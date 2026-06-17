@@ -1,0 +1,22 @@
+# No versionar lo que generan los agentes, pero conservar las carpetas vacías
+/output/**
+!/output/
+!/output/**/
+!/output/**/.gitkeep
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editores
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Node (por si más adelante se agregan herramientas)
+node_modules/
+npm-debug.log*
+
+# Variables de entorno / secretos (tokens de MCP, etc.)
+.env
+.env.local
