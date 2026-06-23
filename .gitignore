@@ -20,6 +20,7 @@ npm-debug.log*
 # Variables de entorno / secretos (tokens de MCP, etc.)
 .env
 .env.local
+<<<<<<< HEAD
 
 # Python
 __pycache__/
@@ -38,3 +39,5 @@ venv/
 
 # Logs sueltos
 *.log
+=======
+>>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae

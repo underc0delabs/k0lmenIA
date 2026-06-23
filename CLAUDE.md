@@ -1,6 +1,10 @@
 # Agentes QARMY — Contexto del proyecto
 
+<<<<<<< HEAD
 Este repositorio es un conjunto de **agentes de QA para Claude Code**, pensados para que profesionales de testing manual aceleren sus tareas del día a día: analizar historias, escribir casos de prueba (manuales, BDD y de API), generar datos de prueba, redactar reportes de bug, ejecutar pruebas end-to-end en el navegador y generar reportes de resultados en HTML.
+=======
+Este repositorio es un conjunto de **agentes de QA para Claude Code**, pensados para que profesionales de testing manual aceleren sus tareas del día a día: analizar historias, escribir casos de prueba (manuales, BDD y de API), generar datos de prueba y redactar reportes de bug profesionales.
+>>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
 
 Todo el trabajo y todas las salidas son **en español**.
 
@@ -31,8 +35,11 @@ input/ → [ agente ] → output/
 | `generador-reportes-bug` | Reportes de bug, siguiendo `plantillas/plantilla-reporte-bug.md` | `output/reportes-bug/` |
 | `generador-datos-prueba` | Datos de prueba realistas (Markdown o CSV) | `output/datos-de-prueba/` |
 | `generador-casos-api` | Casos de prueba de API (tabla resumen + detalle con JSON) a partir de contratos/endpoints | `output/casos-api/` |
+<<<<<<< HEAD
 | `ejecutor-e2e` | Ejecuta los casos/escenarios pedidos en el navegador con Playwright MCP (pregunta headed o headless), reporta con evidencia y genera el reporte HTML de la corrida | `output/ejecuciones/` |
 | `generador-reporte-html` | Arma el reporte HTML (dashboard en modo oscuro, con indicadores y gráficos) de una ejecución, a partir de sus resultados | `output/ejecuciones/` |
+=======
+>>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
 
 ---
 
@@ -82,9 +89,15 @@ Reglas (valen para **todos** los agentes y cualquier sección, incluidas las que
 
 ## Requisitos del entorno
 
+<<<<<<< HEAD
 **Python 3** lo usan los scripts que dan formato a las salidas. Instalan `openpyxl`/`tabulate` solo si faltan; o se instalan con `pip install -r requirements.txt`. Si falta una librería y no se puede instalar, el script avisa con un mensaje claro (no falla en silencio).
 
 - `scripts/generar_casos.py` → arma la planilla `.xlsx` y el `.md` de casos de prueba. Acepta `--limpiar` para borrar su JSON de entrada al terminar (cross-platform, sin depender de `rm`).
+=======
+**Python 3** lo usan los scripts que dan formato a las salidas (instalan `openpyxl`/`tabulate` solo si faltan):
+
+- `scripts/generar_casos.py` → arma la planilla `.xlsx` y el `.md` de casos de prueba.
+>>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
 - `scripts/formatear_tablas.py` → alinea las tablas de cualquier `.md` (lo usan todos los agentes que generan informes).
 
 ---
@@ -97,6 +110,7 @@ Reglas (valen para **todos** los agentes y cualquier sección, incluidas las que
 - Reporte de bug: `BUG-001.md`
 - Datos de prueba: `datos-HU-001.md` (o `.csv`)
 - Casos de API: `casos-api-auth.md`
+<<<<<<< HEAD
 - Ejecución E2E (un reporte por corrida): `reporte-HU-001-<fecha-hora>.html` (dashboard, modo oscuro) + `_resultados-HU-001-<fecha-hora>.json` (datos), en `output/ejecuciones/`; evidencia en `output/ejecuciones/evidencia/`. Cada reporte cubre solo los casos de esa ejecución.
 
 ---
@@ -106,3 +120,5 @@ Reglas (valen para **todos** los agentes y cualquier sección, incluidas las que
 El repo se apoya en estas piezas: **agentes** (`.claude/agents/`, el quién), **skills** (`.claude/skills/`, el cómo, cargados on-demand), **MCP** (`.mcp.json`, conexiones a sistemas externos — un solo archivo que escala a muchas conexiones: Jira, Xray, Playwright…), **herramientas** (`herramientas/`, herramientas externas de testing como JMeter, una subcarpeta por herramienta) y **scripts** (`scripts/`, utilidades internas determinísticas). El detalle y cómo extender cada una está en `ARQUITECTURA.md`.
 
 Secretos (tokens, credenciales): van en variables de entorno con `${VARIABLE}`, **nunca** commiteados. La config MCP real (`.mcp.json`) está gitignored; hay una plantilla en `.mcp.json.example`.
+=======
+>>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae

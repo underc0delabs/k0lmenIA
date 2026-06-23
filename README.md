@@ -41,7 +41,11 @@ input/ → [ agente de QA ] → output/
 - Una cuenta de Claude (plan **Pro**, **Max**, **Team** o **Enterprise**) o acceso por **API** de Anthropic. El plan gratuito no incluye Claude Code.
 - **VS Code** (recomendado, aunque Claude Code corre en cualquier terminal).
 - Para instalar por npm: **Node.js 18 o superior**.
+<<<<<<< HEAD
 - **Python 3** — lo usan los scripts que dan formato a las salidas: `scripts/generar_casos.py` (planilla `.xlsx` y `.md` de casos) y `scripts/formatear_tablas.py` (alinea las tablas de los `.md`). Instalan `openpyxl`/`tabulate` solo si faltan, o las instalás vos con `pip install -r requirements.txt`.
+=======
+- **Python 3** — lo usan los scripts que dan formato a las salidas: `scripts/generar_casos.py` (planilla `.xlsx` y `.md` de casos) y `scripts/formatear_tablas.py` (alinea las tablas de los `.md`). Instalan `openpyxl`/`tabulate` solo si faltan.
+>>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
 
 ---
 
@@ -75,6 +79,7 @@ git clone https://github.com/QARMY/agentes-qarmy.git
 cd agentes-qarmy
 ```
 
+<<<<<<< HEAD
 > Si hiciste un fork, reemplazá la URL por la de tu repositorio.
 
 (Opcional) instalá las dependencias de los scripts de una:
@@ -82,6 +87,8 @@ cd agentes-qarmy
 pip install -r requirements.txt
 ```
 
+=======
+>>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
 ### 3. Abrir en VS Code y lanzar Claude Code
 
 ```bash
@@ -120,6 +127,7 @@ La primera vez te va a pedir autenticarte en el navegador. Listo: Claude Code ya
 agentes-qarmy/
 ├── CLAUDE.md              # Contexto y estándares del proyecto (Claude Code lo lee siempre)
 ├── README.md
+<<<<<<< HEAD
 ├── ARQUITECTURA.md        # Cómo está pensado el repo para crecer (agentes/skills/MCP/herramientas/scripts)
 ├── requirements.txt       # Dependencias de Python (openpyxl, tabulate)
 ├── .mcp.json              # Conexiones MCP activas (Playwright headed + headless)
@@ -141,11 +149,26 @@ agentes-qarmy/
 ## Cómo agregar un agente nuevo
 
 El proyecto está pensado para crecer. Para sumar un agente:
+=======
+├── .claude/agents/        # Los agentes de QA
+├── plantillas/            # Referencias de formato (bug + casos .xlsx + cobertura .md)
+├── scripts/               # Scripts de formato (casos .xlsx/.md + normalizador de tablas)
+├── input/                 # Tus insumos (con un ejemplo en cada carpeta)
+└── output/                # Lo que generan los agentes
+```
+
+---
+
+## Cómo contribuir
+
+¿Querés sumar un agente nuevo a la comunidad?
+>>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
 
 1. Creá un archivo en `.claude/agents/` (ej.: `mi-agente.md`).
 2. Agregale el frontmatter con `name`, `description` y `tools`. La `description` es clave: es lo que usa Claude Code para saber cuándo invocarlo.
 3. Escribí el cuerpo (rol, entradas, proceso, salida y reglas), en español.
 4. Si genera un artefacto con formato propio, sumá su plantilla en `plantillas/` (o su script en `scripts/`) y su carpeta en `output/`.
+<<<<<<< HEAD
 5. Si genera tablas en un `.md`, hacelas pasar por `scripts/formatear_tablas.py` para que queden alineadas (es el estándar del repo).
 
 Tomá los agentes existentes como referencia de estilo.
@@ -154,6 +177,12 @@ Tomá los agentes existentes como referencia de estilo.
 
 Licencia **MIT** — © 2026 **Danilo Vezzoni** (QARMY). Podés usarlo, modificarlo y compartirlo libremente; se entrega sin garantías.
 
+=======
+5. Abrí un Pull Request.
+
+Tomá los agentes existentes como referencia de estilo.
+
+>>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
 ---
 
 Hecho con 🪖 por la comunidad **QARMY** · https://qarmy.ar
