@@ -1,6 +1,6 @@
 # 🪖 Agentes QARMY
 
-**Agentes de QA para Claude Code** que aceleran las tareas del día a día del testing manual: analizar historias, escribir casos de prueba (manuales, BDD y de API), generar datos de prueba y redactar reportes de bug profesionales — todo en español.
+**Agentes de QA para Claude Code** que aceleran las tareas del día a día del testing manual: analizar historias, escribir casos de prueba (manuales, BDD y de API), generar datos de prueba, redactar reportes de bug, ejecutar pruebas end-to-end en el navegador y armar reportes de resultados en HTML — todo en español.
 
 > Pensado para QAs manuales. No hace falta saber programar: se trabaja conversando con Claude Code dentro de VS Code.
 
@@ -14,7 +14,7 @@
 
 Un repositorio con un equipo de **agentes especializados** en QA. Vos ponés un insumo (una historia, una observación de bug, un contrato de API) en la carpeta `input/`, le pedís a Claude Code lo que necesitás, y el agente correspondiente genera el artefacto en la carpeta `output/`.
 
-Los **casos de prueba** se generan como planilla **Excel** (`.xlsx`), acompañada de un **informe de cobertura** en Markdown con ambigüedades y preguntas para el PO. El formato del reporte de bug lo definís editando su plantilla.
+Los **casos de prueba** se generan como planilla **Excel** (`.xlsx`), acompañada de un **informe de cobertura** en Markdown con ambigüedades y preguntas para el PO. El formato del reporte de bug lo definís editando su plantilla. Y si querés, esos casos se pueden **ejecutar en un navegador real** (con Playwright MCP) para obtener un **reporte de resultados en HTML**.
 
 ```
 input/ → [ agente de QA ] → output/
@@ -32,6 +32,8 @@ input/ → [ agente de QA ] → output/
 | 🐞 **Reportes de bug** | Convierte notas sueltas en reportes profesionales, siguiendo tu plantilla |
 | 🎲 **Datos de prueba** | Genera datos realistas (Markdown o CSV) |
 | 🔌 **Casos de API** | Genera casos de prueba de API a partir de un contrato |
+| ▶️ **Ejecutor E2E** | Ejecuta los casos/escenarios pedidos en un navegador real con Playwright MCP (headed o headless) y genera el reporte de la corrida con evidencia |
+| 📊 **Reporte HTML** | Arma el reporte HTML (dashboard en modo oscuro) de una ejecución a partir de sus resultados |
 
 ---
 
@@ -41,11 +43,8 @@ input/ → [ agente de QA ] → output/
 - Una cuenta de Claude (plan **Pro**, **Max**, **Team** o **Enterprise**) o acceso por **API** de Anthropic. El plan gratuito no incluye Claude Code.
 - **VS Code** (recomendado, aunque Claude Code corre en cualquier terminal).
 - Para instalar por npm: **Node.js 18 o superior**.
-<<<<<<< HEAD
 - **Python 3** — lo usan los scripts que dan formato a las salidas: `scripts/generar_casos.py` (planilla `.xlsx` y `.md` de casos) y `scripts/formatear_tablas.py` (alinea las tablas de los `.md`). Instalan `openpyxl`/`tabulate` solo si faltan, o las instalás vos con `pip install -r requirements.txt`.
-=======
-- **Python 3** — lo usan los scripts que dan formato a las salidas: `scripts/generar_casos.py` (planilla `.xlsx` y `.md` de casos) y `scripts/formatear_tablas.py` (alinea las tablas de los `.md`). Instalan `openpyxl`/`tabulate` solo si faltan.
->>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
+- **Para ejecutar pruebas E2E** (opcional): los navegadores de Playwright, que se instalan una sola vez con `npx playwright install` (en Linux, además `npx playwright install-deps`). Requiere Node.js.
 
 ---
 
@@ -79,7 +78,6 @@ git clone https://github.com/QARMY/agentes-qarmy.git
 cd agentes-qarmy
 ```
 
-<<<<<<< HEAD
 > Si hiciste un fork, reemplazá la URL por la de tu repositorio.
 
 (Opcional) instalá las dependencias de los scripts de una:
@@ -87,8 +85,6 @@ cd agentes-qarmy
 pip install -r requirements.txt
 ```
 
-=======
->>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
 ### 3. Abrir en VS Code y lanzar Claude Code
 
 ```bash
@@ -99,6 +95,20 @@ Abrí la terminal integrada de VS Code (no hace falta una extensión aparte) y e
 claude
 ```
 La primera vez te va a pedir autenticarte en el navegador. Listo: Claude Code ya reconoce los agentes de la carpeta `.claude/agents/`.
+
+### 4. (Opcional) Preparar la ejecución E2E
+
+Solo si vas a **ejecutar** pruebas en el navegador (no únicamente generarlas). Instalá los navegadores de Playwright una vez:
+```bash
+npx playwright install
+```
+> En Linux puede pedirte además `npx playwright install-deps`.
+
+Si la app que vas a probar pide **login**, copiá la plantilla de variables y completá tus datos (el `.env` no se sube al repo):
+```bash
+cp .env.example .env
+```
+Editá `.env` con la URL y las credenciales (`APP_URL`, `APP_USER`, `APP_PASSWORD`). El agente las lee de ahí; nunca las commitea.
 
 ---
 
@@ -112,10 +122,11 @@ La primera vez te va a pedir autenticarte en el navegador. Listo: Claude Code ya
 
 - *"Analizá la historia HU-001 y decime qué ambigüedades tiene."*
 - *"Generá los casos de prueba de HU-001."* → arma `casos-HU-001.xlsx`, `casos-HU-001.md` y `casos-HU-001-cobertura.md`
-- *"Pasá la historia HU-001 a escenarios BDD."* → arma `HU-001-login.feature` + `HU-001-cobertura.md`
+- *"Pasá la historia HU-001 a escenarios BDD."* → arma `HU-001-registro.feature` + `HU-001-cobertura.md`
 - *"Tomá la observación de `input/bugs/` y armá el reporte de bug."*
-- *"Generá datos de prueba para el formulario de login."*
+- *"Generá datos de prueba para el formulario de registro."*
 - *"Generá los casos de prueba de la API de autenticación."*
+- *"Ejecutá SOLO el escenario de registro válido de HU-001 contra https://tu-app.com."* → corre la prueba en el navegador y genera el reporte HTML de esa corrida en `output/ejecuciones/`
 
 > 💡 El formato del **reporte de bug** lo definís en `plantillas/plantilla-reporte-bug.md`. Los **casos de prueba** salen como planilla Excel (referencia `plantillas/plantilla-casos-prueba.xlsx`, la arma `scripts/generar_casos.py`) más un informe de cobertura (referencia `plantillas/plantilla-cobertura.md`).
 
@@ -127,11 +138,11 @@ La primera vez te va a pedir autenticarte en el navegador. Listo: Claude Code ya
 agentes-qarmy/
 ├── CLAUDE.md              # Contexto y estándares del proyecto (Claude Code lo lee siempre)
 ├── README.md
-<<<<<<< HEAD
 ├── ARQUITECTURA.md        # Cómo está pensado el repo para crecer (agentes/skills/MCP/herramientas/scripts)
 ├── requirements.txt       # Dependencias de Python (openpyxl, tabulate)
 ├── .mcp.json              # Conexiones MCP activas (Playwright headed + headless)
 ├── .mcp.json.example      # Plantilla para más conexiones (Jira, Xray, etc.)
+├── .env.example           # Plantilla de variables/credenciales (copiar a .env, que no se versiona)
 ├── .claude/
 │   ├── agents/            # Los agentes de QA (el "quién")
 │   └── skills/            # Skills (el "cómo"): técnicas de diseño + ejecución E2E
@@ -149,26 +160,11 @@ agentes-qarmy/
 ## Cómo agregar un agente nuevo
 
 El proyecto está pensado para crecer. Para sumar un agente:
-=======
-├── .claude/agents/        # Los agentes de QA
-├── plantillas/            # Referencias de formato (bug + casos .xlsx + cobertura .md)
-├── scripts/               # Scripts de formato (casos .xlsx/.md + normalizador de tablas)
-├── input/                 # Tus insumos (con un ejemplo en cada carpeta)
-└── output/                # Lo que generan los agentes
-```
-
----
-
-## Cómo contribuir
-
-¿Querés sumar un agente nuevo a la comunidad?
->>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
 
 1. Creá un archivo en `.claude/agents/` (ej.: `mi-agente.md`).
 2. Agregale el frontmatter con `name`, `description` y `tools`. La `description` es clave: es lo que usa Claude Code para saber cuándo invocarlo.
 3. Escribí el cuerpo (rol, entradas, proceso, salida y reglas), en español.
 4. Si genera un artefacto con formato propio, sumá su plantilla en `plantillas/` (o su script en `scripts/`) y su carpeta en `output/`.
-<<<<<<< HEAD
 5. Si genera tablas en un `.md`, hacelas pasar por `scripts/formatear_tablas.py` para que queden alineadas (es el estándar del repo).
 
 Tomá los agentes existentes como referencia de estilo.
@@ -177,12 +173,6 @@ Tomá los agentes existentes como referencia de estilo.
 
 Licencia **MIT** — © 2026 **Danilo Vezzoni** (QARMY). Podés usarlo, modificarlo y compartirlo libremente; se entrega sin garantías.
 
-=======
-5. Abrí un Pull Request.
-
-Tomá los agentes existentes como referencia de estilo.
-
->>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
 ---
 
 Hecho con 🪖 por la comunidad **QARMY** · https://qarmy.ar

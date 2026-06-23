@@ -24,7 +24,6 @@ import subprocess
 DELIM_RE = re.compile(r"^\s*\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?\s*$")
 
 
-<<<<<<< HEAD
 def _need(pkg, instalar=None):
     """Asegura que la librería esté disponible. Si falta, intenta instalarla; si no
     puede, avisa con un mensaje claro y corta."""
@@ -42,14 +41,6 @@ def _need(pkg, instalar=None):
             f"\n[!] Falta la librería '{instalar}' y no se pudo instalar sola.\n"
             f"    Instalá las dependencias con:  pip install -r requirements.txt\n"
             f"    (o directamente:  pip install {instalar})\n")
-=======
-def _ensure(pkg):
-    try:
-        __import__(pkg)
-    except ImportError:
-        print(f"Instalando {pkg}...", file=sys.stderr)
-        subprocess.run([sys.executable, "-m", "pip", "install", pkg, "--quiet"], check=False)
->>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
 
 
 def _cells(line):
@@ -84,17 +75,8 @@ def main():
     path = sys.argv[1]
     width = int(sys.argv[2]) if len(sys.argv) > 2 else 40
 
-<<<<<<< HEAD
     _need("tabulate")
     from tabulate import tabulate
-=======
-    _ensure("tabulate")
-    try:
-        from tabulate import tabulate
-    except ImportError:
-        print("Falta la librería 'tabulate'. Instalala con:  pip install tabulate", file=sys.stderr)
-        sys.exit(1)
->>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
 
     with open(path, encoding="utf-8") as f:
         lines = f.read().split("\n")

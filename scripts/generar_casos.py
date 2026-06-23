@@ -3,16 +3,10 @@
 en el mismo paso, una versión en Markdown (.md) con los casos en tabla ASCII alineada.
 
 Uso:
-<<<<<<< HEAD
     python scripts/generar_casos.py <entrada.json> <salida.xlsx> [--limpiar]
 
 Escribe <salida.xlsx> y, al lado, <salida.md> (misma ruta, extensión .md).
 Con --limpiar, borra el JSON de entrada al terminar (útil para los temporales).
-=======
-    python scripts/generar_casos.py <entrada.json> <salida.xlsx>
-
-Escribe <salida.xlsx> y, al lado, <salida.md> (misma ruta, extensión .md).
->>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
 
 Formato del JSON de entrada:
 {
@@ -27,10 +21,7 @@ Formato del JSON de entrada:
 }
 """
 import sys
-<<<<<<< HEAD
 import os
-=======
->>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
 import re
 import json
 import textwrap
@@ -41,7 +32,6 @@ COLS = ["ID #", "Título", "Descripción", "Precondiciones", "Datos de Prueba", 
         "Fecha de Ejecución", "Comentarios"]
 KEYS = ["id", "titulo", "descripcion", "precondiciones", "datos", "pasos", "resultado",
         "estado", "prioridad", "etiquetas", "evidencia", "fecha_ejecucion", "comentarios"]
-<<<<<<< HEAD
 # El .md tiene: (1) una tabla Resumen y (2) la tabla con todos los casos (una fila por caso).
 # Resumen: 4 columnas, ordenado por prioridad (lo más crítico primero).
 RESUMEN_COLS = ["ID", "Título", "Resultado esperado", "Prioridad"]
@@ -56,24 +46,11 @@ MD_KEYS = ["id", "titulo", "descripcion", "precondiciones", "datos", "pasos",
            "resultado", "prioridad", "etiquetas"]
 # Ancho máximo por columna (las celdas largas se ajustan a varias líneas dentro de la celda).
 MD_MAXW = [6, 16, 22, 16, 18, 24, 20, 9, 12]
-=======
-# Columnas del .md. El detalle quita Evidencia, Fecha de Ejecución y Comentarios (sí están en el .xlsx).
-RESUMEN_COLS = ["ID", "Título", "Resultado esperado", "Prioridad"]
-RESUMEN_KEYS = ["id", "titulo", "resultado", "prioridad"]
-RESUMEN_W = [6, 26, 40, 10]
-
-DETALLE_COLS = ["ID #", "Título", "Descripción", "Precondiciones", "Datos de Prueba",
-                "Pasos", "Resultado Esperado", "Estado", "Prioridad", "#Etiquetas"]
-DETALLE_KEYS = ["id", "titulo", "descripcion", "precondiciones", "datos",
-                "pasos", "resultado", "estado", "prioridad", "etiquetas"]
-DETALLE_W = [8, 14, 20, 16, 16, 20, 20, 9, 9, 13]
->>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
 
 # Orden de prioridad: más crítico primero, prioridad baja al final.
 PRIORIDAD_ORDEN = {"crítica": 0, "critica": 0, "alta": 1, "media": 2, "baja": 3}
 
 
-<<<<<<< HEAD
 def _need(pkg, instalar=None):
     """Asegura que la librería esté disponible. Si falta, intenta instalarla; si no
     puede, avisa con un mensaje claro y corta (en vez de fallar con un traceback)."""
@@ -95,18 +72,6 @@ def _need(pkg, instalar=None):
 
 def to_xlsx(data, out):
     _need("openpyxl")
-=======
-def _ensure(pkg):
-    try:
-        __import__(pkg)
-    except ImportError:
-        print(f"Instalando {pkg}...")
-        subprocess.run([sys.executable, "-m", "pip", "install", pkg, "--quiet"], check=False)
-
-
-def to_xlsx(data, out):
-    _ensure("openpyxl")
->>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
     from openpyxl import Workbook
     from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
     from openpyxl.worksheet.datavalidation import DataValidation
@@ -114,11 +79,7 @@ def to_xlsx(data, out):
     proyecto = data.get("proyecto", "NOMBRE DEL PROYECTO")
     modulo = data.get("modulo", "Módulo")
     casos = data.get("casos", [])
-<<<<<<< HEAD
     widths = [6, 30, 42, 32, 30, 46, 40, 13, 11, 22, 20, 18, 30]
-=======
-    widths = [6, 26, 30, 28, 24, 36, 30, 13, 11, 20, 20, 16, 24]
->>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
     n = len(COLS)
     last_col = chr(ord("A") + n - 1)
 
@@ -191,11 +152,7 @@ def _wrap(texto, ancho):
 
 
 def to_md(data, out):
-<<<<<<< HEAD
     _need("tabulate")
-=======
-    _ensure("tabulate")
->>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
     from tabulate import tabulate
     casos = data.get("casos", [])
     titulo = (f"Casos de prueba — {data.get('modulo', '')}").strip(" —")
@@ -203,32 +160,20 @@ def to_md(data, out):
     filas_r = [[_wrap(c.get(k, ""), w) for k, w in zip(RESUMEN_KEYS, RESUMEN_W)] for c in casos]
     partes += ["```", tabulate(filas_r, headers=RESUMEN_COLS, tablefmt="grid"), "```", ""]
     partes += ["## Detalle de los casos", ""]
-<<<<<<< HEAD
     filas = [[c.get(k, "") for k in MD_KEYS] for c in casos]
     tabla = tabulate(filas, headers=MD_COLS, tablefmt="grid", maxcolwidths=MD_MAXW)
     partes += ["```", tabla, "```", ""]
-=======
-    filas_d = [[_wrap(c.get(k, ""), w) for k, w in zip(DETALLE_KEYS, DETALLE_W)] for c in casos]
-    partes += ["```", tabulate(filas_d, headers=DETALLE_COLS, tablefmt="grid"), "```", ""]
->>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
     with open(out, "w", encoding="utf-8") as f:
         f.write("\n".join(partes) + "\n")
 
 
 def main():
-<<<<<<< HEAD
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     flags = [a for a in sys.argv[1:] if a.startswith("--")]
     if len(args) < 2:
         print("Uso: python scripts/generar_casos.py <entrada.json> <salida.xlsx> [--limpiar]")
         sys.exit(1)
     entrada, salida = args[0], args[1]
-=======
-    if len(sys.argv) < 3:
-        print("Uso: python scripts/generar_casos.py <entrada.json> <salida.xlsx>")
-        sys.exit(1)
-    entrada, salida = sys.argv[1], sys.argv[2]
->>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
     if not salida.lower().endswith(".xlsx"):
         print("La salida debe terminar en .xlsx")
         sys.exit(1)
@@ -244,7 +189,6 @@ def main():
     md = re.sub(r"\.xlsx$", ".md", salida, flags=re.IGNORECASE)
     to_md(data, md)
     print(f"OK: {md}")
-<<<<<<< HEAD
     # Con --limpiar, borra el JSON de entrada (cross-platform, sin depender de 'rm').
     if "--limpiar" in flags:
         try:
@@ -252,8 +196,6 @@ def main():
             print(f"Borrado temporal: {entrada}")
         except OSError:
             pass
-=======
->>>>>>> 99483b8718f07f6a113cf90b7307f594a869a3ae
 
 
 if __name__ == "__main__":

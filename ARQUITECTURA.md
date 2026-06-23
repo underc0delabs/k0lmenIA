@@ -1,12 +1,12 @@
 # Arquitectura del repositorio
 
-Este repo está pensado para crecer de forma ordenada. Hoy se enfoca en **generar** artefactos de QA (análisis de historias, casos manuales, BDD, casos de API, datos de prueba, reportes de bug); más adelante sumará **ejecución** (correr pruebas, integrarse con las herramientas del equipo). Para que eso entre sin romper lo que ya funciona, todo se organiza en piezas, cada una con su lugar.
+Este repo está pensado para crecer de forma ordenada. Cubre tanto **generar** artefactos de QA (análisis de historias, casos manuales, BDD, casos de API, datos de prueba, reportes de bug) como **ejecutar** pruebas end-to-end en el navegador y reportar los resultados. Para que cada capacidad nueva entre sin romper lo que ya funciona, todo se organiza en piezas, cada una con su lugar.
 
 ## Las piezas
 
 ### Agentes — el *quién* (`.claude/agents/`)
 
-Cada agente es un subagente de Claude Code con su rol, su proceso y sus reglas. Es a quién se le delega una tarea entera. Hoy hay seis. La clave de cada uno está en el `description` de su frontmatter: es lo que usa Claude Code para saber cuándo invocarlo.
+Cada agente es un subagente de Claude Code con su rol, su proceso y sus reglas. Es a quién se le delega una tarea entera. Hoy hay ocho. La clave de cada uno está en el `description` de su frontmatter: es lo que usa Claude Code para saber cuándo invocarlo.
 
 ### Skills — el *cómo* (`.claude/skills/`)
 
@@ -28,9 +28,9 @@ Para tocar sistemas de afuera (Jira, Xray, un navegador…), un agente usa un **
 }
 ```
 
-Dejamos un `.mcp.json.example` de plantilla. Para usarlo, copialo a `.mcp.json` (que está gitignored) y dejá solo las conexiones que necesites.
+En este repo, `.mcp.json` ya viene **versionado** con la conexión a **Playwright** (headed y headless), que no lleva secretos, así la ejecución E2E funciona out-of-the-box. El `.mcp.json.example` es la **plantilla** para sumar conexiones que sí piden token (Jira, Xray…): copiás la entrada que necesites a tu `.mcp.json` y el token va por `${VARIABLE}` (ver la regla de secretos).
 
-> **Regla de oro de los secretos:** tokens y credenciales van como variables de entorno con `${VARIABLE}` (en tu entorno o un `.env` local), **nunca** con el valor real en el archivo. Si se commitea un secreto, rotalo de inmediato.
+> **Regla de oro de los secretos:** tokens y credenciales van como variables de entorno con `${VARIABLE}` (en tu entorno o un `.env` local, gitignored), **nunca** con el valor real en el archivo. Hay una plantilla `.env.example` con los nombres de variable; se copia a `.env` y se completan los valores reales. Si se commitea un secreto, rotalo de inmediato.
 
 ### Herramientas — herramientas externas de testing (`herramientas/`)
 
@@ -48,4 +48,4 @@ Código Python propio del repo para tareas mecánicas (generar la planilla `.xls
 - **Herramientas** = herramientas externas que se ejecutan por CLI (JMeter…).
 - **Script** = utilidad interna determinística.
 
-Esto es el **chasis**. Las conexiones MCP, las herramientas y los skills reales se suman en la fase de ejecución.
+Hoy ya están en uso los **skills** (técnicas de diseño, ejecución E2E), la **conexión MCP** con Playwright (para correr pruebas en el navegador) y los **scripts** de formato y reporte. La pieza que queda como espacio a crecer son las **herramientas** externas por CLI (JMeter y compañía), que se suman con el mismo patrón: una subcarpeta por herramienta.
