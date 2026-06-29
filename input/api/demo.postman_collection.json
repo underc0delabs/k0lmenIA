@@ -1,0 +1,101 @@
+{
+  "info": {
+    "name": "Demo API k0lmena (JSONPlaceholder)",
+    "description": "Colección de ejemplo para probar la ejecución de pruebas de API con Newman. Apunta a https://jsonplaceholder.typicode.com (API pública de demo, sin login). Reemplazala por tu propia colección exportada de Postman y cambiá base_url por tu API. El id (API-00x) y la prioridad (entre paréntesis) van en el nombre de cada request: el conversor los usa para el reporte.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "API-001 — Obtener un post existente (Alta)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/posts/1",
+          "host": ["{{base_url}}"],
+          "path": ["posts", "1"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('El status es 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Devuelve id y title', function () {",
+              "    var data = pm.response.json();",
+              "    pm.expect(data).to.have.property('id');",
+              "    pm.expect(data).to.have.property('title');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API-002 — Crear un post (Media)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"k0lmena\",\n  \"body\": \"prueba de creación\",\n  \"userId\": 1\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/posts",
+          "host": ["{{base_url}}"],
+          "path": ["posts"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('El status es 201 (creado)', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test('Devuelve el id del nuevo post', function () {",
+              "    pm.expect(pm.response.json()).to.have.property('id');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API-003 — Post inexistente devuelve 404 (Media)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/posts/99999",
+          "host": ["{{base_url}}"],
+          "path": ["posts", "99999"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('El status es 404', function () {",
+              "    pm.response.to.have.status(404);",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "https://jsonplaceholder.typicode.com" }
+  ]
+}

@@ -1,6 +1,6 @@
-# Agentes QARMY — Contexto del proyecto
+# Agentes k0lmena — Contexto del proyecto
 
-Este repositorio es un conjunto de **agentes de QA para Claude Code**, pensados para que profesionales de testing manual aceleren sus tareas del día a día: analizar historias, escribir casos de prueba (manuales, BDD y de API), generar datos de prueba, redactar reportes de bug, ejecutar pruebas end-to-end en el navegador y generar reportes de resultados en HTML.
+Este repositorio es un conjunto de **agentes de QA para Claude Code**, pensados para que profesionales de testing manual aceleren sus tareas del día a día: analizar historias, escribir casos de prueba (manuales, BDD y de API), generar datos de prueba, redactar reportes de bug, ejecutar pruebas end-to-end en el navegador, ejecutar pruebas de API y generar reportes de resultados en HTML.
 
 Todo el trabajo y todas las salidas son **en español**.
 
@@ -32,6 +32,7 @@ input/ → [ agente ] → output/
 | `generador-datos-prueba` | Datos de prueba realistas (Markdown o CSV) | `output/datos-de-prueba/` |
 | `generador-casos-api` | Casos de prueba de API (tabla resumen + detalle con JSON) a partir de contratos/endpoints | `output/casos-api/` |
 | `ejecutor-e2e` | Ejecuta los casos/escenarios pedidos en el navegador con Playwright MCP (pregunta headed o headless), reporta con evidencia y genera el reporte HTML de la corrida | `output/ejecuciones/` |
+| `ejecutor-api` | Ejecuta pruebas de API corriendo una colección de Postman con Newman y genera el reporte HTML de la corrida | `output/ejecuciones/` |
 | `generador-reporte-html` | Arma el reporte HTML (dashboard en modo oscuro, con indicadores y gráficos) de una ejecución, a partir de sus resultados | `output/ejecuciones/` |
 
 ---

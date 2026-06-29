@@ -3,7 +3,9 @@
   "permissions": {
     "allow": [
       "mcp__playwright__*",
-      "mcp__playwright-headless__*"
+      "mcp__playwright-headless__*",
+      "Bash(newman:*)",
+      "Bash(npx newman:*)"
     ]
   }
 }

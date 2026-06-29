@@ -210,7 +210,7 @@ def build_html(data):
     titulo = data.get("titulo") or "Reporte de ejecución"
     body = f"""<div class="wrap">
   <header>
-    <span class="brand"><span class="dot">🪖</span><span class="eyebrow">QARMY · Reporte de ejecución</span></span>
+    <span class="brand"><span class="dot">🪖</span><span class="eyebrow">k0lmena · Reporte de ejecución</span></span>
     <h1>{_e(titulo)}</h1>
     {_chips(data)}
   </header>
@@ -230,11 +230,11 @@ def build_html(data):
     <div class="card tablecard">{_tabla(casos)}</div>
   </div>
 
-  <footer>Generado por QARMY · Agentes QARMY</footer>
+  <footer>Generado por k0lmena · Agentes k0lmena</footer>
 </div>"""
     return (f'<!doctype html>\n<html lang="es"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width, initial-scale=1">'
-            f'<title>{_e(titulo)} — Reporte QARMY</title><style>{CSS}</style></head>'
+            f'<title>{_e(titulo)} — Reporte k0lmena</title><style>{CSS}</style></head>'
             f'<body>{body}</body></html>\n')
 
 

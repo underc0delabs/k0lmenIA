@@ -6,14 +6,15 @@ Cada herramienta va en su **propia subcarpeta**, así el repo escala sin pisarse
 
 ```
 herramientas/
+├── newman/          # Postman CLI: ejecuta colecciones de pruebas de API (integrada)
+│   └── README.md    # qué es, instalación y cómo la usa el agente
 ├── jmeter/          # ejemplo a futuro: pruebas de performance
 │   ├── planes/      # plantillas .jmx
-│   ├── config/      # configuración
 │   └── README.md    # cómo la usa el agente
-└── ...              # otras (k6, Postman/Newman, etc.)
+└── ...              # otras (k6, etc.)
 ```
 
-Todavía está vacía: las herramientas reales (JMeter y las que vengan) se suman con las funcionalidades de ejecución.
+La primera herramienta integrada es **Newman** (en `newman/`): la usa el agente `ejecutor-api` para correr pruebas de API. Las que vengan (k6, JMeter…) se suman con el mismo patrón: una subcarpeta + su README.
 
 > ¿En qué se diferencia de `scripts/` y de `.mcp.json`?
 > - **`herramientas/`** → herramientas externas que se ejecutan por CLI (JMeter, k6…), con sus plantillas y configs.

@@ -1,12 +1,12 @@
 # Arquitectura del repositorio
 
-Este repo está pensado para crecer de forma ordenada. Cubre tanto **generar** artefactos de QA (análisis de historias, casos manuales, BDD, casos de API, datos de prueba, reportes de bug) como **ejecutar** pruebas end-to-end en el navegador y reportar los resultados. Para que cada capacidad nueva entre sin romper lo que ya funciona, todo se organiza en piezas, cada una con su lugar.
+Este repo está pensado para crecer de forma ordenada. Cubre tanto **generar** artefactos de QA (análisis de historias, casos manuales, BDD, casos de API, datos de prueba, reportes de bug) como **ejecutar** pruebas (end-to-end en el navegador y de API) y reportar los resultados. Para que cada capacidad nueva entre sin romper lo que ya funciona, todo se organiza en piezas, cada una con su lugar.
 
 ## Las piezas
 
 ### Agentes — el *quién* (`.claude/agents/`)
 
-Cada agente es un subagente de Claude Code con su rol, su proceso y sus reglas. Es a quién se le delega una tarea entera. Hoy hay ocho. La clave de cada uno está en el `description` de su frontmatter: es lo que usa Claude Code para saber cuándo invocarlo.
+Cada agente es un subagente de Claude Code con su rol, su proceso y sus reglas. Es a quién se le delega una tarea entera. Hoy hay nueve. La clave de cada uno está en el `description` de su frontmatter: es lo que usa Claude Code para saber cuándo invocarlo.
 
 ### Skills — el *cómo* (`.claude/skills/`)
 
@@ -34,7 +34,7 @@ En este repo, `.mcp.json` ya viene **versionado** con la conexión a **Playwrigh
 
 ### Herramientas — herramientas externas de testing (`herramientas/`)
 
-Herramientas que el agente **ejecuta** por línea de comandos —por ejemplo **JMeter** para performance—, con sus plantillas y configuraciones. Cada herramienta va en su **propia subcarpeta**, así escala: sumar una herramienta = sumar una carpeta (ver `herramientas/README.md`).
+Herramientas que el agente **ejecuta** por línea de comandos, con sus plantillas y configuraciones. La primera integrada es **Newman** (la CLI de Postman), que usa `ejecutor-api` para correr pruebas de API; a futuro pueden sumarse otras como **JMeter** o **k6** para performance. Cada herramienta va en su **propia subcarpeta**, así escala: sumar una herramienta = sumar una carpeta (ver `herramientas/README.md`).
 
 ### Scripts — utilidades internas (`scripts/`)
 
@@ -45,7 +45,7 @@ Código Python propio del repo para tareas mecánicas (generar la planilla `.xls
 - **Agente** = a quién le pido la tarea.
 - **Skill** = el conocimiento de cómo hacerla.
 - **MCP** = conexiones a sistemas externos (un archivo, muchas conexiones: Jira, Xray, Playwright…).
-- **Herramientas** = herramientas externas que se ejecutan por CLI (JMeter…).
+- **Herramientas** = herramientas externas que se ejecutan por CLI (Newman, y a futuro JMeter/k6…).
 - **Script** = utilidad interna determinística.
 
-Hoy ya están en uso los **skills** (técnicas de diseño, ejecución E2E), la **conexión MCP** con Playwright (para correr pruebas en el navegador) y los **scripts** de formato y reporte. La pieza que queda como espacio a crecer son las **herramientas** externas por CLI (JMeter y compañía), que se suman con el mismo patrón: una subcarpeta por herramienta.
+Hoy ya están en uso las cinco piezas: **agentes**, **skills** (técnicas de diseño, ejecución E2E y de API), la **conexión MCP** con Playwright (para el navegador), la **herramienta** Newman (para API) y los **scripts** de formato, reporte y conversión. Sumar capacidades nuevas es repetir el patrón: un agente nuevo en `.claude/agents/`, un skill en `.claude/skills/`, una conexión en `.mcp.json`, una herramienta en `herramientas/` o un script en `scripts/`.

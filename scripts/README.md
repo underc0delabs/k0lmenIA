@@ -7,6 +7,7 @@ Actuales:
 - `generar_casos.py` — genera la planilla `.xlsx` y el `.md` de casos de prueba (ordenados por prioridad). Acepta `--limpiar`.
 - `formatear_tablas.py` — normaliza las tablas de cualquier `.md` a un formato alineado.
 - `generar_reporte.py` — genera un reporte HTML autocontenido (dashboard) de una ejecución, a partir de un JSON de resultados.
+- `newman_a_resultados.py` — convierte la salida de Newman (JSON) al formato que consume `generar_reporte.py`, para que las pruebas de API usen el mismo reporte.
 
 Necesitan **Python 3** (ver `requirements.txt`).
 

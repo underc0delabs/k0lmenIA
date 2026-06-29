@@ -1,4 +1,4 @@
-# 🪖 Agentes QARMY
+# 🪖 Agentes k0lmena
 
 **Agentes de QA para Claude Code** que aceleran las tareas del día a día del testing manual: analizar historias, escribir casos de prueba (manuales, BDD y de API), generar datos de prueba, redactar reportes de bug, ejecutar pruebas end-to-end en el navegador y armar reportes de resultados en HTML — todo en español.
 
@@ -33,6 +33,7 @@ input/ → [ agente de QA ] → output/
 | 🎲 **Datos de prueba** | Genera datos realistas (Markdown o CSV) |
 | 🔌 **Casos de API** | Genera casos de prueba de API a partir de un contrato |
 | ▶️ **Ejecutor E2E** | Ejecuta los casos/escenarios pedidos en un navegador real con Playwright MCP (headed o headless) y genera el reporte de la corrida con evidencia |
+| 🧪 **Ejecutor de API** | Ejecuta una colección de Postman con Newman contra la API y genera el reporte de la corrida |
 | 📊 **Reporte HTML** | Arma el reporte HTML (dashboard en modo oscuro) de una ejecución a partir de sus resultados |
 
 ---
@@ -45,6 +46,7 @@ input/ → [ agente de QA ] → output/
 - Para instalar por npm: **Node.js 18 o superior**.
 - **Python 3** — lo usan los scripts que dan formato a las salidas: `scripts/generar_casos.py` (planilla `.xlsx` y `.md` de casos) y `scripts/formatear_tablas.py` (alinea las tablas de los `.md`). Instalan `openpyxl`/`tabulate` solo si faltan, o las instalás vos con `pip install -r requirements.txt`.
 - **Para ejecutar pruebas E2E** (opcional): los navegadores de Playwright, que se instalan una sola vez con `npx playwright install` (en Linux, además `npx playwright install-deps`). Requiere Node.js.
+- **Para ejecutar pruebas de API** (opcional): **Newman**, la CLI de Postman: `npm install -g newman` (requiere Node.js).
 
 ---
 
@@ -74,8 +76,8 @@ claude --version
 ### 2. Clonar este repositorio
 
 ```bash
-git clone https://github.com/QARMY/agentes-qarmy.git
-cd agentes-qarmy
+git clone https://github.com/QARMY/agentes-k0lmena.git
+cd agentes-k0lmena
 ```
 
 > Si hiciste un fork, reemplazá la URL por la de tu repositorio.
@@ -96,19 +98,26 @@ claude
 ```
 La primera vez te va a pedir autenticarte en el navegador. Listo: Claude Code ya reconoce los agentes de la carpeta `.claude/agents/`.
 
-### 4. (Opcional) Preparar la ejecución E2E
+### 4. (Opcional) Preparar la ejecución (E2E y API)
 
-Solo si vas a **ejecutar** pruebas en el navegador (no únicamente generarlas). Instalá los navegadores de Playwright una vez:
+Solo si vas a **ejecutar** pruebas (no únicamente generarlas).
+
+Para **E2E en el navegador**, instalá los navegadores de Playwright una vez:
 ```bash
 npx playwright install
 ```
 > En Linux puede pedirte además `npx playwright install-deps`.
 
-Si la app que vas a probar pide **login**, copiá la plantilla de variables y completá tus datos (el `.env` no se sube al repo):
+Para **pruebas de API**, instalá Newman (la CLI de Postman):
+```bash
+npm install -g newman
+```
+
+Si la app/API que vas a probar pide **login o token**, copiá la plantilla de variables y completá tus datos (el `.env` no se sube al repo):
 ```bash
 cp .env.example .env
 ```
-Editá `.env` con la URL y las credenciales (`APP_URL`, `APP_USER`, `APP_PASSWORD`). El agente las lee de ahí; nunca las commitea.
+Editá `.env` con la URL y las credenciales (`APP_URL`, `APP_USER`, `APP_PASSWORD`, `API_TOKEN`). Los agentes las leen de ahí; nunca las commitean.
 
 ---
 
@@ -127,6 +136,7 @@ Editá `.env` con la URL y las credenciales (`APP_URL`, `APP_USER`, `APP_PASSWOR
 - *"Generá datos de prueba para el formulario de registro."*
 - *"Generá los casos de prueba de la API de autenticación."*
 - *"Ejecutá SOLO el escenario de registro válido de HU-001 contra https://tu-app.com."* → corre la prueba en el navegador y genera el reporte HTML de esa corrida en `output/ejecuciones/`
+- *"Ejecutá la colección de API de `input/api/` contra https://tu-api.com."* → corre la colección con Newman y genera el reporte HTML en `output/ejecuciones/`
 
 > 💡 El formato del **reporte de bug** lo definís en `plantillas/plantilla-reporte-bug.md`. Los **casos de prueba** salen como planilla Excel (referencia `plantillas/plantilla-casos-prueba.xlsx`, la arma `scripts/generar_casos.py`) más un informe de cobertura (referencia `plantillas/plantilla-cobertura.md`).
 
@@ -135,7 +145,7 @@ Editá `.env` con la URL y las credenciales (`APP_URL`, `APP_USER`, `APP_PASSWOR
 ## Estructura del repositorio
 
 ```
-agentes-qarmy/
+agentes-k0lmena/
 ├── CLAUDE.md              # Contexto y estándares del proyecto (Claude Code lo lee siempre)
 ├── README.md
 ├── ARQUITECTURA.md        # Cómo está pensado el repo para crecer (agentes/skills/MCP/herramientas/scripts)
@@ -145,11 +155,11 @@ agentes-qarmy/
 ├── .env.example           # Plantilla de variables/credenciales (copiar a .env, que no se versiona)
 ├── .claude/
 │   ├── agents/            # Los agentes de QA (el "quién")
-│   └── skills/            # Skills (el "cómo"): técnicas de diseño + ejecución E2E
-├── herramientas/          # Herramientas externas de testing (JMeter, etc.); a futuro
+│   └── skills/            # Skills (el "cómo"): técnicas de diseño + ejecución E2E y de API
+├── herramientas/          # Herramientas externas de testing (Newman para API; JMeter/k6 a futuro)
 ├── plantillas/            # Referencias de formato (bug + casos .xlsx + cobertura .md)
-├── scripts/               # Utilidades internas en Python (casos .xlsx/.md, normalizador, reporte HTML)
-├── input/                 # Tus insumos (con un ejemplo en cada carpeta)
+├── scripts/               # Utilidades internas en Python (casos .xlsx/.md, normalizador, reporte HTML, conversor Newman)
+├── input/                 # Tus insumos (con un ejemplo en cada carpeta; incluye una colección de API en input/api/)
 └── output/                # Lo que generan los agentes (incluye output/ejecuciones/)
 ```
 
@@ -171,8 +181,8 @@ Tomá los agentes existentes como referencia de estilo.
 
 ## Licencia
 
-Licencia **MIT** — © 2026 **Danilo Vezzoni** (QARMY). Podés usarlo, modificarlo y compartirlo libremente; se entrega sin garantías.
+Licencia **MIT** — © 2026 **Danilo Vezzoni** (k0lmena). Podés usarlo, modificarlo y compartirlo libremente; se entrega sin garantías.
 
 ---
 
-Hecho con 🪖 por la comunidad **QARMY** · https://qarmy.ar
+Hecho con 🪖 por la comunidad **k0lmena** · https://qarmy.ar
