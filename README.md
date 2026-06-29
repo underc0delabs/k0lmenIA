@@ -27,6 +27,7 @@ input/ → [ agente de QA ] → output/
 | Agente | Qué hace |
 |--------|----------|
 | 🔍 **Analista de historias** | Analiza historias y criterios de aceptación; detecta ambigüedades y arma preguntas de refinamiento |
+| 🗺️ **Estratega de pruebas** | Arma el plan/estrategia (alcance, riesgos, tipos de prueba, criterios) como dashboard HTML en modo oscuro |
 | 📝 **Casos manuales** | Genera los casos en Excel (.xlsx) y Markdown (.md), + un informe de cobertura (.md) con ambigüedades y preguntas para el PO |
 | 🥒 **Casos BDD** | Genera escenarios en Gherkin (keywords en inglés, contenido en español) + un informe de cobertura por criterio (.md) |
 | 🐞 **Reportes de bug** | Convierte notas sueltas en reportes profesionales, siguiendo tu plantilla |
@@ -35,6 +36,7 @@ input/ → [ agente de QA ] → output/
 | ▶️ **Ejecutor E2E** | Ejecuta los casos/escenarios pedidos en un navegador real con Playwright MCP (headed o headless) y genera el reporte de la corrida con evidencia |
 | 🧪 **Ejecutor de API** | Ejecuta una colección de Postman con Newman contra la API y genera el reporte de la corrida |
 | 📊 **Reporte HTML** | Arma el reporte HTML (dashboard en modo oscuro) de una ejecución a partir de sus resultados |
+| 🏁 **Informe de cierre** | Resume toda la ronda (resultados, bugs, recomendación go/no-go) en un dashboard HTML en modo oscuro |
 
 ---
 
@@ -130,6 +132,7 @@ Editá `.env` con la URL y las credenciales (`APP_URL`, `APP_USER`, `APP_PASSWOR
 **Ejemplos de lo que podés pedir:**
 
 - *"Analizá la historia HU-001 y decime qué ambigüedades tiene."*
+- *"Armá el plan de pruebas de HU-001."* → genera el plan en HTML (modo oscuro) en `output/planes-de-prueba/`
 - *"Generá los casos de prueba de HU-001."* → arma `casos-HU-001.xlsx`, `casos-HU-001.md` y `casos-HU-001-cobertura.md`
 - *"Pasá la historia HU-001 a escenarios BDD."* → arma `HU-001-registro.feature` + `HU-001-cobertura.md`
 - *"Tomá la observación de `input/bugs/` y armá el reporte de bug."*
@@ -137,6 +140,7 @@ Editá `.env` con la URL y las credenciales (`APP_URL`, `APP_USER`, `APP_PASSWOR
 - *"Generá los casos de prueba de la API de autenticación."*
 - *"Ejecutá SOLO el escenario de registro válido de HU-001 contra https://tu-app.com."* → corre la prueba en el navegador y genera el reporte HTML de esa corrida en `output/ejecuciones/`
 - *"Ejecutá la colección de API de `input/api/` contra https://tu-api.com."* → corre la colección con Newman y genera el reporte HTML en `output/ejecuciones/`
+- *"Armá el informe de cierre de las pruebas de HU-001."* → resume la ronda en un informe HTML (modo oscuro) en `output/informes-cierre/`
 
 > 💡 El formato del **reporte de bug** lo definís en `plantillas/plantilla-reporte-bug.md`. Los **casos de prueba** salen como planilla Excel (referencia `plantillas/plantilla-casos-prueba.xlsx`, la arma `scripts/generar_casos.py`) más un informe de cobertura (referencia `plantillas/plantilla-cobertura.md`).
 
@@ -158,9 +162,9 @@ agentes-k0lmena/
 │   └── skills/            # Skills (el "cómo"): técnicas de diseño + ejecución E2E y de API
 ├── herramientas/          # Herramientas externas de testing (Newman para API; JMeter/k6 a futuro)
 ├── plantillas/            # Referencias de formato (bug + casos .xlsx + cobertura .md)
-├── scripts/               # Utilidades internas en Python (casos .xlsx/.md, normalizador, reporte HTML, conversor Newman)
+├── scripts/               # Utilidades internas en Python (casos, reporte HTML, conversor Newman, plan e informe de cierre)
 ├── input/                 # Tus insumos (con un ejemplo en cada carpeta; incluye una colección de API en input/api/)
-└── output/                # Lo que generan los agentes (incluye output/ejecuciones/)
+└── output/                # Lo que generan los agentes (ejecuciones, planes-de-prueba, informes-cierre…)
 ```
 
 > 🧱 ¿Querés entender cómo está armado el repo o sumarle un skill / un server MCP a futuro? Mirá [`ARQUITECTURA.md`](ARQUITECTURA.md).

@@ -1,6 +1,6 @@
 # Agentes k0lmena — Contexto del proyecto
 
-Este repositorio es un conjunto de **agentes de QA para Claude Code**, pensados para que profesionales de testing manual aceleren sus tareas del día a día: analizar historias, escribir casos de prueba (manuales, BDD y de API), generar datos de prueba, redactar reportes de bug, ejecutar pruebas end-to-end en el navegador, ejecutar pruebas de API y generar reportes de resultados en HTML.
+Este repositorio es un conjunto de **agentes de QA para Claude Code**, pensados para que profesionales de testing manual aceleren sus tareas del día a día: planificar la estrategia de pruebas, analizar historias, escribir casos de prueba (manuales, BDD y de API), generar datos de prueba, redactar reportes de bug, ejecutar pruebas end-to-end en el navegador, ejecutar pruebas de API, generar reportes de resultados en HTML y armar el informe de cierre de la ronda.
 
 Todo el trabajo y todas las salidas son **en español**.
 
@@ -26,6 +26,7 @@ input/ → [ agente ] → output/
 | Agente | Para qué sirve | Guarda la salida en |
 |--------|----------------|---------------------|
 | `analista-historias` | Analiza historias y criterios de aceptación; detecta ambigüedades y arma preguntas de refinamiento | `output/analisis-historias/` |
+| `estratega-pruebas` | Plan/estrategia de pruebas (alcance, riesgos, tipos de prueba, criterios) como dashboard HTML en modo oscuro | `output/planes-de-prueba/` |
 | `generador-casos-manuales` | Casos de prueba en Excel (.xlsx) y Markdown (.md), + informe de cobertura (.md) con ambigüedades y preguntas para el PO | `output/casos-de-prueba/manuales/` |
 | `generador-casos-bdd` | Escenarios en Gherkin (keywords en inglés, contenido en español) + informe de cobertura por criterio (.md) | `output/casos-de-prueba/bdd/` |
 | `generador-reportes-bug` | Reportes de bug, siguiendo `plantillas/plantilla-reporte-bug.md` | `output/reportes-bug/` |
@@ -34,6 +35,7 @@ input/ → [ agente ] → output/
 | `ejecutor-e2e` | Ejecuta los casos/escenarios pedidos en el navegador con Playwright MCP (pregunta headed o headless), reporta con evidencia y genera el reporte HTML de la corrida | `output/ejecuciones/` |
 | `ejecutor-api` | Ejecuta pruebas de API corriendo una colección de Postman con Newman y genera el reporte HTML de la corrida | `output/ejecuciones/` |
 | `generador-reporte-html` | Arma el reporte HTML (dashboard en modo oscuro, con indicadores y gráficos) de una ejecución, a partir de sus resultados | `output/ejecuciones/` |
+| `generador-reporte-cierre` | Informe de cierre de la ronda (resultados, bugs, recomendación go/no-go) como dashboard HTML en modo oscuro | `output/informes-cierre/` |
 
 ---
 
