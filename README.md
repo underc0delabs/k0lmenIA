@@ -185,8 +185,8 @@ Tomá los agentes existentes como referencia de estilo.
 
 ## Licencia
 
-Licencia **MIT** — © 2026 **Danilo Vezzoni** (k0lmena). Podés usarlo, modificarlo y compartirlo libremente; se entrega sin garantías.
+Licencia **MIT** — © 2026 **QARMY**. Podés usarlo, modificarlo y compartirlo libremente; se entrega sin garantías.
 
 ---
 
-Hecho con 🪖 por la comunidad **k0lmena** · https://qarmy.ar
+Hecho con 🪖 por la comunidad de **Underc0de**
