@@ -5,7 +5,9 @@
 > Pensado para QAs manuales. No hace falta saber programar: se trabaja conversando con Claude Code dentro de VS Code.
 
 🌐 Web: https://qarmy.ar
+
 ▶️ YouTube: https://www.youtube.com/@QARMY-UC?sub_confirmation=1
+
 💬 Canal de WhatsApp: https://whatsapp.com/channel/0029VaSzkgD1CYoTmiX8Uv26
 
 ---
