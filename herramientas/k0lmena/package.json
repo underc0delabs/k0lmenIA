@@ -25,11 +25,6 @@
     "record:generator": "ts-node -r ./env.js tools/generator/record-generator.ts"
   },
   "author": "Danilo Vezzoni",
-  "colaboradores": [
-    "Yanko Leta",
-    "Gianella Vezzoni",
-    "Maximiliano Pintos"
-  ],
   "license": "ISC",
   "devDependencies": {
     "@cucumber/cucumber": "^13.0.0",

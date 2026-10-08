@@ -202,4 +202,4 @@ Con `K0LMENA_AUTO_HEALING=on`, cada acción exitosa guarda locators alternativos
 
 ## Créditos
 
-k0lmena es un proyecto open source (licencia ISC) de **Danilo Vezzoni**, con **Gianella Vezzoni**, **Maximiliano Pintos** y **Yanko Leta**. Video: https://youtu.be/n7plezXinZ8
+k0lmena es un proyecto open source (licencia ISC) de **Danilo Vezzoni**. Video: https://youtu.be/n7plezXinZ8
