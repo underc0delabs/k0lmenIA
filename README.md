@@ -131,7 +131,7 @@ k0lmenIA trae conectores MCP para **Xray**, **QMetry** (standalone y QTM4J) y **
 
 ## Cómo se usa
 
-1. Poné tu insumo en la carpeta de `input/` que corresponda (hay un ejemplo en cada una para arrancar).
+1. Poné tu insumo en la carpeta de `input/` que corresponda (en `input/api/` hay una colección de ejemplo para arrancar).
 2. Pedile a Claude Code lo que necesites, en lenguaje natural. Él elige el agente adecuado.
 3. Revisá el resultado en `output/`.
 
@@ -170,7 +170,7 @@ k0lmenIA/
 ├── herramientas/          # Herramientas externas de testing (Newman para API; JMeter/k6 a futuro)
 ├── plantillas/            # Referencias de formato (bug + casos .xlsx + cobertura .md)
 ├── scripts/               # Utilidades internas en Python (casos, reporte HTML, conversor Newman, plan e informe de cierre)
-├── input/                 # Tus insumos (con un ejemplo en cada carpeta; incluye una colección de API en input/api/)
+├── input/                 # Tus insumos (historias, documentación, bugs y api; hay una colección de ejemplo en input/api/)
 └── output/                # Lo que generan los agentes (ejecuciones, planes-de-prueba, informes-cierre…)
 ```
 
