@@ -44,7 +44,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 
 <br>
 
-[**📖 Documentación web**](docs/index.html) · [**📄 Documentación en PDF**](docs/k0lmenIA-documentacion.pdf) · [**🚀 Empezar**](#-instalación) · [**🌐 qarmy.ar**](https://qarmy.ar) · [**▶️ YouTube**](https://www.youtube.com/@QARMY-UC?sub_confirmation=1) · [**💬 WhatsApp**](https://whatsapp.com/channel/0029VaSzkgD1CYoTmiX8Uv26)
+[**📖 Documentación web**](https://underc0delabs.github.io/k0lmenIA/) · [**📄 Documentación en PDF**](docs/k0lmenIA-documentacion.pdf) · [**🚀 Empezar**](#-instalación) · [**🌐 qarmy.ar**](https://qarmy.ar) · [**▶️ YouTube**](https://www.youtube.com/@QARMY-UC?sub_confirmation=1) · [**💬 WhatsApp**](https://whatsapp.com/channel/0029VaSzkgD1CYoTmiX8Uv26)
 
 </div>
 
@@ -368,7 +368,7 @@ k0lmenIA/
 - **Skill**: una carpeta en `.claude/skills/` con su `SKILL.md`.
 - **Conector**: una entrada en `.mcp.json`, con los tokens siempre como `${VARIABLE}`.
 - **Herramienta**: una subcarpeta en `herramientas/` con su README.
-- **Documentación**: el sitio es [`docs/index.html`](docs/index.html) (publicable con GitHub Pages desde `docs/`); `node docs/generar.js` regenera los diagramas y el PDF.
+- **Documentación**: el sitio es [`docs/index.html`](docs/index.html), publicado en https://underc0delabs.github.io/k0lmenIA/ (GitHub Pages desde `docs/`); `node docs/generar.js` regenera los diagramas y el PDF.
 
 Más detalle en [`ARQUITECTURA.md`](ARQUITECTURA.md).
 </details>
