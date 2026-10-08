@@ -1,8 +1,8 @@
-# Conectores de gestión de pruebas (MCP)
+# Conectores MCP
 
-Cómo conectar k0lmenIA por MCP a **QMetry**, **AIO Tests** y **Appium**. Xray se integra sin MCP (ver abajo).
+Cómo conectar k0lmenIA por MCP a **Jira y Confluence** (Atlassian), **Figma**, **QMetry**, **AIO Tests** y **Appium**. Xray se integra sin MCP (ver abajo).
 
-Las conexiones están definidas en `.mcp.json.example`. No vienen activas en `.mcp.json` porque cada una necesita credenciales propias. Activá solo las que uses.
+Las conexiones están definidas en `.mcp.json.example`. No vienen activas en `.mcp.json` porque cada una necesita credenciales o una cuenta propia. Activá solo las que uses.
 
 ## Resumen
 
@@ -10,6 +10,13 @@ Las conexiones están definidas en `.mcp.json.example`. No vienen activas en `.m
 +-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
 | Conector  | Herramienta                             | Server MCP                              | Tipo        | Transporte |
 +===========+=========================================+=========================================+=============+============+
+| atlassian | Jira y Confluence (Cloud)               | Atlassian Rovo MCP Server (remoto)      | Oficial     | http       |
++-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
+| figma     | Figma (diseños)                         | Figma MCP Server remoto                 | Oficial     | http       |
++-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
+| figma-    | Figma (app de escritorio)               | Figma MCP Server de escritorio          | Oficial     | http       |
+| desktop   |                                         | (local)                                 |             |            |
++-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
 | qmetry    | QMetry Test Management                  | @smartbear/mcp                          | Oficial     | stdio      |
 +-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
 | qtm4j     | QMetry Test Management for Jira (QTM4J) | @smartbear/mcp                          | Oficial     | stdio      |
@@ -105,6 +112,40 @@ Usa el server MCP **oficial** de AIO Tests, que es remoto (no hay que instalar n
 
 ---
 
+## Atlassian: Jira y Confluence
+
+El conector `atlassian` es el server MCP **oficial de Atlassian** (Rovo MCP Server). Con **una sola conexión** da acceso a **Jira y Confluence** Cloud, con los permisos de tu usuario: los agentes pueden leer historias y sus criterios desde Jira y la documentación funcional desde páginas de Confluence, en lugar de copiarlas a `input/`.
+
+- **No usa token**: se autentica con tu cuenta de Atlassian por OAuth. No hace falta ninguna variable de entorno.
+- Para activarlo:
+  1. Copiá la entrada `atlassian` de `.mcp.json.example` a `.mcp.json` (o ejecutá `claude mcp add --transport http atlassian https://mcp.atlassian.com/v2/mcp`).
+  2. Agregá `"atlassian"` a `enabledMcpjsonServers` en `.claude/settings.local.json`.
+  3. Reiniciá Claude Code, ejecutá `/mcp`, elegí `atlassian` y autorizá el acceso en el navegador.
+- Si tu organización restringe las apps de IA, un admin de Atlassian tiene que habilitar el Rovo MCP Server para el sitio.
+
+Ejemplos de uso:
+
+> *"Leé la historia PROJ-12 de Jira y analizala."* · *"Generá los casos de PROJ-12 usando la página de Confluence 'Reglas de facturación' como documentación."*
+
+---
+
+## Figma
+
+El conector `figma` es el server MCP **oficial de Figma**. Les da a los agentes el contexto de un diseño a partir de un **link a un frame, una capa o un archivo**: textos, componentes, estados y capturas. Sirve para diseñar casos de UI (textos esperados, validaciones visibles, estados vacíos y de error), comparar la app contra el diseño y dar contexto al `web-mapper`.
+
+- **Requisitos**: un asiento **Full** o **Dev** de Figma (otros asientos tienen límites de uso) y permiso de edición o lectura sobre el archivo.
+- **No usa token**: se autentica con tu cuenta de Figma por OAuth.
+- Para activarlo, cualquiera de estas dos opciones:
+  - **Plugin oficial (recomendado por Figma)**: `claude plugin install figma@claude-plugins-official`, reiniciá Claude Code, entrá a `/plugin` → *Installed* → `figma` y autorizá el acceso. Incluye el server y skills de Figma.
+  - **Solo el server**: copiá la entrada `figma` de `.mcp.json.example` a `.mcp.json`, agregá `"figma"` a `enabledMcpjsonServers` en `.claude/settings.local.json`, reiniciá y autorizá desde `/mcp`.
+- **Variante de escritorio** (`figma-desktop`): para organizaciones que no permiten el server remoto. Requiere la app de escritorio de Figma con el server MCP habilitado (modo Dev → panel derecho) y se conecta a `http://127.0.0.1:3845/mcp`.
+
+Ejemplos de uso:
+
+> *"Generá los casos de HU-001 tomando como referencia este diseño: https://www.figma.com/design/…?node-id=…"* · *"Compará la pantalla de registro de https://tu-app.com con el diseño de Figma y reportá las diferencias."*
+
+---
+
 ## Appium (para el mobile-mapper)
 
 No es una herramienta de gestión de pruebas: es el server MCP **oficial de Appium**, [`appium-mcp`](https://github.com/appium/appium-mcp), que usa el agente `mobile-mapper` para recorrer una app en un dispositivo o emulador. Requiere **Node.js 22+**, JDK y, para Android, el Android SDK (los drivers UiAutomator2 y XCUITest vienen incluidos). Para iOS hace falta macOS con Xcode.
@@ -129,6 +170,9 @@ Se activa igual que los demás conectores (entrada `appium-mcp` de `.mcp.json.ex
 
 ## Fuentes
 
+- Atlassian Rovo MCP Server: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/
+- Figma MCP Server (remoto): https://help.figma.com/hc/en-us/articles/35281350665623
+- Figma MCP Server con Claude Code: https://help.figma.com/hc/en-us/articles/39888612464151
 - SmartBear MCP (QMetry y QTM4J): https://github.com/SmartBear/smartbear-mcp
 - AIO Tests MCP Server, guía de configuración: https://aiosupport.atlassian.net/wiki/spaces/AioTests/pages/3097624764/AIO+Tests+MCP+Server+Setup+Configuration+Guide
 - AIO MCP Tools: https://aiosupport.atlassian.net/wiki/spaces/AioTests/pages/3115253762/AIO+MCP+Tools

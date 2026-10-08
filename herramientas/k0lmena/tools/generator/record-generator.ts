@@ -130,7 +130,7 @@ type Action = GotoAction | ClickRoleAction | ClickRoleInLocatorAction | FillRole
   steps.push(`import { BASEURL } from '../config';`);
   steps.push(`import { pages } from '../hooks/hook';`);
   steps.push(`import * as vals from '../utils/validations';`);
-  steps.push(`import { ${Object.keys(locators).join(', ')} } from '../locators/exampleLocators';`);
+  steps.push(`import { ${Object.keys(locators).join(', ')} } from '../locators/locators';`);
   steps.push(`import { getByLocator, getElementByRole, pressKey } from '../utils/interactions';`);
   steps.push(`const STEP_DELAY = ${STEP_DELAY};`);
   steps.push('');

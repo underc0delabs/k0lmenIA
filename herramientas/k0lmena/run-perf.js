@@ -32,6 +32,7 @@ function listar() {
   const k6 = fs.existsSync(DIR_K6) ? fs.readdirSync(DIR_K6).filter((f) => f.endsWith('.ts')).map((f) => f.slice(0, -3)) : [];
   const art = fs.existsSync(DIR_ART) ? fs.readdirSync(DIR_ART).filter((f) => /\.ya?ml$/.test(f)).map((f) => f.replace(/\.ya?ml$/, '')) : [];
   console.log('Scripts de performance:\n');
+  if (!k6.length && !art.length) console.log('  (todavía no hay: los genera el agente performance-mapper)');
   for (const s of k6) console.log(`  k6         ${s}`);
   for (const s of art) console.log(`  artillery  ${s}`);
   console.log(`\nUso: npm run perf -- <script> [${PERFILES.join('|')}] [--confirmar]`);

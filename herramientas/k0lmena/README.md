@@ -119,8 +119,8 @@ Se elige en el `.env` de la raíz, sin tocar código:
 ```bash
 npm run bootstrap:k6                       # una vez: descarga k6 en tools/k6 (o tenelo en el PATH)
 npm run perf                               # lista los scripts (k6 y Artillery)
-npm run perf -- ejemplo-petstore smoke     # k6: valida el script con carga mínima
-npm run perf -- ejemplo-login load         # Artillery + Playwright: pide confirmación
+npm run perf -- <script> smoke             # valida el script con carga mínima
+npm run perf -- <script> load              # carga objetivo: pide confirmación
 npm run perf -- <script> stress --confirmar   # sin pregunta (CI o agente con autorización)
 npm run perf -- <script> load --vus 20 --duracion 2m   # k6: pisa la carga del script
 ```
