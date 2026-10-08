@@ -50,4 +50,5 @@ Aplicá el skill **`automatizacion-k0lmena`** (sección Mobile: estructura, loca
 - **Sin credenciales en el código**: se leen de `process.env`.
 - **No dupliques steps** y no borres los de otras historias.
 - **No modifiques** `mobile/support/` (configuración del framework). Si hace falta una capability nueva, proponela en el `.env.example` de la raíz y avisá.
+- **Base de datos**: no agregues steps de verificación en base de datos salvo que la persona lo pida explícitamente; si un caso menciona datos guardados, anotalo como sugerencia en el reporte de mapeo.
 - **Ahorro de tokens**: pedí el page source solo cuando cambia la pantalla, sin screenshots salvo para un paso bloqueado, y respuesta final corta.

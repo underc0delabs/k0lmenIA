@@ -10,11 +10,11 @@ import '../../env'; // .env único de la raíz de k0lmenIA
 import { Given, When, Then, Before, After, DataTable } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import axios, { AxiosResponse, Method } from 'axios';
+import { variables, interpolar } from '../../tools/variables';
 
 type Estado = {
   headers: Record<string, string>;
   request?: { metodo: string; url: string; body?: unknown };
-  vars: Record<string, unknown>;
   response?: AxiosResponse;
   ms?: number;
 };
@@ -22,15 +22,9 @@ type Estado = {
 let estado: Estado;
 
 Before(() => {
-  estado = { headers: { 'Content-Type': 'application/json' }, vars: {} };
+  estado = { headers: { 'Content-Type': 'application/json' } };
 });
 
-const interpolar = (texto: string): string =>
-  texto.replace(/\{([A-Za-z_][\w.]*)\}/g, (match, nombre) => {
-    if (nombre in estado.vars) return String(estado.vars[nombre]);
-    if (process.env[nombre] !== undefined) return String(process.env[nombre]);
-    return match;
-  });
 
 // Lee un campo con notación de puntos: "data.items.0.id"
 const leerCampo = (obj: unknown, ruta: string): unknown =>
@@ -104,7 +98,7 @@ When('envío un {word} a {string} con el body:', async (metodo: string, endpoint
 });
 
 When('guardo el campo {string} de la respuesta como {string}', (campo: string, nombre: string) => {
-  estado.vars[nombre] = leerCampo(respuesta().data, campo);
+  variables[nombre] = leerCampo(respuesta().data, campo);
 });
 
 /* ---------- Then ---------- */

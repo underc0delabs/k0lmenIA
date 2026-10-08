@@ -41,4 +41,5 @@ Aplicá el skill **`automatizacion-k0lmena`** (sección API: steps genéricos ya
 - **No ejecutes métodos con efecto** (POST/PUT/PATCH/DELETE) sin autorización explícita, y nunca contra producción.
 - **Secretos**: el token se lee de `API_TOKEN`; no lo imprimas ni lo escribas en archivos generados.
 - **No modifiques** `api/steps/comunes.steps.ts` ni borres features de otras historias.
+- **Base de datos**: no agregues steps de verificación en base de datos salvo que la persona lo pida explícitamente; si un caso menciona datos guardados, anotalo como sugerencia en el reporte de mapeo.
 - **Ahorro de tokens**: extraé de la spec solo lo necesario, un request por escenario y respuesta final corta.

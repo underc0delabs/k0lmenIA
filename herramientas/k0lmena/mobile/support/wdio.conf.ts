@@ -78,7 +78,12 @@ export const config: Options.Testrunner = {
   framework: 'cucumber',
   reporters: ['spec'],
   cucumberOpts: {
-    require: [resolve(__dirname, '../steps/**/*.ts'), resolve(__dirname, './hooks.ts')],
+    require: [
+      resolve(__dirname, '../steps/**/*.ts'),
+      resolve(__dirname, './hooks.ts'),
+      resolve(__dirname, '../../tools/variables.ts'),
+      resolve(__dirname, '../../tools/bd/bd.steps.ts'),
+    ],
     timeout: 60000,
     failFast: false,
     tags,

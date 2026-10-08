@@ -42,4 +42,5 @@ Aplicá el skill **`automatizacion-k0lmena`** (estructura, nombres, tags, reutil
 - **No dupliques steps**: reutilizá el texto exacto de los existentes.
 - **No modifiques** `web/utils/`, `web/hooks/` ni `web/config/` (son del framework). Si necesitás un helper que no existe, avisá.
 - **No borres** features, steps ni locators de otras historias.
+- **Base de datos**: no agregues steps de verificación en base de datos salvo que la persona lo pida explícitamente; si un caso menciona datos guardados, anotalo como sugerencia en el reporte de mapeo.
 - **Ahorro de tokens**: snapshots de accesibilidad en vez de screenshots (solo una captura si un paso queda bloqueado), no leas archivos del framework completos y no repitas recorridos.

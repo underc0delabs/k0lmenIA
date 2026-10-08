@@ -1,6 +1,6 @@
 ---
 name: automatizacion-k0lmena
-description: Convenciones para generar pruebas automatizadas en k0lmena (herramientas/k0lmena) — dónde va cada .feature, steps y locators de web, api y mobile, cómo nombrarlos y taggearlos, cómo reutilizar steps sin duplicar, qué helpers usar y cómo validar con npm; y los scripts de performance (k6 y Artillery). Úsalo al mapear casos de prueba a automatización (web-mapper, api-mapper, mobile-mapper, performance-mapper).
+description: Convenciones para generar pruebas automatizadas en k0lmena (herramientas/k0lmena) — dónde va cada .feature, steps y locators de web, api y mobile, cómo nombrarlos y taggearlos, cómo reutilizar steps sin duplicar, qué helpers usar y cómo validar con npm; los steps de verificación en base de datos; y los scripts de performance (k6 y Artillery). Úsalo al mapear casos de prueba a automatización (web-mapper, api-mapper, mobile-mapper, performance-mapper, verificador-datos).
 ---
 
 # Automatización con k0lmena
@@ -139,6 +139,37 @@ When('el usuario ingresa {string} en el campo usuario', async (usuario: string) 
 ```
 
 Dónde corre (dispositivo, emulador o BrowserStack) se define en el `.env` de la raíz (`MOBILE_TARGET`); el código de los steps es el mismo.
+
+## Base de datos — verificaciones en los tests
+
+`tools/bd/bd.steps.ts` está cargado en las suites web, API y mobile. Son steps **de solo lectura** que verifican lo que una prueba dejó guardado. Conexiones en el `.env` (`DB_CONEXIONES` + `DB_<NOMBRE>_*`); sin nombre se usa la primera. **Solo se agregan cuando la persona lo pide explícitamente** (*"sumá la verificación en la base"*, *"validá que quede guardado en la tabla X"*). Aunque un caso diga *"el dato se guarda en la base"*, no los agregues por tu cuenta: dejalo anotado como sugerencia en el reporte de mapeo (*"se puede sumar verificación en BD si se pide"*). Cuando se piden, mirá antes las tablas y columnas con `npm run bd -- esquema --tabla <tabla>`: no adivines nombres.
+
+```gherkin
+Then existe en la base de datos un registro en "usuarios" donde "email" es "ana@test.com"
+Then no existe en la base de datos un registro en "usuarios" donde "email" es "ana@test.com"
+Then la base de datos tiene 1 registro en "pedidos" donde:
+  | campo      | valor        |
+  | usuario_id | {idUsuario}  |
+  | estado     | PAGADO       |
+Then el registro de "usuarios" donde "email" es "ana@test.com" tiene:
+  | campo  | valor      |
+  | estado | ACTIVO     |
+  | baja   | (nulo)     |
+When consulto en la base de datos:
+  """
+  SELECT id, total FROM pedidos WHERE estado = 'PAGADO'
+  """
+Then la consulta devuelve 1 fila                 # también: "la consulta devuelve al menos 2 filas"
+Then el campo "total" de la consulta es "1500.5"
+When guardo el campo "id" de la consulta como "idPedido"
+```
+
+- Con otra conexión: `existe en la base de datos "pagos" un registro en …`, `la base de datos "pagos" tiene …`, `en la base de datos "pagos" el registro de … tiene:`, `consulto en la base de datos "pagos":`.
+- `{variable}` toma lo guardado en el escenario (por ejemplo, con `guardo el campo "id" de la respuesta como "idUsuario"` de la API) o una variable del `.env`. `(nulo)` verifica `NULL`.
+- Comparación tolerante: números (`1500.5` = `1500.50`), booleanos (`true` = `1`) y fechas (`2026-10-01` coincide con `2026-10-01 10:00:00`).
+- Si el dato se guarda de forma asíncrona, los steps reintentan hasta `DB_ESPERA_MS` (5000 ms por defecto).
+- MongoDB: la tabla es la colección y la consulta libre es un JSON: `{"coleccion": "usuarios", "filtro": {"estado": "ACTIVO"}}`.
+- Cada verificación adjunta al reporte la consulta y las filas encontradas (con los datos sensibles enmascarados).
 
 ## Performance — k6 y Artillery
 

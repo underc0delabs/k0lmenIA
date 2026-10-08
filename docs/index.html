@@ -54,6 +54,7 @@
   <a href="#k0lmena">Automatización con k0lmena</a>
   <a href="#performance">Performance</a>
   <a href="#gestion">Xray, QMetry y AIO Tests</a>
+  <a href="#base-de-datos">Verificación en base de datos</a>
   <a href="#conectores">Conectores MCP</a>
   <div class="grupo">Referencia</div>
   <a href="#convenciones">Convenciones</a>
@@ -70,7 +71,7 @@
     <div class="k">Documentación del proyecto</div>
     <h1><span>k0lmenIA</span></h1>
     <div class="l">Agentes de QA para Claude Code: diseño de pruebas, automatización con k0lmena e integración con Xray, QMetry y AIO Tests — todo en español.</div>
-    <div class="chips"><span>17 agentes</span><span>Web · API · Mobile · Performance</span><span>Playwright · Cucumber · Appium · k6 · Artillery</span><span>Xray · QMetry · AIO Tests</span><span>Jira · Confluence · Figma</span><span>Suites sin tokens</span></div>
+    <div class="chips"><span>18 agentes</span><span>Web · API · Mobile · Performance</span><span>Playwright · Cucumber · Appium · k6 · Artillery</span><span>Xray · QMetry · AIO Tests</span><span>Jira · Confluence · Figma</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Suites sin tokens</span></div>
   </div>
   <div class="p"><span>QARMY · Underc0de</span><span>github.com/underc0delabs/k0lmenIA</span><span>Licencia MIT</span></div>
 </section>
@@ -80,8 +81,8 @@
     <li><span>1</span>Qué es k0lmenIA</li><li><span>2</span>Arquitectura</li><li><span>3</span>Cómo se usa</li><li><span>4</span>Agentes</li>
     <li><span>5</span>Requisitos</li><li><span>6</span>Instalación</li><li><span>7</span>Configuración: el archivo .env</li>
     <li><span>8</span>Guía por tarea: diseño y ejecución</li><li><span>9</span>Automatización con k0lmena</li><li><span>10</span>Pruebas de performance</li>
-    <li><span>11</span>Gestión de pruebas: Xray, QMetry y AIO Tests</li><li><span>12</span>Conectores MCP</li><li><span>13</span>Convenciones</li>
-    <li><span>14</span>Estructura del repositorio</li><li><span>15</span>Problemas frecuentes</li><li><span>16</span>Extender el proyecto</li>
+    <li><span>11</span>Gestión de pruebas: Xray, QMetry y AIO Tests</li><li><span>12</span>Verificación en base de datos</li><li><span>13</span>Conectores MCP</li>
+    <li><span>14</span>Convenciones</li><li><span>15</span>Estructura del repositorio</li><li><span>16</span>Problemas frecuentes</li><li><span>17</span>Extender el proyecto</li>
   </ol>
 </section>
 
@@ -111,9 +112,13 @@
     <span class="tec"><i style="background:#0052cc"></i>Jira · Confluence</span>
     <span class="tec"><i style="background:#a259ff"></i>Figma</span>
     <span class="tec"><i style="background:#00c7b1"></i>Xray · QMetry · AIO Tests</span>
+    <span class="tec"><i style="background:#4169e1"></i>PostgreSQL</span>
+    <span class="tec"><i style="background:#4479a1"></i>MySQL · MariaDB</span>
+    <span class="tec"><i style="background:#cc2927"></i>SQL Server</span>
+    <span class="tec"><i style="background:#47a248"></i>MongoDB</span>
   </div>
   <div class="metricas">
-    <div class="metrica"><div class="n">17</div><div class="t">agentes especializados</div></div>
+    <div class="metrica"><div class="n">18</div><div class="t">agentes especializados</div></div>
     <div class="metrica"><div class="n">4</div><div class="t">tipos de automatización</div></div>
     <div class="metrica"><div class="n">4</div><div class="t">herramientas de gestión</div></div>
     <div class="metrica"><div class="n">0</div><div class="t">tokens para correr las suites</div></div>
@@ -229,6 +234,7 @@
     <div class="tarjeta c-verde"><h4>api-mapper</h4><p>Lee Postman o Swagger/OpenAPI, verifica los endpoints y genera los <code>.feature</code>.</p><div class="salida"><code>k0lmena/api/</code></div></div>
     <div class="tarjeta c-verde"><h4>mobile-mapper</h4><p>Recorre la app con Appium y genera <code>.feature</code>, steps y locators.</p><div class="salida"><code>k0lmena/mobile/</code></div></div>
     <div class="tarjeta c-verde"><h4>performance-mapper</h4><p>Carga, estrés, soak y picos con k6 o Artillery; pregunta carga y umbrales.</p><div class="salida"><code>k0lmena/performance/</code></div></div>
+    <div class="tarjeta c-verde"><h4>verificador-datos</h4><p>Verifica datos en PostgreSQL, MySQL, SQL Server o MongoDB y suma verificaciones de BD a los tests.</p><div class="salida">Chat · steps en <code>.feature</code></div></div>
   </div>
 
   <div class="subtitulo-grupo"><h3>Gestión de pruebas</h3></div>
@@ -298,6 +304,7 @@ npm run bootstrap:k6                               <span class="c"># performance
     <tr><td>Auto-healing</td><td><code>K0LMENA_AUTO_HEALING</code></td><td>Recuperar locators rotos</td></tr>
     <tr><td>Mobile</td><td><code>MOBILE_TARGET</code> <code>MOBILE_PLATFORM</code> <code>MOBILE_DEVICE_NAME</code> <code>MOBILE_APP</code> <code>MOBILE_UDID</code> <code>BROWSERSTACK_*</code></td><td>Dónde corre la suite mobile</td></tr>
     <tr><td>Performance</td><td><code>PERF_VUS</code> <code>PERF_DURACION</code></td><td>Pisar la carga de los scripts k6</td></tr>
+    <tr><td>Bases de datos</td><td><code>DB_CONEXIONES</code> + <code>DB_&lt;NOMBRE&gt;_MOTOR</code> <code>_HOST</code> <code>_PUERTO</code> <code>_BASE</code> <code>_USUARIO</code> <code>_CLAVE</code> (o <code>_URL</code>) <code>_ESCRITURA</code> <code>_PRODUCCION</code></td><td>Verificación en base de datos</td></tr>
     <tr><td>Gestión</td><td><code>GESTION_HERRAMIENTA</code> <code>GESTION_PROYECTO</code> + credenciales de la herramienta</td><td>Xray, QMetry y AIO Tests</td></tr>
   </table></div>
   <div class="aviso warn"><span class="ico">!</span><p>Usá credenciales de un entorno de prueba, nunca de producción. Los agentes leen los secretos del <code>.env</code>: nunca pegues un token en el chat ni lo escribas en un archivo versionado.</p></div>
@@ -467,7 +474,49 @@ python scripts/gestion/gestion.py publicar-resultados --ciclo PROJ-60 --resultad
   <p>Las carpetas van sin barra inicial (en Git Bash, <code>/HU-001</code> se convierte en una ruta de Windows). Referencia completa en <code>scripts/gestion/README.md</code>.</p>
 </section>
 
-<!-- ======================================================= 12 CONECTORES -->
+<!-- ======================================================= 12 BASE DE DATOS -->
+<section class="seccion" id="base-de-datos">
+  <div class="kicker">Guías</div>
+  <h2>Verificación en base de datos</h2>
+  <p class="bajada">El <b>verificador-datos</b> revisa lo que las pruebas no ven: qué quedó guardado, en qué estado y con qué valores. Soporta <b>PostgreSQL, MySQL / MariaDB, SQL Server y MongoDB</b>, con varias conexiones con nombre.</p>
+  <div class="tarjetas">
+    <div class="tarjeta c-azul"><div class="ico">?</div><h4>A pedido</h4><p>"Verificá si existe el usuario ana@test.com y en qué estado quedó." Mira el esquema, arma la consulta con parámetros y te responde.</p></div>
+    <div class="tarjeta c-verde"><div class="ico">✓</div><h4>Dentro de los tests, si lo pedís</h4><p>Suma steps de base de datos a los <code>.feature</code> de web, API o mobile solo cuando se lo pedís; después corren con <code>npm test</code>, sin tokens.</p></div>
+    <div class="tarjeta c-naranja"><div class="ico">!</div><h4>Seguro por defecto</h4><p>Solo lectura, en transacciones que se descartan; datos sensibles enmascarados. Escribir requiere habilitarlo y confirmar cada operación.</p></div>
+  </div>
+  <h3>Configuración</h3>
+  <div class="codigo"><pre>DB_CONEXIONES=principal,pagos              <span class="c"># la primera es la de por defecto</span>
+DB_PRINCIPAL_MOTOR=postgres                <span class="c"># postgres | mysql | mariadb | sqlserver | mongodb</span>
+DB_PRINCIPAL_HOST=localhost
+DB_PRINCIPAL_PUERTO=5432
+DB_PRINCIPAL_BASE=tienda
+DB_PRINCIPAL_USUARIO=qa_lectura
+DB_PRINCIPAL_CLAVE=...
+DB_PRINCIPAL_ESCRITURA=no                  <span class="c"># si = permite escribir con confirmación</span>
+DB_PRINCIPAL_PRODUCCION=no                 <span class="c"># si = nunca escribe</span></pre></div>
+  <h3>Steps para los tests</h3>
+  <div class="aviso info"><span class="ico">i</span><p><b>Solo cuando lo pedís.</b> Los mappers (web, API y mobile) no agregan verificaciones de base de datos por su cuenta: si un caso menciona datos guardados, lo dejan como sugerencia en el reporte de mapeo. El verificador-datos, ante una consulta puntual, responde sin tocar los <code>.feature</code>.</p></div>
+  <div class="codigo"><pre>When envío un POST a "/usuarios" con el body: ...
+And guardo el campo "id" de la respuesta como "idUsuario"
+Then existe en la base de datos un registro en "usuarios" donde "id" es "{idUsuario}"
+And el registro de "usuarios" donde "id" es "{idUsuario}" tiene:
+  | campo  | valor  |
+  | estado | ACTIVO |
+  | baja   | (nulo) |
+And la base de datos "pagos" tiene 1 registro en "movimientos" donde:
+  | campo      | valor       |
+  | usuario_id | {idUsuario} |</pre></div>
+  <p>También: <code>no existe en la base de datos …</code>, <code>consulto en la base de datos:</code> (SQL, o JSON en MongoDB), <code>la consulta devuelve N filas</code>, <code>el campo "x" de la consulta es "y"</code> y <code>guardo el campo "x" de la consulta como "var"</code>. Si el dato se guarda de forma asíncrona, los steps reintentan hasta <code>DB_ESPERA_MS</code>. Cada verificación deja en el reporte la consulta y las filas encontradas.</p>
+  <h3>Sin agente</h3>
+  <div class="codigo"><pre>cd herramientas/k0lmena
+npm run bd -- conexiones                                   <span class="c"># lista y prueba las conexiones</span>
+npm run bd -- esquema --tabla usuarios                     <span class="c"># columnas de una tabla</span>
+npm run bd -- existe --tabla usuarios --donde email=ana@test.com
+npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" --param ana@test.com</pre></div>
+  <div class="aviso warn"><span class="ico">!</span><p>Para preparar o limpiar datos, la conexión necesita <code>DB_&lt;NOMBRE&gt;_ESCRITURA=si</code> y el agente muestra la sentencia y pide confirmación antes de cada operación. Con <code>DB_&lt;NOMBRE&gt;_PRODUCCION=si</code> nunca escribe. Recomendado: un usuario de base de datos con permisos de solo lectura.</p></div>
+</section>
+
+<!-- ======================================================= 13 CONECTORES -->
 <section class="seccion" id="conectores">
   <div class="kicker">Guías</div>
   <h2>Conectores MCP</h2>
@@ -543,7 +592,7 @@ python scripts/gestion/gestion.py publicar-resultados --ciclo PROJ-60 --resultad
 ├── .mcp.json.example       <span class="c">Conectores opcionales</span>
 ├── docs/                   <span class="c">Este sitio, el PDF y los diagramas</span>
 ├── .claude/
-│   ├── agents/             <span class="c">Los 17 agentes</span>
+│   ├── agents/             <span class="c">Los 18 agentes</span>
 │   └── skills/             <span class="c">Diseño, ejecución E2E y API, k0lmena</span>
 ├── input/                  <span class="c">historias/ documentacion/ api/ bugs/</span>
 ├── output/                 <span class="c">Lo que generan los agentes</span>
@@ -574,6 +623,7 @@ python scripts/gestion/gestion.py publicar-resultados --ciclo PROJ-60 --resultad
   <details class="faq"><summary><code>npm run perf</code> no corre un perfil con carga desde el agente</summary><div>Es a propósito: fuera de una terminal interactiva hace falta <code>--confirmar</code>, que el agente agrega solo después de tu confirmación.</div></details>
   <details class="faq"><summary>Una carpeta de Xray/QMetry/AIO aparece como <code>C:/Program Files/Git/…</code></summary><div>En Git Bash escribí las carpetas sin <code>/</code> inicial: <code>"HU-001 Registro"</code>.</div></details>
   <details class="faq"><summary>Un conector MCP no conecta</summary><div>Las variables tienen que estar en el entorno donde lanzás <code>claude</code> (no en el <code>.env</code>). Atlassian y Figma se autorizan desde <code>/mcp</code>.</div></details>
+  <details class="faq"><summary>¿Los tests verifican la base de datos siempre?</summary><div>No. Las verificaciones de base de datos se agregan a un <code>.feature</code> solo cuando las pedís, y sin <code>DB_CONEXIONES</code> en el <code>.env</code> la suite corre igual que siempre.</div></details>
   <details class="faq"><summary>Falta una librería de Python</summary><div><code>pip install -r requirements.txt</code></div></details>
 </section>
 

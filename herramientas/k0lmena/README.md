@@ -54,7 +54,7 @@ herramientas/k0lmena/
 
 ## Instalación
 
-Requiere **Node.js 20+** (22+ si vas a usar el mobile-mapper).
+Requiere **Node.js 20+** (22+ si vas a usar el mobile-mapper). Incluye los drivers de PostgreSQL, MySQL / MariaDB, SQL Server y MongoDB para las verificaciones en base de datos.
 
 ```bash
 cd herramientas/k0lmena
@@ -129,6 +129,19 @@ npm run perf -- <script> load --vus 20 --duracion 2m   # k6: pisa la carga del s
 - **Scripts**: k6 en `performance/k6/http/<script>.ts` (base en `performance/k6/lib/k0lmena.ts`); Artillery en `performance/artillery/<script>.yaml` + processor `.ts`. Plantillas en el skill `automatizacion-k0lmena`.
 - **Umbrales**: en el script (`umbrales` en k6, `ensure` en Artillery). Si alguno no se cumple, la corrida termina con código 1.
 - **Salida** en `reports/performance/<k6|artillery>/`: reporte HTML (dashboard), resumen JSON, resultado crudo y log de la herramienta. La consola muestra solo el resumen.
+
+## Base de datos
+
+Verificaciones de solo lectura en **PostgreSQL, MySQL / MariaDB, SQL Server y MongoDB**, con las conexiones del `.env` de la raíz (`DB_CONEXIONES` + `DB_<NOMBRE>_*`, ver `.env.example`).
+
+```bash
+npm run bd -- conexiones                                  # lista y prueba las conexiones
+npm run bd -- esquema --tabla usuarios                    # columnas de una tabla (o campos de una colección)
+npm run bd -- existe --tabla usuarios --donde email=ana@test.com
+npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" --param ana@test.com
+```
+
+Los agentes agregan estas verificaciones a un `.feature` **solo cuando se las piden**; sin `DB_CONEXIONES` en el `.env`, la suite corre igual que siempre. En los `.feature` (web, API o mobile) están disponibles los steps de `tools/bd/bd.steps.ts`: `existe en la base de datos un registro en "usuarios" donde "email" es "…"`, `el registro de "usuarios" donde "id" es "{idUsuario}" tiene:` (tabla campo/valor), `consulto en la base de datos:` (SQL o, en MongoDB, JSON) y más; la lista completa está en el skill `automatizacion-k0lmena`. Las lecturas corren en transacciones de solo lectura que se descartan y los datos sensibles se enmascaran en el reporte. Escribir solo es posible desde el CLI (`escribir … --confirmar`), con `DB_<NOMBRE>_ESCRITURA=si` y nunca en conexiones marcadas `DB_<NOMBRE>_PRODUCCION=si`.
 
 ## Reportes
 

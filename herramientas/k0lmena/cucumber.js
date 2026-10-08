@@ -28,6 +28,9 @@ const parallel = resolveParallel();
 const rawTags = (process.env.TAGS ?? '').trim();
 const tags = rawTags ? `(${rawTags}) and not @bloqueado` : 'not @bloqueado';
 
+// Steps compartidos por todas las suites: variables de escenario y verificaciones de base de datos.
+const pasosComunes = ['tools/variables.ts', 'tools/bd/bd.steps.ts'];
+
 const common = {
   requireModule: ['ts-node/register'],
   timeout: 60000,
@@ -42,7 +45,7 @@ module.exports = {
     ...common,
     retry: 1,
     paths: ['web/features/*.feature'],
-    require: ['web/steps/*.ts'],
+    require: ['web/steps/*.ts', ...pasosComunes],
     parallel,
     format: [
       ['html', 'reports/web/front-report.html'],
@@ -55,7 +58,7 @@ module.exports = {
   api: {
     ...common,
     paths: ['api/features/*.feature'],
-    require: ['api/steps/*.ts'],
+    require: ['api/steps/*.ts', ...pasosComunes],
     parallel,
     format: [
       ['html', 'reports/api/api-report.html'],
@@ -69,7 +72,7 @@ module.exports = {
   debug: {
     ...common,
     paths: ['web/features/*.feature'],
-    require: ['tools/debug/debugHook.ts', 'web/steps/*.ts'],
+    require: ['tools/debug/debugHook.ts', 'web/steps/*.ts', ...pasosComunes],
     parallel: 0,
     format: [
       ['html', 'reports/web/front-report-debug.html'],

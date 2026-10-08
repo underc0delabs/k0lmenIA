@@ -40,6 +40,7 @@ input/ → [ agente ] → output/
 | `api-mapper` | Lee una colección de Postman o un Swagger/OpenAPI, verifica los endpoints y genera los .feature de k0lmena con los steps genéricos | `herramientas/k0lmena/api/` + `output/mapeos/` |
 | `gestor-pruebas` | Crea carpetas y casos en Xray (Cloud o Server/DC), QTM4J o AIO Tests, los vincula a historias, crea ciclos y les agrega casos (vía `scripts/gestion/`) | La herramienta de gestión + `output/gestion/` |
 | `publicador-resultados` | Sube los resultados de una corrida de k0lmena (`npm test`) al ciclo: estado, comentario y evidencias (captura; video si falló) | La herramienta de gestión |
+| `verificador-datos` | Se conecta a las bases de datos del `.env` (PostgreSQL, MySQL/MariaDB, SQL Server, MongoDB) para verificar datos de las pruebas o lo que se le pida; suma verificaciones de BD a los `.feature` de k0lmena solo si se lo piden. Solo lectura; escribe solo con confirmación y nunca en producción | Respuesta en el chat (+ `output/verificaciones-datos/` si se pide) |
 | `mobile-mapper` | Recorre la app mobile con Appium MCP siguiendo los casos y genera la automatización de k0lmena (.feature, steps y locators) | `herramientas/k0lmena/mobile/` + `output/mapeos/` |
 | `performance-mapper` | Pruebas de performance (smoke, load, stress, soak, spike) con k6 para APIs o Artillery + Playwright para flujos web: pregunta carga y umbrales, genera el script, lo valida y lo corre con `npm run perf` (reporte HTML) | `herramientas/k0lmena/performance/` + `reports/performance/` + `output/mapeos/` |
 

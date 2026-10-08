@@ -11,7 +11,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 
 [![Licencia MIT](https://img.shields.io/badge/licencia-MIT-22c55e?style=flat-square)](#licencia)
 [![Idioma](https://img.shields.io/badge/idioma-español-0ea5e9?style=flat-square)](#)
-[![Agentes](https://img.shields.io/badge/agentes-17-8b5cf6?style=flat-square)](#-agentes)
+[![Agentes](https://img.shields.io/badge/agentes-18-8b5cf6?style=flat-square)](#-agentes)
 [![Suites sin tokens](https://img.shields.io/badge/suites-sin%20tokens-10b981?style=flat-square)](#️-automatización-con-k0lmena)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-D97757?style=flat-square&logo=anthropic&logoColor=white)](https://docs.claude.com/en/docs/claude-code/overview)
 
@@ -32,6 +32,14 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 ![Node.js](https://img.shields.io/badge/Node.js-20+-5FA04E?style=flat-square&logo=nodedotjs&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3-3776AB?style=flat-square&logo=python&logoColor=white)
 ![MCP](https://img.shields.io/badge/MCP-conectores-111827?style=flat-square)
+
+**Bases de datos**
+
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white)
+![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=flat-square&logo=mariadb&logoColor=white)
+![SQL Server](https://img.shields.io/badge/SQL%20Server-CC2927?style=flat-square)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white)
 
 **Integraciones**
 
@@ -61,6 +69,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 | 🌐 **Web, API, mobile y performance** | Playwright + Cucumber, axios + Cucumber, WebdriverIO + Appium (dispositivo, emulador o BrowserStack), k6 y Artillery. |
 | 📸 **Evidencia completa** | Captura (y GIF) de cada test que pasa; video, logs, trace y error de cada test que falla, en reportes HTML. |
 | 🗂️ **Gestión de pruebas** | Carpetas, casos, ciclos y resultados con evidencias en **Xray** (Cloud y Server/DC), **QMetry (QTM4J)** y **AIO Tests**. |
+| 🗄️ **Verificación en base de datos** | Revisa lo que dejaron guardado tus pruebas en **PostgreSQL, MySQL/MariaDB, SQL Server o MongoDB**, a pedido o, si lo pedís, como steps dentro de los tests. Solo lectura por defecto. |
 | 🔌 **Conectado** | Lee historias de **Jira**, documentación de **Confluence** y diseños de **Figma** por MCP. |
 | 🛡️ **No inventa** | Si falta un paso, un dato o un umbral, el agente lo marca y te lo pregunta. |
 
@@ -84,6 +93,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 - [Automatización con k0lmena](#️-automatización-con-k0lmena)
 - [Pruebas de performance](#-pruebas-de-performance)
 - [Gestión de pruebas: Xray, QMetry y AIO Tests](#️-gestión-de-pruebas-xray-qmetry-y-aio-tests)
+- [Verificación en base de datos](#️-verificación-en-base-de-datos)
 - [Conectores MCP](#-conectores-mcp)
 - [Referencia](#-referencia): flujo completo, convenciones, estructura, problemas frecuentes y cómo extenderlo
 
@@ -108,11 +118,12 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 <tr><td><code>ejecutor-api</code></td><td>Corre una colección de Postman con Newman</td></tr>
 <tr><td><code>generador-reporte-html</code></td><td>Dashboard HTML de una ejecución</td></tr>
 <tr><td><code>generador-reporte-cierre</code></td><td>Informe de cierre con recomendación go/no-go</td></tr>
-<tr><td rowspan="4"><b>⚙️ Automatización<br>k0lmena</b><br><sub>después sin tokens</sub></td>
+<tr><td rowspan="5"><b>⚙️ Automatización<br>k0lmena</b><br><sub>después sin tokens</sub></td>
   <td><code>web-mapper</code></td><td>Recorre la web siguiendo tus casos y genera <code>.feature</code>, steps y locators</td></tr>
 <tr><td><code>api-mapper</code></td><td>Lee Postman o Swagger/OpenAPI, verifica los endpoints y genera los <code>.feature</code></td></tr>
 <tr><td><code>mobile-mapper</code></td><td>Recorre la app con Appium y genera <code>.feature</code>, steps y locators</td></tr>
 <tr><td><code>performance-mapper</code></td><td>Carga, estrés, soak y picos con k6 o Artillery; pregunta carga y umbrales</td></tr>
+<tr><td><code>verificador-datos</code></td><td>Verifica datos en PostgreSQL, MySQL/MariaDB, SQL Server o MongoDB y suma verificaciones de BD a los tests</td></tr>
 <tr><td rowspan="2"><b>🗂️ Gestión</b></td>
   <td><code>gestor-pruebas</code></td><td>Carpetas, casos, vínculos con la historia y ciclos en Xray, QMetry o AIO Tests</td></tr>
 <tr><td><code>publicador-resultados</code></td><td>Sube los resultados de <code>npm test</code> al ciclo con sus evidencias</td></tr>
@@ -180,6 +191,7 @@ Hay **un solo `.env`, en la raíz**. Lo usan los agentes, k0lmena y los scripts 
 | Ejecución y evidencias | `TAGS` `PARALLEL` `EVIDENCE` (`captura` · `ambos` · `off`) `VIDEO` `TRACE` `K0LMENA_AUTO_HEALING` |
 | Mobile | `MOBILE_TARGET` (`device` · `emulator` · `browserstack`) `MOBILE_PLATFORM` `MOBILE_DEVICE_NAME` `MOBILE_APP` `MOBILE_UDID` `BROWSERSTACK_*` |
 | Performance | `PERF_VUS` `PERF_DURACION` (opcionales) |
+| Bases de datos | `DB_CONEXIONES` + por conexión `DB_<NOMBRE>_MOTOR` `_HOST` `_PUERTO` `_BASE` `_USUARIO` `_CLAVE` (o `_URL`) `_ESCRITURA` `_PRODUCCION` |
 | Gestión | `GESTION_HERRAMIENTA` `GESTION_PROYECTO` + credenciales de Xray, QTM4J o AIO |
 
 > [!WARNING]
@@ -204,6 +216,8 @@ Hay **un solo `.env`, en la raíz**. Lo usan los agentes, k0lmena y los scripts 
 | *"Ejecutá el escenario de registro válido contra https://tu-app.com"* | Reporte HTML de la corrida con evidencia |
 | *"Automatizá en k0lmena los casos de HU-001 contra https://tu-app.com"* | `.feature` + steps + locators |
 | *"Armá una prueba de carga del login para 20 usuarios"* | Script k6/Artillery + reporte HTML |
+| *"Verificá en la base si se creó el usuario ana@test.com y en qué estado quedó"* | Consulta y resultado (solo lectura) |
+| *"Sumá al test de registro la verificación en la base de datos"* | Steps de BD en el `.feature` |
 | *"Subí los casos de HU-001 a Xray, vinculados a PROJ-12, y creá el ciclo Sprint 5"* | Casos y ciclo en Xray |
 | *"Subí los resultados de la última corrida al ciclo PROJ-60"* | Estados y evidencias en el ciclo |
 | *"Armá el informe de cierre de HU-001"* | Resultados, bugs y go/no-go |
@@ -274,6 +288,32 @@ La trazabilidad (`output/gestion/<HU>-<herramienta>.json`) evita duplicados. Tam
 
 ---
 
+## 🗄️ Verificación en base de datos
+
+El **verificador-datos** se conecta a las bases configuradas en el `.env` (**PostgreSQL, MySQL / MariaDB, SQL Server y MongoDB**, con varias conexiones con nombre) y verifica lo que necesites: qué guardó un test web o de API, si existe un dato, en qué estado quedó un registro.
+
+- *"Verificá en la base si existe el usuario ana@test.com y en qué estado quedó"*
+- *"Revisá qué guardó en pedidos el test HU-003"*
+- *"Sumá al escenario de registro la verificación en la base de datos"* → steps que después corren con `npm test`, sin tokens:
+
+```gherkin
+When envío un POST a "/usuarios" con el body: ...
+And guardo el campo "id" de la respuesta como "idUsuario"
+Then el registro de "usuarios" donde "id" es "{idUsuario}" tiene:
+  | campo  | valor  |
+  | estado | ACTIVO |
+```
+
+> [!NOTE]
+> **Las verificaciones de base de datos se agregan a los tests solo cuando lo pedís.** Los mappers (web, API y mobile) no las suman por su cuenta: si un caso menciona datos guardados, lo dejan como sugerencia en el reporte de mapeo. Y el verificador-datos, ante una consulta puntual, responde sin tocar los `.feature`.
+
+> [!IMPORTANT]
+> **Solo lectura por defecto**: las consultas corren en transacciones de solo lectura que se descartan, y las columnas sensibles (contraseñas, tokens, tarjetas) se enmascaran. Para preparar o limpiar datos, la conexión necesita `DB_<NOMBRE>_ESCRITURA=si` y el agente pide confirmación antes de cada operación; con `DB_<NOMBRE>_PRODUCCION=si` nunca escribe. Recomendado: un usuario de base de datos con permisos de solo lectura.
+
+También se usa sin agente: `npm run bd -- conexiones | esquema | existe | consultar` en `herramientas/k0lmena/`.
+
+---
+
 ## 🔌 Conectores MCP
 
 | Conector | Para qué | Autenticación |
@@ -333,7 +373,7 @@ k0lmenIA/
 ├── .mcp.json.example       Conectores opcionales
 ├── docs/                   Documentación web, PDF y diagramas
 ├── .claude/
-│   ├── agents/             Los 17 agentes
+│   ├── agents/             Los 18 agentes
 │   └── skills/             Diseño, ejecución E2E y API, k0lmena
 ├── input/                  historias/ documentacion/ api/ bugs/
 ├── output/                 Lo que generan los agentes
@@ -358,6 +398,7 @@ k0lmenIA/
 | "No encuentro k6" | `npm run bootstrap:k6` en `herramientas/k0lmena/`. |
 | `npm run perf` no corre un perfil con carga desde el agente | Es a propósito: necesita `--confirmar`, que el agente agrega tras tu confirmación. |
 | Una carpeta de Xray/QMetry/AIO sale como `C:/Program Files/Git/…` | En Git Bash escribí las carpetas sin `/` inicial. |
+| ¿Los tests verifican la base de datos siempre? | No: las verificaciones de BD se agregan a un `.feature` solo cuando las pedís; sin `DB_CONEXIONES`, la suite corre igual. |
 | Un conector MCP no conecta | Las variables van en el entorno donde lanzás `claude`; Atlassian y Figma se autorizan desde `/mcp`. |
 </details>
 

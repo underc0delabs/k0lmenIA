@@ -13,6 +13,7 @@
     "report:api": "node reports/api/report-generator.js",
     "report:mobile": "ts-node reports/mobile/generate-report.ts",
     "perf": "node run-perf.js",
+    "bd": "node -r ./env.js tools/bd/cli.js",
     "bootstrap:k6:win": "powershell -ExecutionPolicy Bypass -File performance/k6/scripts/bootstrap-k6.ps1",
     "bootstrap:k6:nix": "bash performance/k6/scripts/bootstrap-k6.sh",
     "bootstrap:k6": "node -e \"process.platform==='win32'?process.exit(0):process.exit(1)\" && npm run bootstrap:k6:win || npm run bootstrap:k6:nix",
@@ -57,6 +58,10 @@
     "axios": "^1.18.1",
     "cheerio": "^1.2.0",
     "gifenc": "^1.0.3",
+    "mongodb": "^7.7.0",
+    "mssql": "^12.7.4",
+    "mysql2": "^3.24.5",
+    "pg": "^8.23.1",
     "pngjs": "^7.0.0"
   },
   "overrides": {
