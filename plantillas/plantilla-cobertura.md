@@ -38,6 +38,21 @@
 - Recuperación de contraseña (no es parte de HU-001).
 - Inicio de sesión con redes sociales (no mencionado).
 
+## Falta información
+
+Datos que no aparecen en ninguna fuente (historia, comentarios, subtareas, épica, Confluence, Figma). Los casos que dependen de ellos están resaltados en la planilla y llevan la etiqueta `@falta-info`. Vienen de la ficha `output/contexto/contexto-HU-001.md`.
+
+```
++-------+----------------------------------------+------------------------------------------+--------------+-----------------------------------+----------+
+| ID    | Qué falta                              | Dónde se buscó                           | Afecta a     | Pregunta para el PO               | Estado   |
++=======+========================================+==========================================+==============+===================================+==========+
+| FI-01 | Texto del mensaje al quedar la cuenta  | Historia, comentarios, Figma, Confluence | CA3 · CP-003 | ¿Cuál es el mensaje exacto al     | Abierto  |
+|       | bloqueada                              |                                          |              | bloquearse?                       |          |
++-------+----------------------------------------+------------------------------------------+--------------+-----------------------------------+----------+
+| FI-02 | Duración del bloqueo (15 o 30 minutos) | Historia, Confluence (se contradicen)    | CA3 · CP-003 | ¿El bloqueo dura 15 o 30 minutos? | Abierto  |
++-------+----------------------------------------+------------------------------------------+--------------+-----------------------------------+----------+
+```
+
 ## Ambigüedades detectadas
 
 Puntos de la historia que no están claros o están incompletos. **No se inventaron valores:** donde hizo falta suponer algo, se aclaró el supuesto en `Comentarios` de la planilla y se listó acá.

@@ -15,9 +15,17 @@ JSON de entrada:
   "casos": [
     {"id": "CP-001", "titulo": "Registro con datos válidos",
      "prioridad": "Crítica", "estado": "Aprobado",
-     "duracion_s": 4.2, "motivo": "", "evidencia": "evidencia/cp-001.png"}
+     "duracion_s": 4.2, "motivo": "", "evidencia": "evidencia/cp-001.png",
+     "falta_info": ["FI-01"]}
+  ],
+  "falta_informacion": [
+    {"id": "FI-01", "que_falta": "Texto del mensaje al bloquearse la cuenta", "pregunta": "...", "estado": "Abierto"}
   ]
 }
+
+"falta_info" (opcional, por caso): el caso depende de información que falta (skill
+investigacion-contexto). Se marca en el detalle del caso y se avisa debajo del resumen;
+con "falta_informacion" se agrega la sección "Falta información" al final.
 
 Estados:  Aprobado | Fallido | Bloqueado
 Prioridad: Crítica | Alta | Media | Baja
@@ -94,6 +102,15 @@ tbody td{padding:13px 14px;border-top:1px solid var(--border);color:var(--body);
 .tablecard{padding:18px 8px 8px}
 .pill{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap}
 .prio{font-size:12px;color:var(--body)}
+.fi{display:inline-block;margin-top:6px;font-size:11.5px;font-weight:600;color:#E3B341;
+  background:rgba(210,153,34,.14);border:1px solid rgba(210,153,34,.35);border-radius:6px;padding:1px 7px}
+.fi-aviso{margin-top:16px;padding:12px 16px;border-radius:12px;border:1px solid rgba(210,153,34,.35);
+  background:rgba(210,153,34,.10);color:#E3B341;font-size:14px}
+.fi-list{list-style:none;padding:6px 22px 18px}
+.fi-list li{padding:10px 0;border-bottom:1px solid var(--border);color:var(--body);font-size:14px}
+.fi-list li:last-child{border-bottom:0}
+.fi-list b{color:#E3B341;margin-right:8px}
+.fi-list .q{display:block;color:var(--muted);font-size:13px;margin-top:2px}
 .prio b{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:middle}
 .ev{color:var(--body);text-decoration:none;border-bottom:1px solid var(--border)}
 td .id{font-weight:600;color:var(--ink)}
@@ -140,6 +157,37 @@ def _legend(counts):
     return f'<div class="legend">{"".join(parts)}</div>'
 
 
+def _fi_ids(c):
+    v = c.get("falta_info") or []
+    if isinstance(v, str):
+        v = v.replace(";", ",").split(",")
+    return [str(x).strip() for x in v if str(x).strip()]
+
+
+def _fi_aviso(casos):
+    afectados = [c for c in casos if _fi_ids(c)]
+    if not afectados:
+        return ""
+    ids = sorted({i for c in afectados for i in _fi_ids(c)})
+    n = len(afectados)
+    return (f'<div class="fi-aviso"><b>Falta información:</b> {n} caso{"s" if n != 1 else ""} '
+            f'depende{"n" if n != 1 else ""} de datos que no están definidos ({_e(", ".join(ids))}). '
+            f'Su resultado puede cambiar cuando se resuelvan.</div>')
+
+
+def _fi_seccion(data):
+    items = data.get("falta_informacion") or []
+    if not items:
+        return ""
+    lis = "".join(
+        f'<li><b>{_e(f.get("id", ""))}</b>{_e(f.get("que_falta", ""))}'
+        f'{" · " + _e(f.get("estado", "Abierto")) if f.get("estado", "Abierto") else ""}'
+        f'{("<span class=q>Pregunta: " + _e(f["pregunta"]) + "</span>") if f.get("pregunta") else ""}</li>'
+        for f in items)
+    return (f'<div class="section"><div class="eyebrow section-title">Falta información</div>'
+            f'<div class="card"><ul class="fi-list">{lis}</ul></div></div>')
+
+
 def _kpis(counts, total):
     cards = [("Total", total, ""), ("Aprobados", counts.get("Aprobado", 0), "ok"),
              ("Fallidos", counts.get("Fallido", 0), "bad"), ("Bloqueados", counts.get("Bloqueado", 0), "blk")]
@@ -179,6 +227,8 @@ def _tabla(casos):
         ev_html = f'<a class="ev" href="{_e(ev)}" target="_blank" rel="noopener">ver</a>' if ev else '<span class="muted">—</span>'
         motivo = _e(c.get("motivo") or "")
         det = motivo if motivo else '<span class="muted">—</span>'
+        if _fi_ids(c):
+            det += f'<br><span class="fi">Falta información: {_e(", ".join(_fi_ids(c)))}</span>'
         pill = (f'<span class="pill" style="background:{COLOR_SOFT.get(est, "rgba(139,148,158,.15)")};'
                 f'color:{COLOR_INK.get(est, "#B1BAC4")}">{_e(est) or "—"}</span>')
         prio_html = f'<span class="prio"><b style="background:{PRIO_DOT.get(prio, "#8B949E")}"></b>{_e(prio) or "—"}</span>'
@@ -219,6 +269,7 @@ def build_html(data):
     <div class="gauge">{_donut(counts, total)}{_legend(counts)}</div>
     {_kpis(counts, total)}
   </div>
+  {_fi_aviso(casos)}
 
   <div class="section">
     <div class="eyebrow section-title">Resultados por prioridad</div>
@@ -229,6 +280,7 @@ def build_html(data):
     <div class="eyebrow section-title">Detalle de casos</div>
     <div class="card tablecard">{_tabla(casos)}</div>
   </div>
+  {_fi_seccion(data)}
 
   <footer>Generado por k0lmenIA</footer>
 </div>"""

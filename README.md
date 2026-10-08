@@ -71,7 +71,8 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 | 🗂️ **Gestión de pruebas** | Carpetas, casos, ciclos y resultados con evidencias en **Xray** (Cloud y Server/DC), **QMetry (QTM4J)** y **AIO Tests**. |
 | 🗄️ **Verificación en base de datos** | Revisa lo que dejaron guardado tus pruebas en **PostgreSQL, MySQL/MariaDB, SQL Server o MongoDB**, a pedido o, si lo pedís, como steps dentro de los tests. Solo lectura por defecto. |
 | 🔌 **Conectado** | Lee historias de **Jira**, documentación de **Confluence** y diseños de **Figma** por MCP. |
-| 🛡️ **No inventa** | Si falta un paso, un dato o un umbral, el agente lo marca y te lo pregunta. |
+| 🔎 **Investiga antes de suponer** | Lee la historia de Jira con **todos sus comentarios, subtareas, épica e issues vinculados**, más Confluence y Figma, y arma una ficha de contexto. |
+| 🛡️ **No inventa** | Lo que no está en ninguna fuente queda marcado como **Falta información** (`FI-01`) en todos los reportes, con la pregunta para el PO. |
 
 <p align="center">
   <img src="docs/assets/img/arquitectura.png" alt="Arquitectura de k0lmenIA" width="100%">
@@ -90,6 +91,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 - [Instalación](#-instalación)
 - [Configuración: el archivo `.env`](#️-configuración-el-archivo-env)
 - [Cómo se usa](#-cómo-se-usa)
+- [Investigación de contexto y "Falta información"](#-investigación-de-contexto-y-falta-información)
 - [Automatización con k0lmena](#️-automatización-con-k0lmena)
 - [Pruebas de performance](#-pruebas-de-performance)
 - [Gestión de pruebas: Xray, QMetry y AIO Tests](#️-gestión-de-pruebas-xray-qmetry-y-aio-tests)
@@ -106,7 +108,7 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 <table>
 <tr><th>Familia</th><th>Agente</th><th>Qué hace</th></tr>
 <tr><td rowspan="7"><b>🧠 Análisis<br>y diseño</b></td>
-  <td><code>analista-historias</code></td><td>Ambigüedades, vacíos, riesgos y preguntas de refinamiento de una historia</td></tr>
+  <td><code>analista-historias</code></td><td>Investiga el contexto (comentarios, subtareas, épica, Confluence, Figma) y detecta ambigüedades, vacíos, riesgos y Falta información</td></tr>
 <tr><td><code>estratega-pruebas</code></td><td>Plan de pruebas (alcance, riesgos, tipos, entorno, criterios) en HTML</td></tr>
 <tr><td><code>generador-casos-manuales</code></td><td>Casos en Excel y Markdown + informe de cobertura</td></tr>
 <tr><td><code>generador-casos-bdd</code></td><td>Escenarios Gherkin (keywords en inglés, contenido en español) + cobertura</td></tr>
@@ -207,6 +209,7 @@ Hay **un solo `.env`, en la raíz**. Lo usan los agentes, k0lmena y los scripts 
 
 | Le pedís | Obtenés |
 |----------|---------|
+| *"Investigá el contexto de PROJ-12"* | Ficha de contexto con fuentes, hallazgos y Falta información |
 | *"Analizá la historia HU-001"* | Ambigüedades y preguntas para el PO |
 | *"Armá el plan de pruebas de HU-001"* | Plan HTML |
 | *"Generá los casos de HU-001"* | `casos-HU-001.xlsx` + `.md` + cobertura |
@@ -221,6 +224,36 @@ Hay **un solo `.env`, en la raíz**. Lo usan los agentes, k0lmena y los scripts 
 | *"Subí los casos de HU-001 a Xray, vinculados a PROJ-12, y creá el ciclo Sprint 5"* | Casos y ciclo en Xray |
 | *"Subí los resultados de la última corrida al ciclo PROJ-60"* | Estados y evidencias en el ciclo |
 | *"Armá el informe de cierre de HU-001"* | Resultados, bugs y go/no-go |
+
+---
+
+## 🔎 Investigación de contexto y "Falta información"
+
+Antes de analizar, planificar, escribir casos o automatizar una historia, los agentes **investigan su contexto completo** (skill `investigacion-contexto`) en lugar de suponer:
+
+| Fuente | Qué revisan |
+|--------|-------------|
+| Historia de Jira | Descripción, criterios, estado, labels, componentes y adjuntos |
+| Comentarios | **Todos**: las decisiones que se tomaron después (*"acordamos que el límite es 50"*) reemplazan a la descripción |
+| Subtareas, épica e issues vinculados | Reglas generales, historias hermanas y bugs conocidos del flujo |
+| Confluence y Figma | Páginas enlazadas o relacionadas; textos exactos, mensajes y estados del diseño |
+| Contratos y `input/` | Swagger, Postman y documentación local |
+
+El resultado es una **ficha de contexto** reutilizable (`output/contexto/contexto-HU-XXX.md`) con las fuentes consultadas, los hallazgos por criterio, las decisiones y las contradicciones. Si la historia no cambió, los demás agentes la reusan sin volver a investigar.
+
+**Lo que no aparece en ninguna fuente se marca como "Falta información"** con un ID por historia (`FI-01`, `FI-02`, …), que viaja a todos los reportes:
+
+| Dónde | Cómo se ve |
+|-------|-----------|
+| Planilla de casos (`.xlsx`) | Casos resaltados en ámbar, etiqueta `@falta-info`, detalle en Comentarios y hoja **Falta información** |
+| Coberturas y análisis | Sección **Falta información** (qué falta, dónde se buscó, a qué afecta, pregunta para el PO); criterios `Parcial (falta información)` |
+| `.feature` de k0lmena | Tags `@falta-info @FI-01` y comentario `# FALTA INFORMACIÓN (FI-01): …` |
+| Reporte de mapeo | Estado `Falta información`: el mapper **no usa la app para completar el dato** |
+| Reportes de k0lmena y de ejecución | Nota visible en el escenario y aviso en el resumen |
+| Informe de cierre | Sección **Falta información** con los ítems abiertos como riesgo |
+| Xray · QMetry · AIO | El comentario del resultado aclara que el caso depende de información faltante |
+
+> *"Investigá el contexto de PROJ-12 y generá los casos"* → ficha de contexto + casos, con lo que falte marcado y las preguntas listas para el PO.
 
 ---
 
@@ -334,6 +367,7 @@ Para activar uno: copiá su entrada de `.mcp.json.example` a `.mcp.json`, agrega
 <summary><b>Un flujo completo, de punta a punta</b></summary>
 
 ```
+0. "Investigá el contexto de PROJ-12"                  → ficha de contexto + Falta información (FI-XX)
 1. "Analizá HU-001"                                    → preguntas para el PO
 2. "Armá el plan de pruebas de HU-001"                 → plan HTML
 3. "Generá los casos de HU-001"                        → casos-HU-001.xlsx + cobertura
@@ -354,6 +388,7 @@ Para activar uno: copiá su entrada de `.mcp.json.example` a `.mcp.json`, agrega
 | Historias · criterios | `HU-001` · `CA1` |
 | Casos manuales · de API | `CP-001` · `CP-API-001` |
 | Bugs | `BUG-001` |
+| Falta información | `FI-01` (por historia) · tags `@falta-info @FI-01` |
 | Severidad y prioridad | Crítica · Alta · Media · Baja |
 | Estado de un caso | N/A · Pendiente · En ejecución · Aprobado · Fallido · Bloqueado |
 | Tags en k0lmena | Feature: `@HU-001 @web` · Scenario: `@CP-001` (`@Smoke` si es crítico) · `@bloqueado` |
@@ -374,9 +409,9 @@ k0lmenIA/
 ├── docs/                   Documentación web, PDF y diagramas
 ├── .claude/
 │   ├── agents/             Los 18 agentes
-│   └── skills/             Diseño, ejecución E2E y API, k0lmena
+│   └── skills/             Investigación de contexto, diseño, ejecución E2E y API, k0lmena
 ├── input/                  historias/ documentacion/ api/ bugs/
-├── output/                 Lo que generan los agentes
+├── output/                 Lo que generan los agentes (contexto/, casos, reportes, mapeos…)
 ├── plantillas/             Bug, planilla de casos, cobertura
 ├── scripts/                Casos, reportes HTML, plan, informe de cierre
 │   └── gestion/            Xray, QMetry (QTM4J) y AIO Tests

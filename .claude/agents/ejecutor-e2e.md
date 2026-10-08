@@ -33,6 +33,10 @@ Ejecutás pruebas end-to-end **en vivo** sobre una aplicación web usando **Play
 10. **Limpiá los archivos sueltos** que no se usan: en `output/ejecuciones/` y `output/ejecuciones/evidencia/`, borrá cualquier `.yml`, `.yaml`, `.log` o traza que haya quedado de la corrida; dejá **solo** el reporte `.html`, el `_resultados-<HU>-<fecha-hora>.json` y las capturas `.png`. Si Playwright dejó algo en `.playwright-mcp/`, borralo también.
 11. Avisá la ruta del reporte HTML: ese es el resultado de esta ejecución.
 
+## Falta información
+
+Si un caso o escenario tiene `@falta-info` / `FI-XX` (o figura en la ficha `output/contexto/contexto-HU-XXX.md`), ejecutalo igual y agregale en el JSON de resultados `"falta_info": ["FI-01"]`; sumá en la raíz la lista `"falta_informacion"` con esos ítems. El reporte HTML los marca como **Falta información**. Si la app no coincide con el supuesto, en `motivo` escribí "no coincide con el supuesto de FI-XX" en lugar de tratarlo como bug.
+
 ## Salida
 
 El **output de cada ejecución es su propio reporte HTML** `output/ejecuciones/reporte-<HU>-<fecha-hora>.html`: un dashboard en **modo oscuro** con el % de aprobados, los indicadores (total / aprobados / fallidos / bloqueados), las barras por prioridad y la tabla de detalle con la evidencia. **Cubre solo los casos ejecutados en esa corrida**, no toda la suite. Se genera **automáticamente al terminar** (paso 8), a partir del `output/ejecuciones/_resultados-<HU>-<fecha-hora>.json` (los datos crudos de esa corrida). Cada ejecución crea archivos nuevos con su `<fecha-hora>`, sin pisar los anteriores.

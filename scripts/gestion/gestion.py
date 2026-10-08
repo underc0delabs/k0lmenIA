@@ -198,6 +198,10 @@ def cmd_publicar_resultados(args, ad):
         evid = [e["archivo"] for e in r["evidencias"]
                 if e["tipo"] in ("captura", "gif") or (e["tipo"] == "video" and r["estado"] == "fallido" and not args.sin_video)]
         comentario = f"Ejecutado con k0lmena ({r['feature']} / {r['escenario']})."
+        faltantes = [t for t in r.get("tags", []) if re.match(r"^FI-\d+$", t, re.I)]
+        if "falta-info" in [t.lower() for t in r.get("tags", [])] or faltantes:
+            comentario += (f"\n\nFALTA INFORMACIÓN ({', '.join(faltantes) or 'ver ficha de contexto'}): "
+                           "el caso depende de datos que no están definidos; el resultado puede cambiar cuando se resuelvan.")
         if r["error"]:
             comentario += f"\n\nError:\n{r['error'][:3000]}"
         no_subidas = ad.registrar_resultado(ciclo, {"key": key, "id": None}, r["estado"], comentario, evid) or []

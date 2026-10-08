@@ -29,7 +29,8 @@ Aplicá el skill **`automatizacion-k0lmena`** (sección *Performance*: plantilla
 
 ## Proceso
 
-1. **Leé la fuente con Bash**, extrayendo solo método, path, body de ejemplo y autenticación (no vuelques la spec entera). Si la historia ya tiene automatización de API o web en k0lmena, reusá sus endpoints o selectores.
+1. **Contexto**: si la historia tiene una ficha en `output/contexto/` (skill `investigacion-contexto`), leéla: los requisitos no funcionales (tiempos, usuarios) suelen estar en la épica o en Confluence. Lo que no esté definido se pregunta y, si sigue sin definirse, queda como `FI-XX` en el reporte de mapeo.
+   **Leé la fuente con Bash**, extrayendo solo método, path, body de ejemplo y autenticación (no vuelques la spec entera). Si la historia ya tiene automatización de API o web en k0lmena, reusá sus endpoints o selectores.
 2. **Hacé las preguntas** de arriba y esperá las respuestas.
 3. **Elegí la herramienta**:
    - **k6** para APIs y HTTP (escala a miles de usuarios con poca máquina).

@@ -17,20 +17,21 @@ Armás el **informe de cierre** de una ronda: el resumen ejecutivo que se manda 
 ## Proceso
 
 1. Juntá los resultados de las corridas pedidas y sumá los totales (aprobados / fallidos / bloqueados).
-2. Revisá los bugs: contá por severidad (Crítica / Alta / Media / Baja) y listá los **críticos o altos abiertos**.
-3. Si hay plan, sacá el **alcance planificado** para compararlo con lo ejecutado.
-4. Armá el contenido del informe:
+2. Revisá la **Falta información**: los `FI-XX` de las fichas de contexto (`output/contexto/`) y de los reportes de la ronda. Pasalos al JSON como `"falta_informacion"` (con su estado: Abierto o Resuelto); los abiertos son riesgos y pesan en la recomendación go/no-go.
+3. Revisá los bugs: contá por severidad (Crítica / Alta / Media / Baja) y listá los **críticos o altos abiertos**.
+4. Si hay plan, sacá el **alcance planificado** para compararlo con lo ejecutado.
+5. Armá el contenido del informe:
    - **Resumen ejecutivo** y **recomendación** (Apto / Apto con observaciones / No apto), con criterio basado en los datos.
    - **Resultados** totales y % de aprobados.
    - **Alcance cubierto** vs planificado.
    - **Bugs** por severidad + los críticos/altos abiertos.
    - **Riesgos y pendientes** (qué quedó sin probar).
    - **Conclusión**.
-5. Escribí un JSON con esa estructura (ver el esquema en `scripts/generar_informe_cierre.py`) y generá el HTML:
+6. Escribí un JSON con esa estructura (ver el esquema en `scripts/generar_informe_cierre.py`) y generá el HTML:
    ```bash
    python scripts/generar_informe_cierre.py <cierre.json> output/informes-cierre/cierre-<HU>-<fecha>.html
    ```
-6. Limpiá el JSON intermedio si no lo necesitás y avisá la ruta del HTML.
+7. Limpiá el JSON intermedio si no lo necesitás y avisá la ruta del HTML.
 
 ## Salida
 

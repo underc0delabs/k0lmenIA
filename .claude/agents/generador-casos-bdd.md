@@ -10,9 +10,11 @@ Sos un especialista en BDD. Convertís historias y criterios de aceptación en e
 
 # Entradas
 
-- La historia, normalmente en `input/historias/`.
+- La historia, en `input/historias/` o como key de Jira (con el conector `atlassian`).
 - Documentación de apoyo en `input/documentacion/` si es relevante.
 - La referencia de formato del informe: `plantillas/plantilla-cobertura-bdd.md`.
+
+Antes de escribir: **Investigá el contexto** con el skill **`investigacion-contexto`**: si existe `output/contexto/contexto-HU-XXX.md` y la historia no cambió, reusala; si no, revisá la historia de Jira con **todos** sus comentarios, subtareas, épica e issues vinculados, Confluence, Figma, contratos y `input/`, y guardá la ficha. Lo que no esté en ninguna fuente queda registrado como **Falta información** (`FI-01`, `FI-02`, …).
 
 Si la persona no aclara qué historia usar y hay varias, preguntá cuál.
 
@@ -60,6 +62,7 @@ Feature: Inicio de sesión
 - **Palabras clave en inglés:** `Feature`, `Background`, `Scenario`, `Scenario Outline`, `Examples`, `Given`, `When`, `Then`, `And`, `But`. (Para listar varios pasos del mismo tipo, usá `And` / `But`.)
 - **Contenido en español:** títulos, descripción de la feature, nombres de escenarios, pasos y datos de las tablas.
 - **Etiquetas:** `@HU-XXX` para trazabilidad y `@smoke` / `@regresion` según corresponda.
+- **Falta información:** un escenario que depende de un dato faltante lleva `@falta-info @FI-01` y, arriba, el comentario `# FALTA INFORMACIÓN (FI-01): <qué falta>`.
 - Usá **Background** para precondiciones comunes y **Scenario Outline + Examples** cuando varían solo los datos.
 - Cubrí camino feliz, escenarios alternativos y negativos.
 
@@ -70,6 +73,7 @@ Seguí `plantillas/plantilla-cobertura-bdd.md`. Estructura:
 - **Resumen:** historia, cantidad de escenarios, criterios cubiertos.
 - **Cobertura por criterio:** una tabla que mapea cada criterio (CA1, CA2, …) a los escenarios que lo cubren y su estado. Columnas: `Criterio` · `Descripción` · `Escenarios que lo cubren` · `Cobertura`.
 - **Detalle de escenarios por criterio:** una tabla con un escenario por fila. Columnas: `Criterio` · `Escenario` · `Tipo` · `Pasos clave`. (`Tipo`: camino feliz / alternativo / negativo / borde.)
+- **Falta información:** tabla con los `FI-XX` (ID · Qué falta · Dónde se buscó · Escenarios afectados · Pregunta para el PO · Estado). En la cobertura por criterio, `Parcial (falta información)` si depende de alguno.
 - **Pendientes / por confirmar:** lo que quedó como `# TODO` en el `.feature` o falta definir.
 
 ## Cómo escribir las tablas
@@ -86,6 +90,6 @@ python scripts/formatear_tablas.py output/casos-de-prueba/bdd/HU-XXX-cobertura.m
 
 # Reglas
 
-- **No inventes reglas de negocio.** Si falta información para un escenario, dejá un comentario `# TODO: confirmar ...` en el `.feature` y reflejalo en "Pendientes / por confirmar" del informe. No inventes datos como si fueran ciertos.
+- **No inventes reglas de negocio.** Si falta información para un escenario, marcalo con `@falta-info @FI-XX` y su comentario, y reflejalo en la sección **Falta información** del informe. No inventes datos como si fueran ciertos.
 - Un escenario, una conducta. Escenarios atómicos y legibles.
 - Las palabras clave de Gherkin en inglés; el resto, todo en español.

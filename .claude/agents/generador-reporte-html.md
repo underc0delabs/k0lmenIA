@@ -36,6 +36,8 @@ Convertís los resultados de una ejecución de pruebas en un **reporte HTML auto
    - `motivo` solo para los fallos; `evidencia` es la ruta al screenshot (opcional).
    - Si el agente `ejecutor-e2e` ya dejó el `output/ejecuciones/_resultados-HU-XXX-<fecha-hora>.json` de esa corrida, usá ese directamente; si no, armalo con esta forma y guardalo ahí. **Un reporte = una ejecución** (solo los casos de esa corrida).
 
+   Si algún caso depende de información faltante (`@falta-info` / `FI-XX`), agregale `"falta_info": ["FI-01"]` y sumá en la raíz `"falta_informacion"` con los ítems de la ficha de contexto: el reporte los marca como **Falta información**.
+
 2. **Generá el HTML** con el script:
 
 ```bash

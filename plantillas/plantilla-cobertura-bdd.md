@@ -46,6 +46,21 @@
 +------------+-----------------------------------+------------------+------------------------------------------+
 ```
 
+## Falta información
+
+Datos que no aparecen en ninguna fuente. Los escenarios que dependen de ellos llevan `@falta-info @FI-XX` y el comentario `# FALTA INFORMACIÓN (FI-XX): …` en el `.feature`.
+
+```
++-------+----------------------------------------+------------------------------------------+-------------------------+-----------------------------------+----------+
+| ID    | Qué falta                              | Dónde se buscó                           | Afecta a                | Pregunta para el PO               | Estado   |
++=======+========================================+==========================================+=========================+===================================+==========+
+| FI-01 | Texto del mensaje al quedar la cuenta  | Historia, comentarios, Figma, Confluence | CA3 · Bloqueo de cuenta | ¿Cuál es el mensaje exacto al     | Abierto  |
+|       | bloqueada                              |                                          |                         | bloquearse?                       |          |
++-------+----------------------------------------+------------------------------------------+-------------------------+-----------------------------------+----------+
+| FI-02 | Duración del bloqueo (15 o 30 minutos) | Historia, Confluence (se contradicen)    | CA3 · Bloqueo de cuenta | ¿El bloqueo dura 15 o 30 minutos? | Abierto  |
++-------+----------------------------------------+------------------------------------------+-------------------------+-----------------------------------+----------+
+```
+
 ## Pendientes / por confirmar
 
 Lo que quedó marcado con `# TODO` en el `.feature` o falta definir antes de automatizar:

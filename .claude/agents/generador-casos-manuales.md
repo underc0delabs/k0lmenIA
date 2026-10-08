@@ -30,8 +30,8 @@ Si la persona no aclara qué historia usar y hay varias, preguntá cuál.
 
 # Proceso
 
-1. Leé la historia y sus criterios de aceptación.
-2. Derivá los casos cubriendo, como mínimo: **positivos**, **negativos**, **de borde** y **validaciones de campos**. Cada vez que falte un dato concreto, **no lo inventes**: usá un supuesto, dejalo anotado en `Comentarios` del caso, y guardalo para listarlo como ambigüedad + pregunta al PO en el informe. **Ordená los casos por prioridad** (Crítica → Alta → Media → Baja) y asigná los IDs en ese orden (`CP-001` = el más crítico).
+1. **Investigá el contexto** con el skill **`investigacion-contexto`**: si existe `output/contexto/contexto-HU-XXX.md` y la historia no cambió, reusala; si no, revisá la historia de Jira con **todos** sus comentarios, subtareas, épica e issues vinculados, Confluence, Figma, contratos y `input/`, y guardá la ficha. Lo que no esté en ninguna fuente queda registrado como **Falta información** (`FI-01`, `FI-02`, …). Leé la historia, sus criterios de aceptación y la ficha.
+2. Derivá los casos cubriendo, como mínimo: **positivos**, **negativos**, **de borde** y **validaciones de campos**. Cada vez que falte un dato concreto, **no lo inventes**: buscalo en la ficha; si es un `FI-XX`, poné en el caso `"falta_info": ["FI-01"]` (y, si usás un supuesto para poder escribirlo, aclaralo en `comentarios`). El script resalta esos casos, les suma la etiqueta `@falta-info` y arma la hoja **Falta información**. **Ordená los casos por prioridad** (Crítica → Alta → Media → Baja) y asigná los IDs en ese orden (`CP-001` = el más crítico).
 3. **Escribí los datos en un JSON temporal** `output/casos-de-prueba/manuales/_casos-HU-XXX.json` (esquema abajo).
 4. **Generá la planilla y el `.md` con el script** (un solo comando genera los dos y borra el JSON temporal al terminar, gracias a `--limpiar`):
 
@@ -65,13 +65,21 @@ python scripts/formatear_tablas.py output/casos-de-prueba/manuales/casos-HU-XXX-
       "pasos": "1. ...\n2. ...", "resultado": "...",
       "estado": "Pendiente", "prioridad": "Alta",
       "etiquetas": "@login @smoke @HU-001 @CA1",
-      "evidencia": "", "fecha_ejecucion": "", "comentarios": ""
+      "evidencia": "", "fecha_ejecucion": "", "comentarios": "",
+      "falta_info": ["FI-01"]
     }
+  ],
+  "falta_informacion": [
+    {"id": "FI-01", "que_falta": "Texto del mensaje al bloquearse la cuenta",
+     "donde_se_busco": "Historia, comentarios, Figma, Confluence", "impacto": "CA3",
+     "pregunta": "¿Cuál es el mensaje exacto?", "estado": "Abierto"}
   ]
 }
 ```
 
 > En `datos` y `pasos`, separá las líneas con `\n`: el script las acomoda dentro de la celda.
+
+> `falta_info` (por caso) y `falta_informacion` (lista) son opcionales: van solo si hay datos que faltan. Copiá los ítems de la ficha de contexto con el mismo ID.
 
 > El `.md` tiene una tabla **Resumen** (ID, Título, Resultado esperado, Prioridad, ordenada por prioridad) y la **tabla de casos** (una fila por caso). No incluye Estado, Evidencia, Fecha de Ejecución ni Comentarios (sí están en el `.xlsx`). Con varias columnas la tabla de casos queda ancha, así que en el editor puede pedir algo de scroll horizontal; la planilla `.xlsx` es la grilla completa con las 13 columnas.
 
@@ -85,6 +93,7 @@ Es prosa en Markdown (no la tabla de casos). Seguí `plantillas/plantilla-cobert
 - **Cobertura por criterio de aceptación:** una tabla que mapea cada criterio (CA1, CA2, …) a los casos que lo cubren y su estado. Escribila como **tabla Markdown normal** (columnas: `Criterio` · `Descripción` · `Casos que lo cubren` · `Cobertura`). No la alinees a mano: la normaliza el paso 6. **Sin emojis** en las celdas (descuadran la tabla).
 - **Cobertura por tipo de prueba:** qué casos son positivos, negativos, de borde y de validación.
 - **Fuera de alcance / no cubierto:** lo que la historia no pide o queda explícitamente afuera.
+- **Falta información:** tabla con los `FI-XX` (ID · Qué falta · Dónde se buscó · Casos afectados · Pregunta para el PO · Estado). En la tabla por criterio, un criterio que depende de un `FI-XX` va como `Parcial (falta información)`.
 - **Ambigüedades detectadas:** puntos poco claros o incompletos de la historia. Incluí acá cada supuesto que hayas tenido que hacer (los mismos que anotaste en `Comentarios`).
 - **Preguntas para el PO:** preguntas concretas y accionables para resolver esas ambigüedades.
 

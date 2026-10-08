@@ -23,6 +23,7 @@ Aplicá el skill **`automatizacion-k0lmena`** (estructura, nombres, tags, reutil
 4. **Recorré la app caso por caso** con Playwright MCP:
    - Ejecutá cada paso en la app real, usando el snapshot de accesibilidad para identificar el elemento (rol, nombre, label, placeholder, test id).
    - Anotá, por cada paso, el **locator** real y si coincide con el caso (`Mapeado`), si hubo que adaptarlo (`Ajustado`: otro nombre de botón, un paso intermedio que el caso no mencionaba, un modal) o si no se pudo ejecutar (`Bloqueado`).
+   - **Falta información**: leé la ficha `output/contexto/contexto-HU-XXX.md` si existe. Un caso con `@falta-info` / `FI-XX` conserva esos tags en el `.feature` (con el comentario `# FALTA INFORMACIÓN (FI-XX): …`). **No uses la app para completar el dato que falta**: si el `Then` depende de ese dato y no hay un valor definido, el escenario va `@bloqueado` con el motivo "falta información FI-XX"; si el caso usó un supuesto, se automatiza con el supuesto y, si la app hace otra cosa, se reporta como "no coincide con el supuesto de FI-XX" (no como bug). En el reporte de mapeo, esos pasos van con estado `Falta información` y lo que muestra la app como observación.
    - En cada `Then`, comprobá el resultado esperado. Si la app hace otra cosa, **no** reescribas el esperado para que coincida: es un posible bug. Dejá el `Then` como dice el caso y anotalo.
    - Una sola pasada por caso; no repitas navegaciones ya verificadas.
 5. **Cerrá el navegador** con `browser_close`.

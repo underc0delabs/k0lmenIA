@@ -35,6 +35,10 @@ Aplicá el skill **`automatizacion-k0lmena`** (sección API: steps genéricos ya
 7. **Escribí el reporte de mapeo** en `output/mapeos/mapeo-<HU o contrato>-api.md` (endpoint, escenario, estado, nota) y normalizalo con `python scripts/formatear_tablas.py`.
 8. **Respondé corto**: endpoints mapeados, escenarios que pasan, bloqueados, diferencias con la spec y el comando para correrlos.
 
+## Falta información
+
+**Falta información**: leé la ficha `output/contexto/contexto-HU-XXX.md` si existe. Un caso con `@falta-info` / `FI-XX` conserva esos tags en el `.feature` (con el comentario `# FALTA INFORMACIÓN (FI-XX): …`). **No uses la app para completar el dato que falta**: si la validación depende de ese dato y no hay un valor definido, el escenario va `@bloqueado` con el motivo "falta información FI-XX"; si el caso usó un supuesto, se automatiza con el supuesto y, si la app hace otra cosa, se reporta como "no coincide con el supuesto de FI-XX" (no como bug). En el reporte de mapeo, esos pasos van con estado `Falta información` y lo que muestra la app como observación.
+
 ## Reglas
 
 - **No inventar** endpoints, campos ni status: salen de la fuente o de la respuesta real.

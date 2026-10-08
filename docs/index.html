@@ -50,6 +50,7 @@
   <a href="#instalacion">Instalación</a>
   <a href="#configuracion">Configuración (.env)</a>
   <div class="grupo">Guías</div>
+  <a href="#contexto">Contexto y falta información</a>
   <a href="#guia">Diseño y ejecución</a>
   <a href="#k0lmena">Automatización con k0lmena</a>
   <a href="#performance">Performance</a>
@@ -80,9 +81,9 @@
   <ol>
     <li><span>1</span>Qué es k0lmenIA</li><li><span>2</span>Arquitectura</li><li><span>3</span>Cómo se usa</li><li><span>4</span>Agentes</li>
     <li><span>5</span>Requisitos</li><li><span>6</span>Instalación</li><li><span>7</span>Configuración: el archivo .env</li>
-    <li><span>8</span>Guía por tarea: diseño y ejecución</li><li><span>9</span>Automatización con k0lmena</li><li><span>10</span>Pruebas de performance</li>
-    <li><span>11</span>Gestión de pruebas: Xray, QMetry y AIO Tests</li><li><span>12</span>Verificación en base de datos</li><li><span>13</span>Conectores MCP</li>
-    <li><span>14</span>Convenciones</li><li><span>15</span>Estructura del repositorio</li><li><span>16</span>Problemas frecuentes</li><li><span>17</span>Extender el proyecto</li>
+    <li><span>8</span>Investigación de contexto y falta información</li><li><span>9</span>Guía por tarea: diseño y ejecución</li><li><span>10</span>Automatización con k0lmena</li><li><span>11</span>Pruebas de performance</li>
+    <li><span>12</span>Gestión de pruebas: Xray, QMetry y AIO Tests</li><li><span>13</span>Verificación en base de datos</li><li><span>14</span>Conectores MCP</li>
+    <li><span>15</span>Convenciones</li><li><span>16</span>Estructura del repositorio</li><li><span>17</span>Problemas frecuentes</li><li><span>18</span>Extender el proyecto</li>
   </ol>
 </section>
 
@@ -145,6 +146,7 @@
     <tr><td>Respetar los formatos</td><td>Los campos, su orden y sus valores los definen las plantillas y los scripts, no el agente.</td></tr>
     <tr><td>Trazabilidad</td><td>Todo referencia la historia (<code>HU-XXX</code>); cada escenario automatizado lleva el ID del caso (<code>@CP-001</code>) y la key de la herramienta de gestión.</td></tr>
     <tr><td>Cobertura pensada</td><td>Positivos, negativos, bordes y validaciones de campos, no solo el camino feliz.</td></tr>
+    <tr><td>Investigar antes de suponer</td><td>Antes de trabajar una historia se revisan sus comentarios, subtareas, épica, issues vinculados, Confluence y Figma. Lo que no aparece queda marcado como <b>Falta información</b> (<code>FI-01</code>).</td></tr>
     <tr><td>Ahorro de tokens</td><td>Lo que se repite se automatiza una vez y después corre sin agentes.</td></tr>
     <tr><td>Seguridad</td><td>Los secretos viven en el <code>.env</code> de la raíz, que nunca se versiona; los agentes nunca piden tokens por el chat.</td></tr>
   </table></div>
@@ -184,13 +186,14 @@
     </figure>
   </div>
   <ol class="pasos">
-    <li><b>Poné tus insumos</b>En <code>input/</code>, o pasá una key de Jira, una página de Confluence o un link de Figma con el conector activo.</li>
+    <li><b>Poné tus insumos</b>En <code>input/</code>, o pasá una key de Jira, una página de Confluence o un link de Figma con el conector activo. Los agentes investigan el contexto completo y marcan lo que falta (<code>FI-01</code>).</li>
     <li><b>Pedí en lenguaje natural</b>Claude Code elige el agente. También podés nombrarlo: <i>"usá el web-mapper para…"</i>.</li>
     <li><b>Revisá el resultado</b>En <code>output/</code> o en <code>herramientas/k0lmena/</code>.</li>
     <li><b>Automatizá lo que se repite</b>Y corrélo con <code>npm test</code> todas las veces que quieras, sin tokens.</li>
   </ol>
   <div class="tabla"><table>
     <tr><th style="width:7%">#</th><th>Le pedís</th><th style="width:32%">Obtenés</th></tr>
+    <tr><td>0</td><td>"Investigá el contexto de PROJ-12"</td><td>Ficha de contexto + Falta información</td></tr>
     <tr><td>1</td><td>"Analizá la historia HU-001"</td><td>Ambigüedades y preguntas para el PO</td></tr>
     <tr><td>2</td><td>"Armá el plan de pruebas de HU-001"</td><td>Plan HTML</td></tr>
     <tr><td>3</td><td>"Generá los casos de HU-001"</td><td><code>casos-HU-001.xlsx</code> + cobertura</td></tr>
@@ -211,7 +214,7 @@
 
   <div class="subtitulo-grupo"><h3>Análisis y diseño</h3></div>
   <div class="tarjetas">
-    <div class="tarjeta c-violeta"><h4>analista-historias</h4><p>Ambigüedades, vacíos, riesgos y preguntas de refinamiento de una historia.</p><div class="salida"><code>output/analisis-historias/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>analista-historias</h4><p>Investiga el contexto de la historia y detecta ambigüedades, vacíos, riesgos y Falta información.</p><div class="salida"><code>output/analisis-historias/</code></div></div>
     <div class="tarjeta c-violeta"><h4>estratega-pruebas</h4><p>Plan de pruebas: alcance, riesgos, tipos de prueba, entorno y criterios, en HTML.</p><div class="salida"><code>output/planes-de-prueba/</code></div></div>
     <div class="tarjeta c-violeta"><h4>generador-casos-manuales</h4><p>Casos en Excel y Markdown + informe de cobertura con preguntas para el PO.</p><div class="salida"><code>output/casos-de-prueba/manuales/</code></div></div>
     <div class="tarjeta c-violeta"><h4>generador-casos-bdd</h4><p>Escenarios Gherkin (keywords en inglés, contenido en español) + cobertura.</p><div class="salida"><code>output/casos-de-prueba/bdd/</code></div></div>
@@ -316,6 +319,37 @@ npm run bootstrap:k6                               <span class="c"># performance
     <tr><td><code>input/documentacion/</code></td><td>Documentación del producto que sirva de contexto.</td></tr>
     <tr><td><code>input/api/</code></td><td>Contratos, colecciones de Postman y environments.</td></tr>
     <tr><td><code>input/bugs/</code></td><td>Observaciones sueltas de errores para convertir en reportes.</td></tr>
+  </table></div>
+</section>
+
+<!-- ======================================================= CONTEXTO -->
+<section class="seccion" id="contexto">
+  <div class="kicker">Guías</div>
+  <h2>Investigación de contexto y "Falta información"</h2>
+  <p class="bajada">Antes de analizar, planificar, escribir casos o automatizar, los agentes <b>investigan el contexto completo</b> de la historia en lugar de suponer. Lo que no encuentran en ninguna fuente queda marcado como <b>Falta información</b> en todos los reportes.</p>
+  <h3>Dónde buscan</h3>
+  <div class="tabla"><table>
+    <tr><th style="width:26%">Fuente</th><th>Qué revisan</th></tr>
+    <tr><td>Historia de Jira</td><td>Descripción, criterios, estado, labels, componentes y adjuntos.</td></tr>
+    <tr><td>Comentarios</td><td><b>Todos.</b> Las decisiones que se tomaron después ("acordamos que el límite es 50") reemplazan a la descripción, citando quién y cuándo.</td></tr>
+    <tr><td>Subtareas, épica e issues vinculados</td><td>Detalle de cada subtarea, reglas generales e historias hermanas de la épica, dependencias y bugs conocidos del flujo.</td></tr>
+    <tr><td>Confluence</td><td>Páginas enlazadas o, si no hay, las más relevantes del espacio del proyecto.</td></tr>
+    <tr><td>Figma</td><td>Textos exactos, mensajes de error, estados y campos obligatorios.</td></tr>
+    <tr><td>Contratos e <code>input/</code></td><td>Swagger, Postman y documentación local.</td></tr>
+  </table></div>
+  <p>El resultado es una <b>ficha de contexto</b> reutilizable, <code>output/contexto/contexto-HU-XXX.md</code>: fuentes consultadas, hallazgos por criterio, decisiones, contradicciones y lo que falta. Si la historia no cambió, los demás agentes la reusan sin volver a investigar. Si un conector no está activo, la fuente queda como "No disponible" en lugar de suponerla.</p>
+  <div class="pedido">Investigá el contexto de PROJ-12 y generá los casos de prueba.</div>
+  <h3>Falta información (FI-XX)</h3>
+  <p>Cada dato que no aparece en ninguna fuente (o aparece contradictorio) recibe un ID por historia, con qué falta, dónde se buscó, a qué afecta y la pregunta para el PO. El mismo ID viaja a todos los artefactos. La app no es fuente de requisitos: si el resultado esperado depende de un dato faltante, el escenario no se "acomoda" a lo que hace la aplicación; se automatiza con el supuesto marcado o queda <code>@bloqueado</code> hasta que el PO responda.</p>
+  <div class="tabla"><table>
+    <tr><th style="width:30%">Dónde</th><th>Cómo se ve</th></tr>
+    <tr><td>Planilla de casos</td><td>Casos resaltados en ámbar, etiqueta <code>@falta-info</code>, detalle en Comentarios y hoja <b>Falta información</b>.</td></tr>
+    <tr><td>Análisis y coberturas</td><td>Sección <b>Falta información</b>; criterios con cobertura <code>Parcial (falta información)</code>.</td></tr>
+    <tr><td><code>.feature</code> de k0lmena</td><td>Tags <code>@falta-info @FI-01</code> y comentario <code># FALTA INFORMACIÓN (FI-01): …</code>.</td></tr>
+    <tr><td>Reporte de mapeo</td><td>Estado <code>Falta información</code>. El mapper no usa la app para completar el dato: lo que muestra la app queda como observación.</td></tr>
+    <tr><td>Reportes de k0lmena y de ejecución</td><td>Nota visible en el escenario y aviso en el resumen.</td></tr>
+    <tr><td>Informe de cierre</td><td>Sección <b>Falta información</b>; los ítems abiertos cuentan como riesgo para el go/no-go.</td></tr>
+    <tr><td>Xray · QMetry · AIO</td><td>El comentario del resultado aclara que el caso depende de información faltante.</td></tr>
   </table></div>
 </section>
 
@@ -552,6 +586,7 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
       <tr><td>Casos manuales</td><td><code>CP-001</code></td></tr>
       <tr><td>Casos de API</td><td><code>CP-API-001</code></td></tr>
       <tr><td>Bugs</td><td><code>BUG-001</code></td></tr>
+      <tr><td>Falta información</td><td><code>FI-01</code> · <code>@falta-info @FI-01</code></td></tr>
     </table></div>
     <div class="tabla"><table>
       <tr><th>Escala</th><th>Valores</th></tr>
@@ -593,7 +628,7 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
 ├── docs/                   <span class="c">Este sitio, el PDF y los diagramas</span>
 ├── .claude/
 │   ├── agents/             <span class="c">Los 18 agentes</span>
-│   └── skills/             <span class="c">Diseño, ejecución E2E y API, k0lmena</span>
+│   └── skills/             <span class="c">Contexto, diseño, ejecución E2E y API, k0lmena</span>
 ├── input/                  <span class="c">historias/ documentacion/ api/ bugs/</span>
 ├── output/                 <span class="c">Lo que generan los agentes</span>
 ├── plantillas/             <span class="c">Bug, planilla de casos, cobertura</span>
@@ -615,6 +650,7 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
 <section class="seccion" id="faq">
   <div class="kicker">Referencia</div>
   <h2>Problemas frecuentes</h2>
+  <details class="faq"><summary>¿Qué pasa si a la historia le falta información?</summary><div>Los agentes primero la buscan en los comentarios, subtareas, épica, issues vinculados, Confluence y Figma. Lo que no encuentran queda como <b>Falta información</b> (<code>FI-01</code>) con la pregunta para el PO, y se marca en los casos, los <code>.feature</code> y todos los reportes. Nunca se completa con lo que hace la app.</div></details>
   <details class="faq"><summary>Un agente nuevo no aparece</summary><div>Reiniciá Claude Code: los agentes se cargan al iniciar la sesión.</div></details>
   <details class="faq"><summary>La suite web falla con un viewport de 0x0 o sin URL</summary><div>Falta el <code>.env</code> de la raíz o sus variables de k0lmena: <code>cp .env.example .env</code> y completalo.</div></details>
   <details class="faq"><summary><code>npm test</code> corre 0 escenarios</summary><div>Todavía no automatizaste nada (las carpetas vienen vacías) o el filtro <code>TAGS</code> no coincide con ningún escenario.</div></details>

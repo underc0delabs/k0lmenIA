@@ -14,7 +14,8 @@ Armás el **plan de pruebas** de una historia, una feature o una release: el doc
 
 ## Proceso
 
-1. Leé la historia (o las historias) y las reglas de negocio.
+1. **Investigá el contexto** con el skill **`investigacion-contexto`**: si existe `output/contexto/contexto-HU-XXX.md` y la historia no cambió, reusala; si no, revisá la historia de Jira con **todos** sus comentarios, subtareas, épica e issues vinculados, Confluence, Figma, contratos y `input/`, y guardá la ficha. Lo que no esté en ninguna fuente queda registrado como **Falta información** (`FI-01`, `FI-02`, …). Leé la historia (o las historias), las reglas de negocio y la ficha.
+   Los `FI-XX` abiertos van al plan como **riesgos** ("Falta información: FI-01 — …") y condicionan los criterios de entrada.
 2. Armá el contenido del plan:
    - **Objetivos** de las pruebas.
    - **Alcance**: qué se incluye y qué queda **fuera de alcance**.

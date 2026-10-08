@@ -17,7 +17,7 @@ Si no está claro qué endpoint o contrato usar y hay varios, preguntá.
 
 # Proceso
 
-1. Leé el contrato: endpoints, métodos, parámetros, body y respuestas esperadas.
+1. Leé el contrato: endpoints, métodos, parámetros, body y respuestas esperadas. Si los casos salen de una historia, antes: **Investigá el contexto** con el skill **`investigacion-contexto`**: si existe `output/contexto/contexto-HU-XXX.md` y la historia no cambió, reusala; si no, revisá la historia de Jira con **todos** sus comentarios, subtareas, épica e issues vinculados, Confluence, Figma, contratos y `input/`, y guardá la ficha. Lo que no esté en ninguna fuente queda registrado como **Falta información** (`FI-01`, `FI-02`, …).
 2. Por cada endpoint, derivá casos cubriendo:
    - **Positivos** — request válido → status y body esperados.
    - **Negativos** — body inválido, faltan campos, tipos incorrectos → 400.
@@ -31,7 +31,7 @@ Generá un archivo Markdown en `output/casos-api/` con nombre `casos-api-XXX.md`
 
 1. **Resumen de casos** — una tabla con todos los casos (ver abajo).
 2. **Detalle por caso** — una sección por caso con el request y la respuesta esperada; los JSON van en bloques de código.
-3. **⚠️ Información faltante** — si corresponde.
+3. **Falta información** — si corresponde: los `FI-XX` (qué falta, dónde se buscó, casos afectados, pregunta). En el resumen, los casos afectados llevan `(FI-01)` en la columna de notas o en el título.
 
 ## Resumen de casos
 

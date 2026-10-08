@@ -44,6 +44,10 @@ Aplicá el skill **`automatizacion-k0lmena`** (sección Mobile: estructura, loca
    - Emulador: `MOBILE_TARGET=emulator`.
    - BrowserStack: `MOBILE_TARGET=browserstack`, `BROWSERSTACK_USER`, `BROWSERSTACK_KEY` y `BROWSERSTACK_APP`.
 
+## Falta información
+
+**Falta información**: leé la ficha `output/contexto/contexto-HU-XXX.md` si existe. Un caso con `@falta-info` / `FI-XX` conserva esos tags en el `.feature` (con el comentario `# FALTA INFORMACIÓN (FI-XX): …`). **No uses la app para completar el dato que falta**: si el `Then` depende de ese dato y no hay un valor definido, el escenario va `@bloqueado` con el motivo "falta información FI-XX"; si el caso usó un supuesto, se automatiza con el supuesto y, si la app hace otra cosa, se reporta como "no coincide con el supuesto de FI-XX" (no como bug). En el reporte de mapeo, esos pasos van con estado `Falta información` y lo que muestra la app como observación.
+
 ## Reglas
 
 - **No inventar** locators: cada uno sale del page source real.

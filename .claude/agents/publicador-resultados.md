@@ -33,6 +33,8 @@ Después de que la persona corre `npm test` en `herramientas/k0lmena/`, llevás 
 
 ## Qué se sube por caso
 
+- **Falta información**: si el escenario tiene `@falta-info` / `@FI-XX`, el comentario lo indica ("FALTA INFORMACIÓN (FI-01): …") para que el resultado se lea con esa reserva.
+
 - **Estado**: aprobado / fallido / bloqueado / pendiente, mapeado al estado de la herramienta.
 - **Comentario**: feature, escenario y, si falló, el error completo.
 - **Evidencias**: la captura del escenario siempre; el GIF del recorrido si la corrida se hizo con `EVIDENCE=ambos`; si falló, también el video completo de la ejecución. Si un archivo supera el límite de adjuntos de la herramienta, se omite y se avisa.

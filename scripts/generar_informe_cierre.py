@@ -21,6 +21,9 @@ JSON de entrada:
     "criticos_abiertos": [ {"id": "BUG-003", "titulo": "...", "severidad": "Alta"} ]
   },
   "riesgos_pendientes": ["...", "..."],
+  "falta_informacion": [                            // opcional (skill investigacion-contexto)
+    {"id": "FI-01", "que_falta": "...", "impacto": "CA3 · CP-004", "pregunta": "...", "estado": "Abierto"}
+  ],
   "conclusion": "Texto de cierre."
 }
 
@@ -116,6 +119,17 @@ def build_html(data):
                       nivel_badge(b.get("severidad"))] for b in criticos]
             contenido += table(["ID", "Bug abierto", "Severidad"], filas)
         body.append(section("Bugs por severidad", contenido))
+
+    # Falta información: lo que nunca se definió y condiciona el resultado de la ronda
+    faltantes = data.get("falta_informacion") or []
+    if faltantes:
+        abiertos = [f for f in faltantes if str(f.get("estado", "Abierto")).lower() != "resuelto"]
+        items = [f'{f.get("id", "")} — {f.get("que_falta", "")}'
+                 + (f' (impacto: {f["impacto"]})' if f.get("impacto") else "")
+                 + (f' · Pregunta: {f["pregunta"]}' if f.get("pregunta") else "")
+                 + f' · {f.get("estado", "Abierto")}' for f in faltantes]
+        titulo = f"Falta información ({len(abiertos)} abierto{'s' if len(abiertos) != 1 else ''})"
+        body.append(section(titulo, doc_list(items)))
 
     # Riesgos y pendientes
     if data.get("riesgos_pendientes"):

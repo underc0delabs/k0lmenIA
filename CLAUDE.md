@@ -51,6 +51,8 @@ input/ → [ agente ] → output/
 Estos principios aplican a **todos** los agentes:
 
 - **No inventar.** Si falta información para hacer bien la tarea (un paso, un dato, una regla de negocio, un resultado esperado), el agente lo **marca y lo pregunta**; nunca rellena con suposiciones disfrazadas de hechos. Es preferible un artefacto con huecos señalados que uno completo pero inventado.
+- **Investigar antes de suponer.** Antes de analizar, planificar, escribir casos o automatizar una historia, se revisa su contexto completo con el skill `investigacion-contexto`: la historia de Jira con **todos** sus comentarios, subtareas, épica e issues vinculados, las páginas de Confluence y los diseños de Figma relacionados, contratos y `input/`. El resultado queda en una ficha reutilizable `output/contexto/contexto-HU-XXX.md`.
+- **Marcar lo que falta.** Lo que no aparece en ninguna fuente se registra como **Falta información** con un ID por historia (`FI-01`, `FI-02`, …) y viaja con ese ID a todos los artefactos: casos (resaltados, etiqueta `@falta-info`, hoja *Falta información*), `.feature` (`@falta-info @FI-01`), coberturas, mapeos, reportes de ejecución, informe de cierre y lo que se publica en Xray/QMetry/AIO.
 - **Respetar los formatos.** Los campos, su orden y sus valores permitidos los define la plantilla (o el script), no el agente.
 - **Trazabilidad.** Todo artefacto referencia la historia (`HU-XXX`) o el contrato del que sale.
 - **Cobertura pensada.** Los casos contemplan escenarios positivos, negativos, de borde y validaciones de campos, no solo el camino feliz.
@@ -63,6 +65,7 @@ Estos principios aplican a **todos** los agentes:
 - Casos de prueba manuales: `CP-001`, `CP-002`, …
 - Casos de prueba de API: `CP-API-001`, `CP-API-002`, …
 - Bugs: `BUG-001`, `BUG-002`, …
+- Falta información: `FI-01`, `FI-02`, … (por historia; tags `@falta-info @FI-01`)
 
 ## Escalas
 
@@ -101,6 +104,7 @@ Reglas (valen para **todos** los agentes y cualquier sección, incluidas las que
 
 ## Nombres de archivos de salida (sugerencia)
 
+- Ficha de contexto: `output/contexto/contexto-HU-001.md` (fuentes consultadas, hallazgos y Falta información)
 - Análisis de historia: `analisis-HU-001.md`
 - Casos manuales: `casos-HU-001.xlsx` + `casos-HU-001.md` + `casos-HU-001-cobertura.md`
 - Casos BDD: `HU-001-registro.feature` + `HU-001-cobertura.md`
