@@ -1,4 +1,4 @@
-# 🪖 Agentes k0lmena
+# 🪖 k0lmenIA
 
 **Agentes de QA para Claude Code** que aceleran las tareas del día a día del testing manual: analizar historias, escribir casos de prueba (manuales, BDD y de API), generar datos de prueba, redactar reportes de bug, ejecutar pruebas end-to-end en el navegador y armar reportes de resultados en HTML — todo en español.
 
@@ -80,8 +80,8 @@ claude --version
 ### 2. Clonar este repositorio
 
 ```bash
-git clone https://github.com/QARMY/agentes-k0lmena.git
-cd agentes-k0lmena
+git clone https://github.com/QARMY/k0lmenIA.git
+cd k0lmenIA
 ```
 
 > Si hiciste un fork, reemplazá la URL por la de tu repositorio.
@@ -123,6 +123,10 @@ cp .env.example .env
 ```
 Editá `.env` con la URL y las credenciales (`APP_URL`, `APP_USER`, `APP_PASSWORD`, `API_TOKEN`). Los agentes las leen de ahí; nunca las commitean.
 
+### 5. (Opcional) Conectar tu herramienta de gestión de pruebas
+
+k0lmenIA trae conectores MCP para **Xray**, **QMetry** (standalone y QTM4J) y **AIO Tests**, así los agentes pueden leer y cargar casos y resultados directamente ahí. Vienen desactivados; los pasos para activar el tuyo están en [`CONECTORES.md`](CONECTORES.md).
+
 ---
 
 ## Cómo se usa
@@ -151,13 +155,14 @@ Editá `.env` con la URL y las credenciales (`APP_URL`, `APP_USER`, `APP_PASSWOR
 ## Estructura del repositorio
 
 ```
-agentes-k0lmena/
+k0lmenIA/
 ├── CLAUDE.md              # Contexto y estándares del proyecto (Claude Code lo lee siempre)
 ├── README.md
 ├── ARQUITECTURA.md        # Cómo está pensado el repo para crecer (agentes/skills/MCP/herramientas/scripts)
 ├── requirements.txt       # Dependencias de Python (openpyxl, tabulate)
 ├── .mcp.json              # Conexiones MCP activas (Playwright headed + headless)
-├── .mcp.json.example      # Plantilla para más conexiones (Jira, Xray, etc.)
+├── .mcp.json.example      # Plantilla para más conexiones (Jira, Xray, QMetry, AIO Tests)
+├── CONECTORES.md          # Cómo activar los conectores de Xray, QMetry y AIO Tests
 ├── .env.example           # Plantilla de variables/credenciales (copiar a .env, que no se versiona)
 ├── .claude/
 │   ├── agents/            # Los agentes de QA (el "quién")

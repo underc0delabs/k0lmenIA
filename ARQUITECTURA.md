@@ -22,13 +22,13 @@ Para tocar sistemas de afuera (Jira, Xray, un navegador…), un agente usa un **
 {
   "mcpServers": {
     "atlassian":  { "type": "http", "url": "https://mcp.atlassian.com/v1/mcp" },
-    "xray":       { "type": "http", "url": "${XRAY_MCP_URL}", "headers": { "Authorization": "Bearer ${XRAY_TOKEN}" } },
+    "qtm4j":      { "type": "stdio", "command": "npx", "args": ["-y", "@smartbear/mcp@latest"], "env": { "QTM4J_API_KEY": "${QTM4J_API_KEY}" } },
     "playwright": { "type": "stdio", "command": "npx", "args": ["-y", "@playwright/mcp@latest"] }
   }
 }
 ```
 
-En este repo, `.mcp.json` ya viene **versionado** con la conexión a **Playwright** (headed y headless), que no lleva secretos, así la ejecución E2E funciona out-of-the-box. El `.mcp.json.example` es la **plantilla** para sumar conexiones que sí piden token (Jira, Xray…): copiás la entrada que necesites a tu `.mcp.json` y el token va por `${VARIABLE}` (ver la regla de secretos).
+En este repo, `.mcp.json` ya viene **versionado** con la conexión a **Playwright** (headed y headless), que no lleva secretos, así la ejecución E2E funciona out-of-the-box. El `.mcp.json.example` es la **plantilla** para sumar conexiones que sí piden token (Jira, Xray, QMetry, AIO Tests…): copiás la entrada que necesites a tu `.mcp.json` y el token va por `${VARIABLE}` (ver la regla de secretos). El paso a paso de cada conector de gestión de pruebas está en [`CONECTORES.md`](CONECTORES.md).
 
 > **Regla de oro de los secretos:** tokens y credenciales van como variables de entorno con `${VARIABLE}` (en tu entorno o un `.env` local, gitignored), **nunca** con el valor real en el archivo. Hay una plantilla `.env.example` con los nombres de variable; se copia a `.env` y se completan los valores reales. Si se commitea un secreto, rotalo de inmediato.
 
@@ -44,7 +44,7 @@ Código Python propio del repo para tareas mecánicas (generar la planilla `.xls
 
 - **Agente** = a quién le pido la tarea.
 - **Skill** = el conocimiento de cómo hacerla.
-- **MCP** = conexiones a sistemas externos (un archivo, muchas conexiones: Jira, Xray, Playwright…).
+- **MCP** = conexiones a sistemas externos (un archivo, muchas conexiones: Jira, Xray, QMetry, AIO Tests, Playwright…).
 - **Herramientas** = herramientas externas que se ejecutan por CLI (Newman, y a futuro JMeter/k6…).
 - **Script** = utilidad interna determinística.
 

@@ -30,7 +30,7 @@ newman run input/api/demo.postman_collection.json \
 # 2) Se convierte ese JSON al formato del reporte del repo
 python scripts/newman_a_resultados.py \
   output/ejecuciones/_newman-<fecha-hora>.json \
-  output/ejecuciones/_resultados-API-<fecha-hora>.json "Demo API k0lmena"
+  output/ejecuciones/_resultados-API-<fecha-hora>.json "Demo API k0lmenIA"
 
 # 3) Se genera el reporte HTML (dashboard, modo oscuro)
 python scripts/generar_reporte.py \

@@ -1,4 +1,4 @@
-# Agentes k0lmena — Contexto del proyecto
+# k0lmenIA — Contexto del proyecto
 
 Este repositorio es un conjunto de **agentes de QA para Claude Code**, pensados para que profesionales de testing manual aceleren sus tareas del día a día: planificar la estrategia de pruebas, analizar historias, escribir casos de prueba (manuales, BDD y de API), generar datos de prueba, redactar reportes de bug, ejecutar pruebas end-to-end en el navegador, ejecutar pruebas de API, generar reportes de resultados en HTML y armar el informe de cierre de la ronda.
 
@@ -108,4 +108,4 @@ Reglas (valen para **todos** los agentes y cualquier sección, incluidas las que
 
 El repo se apoya en estas piezas: **agentes** (`.claude/agents/`, el quién), **skills** (`.claude/skills/`, el cómo, cargados on-demand), **MCP** (`.mcp.json`, conexiones a sistemas externos — un solo archivo que escala a muchas conexiones: Jira, Xray, Playwright…), **herramientas** (`herramientas/`, herramientas externas de testing como JMeter, una subcarpeta por herramienta) y **scripts** (`scripts/`, utilidades internas determinísticas). El detalle y cómo extender cada una está en `ARQUITECTURA.md`.
 
-Secretos (tokens, credenciales): van en variables de entorno con `${VARIABLE}` o en un `.env` local (gitignored), **nunca** commiteados; hay una plantilla `.env.example`. El `.mcp.json` está versionado y trae la conexión a Playwright (sin secretos); `.mcp.json.example` es la plantilla para sumar conexiones con token (Jira, Xray…).
+Secretos (tokens, credenciales): van en variables de entorno con `${VARIABLE}` o en un `.env` local (gitignored), **nunca** commiteados; hay una plantilla `.env.example`. El `.mcp.json` está versionado y trae la conexión a Playwright (sin secretos); `.mcp.json.example` es la plantilla para sumar conexiones con token (Jira, Xray, QMetry/QTM4J, AIO Tests); cómo activarlas está en `CONECTORES.md`.

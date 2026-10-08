@@ -43,7 +43,7 @@ newman run input/api/demo.postman_collection.json \
 # 2) JSON de Newman → formato del reporte
 python scripts/newman_a_resultados.py \
   output/ejecuciones/_newman-$FECHA.json \
-  output/ejecuciones/_resultados-API-$FECHA.json "Demo API k0lmena"
+  output/ejecuciones/_resultados-API-$FECHA.json "Demo API k0lmenIA"
 
 # 3) → reporte HTML (dashboard oscuro)
 python scripts/generar_reporte.py \
@@ -81,7 +81,7 @@ pm.response.to.have.status(200);
 // Cuerpo: propiedad y valor
 var data = pm.response.json();
 pm.expect(data).to.have.property("id");
-pm.expect(data.title).to.eql("k0lmena");
+pm.expect(data.title).to.eql("k0lmenIA");
 
 // Tiempo de respuesta
 pm.expect(pm.response.responseTime).to.be.below(800);

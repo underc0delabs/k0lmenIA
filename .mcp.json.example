@@ -5,10 +5,41 @@
       "url": "https://mcp.atlassian.com/v1/mcp"
     },
     "xray": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${XRAY_MCP_PATH}/dist/index.js"],
+      "env": {
+        "XRAY_DEPLOYMENT": "${XRAY_DEPLOYMENT:-cloud}",
+        "XRAY_CLOUD_CLIENT_ID": "${XRAY_CLOUD_CLIENT_ID}",
+        "XRAY_CLOUD_CLIENT_SECRET": "${XRAY_CLOUD_CLIENT_SECRET}"
+      }
+    },
+    "qmetry": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@smartbear/mcp@latest"],
+      "env": {
+        "MCP_CLIENTS": "QMetry",
+        "QMETRY_API_KEY": "${QMETRY_API_KEY}",
+        "QMETRY_BASE_URL": "${QMETRY_BASE_URL:-https://testmanagement.qmetry.com}"
+      }
+    },
+    "qtm4j": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@smartbear/mcp@latest"],
+      "env": {
+        "MCP_CLIENTS": "QTM4J",
+        "QTM4J_API_KEY": "${QTM4J_API_KEY}",
+        "QTM4J_BASE_URL": "${QTM4J_BASE_URL:-https://qtmcloud.qmetry.com}",
+        "QTM4J_AUTOMATION_API_KEY": "${QTM4J_AUTOMATION_API_KEY:-}"
+      }
+    },
+    "aio-tests": {
       "type": "http",
-      "url": "${XRAY_MCP_URL}",
+      "url": "${AIO_MCP_URL}",
       "headers": {
-        "Authorization": "Bearer ${XRAY_TOKEN}"
+        "Authorization": "Bearer ${AIO_API_TOKEN}"
       }
     },
     "playwright": {

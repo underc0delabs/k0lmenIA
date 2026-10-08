@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "Demo API k0lmena (JSONPlaceholder)",
+    "name": "Demo API k0lmenIA (JSONPlaceholder)",
     "description": "Colección de ejemplo para probar la ejecución de pruebas de API con Newman. Apunta a https://jsonplaceholder.typicode.com (API pública de demo, sin login). Reemplazala por tu propia colección exportada de Postman y cambiá base_url por tu API. El id (API-00x) y la prioridad (entre paréntesis) van en el nombre de cada request: el conversor los usa para el reporte.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
@@ -44,7 +44,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"title\": \"k0lmena\",\n  \"body\": \"prueba de creación\",\n  \"userId\": 1\n}"
+          "raw": "{\n  \"title\": \"k0lmenIA\",\n  \"body\": \"prueba de creación\",\n  \"userId\": 1\n}"
         },
         "url": {
           "raw": "{{base_url}}/posts",

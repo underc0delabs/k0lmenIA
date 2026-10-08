@@ -7,7 +7,7 @@ de cierre…). Centraliza la paleta, el CSS y los gráficos para que el tema osc
 viva en un solo lugar y todos los reportes se vean igual.
 
 Componentes:
-  - page(titulo, eyebrow, meta_html, body)  -> documento HTML completo (con marca k0lmena)
+  - page(titulo, eyebrow, meta_html, body)  -> documento HTML completo (con marca k0lmenIA)
   - meta(items)                             -> fila de chips (Historia, Fecha, …)
   - section(titulo, body_html)              -> sección con título + card
   - kpi_tiles(items)                        -> grilla de indicadores
@@ -137,12 +137,12 @@ def e(s):
 def page(titulo, eyebrow, meta_html, body):
     return (f'<!doctype html>\n<html lang="es"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width, initial-scale=1">'
-            f'<title>{e(titulo)} — k0lmena</title><style>{CSS}</style></head>'
+            f'<title>{e(titulo)} — k0lmenIA</title><style>{CSS}</style></head>'
             f'<body><div class="wrap"><header>'
             f'<span class="brand"><span class="dot">🪖</span>'
-            f'<span class="eyebrow">k0lmena · {e(eyebrow)}</span></span>'
+            f'<span class="eyebrow">k0lmenIA · {e(eyebrow)}</span></span>'
             f'<h1>{e(titulo)}</h1>{meta_html}</header>{body}'
-            f'<footer>Generado por k0lmena · Agentes k0lmena</footer></div></body></html>\n')
+            f'<footer>Generado por k0lmenIA</footer></div></body></html>\n')
 
 
 def meta(items):
