@@ -80,8 +80,8 @@ claude --version
 ### 2. Clonar este repositorio
 
 ```bash
-git clone https://github.com/QARMY/k0lmenIA.git
-cd k0lmenIA
+git clone https://github.com/underc0delabs/agentes-k0lmena.git
+cd agentes-k0lmena
 ```
 
 > Si hiciste un fork, reemplazá la URL por la de tu repositorio.
