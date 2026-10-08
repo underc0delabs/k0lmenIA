@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-VERSION="v0.52.0"
+VERSION="v2.3.0"
 OUTDIR="tools/k6"
 mkdir -p "$OUTDIR"
 

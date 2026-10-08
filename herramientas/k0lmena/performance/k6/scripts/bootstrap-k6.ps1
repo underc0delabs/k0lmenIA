@@ -1,10 +1,9 @@
 $ErrorActionPreference = "Stop"
-$Version = "v0.52.0"
+$Version = "v2.3.0"
 $OutDir = "tools/k6"
 New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
 
-$Arch = (Get-CimInstance Win32_OperatingSystem).OSArchitecture
-if ($Arch -match "64") { $A="amd64" } else { $A="386" }
+$A = "amd64"  # k6 publica binarios de Windows solo para amd64
 
 $ZipUrl = "https://github.com/grafana/k6/releases/download/$Version/k6-$Version-windows-$A.zip"
 $ZipPath = "$OutDir\k6.zip"

@@ -20,9 +20,12 @@ casos de prueba (output/casos-de-prueba/)
         │
         ├── web-mapper     → recorre la web (Playwright MCP)    → web/features + steps + locators
         ├── api-mapper     → lee Postman / Swagger              → api/features
-        └── mobile-mapper  → recorre la app (Appium MCP)        → mobile/features + steps + locators
+        ├── mobile-mapper  → recorre la app (Appium MCP)        → mobile/features + steps + locators
+        │                                                                │
+        │                                                          npm test  (sin tokens)
+        └── performance-mapper → carga y umbrales (pregunta)     → performance/k6 · performance/artillery
                                                                          │
-                                                                   npm test  (sin tokens)
+                                                               npm run perf  (sin tokens)
 ```
 
 ## Estructura
@@ -41,7 +44,7 @@ herramientas/k0lmena/
 │   ├── features/ steps/ locators/
 │   ├── support/    wdio.conf.ts (dispositivo, emulador o BrowserStack) y hooks
 │   └── apps/       tu .apk / .ipa (no se versiona)
-├── performance/    Artillery y k6
+├── performance/    k6 (k6/http/) y Artillery + Playwright (artillery/)
 ├── reports/        reportes HTML de cada tipo
 ├── tools/          crawler de locators, link tester, recorder, debug
 ├── cucumber.js     perfiles web / api / debug
@@ -114,12 +117,18 @@ Se elige en el `.env` de la raíz, sin tocar código:
 ### Performance
 
 ```bash
-npm run perf:load                 # Artillery (genera reports/performance/artillery/report.json)
-npm run perf:load-report          # reporte HTML de Artillery
-npm run bootstrap:k6              # descarga k6 en tools/k6
-npm run k6:build                  # compila los escenarios TypeScript de k6
-npm run k6:smoke                  # también: k6:stress, k6:soak, k6:spike, k6:run:browser
+npm run bootstrap:k6                       # una vez: descarga k6 en tools/k6 (o tenelo en el PATH)
+npm run perf                               # lista los scripts (k6 y Artillery)
+npm run perf -- ejemplo-petstore smoke     # k6: valida el script con carga mínima
+npm run perf -- ejemplo-login load         # Artillery + Playwright: pide confirmación
+npm run perf -- <script> stress --confirmar   # sin pregunta (CI o agente con autorización)
+npm run perf -- <script> load --vus 20 --duracion 2m   # k6: pisa la carga del script
 ```
+
+- **Perfiles**: `smoke` (carga mínima, valida el script), `load` (carga objetivo sostenida), `stress` (1x, 2x y 3x), `soak` (larga duración) y `spike` (pico brusco). Los perfiles con carga piden confirmación.
+- **Scripts**: k6 en `performance/k6/http/<script>.ts` (base en `performance/k6/lib/k0lmena.ts`); Artillery en `performance/artillery/<script>.yaml` + processor `.ts`. Plantillas en el skill `automatizacion-k0lmena`.
+- **Umbrales**: en el script (`umbrales` en k6, `ensure` en Artillery). Si alguno no se cumple, la corrida termina con código 1.
+- **Salida** en `reports/performance/<k6|artillery>/`: reporte HTML (dashboard), resumen JSON, resultado crudo y log de la herramienta. La consola muestra solo el resumen.
 
 ## Reportes
 
@@ -133,7 +142,7 @@ npm run k6:smoke                  # también: k6:stress, k6:soak, k6:spike, k6:r
 +--------------------------+-------------------------+
 | npm run report:mobile    | HTML de la suite mobile |
 +--------------------------+-------------------------+
-| npm run perf:load-report | HTML de Artillery       |
+| npm run perf -- <script> | HTML perf. (automático) |
 +--------------------------+-------------------------+
 ```
 

@@ -44,6 +44,7 @@ input/ → [ agente de QA ] → output/
 | 🗂️ **Gestor de pruebas** | Sube tus casos a Xray, QMetry (QTM4J) o AIO Tests: carpetas, vínculo con la historia, ciclos y casos dentro del ciclo |
 | 📤 **Publicador de resultados** | Después de `npm test`, sube a tu ciclo el estado de cada caso con su evidencia (captura; video si falló) |
 | 📱 **Mobile mapper** | Recorre la app mobile (Appium) siguiendo tus casos y genera la automatización en k0lmena |
+| ⚡ **Performance mapper** | Arma y corre pruebas de carga, estrés, soak y picos con k6 (APIs) o Artillery (navegador); te pregunta la carga y los umbrales y genera un reporte HTML |
 
 ---
 
@@ -131,7 +132,7 @@ Editá `.env` con la URL y las credenciales (`APP_URL`, `APP_USER`, `APP_PASSWOR
 
 ### 5. (Opcional) Automatizar con k0lmena
 
-Los agentes **web-mapper**, **api-mapper** y **mobile-mapper** generan la automatización una sola vez; después la corrés las veces que quieras **sin gastar tokens**:
+Los agentes **web-mapper**, **api-mapper**, **mobile-mapper** y **performance-mapper** generan la automatización una sola vez; después la corrés las veces que quieras **sin gastar tokens**:
 
 Usa el **mismo `.env` de la raíz** del paso 4 (ahí están `BASEURL`, `API_BASEURL`, el destino mobile, etc.):
 
@@ -140,6 +141,7 @@ cd herramientas/k0lmena
 npm install
 npx playwright install chromium
 npm test                  # corre web + api (también: test:web, test:api, test:mobile)
+npm run perf -- <script> smoke   # performance con k6 o Artillery (también: load, stress, soak, spike)
 ```
 
 Detalle de comandos, mobile (dispositivo, emulador o BrowserStack) y performance en [`herramientas/k0lmena/README.md`](herramientas/k0lmena/README.md).
@@ -170,6 +172,7 @@ Los agentes **gestor-pruebas** y **publicador-resultados** trabajan con **Xray (
 - *"Armá el informe de cierre de las pruebas de HU-001."* → resume la ronda en un informe HTML (modo oscuro) en `output/informes-cierre/`
 - *"Automatizá en k0lmena los casos de HU-001 contra https://tu-app.com."* → el web-mapper recorre la web y deja el `.feature`, steps y locators listos para `npm test`
 - *"Pasá a k0lmena los endpoints de /pet del Swagger https://petstore.swagger.io/v2/swagger.json."* → el api-mapper genera los `.feature` de API
+- *"Armá una prueba de carga de los endpoints de /pet para 50 usuarios."* → el performance-mapper te pregunta ambiente y umbrales, genera el script de k6, lo valida y deja el reporte HTML
 - *"Subí los casos de HU-001 a Xray en la carpeta Registro, vinculados a PROJ-12, y armá el ciclo del Sprint 5."* → el gestor-pruebas crea carpeta, casos, vínculos y ciclo
 - *"Subí los resultados de la última corrida web al ciclo PROJ-60."* → el publicador-resultados carga estados y evidencias
 

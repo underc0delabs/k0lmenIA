@@ -1,6 +1,6 @@
 ---
 name: automatizacion-k0lmena
-description: Convenciones para generar pruebas automatizadas en k0lmena (herramientas/k0lmena) — dónde va cada .feature, steps y locators de web, api y mobile, cómo nombrarlos y taggearlos, cómo reutilizar steps sin duplicar, qué helpers usar y cómo validar con npm. Úsalo al mapear casos de prueba a automatización (web-mapper, api-mapper, mobile-mapper).
+description: Convenciones para generar pruebas automatizadas en k0lmena (herramientas/k0lmena) — dónde va cada .feature, steps y locators de web, api y mobile, cómo nombrarlos y taggearlos, cómo reutilizar steps sin duplicar, qué helpers usar y cómo validar con npm; y los scripts de performance (k6 y Artillery). Úsalo al mapear casos de prueba a automatización (web-mapper, api-mapper, mobile-mapper, performance-mapper).
 ---
 
 # Automatización con k0lmena
@@ -12,7 +12,7 @@ herramientas/k0lmena/
 ├── web/      features/  steps/  locators/   (Playwright + Cucumber; hooks/, utils/ ya existen)
 ├── api/      features/  steps/              (axios + Cucumber; steps/comunes.steps.ts ya existe)
 ├── mobile/   features/  steps/  locators/   (WebdriverIO + Appium; support/ ya existe; apps/ = .apk/.ipa)
-├── performance/                             (Artillery y k6; no lo generan los mappers)
+├── performance/  k6/http/  artillery/       (k6 y Artillery; lo genera el performance-mapper)
 ├── cucumber.js  run-tests.js  env.js      (env.js carga el .env ÚNICO de la raíz del repo)
 ```
 
@@ -139,6 +139,88 @@ When('el usuario ingresa {string} en el campo usuario', async (usuario: string) 
 ```
 
 Dónde corre (dispositivo, emulador o BrowserStack) se define en el `.env` de la raíz (`MOBILE_TARGET`); el código de los steps es el mismo.
+
+## Performance — k6 y Artillery
+
+Se corre con `npm run perf -- <script> <perfil>` (`run-perf.js`). Perfiles: `smoke` (carga mínima, valida el script), `load`, `stress`, `soak`, `spike`. Cada corrida deja en `reports/performance/<k6|artillery>/` el reporte HTML, un resumen JSON chico, el resultado crudo y el log; la consola muestra solo el resumen.
+
+| Herramienta           | Cuándo                                               | Archivos                                                                 |
+| --------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------ |
+| k6                    | APIs / HTTP (escala a miles de usuarios)             | `performance/k6/http/HU-001-<slug>.ts`                                   |
+| Artillery + Playwright | Flujos de navegador (pocos usuarios: cada uno es un Chromium) | `performance/artillery/HU-001-<slug>.yaml` + `HU-001-<slug>.ts` (processor) |
+
+### k6
+
+```ts
+// performance/k6/http/HU-001-<slug>.ts
+import { check, group, sleep } from 'k6';
+import { env, opciones, pedir } from '../lib/k0lmena';
+export { handleSummary } from '../lib/k0lmena';   // obligatorio: arma el reporte
+
+const BASE = env.API_BASEURL;                       // o env.BASEURL; token: env.TOKEN (API_TOKEN)
+const E = { listar: 'GET /usuarios', crear: 'POST /usuarios' };   // nombre = método + path con {params}
+
+export const options = opciones({
+  vus: 50, duracion: '5m',                          // carga objetivo (la define la persona)
+  // rampa: '1m', duracionSoak: '2h', pico: 200,    // opcionales
+  umbrales: {                                       // los define la persona
+    http_req_failed: ['rate<0.01'],
+    http_req_duration: ['p(95)<500', 'p(99)<1000'],
+    'http_req_duration{name:POST /usuarios}': ['p(95)<800'],   // umbral por endpoint
+    checks: ['rate>0.99'],
+  },
+  endpoints: Object.values(E),                      // métricas por endpoint en el reporte
+});
+
+export default function () {
+  group('Listar usuarios', () => {
+    const res = pedir('GET', E.listar, `${BASE}/usuarios?page=1`);
+    check(res, { 'listar: status 200': (r) => r.status === 200 });
+  });
+  sleep(1);                                         // tiempo de pensamiento
+}
+```
+
+- `pedir(metodo, nombre, url, body?, headers?)` agrega `Content-Type` JSON y el `Authorization: Bearer` si hay `API_TOKEN`.
+- `__ENV.X` lee cualquier variable del `.env` de la raíz (ej. `__ENV.APP_USER`). Nunca escribas credenciales en el script.
+- Datos variables: `__VU` y `__ITER` para no repetir (ej. emails únicos); un login por usuario va en `setup()` o al inicio de la iteración.
+- No modifiques `lib/k0lmena.ts`.
+
+### Artillery + Playwright
+
+```yaml
+# performance/artillery/HU-001-<slug>.yaml
+config:
+  target: https://app.ejemplo.com                  # la URL confirmada por la persona
+  engines: { playwright: { launchOptions: { headless: true } } }
+  processor: ./HU-001-<slug>.ts
+  plugins: { ensure: {} }                          # obligatorio para evaluar los umbrales
+  ensure:
+    maxErrorRate: 1                                # % de usuarios que no completaron el flujo
+    thresholds:
+      - browser.step.Iniciar sesión.p95: 3000      # <métrica>: máximo (ms)
+  environments:                                    # un environment por perfil
+    smoke:  { phases: [{ name: smoke, duration: 30, arrivalCount: 5 }] }
+    load:   { phases: [{ name: rampa, duration: 60, arrivalRate: 1, rampTo: 5 }, { name: sostenido, duration: 300, arrivalRate: 5, maxVusers: 20 }] }
+scenarios:
+  - { name: HU-001 <flujo>, engine: playwright, testFunction: flujo }
+```
+
+```ts
+// performance/artillery/HU-001-<slug>.ts
+export async function flujo(page, _vu, _events, test) {
+  await test.step('Iniciar sesión', async () => {      // cada step = métrica browser.step.<nombre>
+    await page.goto('/login');
+    await page.getByLabel('Usuario').fill(process.env.APP_USER ?? '');
+    await page.getByLabel('Contraseña').fill(process.env.APP_PASSWORD ?? '');
+    await page.getByRole('button', { name: 'Ingresar' }).click();
+    await page.getByRole('heading', { name: 'Inicio' }).waitFor();   // cada step termina con una espera observable
+  });
+}
+```
+
+- Usá los mismos selectores que `web/locators/HU-XXX.locators.ts` (role/label/placeholder) si la historia ya está automatizada.
+- `arrivalRate` = usuarios nuevos por segundo; `maxVusers` = tope de simultáneos. Cada usuario es un navegador: en una PC común, más de 10-20 simultáneos satura la máquina y mide la PC, no la app.
 
 ## Validar lo generado (una sola vez)
 

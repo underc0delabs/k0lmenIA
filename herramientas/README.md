@@ -17,7 +17,7 @@ herramientas/
 Hay dos integradas:
 
 - **Newman** (en `newman/`): la usa el agente `ejecutor-api` para correr pruebas de API.
-- **k0lmena** (en `k0lmena/`): copia del framework [underc0delabs/k0lmena](https://github.com/underc0delabs/k0lmena). Los agentes `web-mapper`, `api-mapper` y `mobile-mapper` generan ahí los `.feature`, steps y locators, y después la suite corre con `npm test` sin agentes ni tokens.
+- **k0lmena** (en `k0lmena/`): copia del framework [underc0delabs/k0lmena](https://github.com/underc0delabs/k0lmena). Los agentes `web-mapper`, `api-mapper` y `mobile-mapper` generan ahí los `.feature`, steps y locators, y después la suite corre con `npm test` sin agentes ni tokens. El `performance-mapper` genera los scripts de k6 y Artillery, que corren con `npm run perf`.
 
 Las que vengan (JMeter…) se suman con el mismo patrón: una subcarpeta + su README.
 

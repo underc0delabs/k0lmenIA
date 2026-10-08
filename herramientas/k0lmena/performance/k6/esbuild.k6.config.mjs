@@ -1,39 +1,25 @@
 // performance/k6/esbuild.k6.config.mjs
-// Bundlea las suites TS de k6 y copia el summary.js sin bundlear
+// Compila los scripts TypeScript de k6 (performance/k6/http/*.ts) a performance/k6/dist/.
+// Uso: node performance/k6/esbuild.k6.config.mjs [script.ts ...]   (sin argumentos: todos)
 
 import { build } from 'esbuild';
 import { globby } from 'globby';
 import path from 'node:path';
 import fs from 'node:fs';
 
-const entryPatterns = [
-  'performance/k6/http/*.ts',
-  'performance/k6/browser/*.ts',
-  // ⚠️ No bundlear reports/*.js (se copia tal cual)
-];
+const pedidos = process.argv.slice(2);
+const archivos = pedidos.length ? pedidos : await globby('performance/k6/http/*.ts');
 
-const entries = (await globby(entryPatterns)).map((f) => ({
+const entries = archivos.map((f) => ({
   in: f,
   out: path.join('performance/k6/dist', path.relative('performance/k6', f)).replace(/\.ts$/, '.js'),
 }));
 
-// Asegurar carpetas de salida
-for (const e of entries) {
-  fs.mkdirSync(path.dirname(e.out), { recursive: true });
-}
+for (const e of entries) fs.mkdirSync(path.dirname(e.out), { recursive: true });
 
-// Módulos nativos de k6 (se resuelven en runtime)
-const K6_EXTERNAL = [
-  'k6',
-  'k6/http',
-  'k6/metrics',
-  'k6/encoding',
-  'k6/ws',
-  'k6/experimental/browser',
-  'k6/experimental/timers',
-];
+// Módulos nativos de k6 (se resuelven en runtime) y librerías remotas de jslib.k6.io
+const K6_EXTERNAL = ['k6', 'k6/*', 'https://*'];
 
-// Build de todas las entradas
 await Promise.all(
   entries.map((e) =>
     build({
@@ -42,17 +28,12 @@ await Promise.all(
       bundle: true,
       platform: 'neutral',
       format: 'esm',
-      target: ['es2017'], // más compatible con k6
-      sourcemap: true,
+      target: ['es2020'],
+      sourcemap: false,
+      logLevel: 'error',
       external: K6_EXTERNAL,
     }),
   ),
 );
 
-// ✅ Copiar summary.js a dist (sin bundlear)
-const srcSummary = 'performance/k6/reports/summary.js';
-const outSummary = 'performance/k6/dist/reports/summary.js';
-fs.mkdirSync(path.dirname(outSummary), { recursive: true });
-fs.copyFileSync(srcSummary, outSummary);
-
-console.log(`Built ${entries.length} k6 files and copied reports/summary.js`);
+console.log(`k6: ${entries.length} script(s) compilado(s) en performance/k6/dist/`);

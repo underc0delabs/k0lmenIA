@@ -17,7 +17,8 @@ assets/
 output/
 /tools/k6
 /performance/k6/dist/
-/reports/performance/k6/*
+/reports/performance/k6/
+/reports/performance/artillery/
 front-history.json
 # Per-worker auto-healing history files (Cucumber parallel mode)
 front-history.worker-*.json

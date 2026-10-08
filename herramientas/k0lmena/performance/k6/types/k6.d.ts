@@ -1,31 +1,34 @@
-// Stubs mínimos para compilar con TS (no son los tipos oficiales)
+// Stubs mínimos para compilar con TS (no son los tipos oficiales; k6 resuelve los módulos en runtime)
 
 declare module 'k6' {
   export function sleep(seconds: number): void;
-  export function check<T = any>(value: T, checks: Record<string, (val: T) => boolean>): boolean;
+  export function check<T = any>(value: T, checks: Record<string, (val: T) => boolean>, tags?: Record<string, string>): boolean;
+  export function group<T>(name: string, fn: () => T): T;
+  export function fail(message?: string): never;
 }
 
 declare module 'k6/http' {
-  export type ResponseType = any;
-  export type RefinedResponse<T = any> = {
-    status: number;
-    body?: any;
+  export interface Params {
     headers?: Record<string, string>;
-    json<T2 = any>(): T2;
-  } & T;
+    tags?: Record<string, string>;
+    timeout?: string | number;
+  }
+  export interface Response {
+    status: number;
+    body: any;
+    headers: Record<string, string>;
+    timings: Record<string, number>;
+    json(selector?: string): any;
+  }
 
   const http: {
-    get(url: string, params?: { headers?: Record<string, string> }): RefinedResponse<ResponseType>;
-    post(url: string, body?: any, params?: { headers?: Record<string, string> }): RefinedResponse<ResponseType>;
-    put(url: string, body?: any, params?: { headers?: Record<string, string> }): RefinedResponse<ResponseType>;
-    del(url: string, params?: { headers?: Record<string, string> }): RefinedResponse<ResponseType>;
+    request(method: string, url: string, body?: any, params?: Params): Response;
+    get(url: string, params?: Params): Response;
+    post(url: string, body?: any, params?: Params): Response;
+    put(url: string, body?: any, params?: Params): Response;
+    patch(url: string, body?: any, params?: Params): Response;
+    del(url: string, body?: any, params?: Params): Response;
   };
 
   export default http;
-}
-
-declare module 'k6/experimental/browser' {
-  export const browser: {
-    newPage(): any;
-  };
 }

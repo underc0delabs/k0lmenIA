@@ -1,0 +1,47 @@
+# Ejemplo de prueba de performance con navegador (Artillery + Playwright).
+# Los genera el agente performance-mapper. Correr:  npm run perf -- ejemplo-login smoke
+#
+# - Cada perfil (smoke, load, stress, soak, spike) es un "environment" con sus fases.
+#   arrivalRate = usuarios nuevos por segundo; maxVusers = tope de usuarios simultáneos.
+# - ensure = umbrales (metrica: máximo): si alguno no se cumple, la corrida termina con error.
+#   browser.step.<nombre> sale de cada test.step() del processor (ms).
+config:
+  target: https://qarmy.ar
+  engines:
+    playwright:
+      launchOptions:
+        headless: true
+  processor: ./ejemplo-login.ts
+  plugins:
+    ensure: {}                            # activa la evaluación de los umbrales
+  ensure:
+    maxErrorRate: 1                       # % de usuarios que no completaron el flujo
+    thresholds:
+      - browser.step.Ingresar al login.p95: 5000
+      - browser.step.Iniciar sesión.p95: 5000
+  environments:
+    smoke:
+      phases:
+        - { name: smoke, duration: 30, arrivalCount: 5 }   # 5 usuarios, de a uno
+    load:
+      phases:
+        - { name: rampa, duration: 30, arrivalRate: 1, rampTo: 2 }
+        - { name: sostenido, duration: 60, arrivalRate: 2, maxVusers: 5 }
+    stress:
+      phases:
+        - { name: base, duration: 60, arrivalRate: 2 }
+        - { name: 2x, duration: 60, arrivalRate: 4 }
+        - { name: 3x, duration: 60, arrivalRate: 6 }
+    soak:
+      phases:
+        - { name: sostenido, duration: 1800, arrivalRate: 1, maxVusers: 3 }
+    spike:
+      phases:
+        - { name: base, duration: 60, arrivalRate: 1 }
+        - { name: pico, duration: 20, arrivalRate: 8 }
+        - { name: recuperacion, duration: 60, arrivalRate: 1 }
+
+scenarios:
+  - name: Login QARMY
+    engine: playwright
+    testFunction: loginQARMY

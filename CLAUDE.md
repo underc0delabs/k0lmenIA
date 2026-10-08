@@ -41,6 +41,7 @@ input/ → [ agente ] → output/
 | `gestor-pruebas` | Crea carpetas y casos en Xray (Cloud o Server/DC), QTM4J o AIO Tests, los vincula a historias, crea ciclos y les agrega casos (vía `scripts/gestion/`) | La herramienta de gestión + `output/gestion/` |
 | `publicador-resultados` | Sube los resultados de una corrida de k0lmena (`npm test`) al ciclo: estado, comentario y evidencias (captura; video si falló) | La herramienta de gestión |
 | `mobile-mapper` | Recorre la app mobile con Appium MCP siguiendo los casos y genera la automatización de k0lmena (.feature, steps y locators) | `herramientas/k0lmena/mobile/` + `output/mapeos/` |
+| `performance-mapper` | Pruebas de performance (smoke, load, stress, soak, spike) con k6 para APIs o Artillery + Playwright para flujos web: pregunta carga y umbrales, genera el script, lo valida y lo corre con `npm run perf` (reporte HTML) | `herramientas/k0lmena/performance/` + `reports/performance/` + `output/mapeos/` |
 
 ---
 
@@ -120,6 +121,6 @@ El repo se apoya en estas piezas: **agentes** (`.claude/agents/`, el quién), **
 
 ## Automatización con k0lmena (ahorro de tokens)
 
-`herramientas/k0lmena/` es el framework de automatización (web, api, mobile y performance). Los agentes **mapper** escriben la automatización **una sola vez** (skill `automatizacion-k0lmena`); después la suite corre **sin agentes ni tokens** con `cd herramientas/k0lmena && npm test`. Para correr pruebas ya automatizadas, preferí `npm test` antes que los ejecutores en vivo (`ejecutor-e2e` / `ejecutor-api`), que gastan tokens en cada corrida.
+`herramientas/k0lmena/` es el framework de automatización (web, api, mobile y performance). Los agentes **mapper** escriben la automatización **una sola vez** (skill `automatizacion-k0lmena`); después la suite corre **sin agentes ni tokens** con `cd herramientas/k0lmena && npm test` (performance: `npm run perf -- <script> <perfil>`). Para correr pruebas ya automatizadas, preferí `npm test` antes que los ejecutores en vivo (`ejecutor-e2e` / `ejecutor-api`), que gastan tokens en cada corrida.
 
 Secretos (tokens, credenciales): van en variables de entorno con `${VARIABLE}` o en un `.env` local (gitignored), **nunca** commiteados; hay una plantilla `.env.example`. El `.mcp.json` está versionado y trae la conexión a Playwright (sin secretos); `.mcp.json.example` es la plantilla para sumar conexiones con token (Jira, Xray, QMetry/QTM4J, AIO Tests); cómo activarlas está en `CONECTORES.md`.
