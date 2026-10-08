@@ -21,6 +21,7 @@ import {
 import * as fs from "fs";
 import * as path from "path";
 import { consumeHealingEvents, flushHealingHistory } from "../utils/autoHealing";
+import { crearGif, htmlGif, modoEvidencia } from "../../tools/evidencia/gif";
 
 setDefaultTimeout(60 * 1000);
 
@@ -36,6 +37,8 @@ let pages: Page[] = [];
 let contexts: BrowserContext[] = [];
 
 const pageLogs = new Map<Page, string[]>();
+// Capturas por paso para el GIF del recorrido (solo con EVIDENCE=ambos).
+const pageFrames = new Map<Page, Buffer[]>();
 const traceState = new Map<
   BrowserContext,
   { started: boolean; stopped: boolean }
@@ -185,6 +188,7 @@ Before(async function () {
   contexts.length = 0;
   pages.length = 0;
   pageLogs.clear();
+  pageFrames.clear();
   traceState.clear();
 
   const viewport = {
@@ -224,6 +228,13 @@ AfterStep(async function ({ result, pickle }) {
       })
       .join("\n\n");
     await this.attach(lines, "text/plain");
+  }
+
+  if (modoEvidencia() === "ambos" && result?.status === Status.PASSED) {
+    for (const page of pages) {
+      const frame = await page.screenshot().catch(() => undefined);
+      if (frame) pageFrames.set(page, [...(pageFrames.get(page) ?? []), frame]);
+    }
   }
 
   if (!result || result.status !== Status.FAILED) return;
@@ -319,8 +330,24 @@ After(async function (scenario: ITestCaseHookParameter) {
   const scenarioName = sanitizeFilePart(scenario?.pickle?.name || scenarioNameFromWorld(this as any));
   const timestamp = Date.now();
 
-  // Evidencia de un escenario que pasa: captura final de la pantalla (una por test y navegador).
-  if (!failed && boolFromEnv("EVIDENCE", true)) {
+  // Evidencia de un escenario que pasa: captura final (una por test y navegador) y,
+  // con EVIDENCE=ambos, también el GIF del recorrido.
+  const evidencia = modoEvidencia();
+  if (!failed && evidencia === "ambos") {
+    const evidenceDir = await ensureDirAbs(path.join(reportRoot, "evidencias"));
+    for (let i = 0; i < pages.length; i++) {
+      const browserLabel = getBrowserLabel(browsers[i] ?? (browsers[0] as any));
+      const gif = crearGif(pageFrames.get(pages[i]) ?? []);
+      if (!gif) continue;
+      const gifAbs = path.join(evidenceDir, `gif-${scenarioName}-${browserLabel}-${timestamp}.gif`);
+      fs.writeFileSync(gifAbs, gif);
+      await this.attach(
+        htmlGif(toPosix(path.relative(reportRoot, gifAbs)), `Recorrido del escenario (${browserLabel})`),
+        "text/html"
+      );
+    }
+  }
+  if (!failed && evidencia !== "off") {
     const evidenceDir = await ensureDirAbs(path.join(reportRoot, "evidencias"));
     for (let i = 0; i < pages.length; i++) {
       const browserLabel = getBrowserLabel(browsers[i] ?? (browsers[0] as any));
@@ -374,6 +401,7 @@ After(async function (scenario: ITestCaseHookParameter) {
   pages.length = 0;
   nodeLogs.length = 0;
   pageLogs.clear();
+  pageFrames.clear();
   traceState.clear();
 });
 

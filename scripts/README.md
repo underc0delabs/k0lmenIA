@@ -10,6 +10,7 @@ Actuales:
 - `newman_a_resultados.py` — convierte la salida de Newman (JSON) al formato que consume `generar_reporte.py`, para que las pruebas de API usen el mismo reporte.
 - `generar_plan.py` — genera el **plan de pruebas** en HTML (dashboard oscuro) a partir de un JSON.
 - `generar_informe_cierre.py` — genera el **informe de cierre** de una ronda en HTML (dashboard oscuro) a partir de un JSON.
+- `gestion/` — integración con **Xray (Cloud y Server/DC), QMetry para Jira (QTM4J) y AIO Tests**: carpetas, casos, vínculos con historias, ciclos y publicación de resultados con evidencias. La usan los agentes `gestor-pruebas` y `publicador-resultados`. Ver `gestion/README.md`.
 - `_estilos_reporte.py` — módulo común con la paleta, el CSS y los gráficos del modo oscuro (lo usan `generar_plan.py` y `generar_informe_cierre.py`); centraliza el tema para que todos los reportes se vean igual.
 
 Necesitan **Python 3** (ver `requirements.txt`).

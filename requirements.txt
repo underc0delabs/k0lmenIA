@@ -1,3 +1,4 @@
 # Dependencias de los scripts del repo (instalá con: pip install -r requirements.txt)
 openpyxl>=3.1
 tabulate>=0.9
+requests>=2.31

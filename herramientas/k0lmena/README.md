@@ -145,7 +145,7 @@ Primero corré los tests y después generá el reporte: refleja **solo la últim
 +---------+------------------------------+------------------------------------------+
 | Suite   | Escenario que pasa           | Escenario que falla                      |
 +=========+==============================+==========================================+
-| web     | Captura final de la pantalla | Video completo, captura, error con       |
+| web     | Captura final (+ GIF opc.)   | Video completo, captura, error con       |
 |         |                              | stack, URL y título de la página, logs   |
 |         |                              | del navegador (consola, errores JS,      |
 |         |                              | requests fallidos, respuestas HTTP >=    |
@@ -154,12 +154,18 @@ Primero corré los tests y después generá el reporte: refleja **solo la últim
 | api     | Request y response completos | Lo mismo, más el error de la validación  |
 |         |                              | que falló                                |
 +---------+------------------------------+------------------------------------------+
-| mobile  | Captura final de la pantalla | Video completo, captura, page source y   |
+| mobile  | Captura final (+ GIF opc.)   | Video completo, captura, page source y   |
 |         |                              | logs del dispositivo (logcat / syslog)   |
 +---------+------------------------------+------------------------------------------+
 ```
 
-Se controlan desde el `.env` de la raíz: `VIDEO` (`on-failure` por defecto, `on` u `off`), `EVIDENCE` (`on` u `off`) y `TRACE` (`on-failure`, `on` u `off`). En el reporte, el video se abre desde el adjunto **Video** del escenario y el trace se descarga para abrirlo en [trace.playwright.dev](https://trace.playwright.dev). En API el header `Authorization` se oculta.
+Se controlan desde el `.env` de la raíz:
+
+- `EVIDENCE`: qué se guarda de los escenarios que pasan. `captura` (captura final), `ambos` (captura + **GIF del recorrido**, una captura por paso; suma ~0,5 s por escenario) u `off`. **Si queda vacía, `npm test` lo pregunta al arrancar**; en CI o sin terminal interactiva usa `captura`.
+- `VIDEO`: `on-failure` (por defecto), `on` u `off`.
+- `TRACE`: `on-failure`, `on` u `off`.
+
+En el reporte, el GIF y el video se abren desde los adjuntos del escenario y el trace se descarga para abrirlo en [trace.playwright.dev](https://trace.playwright.dev). En API el header `Authorization` se oculta.
 
 Archivos sueltos: `reports/web/videos/`, `traces/`, `screenshots/` y `evidencias/` (mobile: `reports/mobile/html/videos/`, `screenshots/` y `evidencias/`).
 

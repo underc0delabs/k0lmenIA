@@ -41,6 +41,8 @@ input/ → [ agente de QA ] → output/
 | 🏁 **Informe de cierre** | Resume toda la ronda (resultados, bugs, recomendación go/no-go) en un dashboard HTML en modo oscuro |
 | 🧭 **Web mapper** | Recorre la web siguiendo tus casos y genera la automatización en k0lmena (.feature, steps y locators) |
 | 🛰️ **API mapper** | Lee un Postman o un Swagger, verifica los endpoints y genera las pruebas de API en k0lmena |
+| 🗂️ **Gestor de pruebas** | Sube tus casos a Xray, QMetry (QTM4J) o AIO Tests: carpetas, vínculo con la historia, ciclos y casos dentro del ciclo |
+| 📤 **Publicador de resultados** | Después de `npm test`, sube a tu ciclo el estado de cada caso con su evidencia (captura; video si falló) |
 | 📱 **Mobile mapper** | Recorre la app mobile (Appium) siguiendo tus casos y genera la automatización en k0lmena |
 
 ---
@@ -144,7 +146,7 @@ Detalle de comandos, mobile (dispositivo, emulador o BrowserStack) y performance
 
 ### 6. (Opcional) Conectar tu herramienta de gestión de pruebas
 
-k0lmenIA trae conectores MCP para **Xray**, **QMetry** (standalone y QTM4J) y **AIO Tests**, así los agentes pueden leer y cargar casos y resultados directamente ahí. Vienen desactivados; los pasos para activar el tuyo están en [`CONECTORES.md`](CONECTORES.md).
+Los agentes **gestor-pruebas** y **publicador-resultados** trabajan con **Xray (Cloud o Server/DC)**, **QMetry para Jira (QTM4J)** y **AIO Tests**: completá la sección *Gestión de pruebas* del `.env` (herramienta, proyecto y credenciales). Detalle en [`scripts/gestion/README.md`](scripts/gestion/README.md). Además hay conectores MCP opcionales para consultar QMetry y AIO desde el chat ([`CONECTORES.md`](CONECTORES.md)).
 
 ---
 
@@ -168,6 +170,8 @@ k0lmenIA trae conectores MCP para **Xray**, **QMetry** (standalone y QTM4J) y **
 - *"Armá el informe de cierre de las pruebas de HU-001."* → resume la ronda en un informe HTML (modo oscuro) en `output/informes-cierre/`
 - *"Automatizá en k0lmena los casos de HU-001 contra https://tu-app.com."* → el web-mapper recorre la web y deja el `.feature`, steps y locators listos para `npm test`
 - *"Pasá a k0lmena los endpoints de /pet del Swagger https://petstore.swagger.io/v2/swagger.json."* → el api-mapper genera los `.feature` de API
+- *"Subí los casos de HU-001 a Xray en la carpeta Registro, vinculados a PROJ-12, y armá el ciclo del Sprint 5."* → el gestor-pruebas crea carpeta, casos, vínculos y ciclo
+- *"Subí los resultados de la última corrida web al ciclo PROJ-60."* → el publicador-resultados carga estados y evidencias
 
 > 💡 El formato del **reporte de bug** lo definís en `plantillas/plantilla-reporte-bug.md`. Los **casos de prueba** salen como planilla Excel (referencia `plantillas/plantilla-casos-prueba.xlsx`, la arma `scripts/generar_casos.py`) más un informe de cobertura (referencia `plantillas/plantilla-cobertura.md`).
 

@@ -38,7 +38,7 @@ Herramientas que el agente **ejecuta** por línea de comandos, con sus plantilla
 
 ### Scripts — utilidades internas (`scripts/`)
 
-Código Python propio del repo para tareas mecánicas (generar la planilla `.xlsx`, normalizar tablas). Las utilidades internas nuevas viven acá.
+Código Python propio del repo para tareas mecánicas (generar la planilla `.xlsx`, normalizar tablas). Incluye `scripts/gestion/`, la integración con Xray, QMetry (QTM4J) y AIO Tests sobre sus APIs oficiales: los agentes deciden qué hacer y el script lo ejecuta, sin depender de servers MCP. Las utilidades internas nuevas viven acá.
 
 ## En resumen
 

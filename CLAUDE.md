@@ -38,6 +38,8 @@ input/ → [ agente ] → output/
 | `generador-reporte-cierre` | Informe de cierre de la ronda (resultados, bugs, recomendación go/no-go) como dashboard HTML en modo oscuro | `output/informes-cierre/` |
 | `web-mapper` | Recorre la web con Playwright MCP siguiendo casos manuales o BDD y genera la automatización de k0lmena (.feature ajustado, steps y locators) | `herramientas/k0lmena/web/` + `output/mapeos/` |
 | `api-mapper` | Lee una colección de Postman o un Swagger/OpenAPI, verifica los endpoints y genera los .feature de k0lmena con los steps genéricos | `herramientas/k0lmena/api/` + `output/mapeos/` |
+| `gestor-pruebas` | Crea carpetas y casos en Xray (Cloud o Server/DC), QTM4J o AIO Tests, los vincula a historias, crea ciclos y les agrega casos (vía `scripts/gestion/`) | La herramienta de gestión + `output/gestion/` |
+| `publicador-resultados` | Sube los resultados de una corrida de k0lmena (`npm test`) al ciclo: estado, comentario y evidencias (captura; video si falló) | La herramienta de gestión |
 | `mobile-mapper` | Recorre la app mobile con Appium MCP siguiendo los casos y genera la automatización de k0lmena (.feature, steps y locators) | `herramientas/k0lmena/mobile/` + `output/mapeos/` |
 
 ---
@@ -111,6 +113,10 @@ Reglas (valen para **todos** los agentes y cualquier sección, incluidas las que
 ## Arquitectura (cómo crece el repo)
 
 El repo se apoya en estas piezas: **agentes** (`.claude/agents/`, el quién), **skills** (`.claude/skills/`, el cómo, cargados on-demand), **MCP** (`.mcp.json`, conexiones a sistemas externos — un solo archivo que escala a muchas conexiones: Jira, Xray, Playwright…), **herramientas** (`herramientas/`, herramientas externas de testing, una subcarpeta por herramienta: Newman y **k0lmena**) y **scripts** (`scripts/`, utilidades internas determinísticas). El detalle y cómo extender cada una está en `ARQUITECTURA.md`.
+
+## Herramientas de gestión de pruebas
+
+`scripts/gestion/gestion.py` integra **Xray Cloud, Xray Server/DC, QTM4J y AIO Tests** con los mismos comandos (configurados en el `.env` de la raíz con `GESTION_HERRAMIENTA` y `GESTION_PROYECTO`). La trazabilidad local `output/gestion/<HU>-<herramienta>.json` guarda qué `CP-XXX` es qué key remota. Detalle en `scripts/gestion/README.md`.
 
 ## Automatización con k0lmena (ahorro de tokens)
 

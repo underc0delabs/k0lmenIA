@@ -37,16 +37,45 @@ const CLEAN = {
   web: ['screenshots', 'traces', 'videos', 'evidencias'].map((d) =>
     path.resolve(__dirname, process.env.REPORT_DIR || 'reports/web', d)
   ),
-  mobile: ['html/videos', 'evidencias', 'screenshots'].map((d) => path.join(__dirname, 'reports/mobile', d)),
+  mobile: ['html/videos', 'html/evidencias', 'evidencias', 'screenshots'].map((d) => path.join(__dirname, 'reports/mobile', d)),
 };
 
-const results = plan.map((suite) => {
-  console.log(`\n=== k0lmena: suite ${suite} ===`);
-  for (const dir of CLEAN[suite] || []) fs.rmSync(dir, { recursive: true, force: true });
-  const { status } = spawnSync(SUITES[suite], { stdio: 'inherit', shell: true });
-  return { suite, ok: status === 0 };
-});
+// Evidencia de los tests que pasan: si EVIDENCE no está en el .env, se pregunta (solo en una
+// terminal interactiva; en CI o sin terminal queda "captura").
+function preguntarEvidencia() {
+  if ((process.env.EVIDENCE ?? '').trim()) return Promise.resolve();
+  if (!process.stdin.isTTY || process.env.CI || !plan.some((s) => s === 'web' || s === 'mobile')) {
+    process.env.EVIDENCE = 'captura';
+    return Promise.resolve();
+  }
+  const rl = require('readline').createInterface({ input: process.stdin, output: process.stdout });
+  const texto =
+    '\n¿Qué evidencia guardo de los tests que pasan?\n' +
+    '  1) Solo captura\n' +
+    '  2) Captura + GIF del recorrido (suma ~0,5 s por escenario)\n' +
+    'Opción [1]: ';
+  return new Promise((resolver) =>
+    rl.question(texto, (r) => {
+      rl.close();
+      process.env.EVIDENCE = r.trim() === '2' ? 'ambos' : 'captura';
+      console.log(`Evidencia: ${process.env.EVIDENCE === 'ambos' ? 'captura + GIF' : 'solo captura'}` +
+        ' (para no preguntar, fijá EVIDENCE en el .env de la raíz)');
+      resolver();
+    })
+  );
+}
 
-console.log('\n=== Resumen ===');
-for (const r of results) console.log(`${r.suite.padEnd(7)} ${r.ok ? 'OK' : 'FALLÓ'}`);
-process.exit(results.every((r) => r.ok) ? 0 : 1);
+function correr() {
+  const results = plan.map((suite) => {
+    console.log(`\n=== k0lmena: suite ${suite} ===`);
+    for (const dir of CLEAN[suite] || []) fs.rmSync(dir, { recursive: true, force: true });
+    const { status } = spawnSync(SUITES[suite], { stdio: 'inherit', shell: true });
+    return { suite, ok: status === 0 };
+  });
+
+  console.log('\n=== Resumen ===');
+  for (const r of results) console.log(`${r.suite.padEnd(7)} ${r.ok ? 'OK' : 'FALLÓ'}`);
+  process.exit(results.every((r) => r.ok) ? 0 : 1);
+}
+
+preguntarEvidencia().then(correr);

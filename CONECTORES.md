@@ -1,6 +1,6 @@
 # Conectores de gestión de pruebas (MCP)
 
-Cómo conectar k0lmenIA a **Xray**, **QMetry** y **AIO Tests** para que los agentes lean y escriban casos, ejecuciones y resultados directamente en tu herramienta de gestión de pruebas.
+Cómo conectar k0lmenIA por MCP a **QMetry**, **AIO Tests** y **Appium**. Xray se integra sin MCP (ver abajo).
 
 Las conexiones están definidas en `.mcp.json.example`. No vienen activas en `.mcp.json` porque cada una necesita credenciales propias. Activá solo las que uses.
 
@@ -10,8 +10,6 @@ Las conexiones están definidas en `.mcp.json.example`. No vienen activas en `.m
 +-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
 | Conector  | Herramienta                             | Server MCP                              | Tipo        | Transporte |
 +===========+=========================================+=========================================+=============+============+
-| xray      | Xray (Cloud o Server/Data Center)       | jithinjosejacob/xray-mcp-server         | Comunitario | stdio      |
-+-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
 | qmetry    | QMetry Test Management                  | @smartbear/mcp                          | Oficial     | stdio      |
 +-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
 | qtm4j     | QMetry Test Management for Jira (QTM4J) | @smartbear/mcp                          | Oficial     | stdio      |
@@ -20,7 +18,7 @@ Las conexiones están definidas en `.mcp.json.example`. No vienen activas en `.m
 +-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
 ```
 
-> Xray no tiene un server MCP oficial. El conector usa un proyecto de la comunidad: revisá su código antes de darle credenciales.
+> **Para crear carpetas, casos, ciclos y publicar resultados no hace falta ningún MCP**: lo hace la integración propia `scripts/gestion/` (agentes `gestor-pruebas` y `publicador-resultados`), que soporta **Xray Cloud, Xray Server/Data Center, QTM4J y AIO Tests** con sus APIs oficiales. Configuración en [`scripts/gestion/README.md`](scripts/gestion/README.md). Los MCP de esta página son opcionales, para consultar o explorar la herramienta desde el chat.
 
 ---
 
@@ -48,33 +46,7 @@ claude
 
 ## Xray
 
-Usa el server comunitario [`jithinjosejacob/xray-mcp-server`](https://github.com/jithinjosejacob/xray-mcp-server), que soporta Xray Cloud y Server/Data Center. No está publicado en npm, así que se clona y se compila una vez:
-
-```bash
-git clone https://github.com/jithinjosejacob/xray-mcp-server.git
-cd xray-mcp-server
-npm install
-npm run build
-```
-
-```
-+--------------------------+-------------+-----------------------------------------+
-| Variable                 | Obligatoria | Descripción                             |
-+==========================+=============+=========================================+
-| XRAY_MCP_PATH            | Sí          | Ruta absoluta a la carpeta clonada (usá |
-|                          |             | / también en Windows)                   |
-+--------------------------+-------------+-----------------------------------------+
-| XRAY_DEPLOYMENT          | No (cloud)  | cloud o server                          |
-+--------------------------+-------------+-----------------------------------------+
-| XRAY_CLOUD_CLIENT_ID     | Sí (Cloud)  | Client ID de la API key de Xray         |
-+--------------------------+-------------+-----------------------------------------+
-| XRAY_CLOUD_CLIENT_SECRET | Sí (Cloud)  | Client Secret de la API key de Xray     |
-+--------------------------+-------------+-----------------------------------------+
-```
-
-La API key se crea en Jira, en **Configuración global de Xray > API Keys**, idealmente con un usuario de servicio.
-
-**Xray Server / Data Center:** poné `XRAY_DEPLOYMENT=server` y agregá al bloque `env` del conector `XRAY_JIRA_BASE_URL`, `XRAY_AUTH_TYPE` (`token` o `basic`) y `XRAY_TOKEN` (o `XRAY_USERNAME` y `XRAY_PASSWORD` si usás `basic`).
+Xray **no tiene un server MCP oficial** y los comunitarios no cubren carpetas, vínculos con historias ni evidencias. Por eso Xray (Cloud y Server/Data Center) se integra con los scripts propios de `scripts/gestion/`, sobre la API oficial de Xray. Ver [`scripts/gestion/README.md`](scripts/gestion/README.md).
 
 ## QMetry
 
@@ -160,5 +132,6 @@ Se activa igual que los demás conectores (entrada `appium-mcp` de `.mcp.json.ex
 - SmartBear MCP (QMetry y QTM4J): https://github.com/SmartBear/smartbear-mcp
 - AIO Tests MCP Server, guía de configuración: https://aiosupport.atlassian.net/wiki/spaces/AioTests/pages/3097624764/AIO+Tests+MCP+Server+Setup+Configuration+Guide
 - AIO MCP Tools: https://aiosupport.atlassian.net/wiki/spaces/AioTests/pages/3115253762/AIO+MCP+Tools
-- Xray MCP Server (comunitario): https://github.com/jithinjosejacob/xray-mcp-server
+- Xray Cloud GraphQL API (integración propia): https://docs.getxray.app/display/XRAYCLOUD/GraphQL+API
+- Xray Server/DC REST API (integración propia): https://docs.getxray.app/display/XRAY/REST+API
 - Appium MCP (oficial): https://github.com/appium/appium-mcp
