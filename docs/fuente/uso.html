@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>k0lmenIA · Cómo se usa</title>
+<link rel="stylesheet" href="comun.css">
+<style>
+  .lienzo { width: 1800px; }
+  .etapas { display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: 22px; }
+  .etapa { background: rgba(255,255,255,0.015); border: 1px solid var(--linea); border-radius: 18px; padding: 18px; }
+  .etapa > h2 { margin: 0 0 4px; font-size: 24px; display: flex; align-items: center; gap: 12px; }
+  .etapa > p { margin: 0 0 16px; color: var(--muted); font-size: 15px; }
+  .num-etapa { width: 38px; height: 38px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 20px; font-weight: 800; color: #0b0f17; }
+  .paso { display: grid; grid-template-columns: 34px 1fr; gap: 12px; background: var(--panel); border: 1px solid var(--linea); border-radius: 12px; padding: 12px 14px; }
+  .paso + .paso { margin-top: 0; }
+  .n { width: 30px; height: 30px; border-radius: 50%; background: var(--panel2); border: 1px solid var(--linea); display: grid; place-items: center; font-weight: 800; font-size: 15px; }
+  .paso .pedido { font-size: 16px; font-style: italic; color: #f3f6fa; }
+  .paso .quien { font-size: 13px; color: var(--muted); margin-top: 3px; }
+  .paso .sale { font-size: 14px; margin-top: 6px; }
+  .paso .sale::before { content: "→ "; color: var(--muted); }
+  .bajada { text-align: center; color: var(--muted); font-size: 16px; line-height: 1; margin: 6px 0; }
+  .terminal { background: #08111d; border: 1px solid var(--linea); border-radius: 12px; padding: 12px 14px; font-family: Consolas, "Cascadia Mono", monospace; font-size: 14.5px; line-height: 1.7; color: var(--verde); }
+  .terminal .c { color: var(--muted); }
+  .pie { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 24px; }
+  .bucle { margin-top: 14px; border: 1px dashed var(--verde); border-radius: 12px; padding: 10px 14px; color: var(--verde); font-size: 14px; text-align: center; }
+</style></head>
+<body><div class="lienzo" id="captura">
+  <div class="titulo">
+    <div><h1>k0lmenIA <span class="tenue">· Cómo se usa</span></h1>
+      <p class="sub">Le pedís a Claude Code lo que necesitás en lenguaje natural; el agente que corresponde hace el trabajo y deja el resultado</p></div>
+    <div class="marca">QARMY · Underc0de</div>
+  </div>
+
+  <div class="etapas">
+    <!-- 1 -->
+    <div class="etapa">
+      <h2><span class="num-etapa" style="background:var(--violeta)">1</span>Diseño</h2>
+      <p>De la historia a los casos de prueba</p>
+      <div class="paso"><div class="n">0</div><div><div class="pedido">Poné la historia en <code>input/historias/</code></div>
+        <div class="quien">o pasá una key de Jira, una página de Confluence o un link de Figma (con el conector activo)</div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">1</div><div><div class="pedido">"Analizá la historia HU-001"</div><div class="quien">analista-historias</div>
+        <div class="sale">ambigüedades y preguntas para el PO</div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">2</div><div><div class="pedido">"Armá el plan de pruebas de HU-001"</div><div class="quien">estratega-pruebas</div>
+        <div class="sale">plan HTML: alcance, riesgos, criterios</div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">3</div><div><div class="pedido">"Generá los casos de HU-001" · "Pasala a BDD"</div><div class="quien">generador-casos-manuales · generador-casos-bdd · generador-casos-api</div>
+        <div class="sale">casos-HU-001.xlsx + .md + cobertura · .feature</div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">4</div><div><div class="pedido">"Generá datos de prueba" · "Armá el reporte de este bug"</div><div class="quien">generador-datos-prueba · generador-reportes-bug</div>
+        <div class="sale">datos CSV/MD · BUG-001.md</div></div></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="etapa">
+      <h2><span class="num-etapa" style="background:var(--verde)">2</span>Ejecución y automatización</h2>
+      <p>Una vez con agentes, después sin tokens</p>
+      <div class="paso"><div class="n">5</div><div><div class="pedido">"Automatizá en k0lmena los casos de HU-001 contra https://tu-app.com"</div>
+        <div class="quien">web-mapper · api-mapper (Postman / Swagger) · mobile-mapper (Appium)</div>
+        <div class="sale">recorre la app, ajusta los pasos y escribe .feature + steps + locators <span class="pill token">una vez</span></div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">6</div><div><div class="pedido">Corrés la suite cuando quieras <span class="pill ok">sin tokens</span></div>
+        <div class="terminal">cd herramientas/k0lmena<br>npm test <span class="c">           # web + api (TAGS=@HU-001)</span><br>npm run test:mobile<br>npm run report:web <span class="c"> # HTML con evidencias</span></div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">7</div><div><div class="pedido">"Armá una prueba de carga del login para 50 usuarios"</div>
+        <div class="quien">performance-mapper: pregunta ambiente, carga y umbrales · k6 o Artillery</div>
+        <div class="terminal">npm run perf -- HU-001-login smoke<br>npm run perf -- HU-001-login load <span class="c"> # pide confirmación</span></div></div></div>
+      <div class="bucle">¿Una prueba puntual que no vale la pena automatizar? → "Ejecutá el escenario X contra https://…" (ejecutor-e2e / ejecutor-api, en vivo)</div>
+    </div>
+
+    <!-- 3 -->
+    <div class="etapa">
+      <h2><span class="num-etapa" style="background:var(--cian)">3</span>Gestión y cierre</h2>
+      <p>Xray · QMetry (QTM4J) · AIO Tests</p>
+      <div class="paso"><div class="n">8</div><div><div class="pedido">"Subí los casos de HU-001 a Xray en 'HU-001 Registro', vinculados a PROJ-12"</div>
+        <div class="quien">gestor-pruebas</div><div class="sale">carpeta + casos vinculados a la historia</div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">9</div><div><div class="pedido">"Creá el ciclo Sprint 5 con esos casos"</div>
+        <div class="quien">gestor-pruebas</div><div class="sale">ciclo (Test Execution) vinculado a PROJ-12</div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">10</div><div><div class="pedido">"Subí los resultados de la última corrida al ciclo PROJ-60"</div>
+        <div class="quien">publicador-resultados</div><div class="sale">estado + error + captura, GIF y video (si falló) por caso</div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">11</div><div><div class="pedido">"Armá el informe de cierre de HU-001"</div>
+        <div class="quien">generador-reporte-cierre</div><div class="sale">resultados, bugs, riesgos y go / no-go</div></div></div>
+    </div>
+  </div>
+
+  <div class="pie">
+    <div class="caja acento-azul"><div class="et">Una sola configuración</div><p>El <code>.env</code> de la raíz: URLs, credenciales, k0lmena y gestión. Nunca se commitea.</p></div>
+    <div class="caja acento-violeta"><div class="et">No inventa</div><p>Si falta un paso, un dato o un umbral, el agente lo marca y te lo pregunta.</p></div>
+    <div class="caja acento-verde"><div class="et">Ahorra tokens</div><p>Lo que se repite se automatiza una vez y corre con <code>npm</code>, sin agentes.</p></div>
+    <div class="caja acento-cian"><div class="et">Trazabilidad</div><p>HU-001 → CP-001 → <code>@CP-001</code> → key en Xray/QMetry/AIO → resultado.</p></div>
+  </div>
+</div></body></html>

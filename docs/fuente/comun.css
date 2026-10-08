@@ -1,0 +1,35 @@
+/* Estilos de los diagramas de k0lmenIA (arquitectura.html y uso.html) */
+:root {
+  --bg: #0b0f17; --panel: #121826; --panel2: #0e1420; --linea: #26304a;
+  --texto: #e6edf3; --muted: #8b97a8;
+  --azul: #60a5fa; --violeta: #a78bfa; --verde: #34d399; --naranja: #f59e0b; --cian: #22d3ee; --gris: #64748b; --rojo: #f87171;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--texto); font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif; }
+.lienzo { padding: 44px 48px 48px; background: radial-gradient(1400px 700px at 0% -10%, #13203a 0%, var(--bg) 60%); }
+.titulo { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; border-bottom: 1px solid var(--linea); padding-bottom: 18px; }
+h1 { margin: 0; font-size: 40px; letter-spacing: -0.5px; }
+.sub { margin: 6px 0 0; color: var(--muted); font-size: 18px; }
+.marca { color: var(--muted); font-size: 15px; letter-spacing: 1px; text-transform: uppercase; }
+.tenue { color: var(--muted); font-weight: 400; }
+.bloque-tit { font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin: 0 0 10px 2px; }
+.bloque-tit code { text-transform: none; }
+.caja { background: var(--panel); border: 1px solid var(--linea); border-left: 5px solid var(--gris); border-radius: 14px; padding: 14px 16px; }
+.caja h3 { margin: 2px 0 6px; font-size: 20px; }
+.caja p { margin: 4px 0 0; color: var(--muted); font-size: 14px; line-height: 1.4; }
+.caja ul { margin: 6px 0 0; padding-left: 18px; font-size: 15px; line-height: 1.55; }
+.caja ul.dos { columns: 2; column-gap: 18px; }
+.caja .et { font-size: 12px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); font-weight: 700; display: flex; gap: 8px; align-items: center; }
+.caja .nota { font-size: 13px; margin-top: 8px; }
+.centrado { text-align: center; }
+.centrado .et { justify-content: center; }
+.grande h3 { font-size: 26px; }
+.acento-azul { border-left-color: var(--azul); } .acento-violeta { border-left-color: var(--violeta); }
+.acento-verde { border-left-color: var(--verde); } .acento-naranja { border-left-color: var(--naranja); }
+.acento-cian { border-left-color: var(--cian); } .acento-gris { border-left-color: var(--gris); }
+.flecha { text-align: center; color: var(--muted); font-size: 22px; line-height: 1; margin: 10px 0; }
+code { font-family: Consolas, "Cascadia Mono", monospace; font-size: 0.92em; background: var(--panel2); padding: 1px 6px; border-radius: 6px; }
+.pill { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+.pill.ok { background: rgba(52, 211, 153, 0.15); color: var(--verde); }
+.pill.token { background: rgba(245, 158, 11, 0.15); color: var(--naranja); }
+.cmd { font-family: Consolas, "Cascadia Mono", monospace; font-size: 14px; background: #08111d; border: 1px solid var(--linea); border-radius: 8px; padding: 4px 10px; color: var(--verde); }

@@ -39,6 +39,12 @@ input/ ──► [ agente de QA ] ──► output/
        plantillas/ + scripts/   (formato de cada entregable)
 ```
 
+> 📄 **Documentación completa en PDF:** [`docs/k0lmenIA-documentacion.pdf`](docs/k0lmenIA-documentacion.pdf)
+
+![Arquitectura de k0lmenIA](docs/k0lmenIA-arquitectura.png)
+
+![Cómo se usa k0lmenIA](docs/k0lmenIA-uso.png)
+
 El trabajo se organiza en tres etapas, y podés usar solo las que necesites:
 
 ```
@@ -521,6 +527,7 @@ k0lmenIA/
 ├── .mcp.json                 Conexiones MCP activas (Playwright)
 ├── .mcp.json.example         Conectores opcionales (Jira y Confluence, Figma, QMetry, AIO Tests, Appium)
 ├── requirements.txt          Dependencias de Python
+├── docs/                     Documentación en PDF, diagramas de arquitectura y de uso (fuentes en docs/fuente/)
 ├── .claude/
 │   ├── agents/               Los agentes (el "quién")
 │   └── skills/               El "cómo": técnicas de diseño, ejecución E2E y de API, automatización con k0lmena

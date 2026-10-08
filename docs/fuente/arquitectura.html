@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>k0lmenIA · Arquitectura</title>
+<link rel="stylesheet" href="comun.css">
+<style>
+  .lienzo { width: 1800px; }
+  .fila { display: grid; gap: 16px; }
+  .f-agentes { grid-template-columns: 1.25fr 1fr 1.1fr 0.9fr; }
+  .f-soporte { grid-template-columns: 1fr 1.15fr 1.1fr; }
+  .f-ejec { grid-template-columns: 1fr 1.6fr; }
+  .f-ext { grid-template-columns: repeat(6, 1fr); }
+  .centro { display: grid; grid-template-columns: 260px 1fr 260px; gap: 18px; align-items: stretch; }
+  .lateral { display: flex; flex-direction: column; gap: 10px; }
+  .lateral .caja { flex: 1; }
+  .k0 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+  .k0 .mini { background: var(--panel2); border: 1px solid var(--linea); border-radius: 10px; padding: 10px; }
+  .k0 .mini b { display: block; font-size: 15px; margin-bottom: 4px; }
+  .k0 .mini span { color: var(--muted); font-size: 13px; line-height: 1.35; display: block; }
+  .runners { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+</style></head>
+<body><div class="lienzo" id="captura">
+  <div class="titulo">
+    <div><h1>k0lmenIA <span class="tenue">· Arquitectura</span></h1>
+      <p class="sub">Agentes de QA para Claude Code + automatización con k0lmena + integración con herramientas de gestión de pruebas</p></div>
+    <div class="marca">QARMY · Underc0de</div>
+  </div>
+
+  <!-- Persona y Claude Code -->
+  <div class="fila" style="grid-template-columns: 1fr 2fr 1fr; align-items:center">
+    <div class="caja acento-gris centrado"><div class="et">Persona</div><h3>QA</h3><p>Pide en lenguaje natural, desde VS Code</p></div>
+    <div class="caja acento-azul centrado grande"><div class="et">Orquestador</div><h3>Claude Code</h3>
+      <p><code>CLAUDE.md</code>: estándares del proyecto (no inventar, trazabilidad, formatos, IDs) · elige el agente según el pedido</p></div>
+    <div class="caja acento-gris centrado"><div class="et">Configuración única</div><h3><code>.env</code> de la raíz</h3><p>URLs, credenciales, k0lmena, gestión (gitignored)</p></div>
+  </div>
+  <div class="flecha">▼</div>
+
+  <div class="centro">
+    <!-- input -->
+    <div class="lateral">
+      <div class="caja acento-gris"><div class="et">Entrada</div><h3><code>input/</code></h3>
+        <ul><li>historias/</li><li>documentacion/</li><li>api/ (Postman, contratos)</li><li>bugs/</li></ul></div>
+      <div class="caja acento-gris"><div class="et">O por MCP</div><h3>Fuentes vivas</h3>
+        <ul><li>Jira / Confluence</li><li>Figma</li><li>Swagger por URL</li></ul></div>
+    </div>
+
+    <div>
+      <!-- Agentes -->
+      <div class="bloque"><div class="bloque-tit">Agentes <span class="tenue">· <code>.claude/agents/</code> · el "quién"</span></div>
+        <div class="fila f-agentes">
+          <div class="caja acento-violeta"><div class="et">Análisis y diseño</div>
+            <ul><li>analista-historias</li><li>estratega-pruebas</li><li>generador-casos-manuales</li><li>generador-casos-bdd</li><li>generador-casos-api</li><li>generador-datos-prueba</li><li>generador-reportes-bug</li></ul></div>
+          <div class="caja acento-naranja"><div class="et">Ejecución en vivo <span class="pill token">usa tokens</span></div>
+            <ul><li>ejecutor-e2e</li><li>ejecutor-api</li><li>generador-reporte-html</li><li>generador-reporte-cierre</li></ul></div>
+          <div class="caja acento-verde"><div class="et">Automatización (mappers)</div>
+            <ul><li>web-mapper</li><li>api-mapper</li><li>mobile-mapper</li><li>performance-mapper</li></ul>
+            <p class="nota">Escriben el código una sola vez</p></div>
+          <div class="caja acento-cian"><div class="et">Gestión de pruebas</div>
+            <ul><li>gestor-pruebas</li><li>publicador-resultados</li></ul></div>
+        </div>
+      </div>
+      <div class="flecha">▼</div>
+
+      <!-- Soporte -->
+      <div class="bloque"><div class="bloque-tit">Soporte <span class="tenue">· el "cómo" y el formato</span></div>
+        <div class="fila f-soporte">
+          <div class="caja acento-violeta"><div class="et">Skills · <code>.claude/skills/</code></div>
+            <ul><li>tecnicas-de-diseno</li><li>ejecucion-e2e · ejecucion-api</li><li>automatizacion-k0lmena</li></ul></div>
+          <div class="caja acento-gris"><div class="et">Plantillas + scripts Python</div>
+            <ul><li>generar_casos.py → .xlsx + .md</li><li>formatear_tablas.py</li><li>generar_plan / generar_reporte / generar_informe_cierre</li><li>newman_a_resultados.py</li></ul></div>
+          <div class="caja acento-cian"><div class="et">Integración de gestión · <code>scripts/gestion/</code></div>
+            <ul><li>gestion.py: carpetas, casos, vínculos, ciclos, resultados</li><li>Adaptadores: Xray Cloud · Xray DC · QTM4J · AIO</li><li>Trazabilidad CP-XXX → key remota</li></ul></div>
+        </div>
+      </div>
+      <div class="flecha">▼</div>
+
+      <!-- MCP + herramientas -->
+      <div class="fila f-ejec">
+        <div class="bloque"><div class="bloque-tit">Conectores MCP <span class="tenue">· <code>.mcp.json</code></span></div>
+          <div class="caja acento-azul">
+            <ul><li><b>Playwright</b> headed / headless <span class="pill ok">activo</span></li><li><b>atlassian</b>: Jira y Confluence</li><li><b>figma</b> / figma-desktop</li><li><b>appium-mcp</b> (mobile-mapper)</li><li><b>qmetry · qtm4j · aio-tests</b></li></ul>
+            <p class="nota">Opcionales en <code>.mcp.json.example</code> · guía en CONECTORES.md</p></div>
+        </div>
+        <div class="bloque"><div class="bloque-tit">Herramientas <span class="tenue">· <code>herramientas/</code></span></div>
+          <div class="caja acento-verde">
+            <div style="display:flex; justify-content:space-between; align-items:baseline"><h3>k0lmena <span class="pill ok">sin tokens</span></h3><span class="tenue">+ Newman para colecciones de Postman</span></div>
+            <div class="k0">
+              <div class="mini"><b>web/</b><span>Playwright + Cucumber · auto-healing · video, trace, GIF</span></div>
+              <div class="mini"><b>api/</b><span>axios + Cucumber · steps genéricos en español</span></div>
+              <div class="mini"><b>mobile/</b><span>WebdriverIO + Appium · dispositivo, emulador o BrowserStack</span></div>
+              <div class="mini"><b>performance/</b><span>k6 (APIs) · Artillery + Playwright (web)</span></div>
+            </div>
+            <div class="runners"><span class="cmd">npm test</span><span class="cmd">npm run report:web|api|mobile</span><span class="cmd">npm run perf -- &lt;script&gt; &lt;perfil&gt;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- output -->
+    <div class="lateral">
+      <div class="caja acento-gris"><div class="et">Salida</div><h3><code>output/</code></h3>
+        <ul><li>analisis-historias/</li><li>planes-de-prueba/</li><li>casos-de-prueba/</li><li>casos-api/</li><li>datos-de-prueba/</li><li>reportes-bug/</li><li>ejecuciones/</li><li>informes-cierre/</li><li>mapeos/</li><li>gestion/</li></ul></div>
+      <div class="caja acento-gris"><div class="et">Reportes de k0lmena</div><h3><code>reports/</code></h3>
+        <ul><li>web, api, mobile: HTML con evidencias</li><li>performance: HTML y resumen</li></ul></div>
+    </div>
+  </div>
+  <div class="flecha">▼</div>
+
+  <div class="bloque"><div class="bloque-tit">Sistemas externos</div>
+    <div class="fila f-ext">
+      <div class="caja acento-gris centrado"><h3>App web</h3><p>bajo prueba</p></div>
+      <div class="caja acento-gris centrado"><h3>APIs</h3><p>REST · Swagger</p></div>
+      <div class="caja acento-gris centrado"><h3>App mobile</h3><p>Android · iOS · BrowserStack</p></div>
+      <div class="caja acento-gris centrado"><h3>Jira · Confluence</h3><p>historias y documentación</p></div>
+      <div class="caja acento-gris centrado"><h3>Figma</h3><p>diseños</p></div>
+      <div class="caja acento-cian centrado"><h3>Xray · QMetry · AIO</h3><p>casos, ciclos y resultados</p></div>
+    </div>
+  </div>
+</div></body></html>
