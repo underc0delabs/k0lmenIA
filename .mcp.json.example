@@ -7,7 +7,9 @@
     "xray": {
       "type": "stdio",
       "command": "node",
-      "args": ["${XRAY_MCP_PATH}/dist/index.js"],
+      "args": [
+        "${XRAY_MCP_PATH}/dist/index.js"
+      ],
       "env": {
         "XRAY_DEPLOYMENT": "${XRAY_DEPLOYMENT:-cloud}",
         "XRAY_CLOUD_CLIENT_ID": "${XRAY_CLOUD_CLIENT_ID}",
@@ -17,7 +19,10 @@
     "qmetry": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@smartbear/mcp@latest"],
+      "args": [
+        "-y",
+        "@smartbear/mcp@latest"
+      ],
       "env": {
         "MCP_CLIENTS": "QMetry",
         "QMETRY_API_KEY": "${QMETRY_API_KEY}",
@@ -27,7 +32,10 @@
     "qtm4j": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@smartbear/mcp@latest"],
+      "args": [
+        "-y",
+        "@smartbear/mcp@latest"
+      ],
       "env": {
         "MCP_CLIENTS": "QTM4J",
         "QTM4J_API_KEY": "${QTM4J_API_KEY}",
@@ -42,10 +50,24 @@
         "Authorization": "Bearer ${AIO_API_TOKEN}"
       }
     },
+    "appium-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "appium-mcp@latest"
+      ],
+      "env": {
+        "ANDROID_HOME": "${ANDROID_HOME}"
+      }
+    },
     "playwright": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@playwright/mcp@latest"]
+      "args": [
+        "-y",
+        "@playwright/mcp@latest"
+      ]
     }
   }
 }

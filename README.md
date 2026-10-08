@@ -39,6 +39,9 @@ input/ → [ agente de QA ] → output/
 | 🧪 **Ejecutor de API** | Ejecuta una colección de Postman con Newman contra la API y genera el reporte de la corrida |
 | 📊 **Reporte HTML** | Arma el reporte HTML (dashboard en modo oscuro) de una ejecución a partir de sus resultados |
 | 🏁 **Informe de cierre** | Resume toda la ronda (resultados, bugs, recomendación go/no-go) en un dashboard HTML en modo oscuro |
+| 🧭 **Web mapper** | Recorre la web siguiendo tus casos y genera la automatización en k0lmena (.feature, steps y locators) |
+| 🛰️ **API mapper** | Lee un Postman o un Swagger, verifica los endpoints y genera las pruebas de API en k0lmena |
+| 📱 **Mobile mapper** | Recorre la app mobile (Appium) siguiendo tus casos y genera la automatización en k0lmena |
 
 ---
 
@@ -51,6 +54,7 @@ input/ → [ agente de QA ] → output/
 - **Python 3** — lo usan los scripts que dan formato a las salidas: `scripts/generar_casos.py` (planilla `.xlsx` y `.md` de casos) y `scripts/formatear_tablas.py` (alinea las tablas de los `.md`). Instalan `openpyxl`/`tabulate` solo si faltan, o las instalás vos con `pip install -r requirements.txt`.
 - **Para ejecutar pruebas E2E** (opcional): los navegadores de Playwright, que se instalan una sola vez con `npx playwright install` (en Linux, además `npx playwright install-deps`). Requiere Node.js.
 - **Para ejecutar pruebas de API** (opcional): **Newman**, la CLI de Postman: `npm install -g newman` (requiere Node.js).
+- **Para automatizar con k0lmena** (opcional): **Node.js 20+** (22+ para el mobile-mapper). Ver [`herramientas/k0lmena/README.md`](herramientas/k0lmena/README.md).
 
 ---
 
@@ -123,7 +127,22 @@ cp .env.example .env
 ```
 Editá `.env` con la URL y las credenciales (`APP_URL`, `APP_USER`, `APP_PASSWORD`, `API_TOKEN`). Los agentes las leen de ahí; nunca las commitean.
 
-### 5. (Opcional) Conectar tu herramienta de gestión de pruebas
+### 5. (Opcional) Automatizar con k0lmena
+
+Los agentes **web-mapper**, **api-mapper** y **mobile-mapper** generan la automatización una sola vez; después la corrés las veces que quieras **sin gastar tokens**:
+
+Usa el **mismo `.env` de la raíz** del paso 4 (ahí están `BASEURL`, `API_BASEURL`, el destino mobile, etc.):
+
+```bash
+cd herramientas/k0lmena
+npm install
+npx playwright install chromium
+npm test                  # corre web + api (también: test:web, test:api, test:mobile)
+```
+
+Detalle de comandos, mobile (dispositivo, emulador o BrowserStack) y performance en [`herramientas/k0lmena/README.md`](herramientas/k0lmena/README.md).
+
+### 6. (Opcional) Conectar tu herramienta de gestión de pruebas
 
 k0lmenIA trae conectores MCP para **Xray**, **QMetry** (standalone y QTM4J) y **AIO Tests**, así los agentes pueden leer y cargar casos y resultados directamente ahí. Vienen desactivados; los pasos para activar el tuyo están en [`CONECTORES.md`](CONECTORES.md).
 
@@ -147,6 +166,8 @@ k0lmenIA trae conectores MCP para **Xray**, **QMetry** (standalone y QTM4J) y **
 - *"Ejecutá SOLO el escenario de registro válido de HU-001 contra https://tu-app.com."* → corre la prueba en el navegador y genera el reporte HTML de esa corrida en `output/ejecuciones/`
 - *"Ejecutá la colección de API de `input/api/` contra https://tu-api.com."* → corre la colección con Newman y genera el reporte HTML en `output/ejecuciones/`
 - *"Armá el informe de cierre de las pruebas de HU-001."* → resume la ronda en un informe HTML (modo oscuro) en `output/informes-cierre/`
+- *"Automatizá en k0lmena los casos de HU-001 contra https://tu-app.com."* → el web-mapper recorre la web y deja el `.feature`, steps y locators listos para `npm test`
+- *"Pasá a k0lmena los endpoints de /pet del Swagger https://petstore.swagger.io/v2/swagger.json."* → el api-mapper genera los `.feature` de API
 
 > 💡 El formato del **reporte de bug** lo definís en `plantillas/plantilla-reporte-bug.md`. Los **casos de prueba** salen como planilla Excel (referencia `plantillas/plantilla-casos-prueba.xlsx`, la arma `scripts/generar_casos.py`) más un informe de cobertura (referencia `plantillas/plantilla-cobertura.md`).
 
@@ -166,12 +187,12 @@ k0lmenIA/
 ├── .env.example           # Plantilla de variables/credenciales (copiar a .env, que no se versiona)
 ├── .claude/
 │   ├── agents/            # Los agentes de QA (el "quién")
-│   └── skills/            # Skills (el "cómo"): técnicas de diseño + ejecución E2E y de API
-├── herramientas/          # Herramientas externas de testing (Newman para API; JMeter/k6 a futuro)
+│   └── skills/            # Skills (el "cómo"): técnicas de diseño, ejecución E2E y de API, automatización con k0lmena
+├── herramientas/          # Herramientas externas de testing: Newman (API) y k0lmena (automatización web/api/mobile/performance)
 ├── plantillas/            # Referencias de formato (bug + casos .xlsx + cobertura .md)
 ├── scripts/               # Utilidades internas en Python (casos, reporte HTML, conversor Newman, plan e informe de cierre)
 ├── input/                 # Tus insumos (historias, documentación, bugs y api; hay una colección de ejemplo en input/api/)
-└── output/                # Lo que generan los agentes (ejecuciones, planes-de-prueba, informes-cierre…)
+└── output/                # Lo que generan los agentes (ejecuciones, planes-de-prueba, informes-cierre, mapeos…)
 ```
 
 > 🧱 ¿Querés entender cómo está armado el repo o sumarle un skill / un server MCP a futuro? Mirá [`ARQUITECTURA.md`](ARQUITECTURA.md).

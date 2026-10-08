@@ -7,17 +7,17 @@ Las conexiones están definidas en `.mcp.json.example`. No vienen activas en `.m
 ## Resumen
 
 ```
-+------------+-----------------------------------------+-----------------------------------------+-------------+--------------+
-| Conector   | Herramienta                             | Server MCP                              | Tipo        | Transporte   |
-+============+=========================================+=========================================+=============+==============+
-| xray       | Xray (Cloud o Server/Data Center)       | jithinjosejacob/xray-mcp-server       | Comunitario | stdio        |
-+------------+-----------------------------------------+-----------------------------------------+-------------+--------------+
-| qmetry     | QMetry Test Management                  | @smartbear/mcp                        | Oficial     | stdio        |
-+------------+-----------------------------------------+-----------------------------------------+-------------+--------------+
-| qtm4j      | QMetry Test Management for Jira (QTM4J) | @smartbear/mcp                        | Oficial     | stdio        |
-+------------+-----------------------------------------+-----------------------------------------+-------------+--------------+
-| aio-tests  | AIO Tests for Jira                      | Server remoto de AIO Tests (por tenant) | Oficial     | http         |
-+------------+-----------------------------------------+-----------------------------------------+-------------+--------------+
++-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
+| Conector  | Herramienta                             | Server MCP                              | Tipo        | Transporte |
++===========+=========================================+=========================================+=============+============+
+| xray      | Xray (Cloud o Server/Data Center)       | jithinjosejacob/xray-mcp-server         | Comunitario | stdio      |
++-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
+| qmetry    | QMetry Test Management                  | @smartbear/mcp                          | Oficial     | stdio      |
++-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
+| qtm4j     | QMetry Test Management for Jira (QTM4J) | @smartbear/mcp                          | Oficial     | stdio      |
++-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
+| aio-tests | AIO Tests for Jira                      | Server remoto de AIO Tests (por tenant) | Oficial     | http       |
++-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
 ```
 
 > Xray no tiene un server MCP oficial. El conector usa un proyecto de la comunidad: revisá su código antes de darle credenciales.
@@ -58,18 +58,18 @@ npm run build
 ```
 
 ```
-+--------------------------+---------------+-----------------------------------------+
-| Variable                 | Obligatoria   | Descripción                             |
-+==========================+===============+=========================================+
-| XRAY_MCP_PATH            | Sí            | Ruta absoluta a la carpeta clonada (usá |
-|                          |               | / también en Windows)                 |
-+--------------------------+---------------+-----------------------------------------+
-| XRAY_DEPLOYMENT          | No (cloud)  | cloud o server                      |
-+--------------------------+---------------+-----------------------------------------+
-| XRAY_CLOUD_CLIENT_ID     | Sí (Cloud)    | Client ID de la API key de Xray         |
-+--------------------------+---------------+-----------------------------------------+
-| XRAY_CLOUD_CLIENT_SECRET | Sí (Cloud)    | Client Secret de la API key de Xray     |
-+--------------------------+---------------+-----------------------------------------+
++--------------------------+-------------+-----------------------------------------+
+| Variable                 | Obligatoria | Descripción                             |
++==========================+=============+=========================================+
+| XRAY_MCP_PATH            | Sí          | Ruta absoluta a la carpeta clonada (usá |
+|                          |             | / también en Windows)                   |
++--------------------------+-------------+-----------------------------------------+
+| XRAY_DEPLOYMENT          | No (cloud)  | cloud o server                          |
++--------------------------+-------------+-----------------------------------------+
+| XRAY_CLOUD_CLIENT_ID     | Sí (Cloud)  | Client ID de la API key de Xray         |
++--------------------------+-------------+-----------------------------------------+
+| XRAY_CLOUD_CLIENT_SECRET | Sí (Cloud)  | Client Secret de la API key de Xray     |
++--------------------------+-------------+-----------------------------------------+
 ```
 
 La API key se crea en Jira, en **Configuración global de Xray > API Keys**, idealmente con un usuario de servicio.
@@ -83,33 +83,33 @@ Usa el server oficial de SmartBear, [`@smartbear/mcp`](https://github.com/SmartB
 **`qmetry` — QMetry Test Management (standalone):**
 
 ```
-+-----------------+---------------+---------------------------------------+
-| Variable        | Obligatoria   | Descripción                           |
-+=================+===============+=======================================+
-| QMETRY_API_KEY  | Sí            | Open API Key de QMetry                |
-+-----------------+---------------+---------------------------------------+
-| QMETRY_BASE_URL | No            | Por defecto                           |
-|                 |               | https://testmanagement.qmetry.com;  |
-|                 |               | cambiala si tu instancia usa otra URL |
-+-----------------+---------------+---------------------------------------+
++-----------------+-------------+---------------------------------------+
+| Variable        | Obligatoria | Descripción                           |
++=================+=============+=======================================+
+| QMETRY_API_KEY  | Sí          | Open API Key de QMetry                |
++-----------------+-------------+---------------------------------------+
+| QMETRY_BASE_URL | No          | Por defecto                           |
+|                 |             | https://testmanagement.qmetry.com;    |
+|                 |             | cambiala si tu instancia usa otra URL |
++-----------------+-------------+---------------------------------------+
 ```
 
 **`qtm4j` — QMetry Test Management for Jira (Cloud):**
 
 ```
-+--------------------------+---------------+---------------------------------------+
-| Variable                 | Obligatoria   | Descripción                           |
-+==========================+===============+=======================================+
-| QTM4J_API_KEY            | Sí            | API Key de QTM4J                      |
-+--------------------------+---------------+---------------------------------------+
-| QTM4J_BASE_URL           | No            | US (por defecto):                     |
-|                          |               | https://qtmcloud.qmetry.com ·       |
-|                          |               | Australia: https://syd-              |
-|                          |               | qtmcloud.qmetry.com                  |
-+--------------------------+---------------+---------------------------------------+
-| QTM4J_AUTOMATION_API_KEY | No            | Solo para las herramientas de         |
-|                          |               | automatización; vacía las deshabilita |
-+--------------------------+---------------+---------------------------------------+
++--------------------------+-------------+---------------------------------------+
+| Variable                 | Obligatoria | Descripción                           |
++==========================+=============+=======================================+
+| QTM4J_API_KEY            | Sí          | API Key de QTM4J                      |
++--------------------------+-------------+---------------------------------------+
+| QTM4J_BASE_URL           | No          | US (por defecto):                     |
+|                          |             | https://qtmcloud.qmetry.com ·         |
+|                          |             | Australia: https://syd-               |
+|                          |             | qtmcloud.qmetry.com                   |
++--------------------------+-------------+---------------------------------------+
+| QTM4J_AUTOMATION_API_KEY | No          | Solo para las herramientas de         |
+|                          |             | automatización; vacía las deshabilita |
++--------------------------+-------------+---------------------------------------+
 ```
 
 ## AIO Tests
@@ -117,19 +117,35 @@ Usa el server oficial de SmartBear, [`@smartbear/mcp`](https://github.com/SmartB
 Usa el server MCP **oficial** de AIO Tests, que es remoto (no hay que instalar nada). Cada tenant tiene su propia URL.
 
 ```
-+---------------+---------------+------------------------------------------+
-| Variable      | Obligatoria   | Descripción                              |
-+===============+===============+==========================================+
-| AIO_MCP_URL   | Sí            | URL del server; se copia de **My         |
-|               |               | Settings > MCP Authorization** en AIO    |
-|               |               | Tests                                    |
-+---------------+---------------+------------------------------------------+
-| AIO_API_TOKEN | Sí            | Public API Token, de **My Settings > API |
-|               |               | Token**                                  |
-+---------------+---------------+------------------------------------------+
++---------------+-------------+------------------------------------------+
+| Variable      | Obligatoria | Descripción                              |
++===============+=============+==========================================+
+| AIO_MCP_URL   | Sí          | URL del server; se copia de **My         |
+|               |             | Settings > MCP Authorization** en AIO    |
+|               |             | Tests                                    |
++---------------+-------------+------------------------------------------+
+| AIO_API_TOKEN | Sí          | Public API Token, de **My Settings > API |
+|               |             | Token**                                  |
++---------------+-------------+------------------------------------------+
 ```
 
 **Alternativa sin token (OAuth):** AIO Tests también acepta OAuth 2.1 si usás la versión Forge de la app. En ese caso borrá el bloque `headers` del conector y Claude Code abre el login en el navegador la primera vez (`/mcp` > *Authenticate*).
+
+---
+
+## Appium (para el mobile-mapper)
+
+No es una herramienta de gestión de pruebas: es el server MCP **oficial de Appium**, [`appium-mcp`](https://github.com/appium/appium-mcp), que usa el agente `mobile-mapper` para recorrer una app en un dispositivo o emulador. Requiere **Node.js 22+**, JDK y, para Android, el Android SDK (los drivers UiAutomator2 y XCUITest vienen incluidos). Para iOS hace falta macOS con Xcode.
+
+```
++--------------+---------------+---------------------+
+| Variable     | Obligatoria   | Descripción         |
++==============+===============+=====================+
+| ANDROID_HOME | Sí (Android)  | Ruta al Android SDK |
++--------------+---------------+---------------------+
+```
+
+Se activa igual que los demás conectores (entrada `appium-mcp` de `.mcp.json.example`). La suite que genera el mapper después corre sin MCP, con `npm run test:mobile`, en dispositivo, emulador o BrowserStack (ver `herramientas/k0lmena/README.md`).
 
 ---
 
@@ -145,3 +161,4 @@ Usa el server MCP **oficial** de AIO Tests, que es remoto (no hay que instalar n
 - AIO Tests MCP Server, guía de configuración: https://aiosupport.atlassian.net/wiki/spaces/AioTests/pages/3097624764/AIO+Tests+MCP+Server+Setup+Configuration+Guide
 - AIO MCP Tools: https://aiosupport.atlassian.net/wiki/spaces/AioTests/pages/3115253762/AIO+MCP+Tools
 - Xray MCP Server (comunitario): https://github.com/jithinjosejacob/xray-mcp-server
+- Appium MCP (oficial): https://github.com/appium/appium-mcp

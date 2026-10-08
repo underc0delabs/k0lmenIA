@@ -1,0 +1,46 @@
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+cucumber-report.html
+cucumber-report.json
+report.html
+result.json
+front-report.html
+report.json
+report.json.html
+reports/web/screenshots/
+.k0lmena/auto-healing/
+index.html
+assets/
+output/
+/tools/k6
+/performance/k6/dist/
+/reports/performance/k6/*
+front-history.json
+# Per-worker auto-healing history files (Cucumber parallel mode)
+front-history.worker-*.json
+
+# Salidas de corridas (k0lmenIA)
+reports/web/traces/
+reports/web/videos/
+reports/web/evidencias/
+reports/mobile/html/
+reports/mobile/*.png
+reports/**/*-report.html
+reports/**/*-report-debug.html
+reports/**/*.json
+!reports/**/README.md
+
+# Apps mobile: el .apk/.ipa no se versiona (ver mobile/apps/README.md)
+mobile/apps/*
+!mobile/apps/README.md
+reports/mobile/evidencias/
+reports/mobile/screenshots/
+
+# Salidas generadas por los reportes (npm run report:*)
+reports/**/features/
+reports/**/scripts/
+reports/**/styles.min.css
+reports/**/html/

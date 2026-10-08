@@ -36,6 +36,9 @@ input/ → [ agente ] → output/
 | `ejecutor-api` | Ejecuta pruebas de API corriendo una colección de Postman con Newman y genera el reporte HTML de la corrida | `output/ejecuciones/` |
 | `generador-reporte-html` | Arma el reporte HTML (dashboard en modo oscuro, con indicadores y gráficos) de una ejecución, a partir de sus resultados | `output/ejecuciones/` |
 | `generador-reporte-cierre` | Informe de cierre de la ronda (resultados, bugs, recomendación go/no-go) como dashboard HTML en modo oscuro | `output/informes-cierre/` |
+| `web-mapper` | Recorre la web con Playwright MCP siguiendo casos manuales o BDD y genera la automatización de k0lmena (.feature ajustado, steps y locators) | `herramientas/k0lmena/web/` + `output/mapeos/` |
+| `api-mapper` | Lee una colección de Postman o un Swagger/OpenAPI, verifica los endpoints y genera los .feature de k0lmena con los steps genéricos | `herramientas/k0lmena/api/` + `output/mapeos/` |
+| `mobile-mapper` | Recorre la app mobile con Appium MCP siguiendo los casos y genera la automatización de k0lmena (.feature, steps y locators) | `herramientas/k0lmena/mobile/` + `output/mapeos/` |
 
 ---
 
@@ -100,12 +103,17 @@ Reglas (valen para **todos** los agentes y cualquier sección, incluidas las que
 - Reporte de bug: `BUG-001.md`
 - Datos de prueba: `datos-HU-001.md` (o `.csv`)
 - Casos de API: `casos-api-auth.md`
+- Mapeo a automatización: `herramientas/k0lmena/<web|api|mobile>/features/HU-001-<slug>.feature` + `steps/HU-001.steps.ts` + `locators/HU-001.locators.ts`, y el reporte `output/mapeos/mapeo-HU-001-<web|api|mobile>.md`.
 - Ejecución E2E (un reporte por corrida): `reporte-HU-001-<fecha-hora>.html` (dashboard, modo oscuro) + `_resultados-HU-001-<fecha-hora>.json` (datos), en `output/ejecuciones/`; evidencia en `output/ejecuciones/evidencia/`. Cada reporte cubre solo los casos de esa ejecución.
 
 ---
 
 ## Arquitectura (cómo crece el repo)
 
-El repo se apoya en estas piezas: **agentes** (`.claude/agents/`, el quién), **skills** (`.claude/skills/`, el cómo, cargados on-demand), **MCP** (`.mcp.json`, conexiones a sistemas externos — un solo archivo que escala a muchas conexiones: Jira, Xray, Playwright…), **herramientas** (`herramientas/`, herramientas externas de testing como JMeter, una subcarpeta por herramienta) y **scripts** (`scripts/`, utilidades internas determinísticas). El detalle y cómo extender cada una está en `ARQUITECTURA.md`.
+El repo se apoya en estas piezas: **agentes** (`.claude/agents/`, el quién), **skills** (`.claude/skills/`, el cómo, cargados on-demand), **MCP** (`.mcp.json`, conexiones a sistemas externos — un solo archivo que escala a muchas conexiones: Jira, Xray, Playwright…), **herramientas** (`herramientas/`, herramientas externas de testing, una subcarpeta por herramienta: Newman y **k0lmena**) y **scripts** (`scripts/`, utilidades internas determinísticas). El detalle y cómo extender cada una está en `ARQUITECTURA.md`.
+
+## Automatización con k0lmena (ahorro de tokens)
+
+`herramientas/k0lmena/` es el framework de automatización (web, api, mobile y performance). Los agentes **mapper** escriben la automatización **una sola vez** (skill `automatizacion-k0lmena`); después la suite corre **sin agentes ni tokens** con `cd herramientas/k0lmena && npm test`. Para correr pruebas ya automatizadas, preferí `npm test` antes que los ejecutores en vivo (`ejecutor-e2e` / `ejecutor-api`), que gastan tokens en cada corrida.
 
 Secretos (tokens, credenciales): van en variables de entorno con `${VARIABLE}` o en un `.env` local (gitignored), **nunca** commiteados; hay una plantilla `.env.example`. El `.mcp.json` está versionado y trae la conexión a Playwright (sin secretos); `.mcp.json.example` es la plantilla para sumar conexiones con token (Jira, Xray, QMetry/QTM4J, AIO Tests); cómo activarlas está en `CONECTORES.md`.

@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "strict": false,
+    "skipLibCheck": true,
+    "noErrorTruncation": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "lib": ["esnext", "dom"],
+    "moduleResolution": "node",
+    "ignoreDeprecations": "6.0",
+    "target": "esnext",
+    "module": "commonjs",
+    "types": ["node"]
+  },
+  "include": ["web/**/*", "api/**/*", "mobile/**/*", "performance/**/*", "reports/**/*", "tools/**/*"],
+  "exclude": ["performance/k6", "node_modules"]
+}

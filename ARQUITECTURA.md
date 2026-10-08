@@ -34,7 +34,7 @@ En este repo, `.mcp.json` ya viene **versionado** con la conexión a **Playwrigh
 
 ### Herramientas — herramientas externas de testing (`herramientas/`)
 
-Herramientas que el agente **ejecuta** por línea de comandos, con sus plantillas y configuraciones. La primera integrada es **Newman** (la CLI de Postman), que usa `ejecutor-api` para correr pruebas de API; a futuro pueden sumarse otras como **JMeter** o **k6** para performance. Cada herramienta va en su **propia subcarpeta**, así escala: sumar una herramienta = sumar una carpeta (ver `herramientas/README.md`).
+Herramientas que el agente **ejecuta** por línea de comandos, con sus plantillas y configuraciones. Hay dos integradas: **Newman** (la CLI de Postman), que usa `ejecutor-api` para correr pruebas de API, y **k0lmena**, el framework de automatización (web, api, mobile y performance con Artillery y k6). En k0lmena los agentes *mapper* escriben la automatización una sola vez y después corre con `npm test`, **sin agentes ni tokens**. Cada herramienta va en su **propia subcarpeta**, así escala: sumar una herramienta = sumar una carpeta (ver `herramientas/README.md`).
 
 ### Scripts — utilidades internas (`scripts/`)
 
@@ -45,7 +45,7 @@ Código Python propio del repo para tareas mecánicas (generar la planilla `.xls
 - **Agente** = a quién le pido la tarea.
 - **Skill** = el conocimiento de cómo hacerla.
 - **MCP** = conexiones a sistemas externos (un archivo, muchas conexiones: Jira, Xray, QMetry, AIO Tests, Playwright…).
-- **Herramientas** = herramientas externas que se ejecutan por CLI (Newman, y a futuro JMeter/k6…).
+- **Herramientas** = herramientas externas que se ejecutan por CLI (Newman y k0lmena).
 - **Script** = utilidad interna determinística.
 
-Hoy ya están en uso las cinco piezas: **agentes**, **skills** (técnicas de diseño, ejecución E2E y de API), la **conexión MCP** con Playwright (para el navegador), la **herramienta** Newman (para API) y los **scripts** de formato, reporte y conversión. Sumar capacidades nuevas es repetir el patrón: un agente nuevo en `.claude/agents/`, un skill en `.claude/skills/`, una conexión en `.mcp.json`, una herramienta en `herramientas/` o un script en `scripts/`.
+Hoy ya están en uso las cinco piezas: **agentes**, **skills** (técnicas de diseño, ejecución E2E y de API, automatización con k0lmena), la **conexión MCP** con Playwright (para el navegador), las **herramientas** Newman (para API) y k0lmena (automatización sin tokens) y los **scripts** de formato, reporte y conversión. Sumar capacidades nuevas es repetir el patrón: un agente nuevo en `.claude/agents/`, un skill en `.claude/skills/`, una conexión en `.mcp.json`, una herramienta en `herramientas/` o un script en `scripts/`.
