@@ -21,16 +21,16 @@ Para tocar sistemas de afuera (Jira, Xray, un navegador…), un agente usa un **
 ```json
 {
   "mcpServers": {
-    "atlassian":  { "type": "http", "url": "https://mcp.atlassian.com/v1/mcp" },
-    "qtm4j":      { "type": "stdio", "command": "npx", "args": ["-y", "@smartbear/mcp@latest"], "env": { "QTM4J_API_KEY": "${QTM4J_API_KEY}" } },
+    "atlassian":  { "type": "http", "url": "https://mcp.atlassian.com/v2/mcp" },
+    "qtm4j":      { "type": "stdio", "command": "node", "args": ["scripts/mcp/con-env.js", "qtm4j", "--requeridas", "QTM4J_API_KEY", "--", "npx", "-y", "@smartbear/mcp@latest"], "env": { "MCP_CLIENTS": "QTM4J" } },
     "playwright": { "type": "stdio", "command": "npx", "args": ["-y", "@playwright/mcp@latest"] }
   }
 }
 ```
 
-En este repo, `.mcp.json` ya viene **versionado** con la conexión a **Playwright** (headed y headless), que no lleva secretos, así la ejecución E2E funciona out-of-the-box. El `.mcp.json.example` es la **plantilla** para sumar conexiones que piden token o una cuenta (Jira y Confluence, Figma, QMetry, AIO Tests, Appium…): copiás la entrada que necesites a tu `.mcp.json` y, si lleva token, va por `${VARIABLE}` (ver la regla de secretos). El paso a paso de cada conector está en [`CONECTORES.md`](CONECTORES.md).
+En este repo, `.mcp.json` viene **versionado con todos los conectores** (Playwright, Jira y Confluence, Figma, QMetry, AIO Tests, k0lmenaTMT, Azure DevOps, Appium) y **ninguno lleva secretos**: los que necesitan token arrancan con un script de `scripts/mcp/` que lo lee del `.env`. Solo Playwright viene habilitado (headed y headless), así la ejecución E2E funciona out-of-the-box; cada persona habilita los demás en su `.claude/settings.local.json`. El paso a paso de cada conector está en [`CONECTORES.md`](CONECTORES.md).
 
-> **Regla de oro de los secretos:** tokens y credenciales van como variables de entorno con `${VARIABLE}` (en tu entorno o un `.env` local, gitignored), **nunca** con el valor real en el archivo. Hay una plantilla `.env.example` con los nombres de variable; se copia a `.env` y se completan los valores reales. Si se commitea un secreto, rotalo de inmediato.
+> **Regla de oro de los secretos:** tokens y credenciales van en el `.env` local (gitignored) o en variables de entorno, **nunca** con el valor real en `.mcp.json` ni en otro archivo versionado. Hay una plantilla `.env.example` con los nombres de variable; se copia a `.env` y se completan los valores reales. Si se commitea un secreto, rotalo de inmediato.
 
 ### Herramientas — herramientas externas de testing (`herramientas/`)
 
@@ -44,7 +44,7 @@ Código Python propio del repo para tareas mecánicas (generar la planilla `.xls
 
 - **Agente** = a quién le pido la tarea.
 - **Skill** = el conocimiento de cómo hacerla.
-- **MCP** = conexiones a sistemas externos (un archivo, muchas conexiones: Jira, Confluence, Figma, QMetry, AIO Tests, Playwright…).
+- **MCP** = conexiones a sistemas externos (un archivo, muchas conexiones: Jira, Confluence, Figma, QMetry, AIO Tests, Azure DevOps, Playwright…).
 - **Herramientas** = herramientas externas que se ejecutan por CLI (Newman y k0lmena).
 - **Script** = utilidad interna determinística.
 

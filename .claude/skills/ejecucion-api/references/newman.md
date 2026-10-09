@@ -98,11 +98,17 @@ pm.environment.set("token", token);
 
 `scripts/newman_a_resultados.py` lee la salida de Newman y arma el JSON del reporte:
 
-| Situación en Newman | Estado en el reporte | Motivo |
-|---|---|---|
-| Request OK, sin asserts fallidos | **Aprobado** | — |
-| Algún `pm.test` falló | **Fallido** | el primer assert que falló |
-| El request no se pudo hacer | **Bloqueado** | el error de conexión |
+```
++----------------------------------+------------------------+----------------------------+
+| Situación en Newman              | Estado en el reporte   | Motivo                     |
++==================================+========================+============================+
+| Request OK, sin asserts fallidos | **Aprobado**           | —                          |
++----------------------------------+------------------------+----------------------------+
+| Algún `pm.test` falló            | **Fallido**            | el primer assert que falló |
++----------------------------------+------------------------+----------------------------+
+| El request no se pudo hacer      | **Bloqueado**          | el error de conexión       |
++----------------------------------+------------------------+----------------------------+
+```
 
 El **título** del reporte sale del nombre de la colección (o del que le pases como 3.º argumento). El **base_url** se toma del environment/colección para mostrarlo en el reporte. La **fecha** sale del momento real de la corrida.
 

@@ -1,5 +1,11 @@
 # Gestión de pruebas: Xray, QMetry (QTM4J) y AIO Tests
 
+> **Azure DevOps Test Plans** no pasa por `gestion.py`: se integra por el conector MCP `azure-devops` (ver [`CONECTORES.md`](../../CONECTORES.md#azure-devops)). Desde acá solo se usa `para_azure_devops.py`, que convierte los casos al formato del conector:
+>
+> ```bash
+> python scripts/gestion/para_azure_devops.py output/casos-de-prueba/manuales/casos-HU-001.xlsx [--ids CP-001,CP-003]
+> ```
+
 Integración propia de k0lmenIA con las herramientas de gestión de pruebas, sobre sus **APIs oficiales**. Los mismos comandos sirven para las cuatro variantes:
 
 ```

@@ -1,0 +1,20 @@
+{
+  "name": "k0lmenia",
+  "private": true,
+  "description": "Atajos para correr k0lmena (herramientas/k0lmena) desde la raíz del repo",
+  "scripts": {
+    "postinstall": "npm install --prefix herramientas/k0lmena",
+    "test": "npm --prefix herramientas/k0lmena run test --",
+    "test:web": "npm --prefix herramientas/k0lmena run test:web --",
+    "test:api": "npm --prefix herramientas/k0lmena run test:api --",
+    "test:mobile": "npm --prefix herramientas/k0lmena run test:mobile --",
+    "test:all": "npm --prefix herramientas/k0lmena run test:all --",
+    "report:web": "npm --prefix herramientas/k0lmena run report:web --",
+    "report:api": "npm --prefix herramientas/k0lmena run report:api --",
+    "report:mobile": "npm --prefix herramientas/k0lmena run report:mobile --",
+    "perf": "npm --prefix herramientas/k0lmena run perf --",
+    "bd": "npm --prefix herramientas/k0lmena run bd --",
+    "bootstrap:k6": "npm --prefix herramientas/k0lmena run bootstrap:k6 --",
+    "debug": "npm --prefix herramientas/k0lmena run debug --"
+  }
+}

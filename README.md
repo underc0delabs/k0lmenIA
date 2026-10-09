@@ -5,7 +5,7 @@
 ### Agentes de QA para Claude Code
 
 **Diseñá, ejecutá y automatizá pruebas conversando en español.**<br>
-Análisis de historias, casos de prueba, automatización con k0lmena y gestión en Xray, QMetry o AIO Tests.
+Análisis de historias, casos de prueba, automatización con k0lmena y gestión en Xray, QMetry, AIO Tests o Azure DevOps.
 
 <br>
 
@@ -49,6 +49,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 ![Xray](https://img.shields.io/badge/Xray-Cloud%20·%20DC-00C7B1?style=flat-square)
 ![QMetry](https://img.shields.io/badge/QMetry-QTM4J-1E88E5?style=flat-square)
 ![AIO Tests](https://img.shields.io/badge/AIO%20Tests-Jira%20Cloud-F59E0B?style=flat-square)
+![Azure DevOps](https://img.shields.io/badge/Azure%20DevOps-Test%20Plans-0078D7?style=flat-square)
 
 <br>
 
@@ -62,17 +63,17 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 
 > Pensado para QAs manuales: no hace falta programar. Se trabaja conversando con Claude Code dentro de VS Code.
 
-| | |
-|---|---|
-| 🧠 **Diseño de pruebas** | Analiza historias, arma el plan, escribe casos manuales (Excel), BDD (Gherkin) y de API, genera datos y redacta bugs. |
-| 🤖 **Automatización sin tokens** | Los agentes *mapper* recorren tu app **una sola vez** y escriben la automatización en k0lmena. Después corre con `npm test`, sin agentes. |
-| 🌐 **Web, API, mobile y performance** | Playwright + Cucumber, axios + Cucumber, WebdriverIO + Appium (dispositivo, emulador o BrowserStack), k6 y Artillery. |
-| 📸 **Evidencia completa** | Captura (y GIF) de cada test que pasa; video, logs, trace y error de cada test que falla, en reportes HTML. |
-| 🗂️ **Gestión de pruebas** | Carpetas, casos, ciclos y resultados con evidencias en **Xray** (Cloud y Server/DC), **QMetry (QTM4J)** y **AIO Tests**. |
-| 🗄️ **Verificación en base de datos** | Revisa lo que dejaron guardado tus pruebas en **PostgreSQL, MySQL/MariaDB, SQL Server o MongoDB**, a pedido o, si lo pedís, como steps dentro de los tests. Solo lectura por defecto. |
-| 🔌 **Conectado** | Lee historias de **Jira**, documentación de **Confluence** y diseños de **Figma** por MCP. |
-| 🔎 **Investiga antes de suponer** | Lee la historia de Jira con **todos sus comentarios, subtareas, épica e issues vinculados**, más Confluence y Figma, y arma una ficha de contexto. |
-| 🛡️ **No inventa** | Lo que no está en ninguna fuente queda marcado como **Falta información** (`FI-01`) en todos los reportes, con la pregunta para el PO. |
+|                                       |                                                                                                                                                                                       |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 🧠 **Diseño de pruebas**              | Analiza historias, arma el plan, escribe casos manuales (Excel), BDD (Gherkin) y de API, genera datos y redacta bugs.                                                                 |
+| 🤖 **Automatización sin tokens**      | Los agentes *mapper* recorren tu app **una sola vez** y escriben la automatización en k0lmena. Después corre con `npm test`, sin agentes.                                             |
+| 🌐 **Web, API, mobile y performance** | Playwright + Cucumber, axios + Cucumber, WebdriverIO + Appium (dispositivo, emulador o BrowserStack), k6 y Artillery.                                                                 |
+| 📸 **Evidencia completa**             | Captura (y GIF) de cada test que pasa; video, logs, trace y error de cada test que falla, en reportes HTML.                                                                           |
+| 🗂️ **Gestión de pruebas**             | Carpetas, casos, ciclos y resultados con evidencias en **Xray** (Cloud y Server/DC), **QMetry (QTM4J)** y **AIO Tests**; casos y suites en **Azure DevOps Test Plans**.               |
+| 🗄️ **Verificación en base de datos**  | Revisa lo que dejaron guardado tus pruebas en **PostgreSQL, MySQL/MariaDB, SQL Server o MongoDB**, a pedido o, si lo pedís, como steps dentro de los tests. Solo lectura por defecto. |
+| 🔌 **Conectado**                      | Lee historias de **Jira** o **Azure DevOps**, documentación de **Confluence** o de la Wiki de Azure DevOps y diseños de **Figma** por MCP.                                            |
+| 🔎 **Investiga antes de suponer**     | Lee la historia de Jira con **todos sus comentarios, subtareas, épica e issues vinculados**, más Confluence y Figma, y arma una ficha de contexto.                                    |
+| 🛡️ **No inventa**                     | Lo que no está en ninguna fuente queda marcado como **Falta información** (`FI-01`) en todos los reportes, con la pregunta para el PO.                                                |
 
 <p align="center">
   <img src="docs/assets/img/arquitectura.png" alt="Arquitectura de k0lmenIA" width="100%">
@@ -127,7 +128,7 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 <tr><td><code>performance-mapper</code></td><td>Carga, estrés, soak y picos con k6 o Artillery; pregunta carga y umbrales</td></tr>
 <tr><td><code>verificador-datos</code></td><td>Verifica datos en PostgreSQL, MySQL/MariaDB, SQL Server o MongoDB y suma verificaciones de BD a los tests</td></tr>
 <tr><td rowspan="2"><b>🗂️ Gestión</b></td>
-  <td><code>gestor-pruebas</code></td><td>Carpetas, casos, vínculos con la historia y ciclos en Xray, QMetry o AIO Tests</td></tr>
+  <td><code>gestor-pruebas</code></td><td>Carpetas, casos, vínculos con la historia y ciclos en Xray, QMetry, AIO Tests o Azure DevOps</td></tr>
 <tr><td><code>publicador-resultados</code></td><td>Sube los resultados de <code>npm test</code> al ciclo con sus evidencias</td></tr>
 </table>
 
@@ -135,14 +136,14 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 
 ## 📋 Requisitos
 
-| Para… | Necesitás |
-|-------|-----------|
-| Usar los agentes | **Claude Code** + cuenta de Claude (Pro, Max, Team o Enterprise) o API de Anthropic. VS Code recomendado. |
-| Casos, reportes y gestión | **Python 3** (`pip install -r requirements.txt`) |
-| Ejecutar E2E en vivo | **Node.js 18+** y navegadores de Playwright |
-| Colecciones de Postman | **Newman** |
-| Automatizar con k0lmena | **Node.js 20+** |
-| Automatizar mobile | **Node.js 22+**, JDK y Android SDK (o macOS con Xcode), o BrowserStack |
+| Para…                     | Necesitás                                                                                                 |
+| ------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Usar los agentes          | **Claude Code** + cuenta de Claude (Pro, Max, Team o Enterprise) o API de Anthropic. VS Code recomendado. |
+| Casos, reportes y gestión | **Python 3** (`pip install -r requirements.txt`)                                                          |
+| Ejecutar E2E en vivo      | **Node.js 18+** y navegadores de Playwright                                                               |
+| Colecciones de Postman    | **Newman**                                                                                                |
+| Automatizar con k0lmena   | **Node.js 20+**                                                                                           |
+| Automatizar mobile        | **Node.js 22+**, JDK y Android SDK (o macOS con Xcode), o BrowserStack                                    |
 
 ---
 
@@ -170,8 +171,8 @@ claude                            # en la terminal de VS Code
 npx playwright install                  # ejecución E2E en vivo
 npm install -g newman                   # colecciones de Postman
 
+npm install                             # k0lmena (desde la raíz; instala en herramientas/k0lmena)
 cd herramientas/k0lmena
-npm install                             # k0lmena
 npx playwright install chromium
 npm run bootstrap:k6                    # performance de APIs con k6
 ```
@@ -185,16 +186,17 @@ Claude Code también se instala con `npm install -g @anthropic-ai/claude-code` (
 
 Hay **un solo `.env`, en la raíz**. Lo usan los agentes, k0lmena y los scripts de gestión. Nunca se sube al repo; la plantilla comentada es [`.env.example`](.env.example).
 
-| Grupo | Variables |
-|-------|-----------|
-| App bajo prueba | `APP_URL` `APP_USER` `APP_PASSWORD` |
-| API | `API_TOKEN` `API_BASEURL` |
-| Web (k0lmena) | `BASEURL` `BROWSER` `HEADLESS` `VIEWPORT_WIDTH` `VIEWPORT_HEIGHT` `LOCALE` `TIMEZONE` |
-| Ejecución y evidencias | `TAGS` `PARALLEL` `EVIDENCE` (`captura` · `ambos` · `off`) `VIDEO` `TRACE` `K0LMENA_AUTO_HEALING` |
-| Mobile | `MOBILE_TARGET` (`device` · `emulator` · `browserstack`) `MOBILE_PLATFORM` `MOBILE_DEVICE_NAME` `MOBILE_APP` `MOBILE_UDID` `BROWSERSTACK_*` |
-| Performance | `PERF_VUS` `PERF_DURACION` (opcionales) |
-| Bases de datos | `DB_CONEXIONES` + por conexión `DB_<NOMBRE>_MOTOR` `_HOST` `_PUERTO` `_BASE` `_USUARIO` `_CLAVE` (o `_URL`) `_ESCRITURA` `_PRODUCCION` |
-| Gestión | `GESTION_HERRAMIENTA` `GESTION_PROYECTO` + credenciales de Xray, QTM4J o AIO |
+| Grupo                  | Variables                                                                                                                                   |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| App bajo prueba        | `APP_URL` `APP_USER` `APP_PASSWORD`                                                                                                         |
+| API                    | `API_TOKEN` `API_BASEURL`                                                                                                                   |
+| Web (k0lmena)          | `BASEURL` `BROWSER` `HEADLESS` `VIEWPORT_WIDTH` `VIEWPORT_HEIGHT` `LOCALE` `TIMEZONE`                                                       |
+| Ejecución y evidencias | `TAGS` `PARALLEL` `EVIDENCE` (`captura` · `ambos` · `off`) `VIDEO` `TRACE` `K0LMENA_AUTO_HEALING`                                           |
+| Mobile                 | `MOBILE_TARGET` (`device` · `emulator` · `browserstack`) `MOBILE_PLATFORM` `MOBILE_DEVICE_NAME` `MOBILE_APP` `MOBILE_UDID` `BROWSERSTACK_*` |
+| Performance            | `PERF_VUS` `PERF_DURACION` (opcionales)                                                                                                     |
+| Bases de datos         | `DB_CONEXIONES` + por conexión `DB_<NOMBRE>_MOTOR` `_HOST` `_PUERTO` `_BASE` `_USUARIO` `_CLAVE` (o `_URL`) `_ESCRITURA` `_PRODUCCION`      |
+| Gestión                | `GESTION_HERRAMIENTA` `GESTION_PROYECTO` + credenciales de Xray, QTM4J o AIO                                                                |
+| Azure DevOps (MCP)     | `ADO_ORGANIZACION` `ADO_PAT` `ADO_PROYECTO`                                                                                                 |
 
 > [!WARNING]
 > Usá credenciales de un entorno de **prueba**. Los agentes leen los secretos del `.env`: nunca pegues un token en el chat.
@@ -207,23 +209,23 @@ Hay **un solo `.env`, en la raíz**. Lo usan los agentes, k0lmena y los scripts 
 2. Pedí lo que necesitás en lenguaje natural.
 3. Revisá el resultado en `output/` o en `herramientas/k0lmena/`.
 
-| Le pedís | Obtenés |
-|----------|---------|
-| *"Investigá el contexto de PROJ-12"* | Ficha de contexto con fuentes, hallazgos y Falta información |
-| *"Analizá la historia HU-001"* | Ambigüedades y preguntas para el PO |
-| *"Armá el plan de pruebas de HU-001"* | Plan HTML |
-| *"Generá los casos de HU-001"* | `casos-HU-001.xlsx` + `.md` + cobertura |
-| *"Pasá la historia HU-001 a escenarios BDD"* | `HU-001-<slug>.feature` + cobertura |
-| *"Generá los casos de la API de autenticación"* | Casos de API con sus JSON |
-| *"Tomá la observación de input/bugs/ y armá el reporte"* | `BUG-001.md` |
-| *"Ejecutá el escenario de registro válido contra https://tu-app.com"* | Reporte HTML de la corrida con evidencia |
-| *"Automatizá en k0lmena los casos de HU-001 contra https://tu-app.com"* | `.feature` + steps + locators |
-| *"Armá una prueba de carga del login para 20 usuarios"* | Script k6/Artillery + reporte HTML |
-| *"Verificá en la base si se creó el usuario ana@test.com y en qué estado quedó"* | Consulta y resultado (solo lectura) |
-| *"Sumá al test de registro la verificación en la base de datos"* | Steps de BD en el `.feature` |
-| *"Subí los casos de HU-001 a Xray, vinculados a PROJ-12, y creá el ciclo Sprint 5"* | Casos y ciclo en Xray |
-| *"Subí los resultados de la última corrida al ciclo PROJ-60"* | Estados y evidencias en el ciclo |
-| *"Armá el informe de cierre de HU-001"* | Resultados, bugs y go/no-go |
+| Le pedís                                                                            | Obtenés                                                      |
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| *"Investigá el contexto de PROJ-12"*                                                | Ficha de contexto con fuentes, hallazgos y Falta información |
+| *"Analizá la historia HU-001"*                                                      | Ambigüedades y preguntas para el PO                          |
+| *"Armá el plan de pruebas de HU-001"*                                               | Plan HTML                                                    |
+| *"Generá los casos de HU-001"*                                                      | `casos-HU-001.xlsx` + `.md` + cobertura                      |
+| *"Pasá la historia HU-001 a escenarios BDD"*                                        | `HU-001-<slug>.feature` + cobertura                          |
+| *"Generá los casos de la API de autenticación"*                                     | Casos de API con sus JSON                                    |
+| *"Tomá la observación de input/bugs/ y armá el reporte"*                            | `BUG-001.md`                                                 |
+| *"Ejecutá el escenario de registro válido contra https://tu-app.com"*               | Reporte HTML de la corrida con evidencia                     |
+| *"Automatizá en k0lmena los casos de HU-001 contra https://tu-app.com"*             | `.feature` + steps + locators                                |
+| *"Armá una prueba de carga del login para 20 usuarios"*                             | Script k6/Artillery + reporte HTML                           |
+| *"Verificá en la base si se creó el usuario ana@test.com y en qué estado quedó"*    | Consulta y resultado (solo lectura)                          |
+| *"Sumá al test de registro la verificación en la base de datos"*                    | Steps de BD en el `.feature`                                 |
+| *"Subí los casos de HU-001 a Xray, vinculados a PROJ-12, y creá el ciclo Sprint 5"* | Casos y ciclo en Xray                                        |
+| *"Subí los resultados de la última corrida al ciclo PROJ-60"*                       | Estados y evidencias en el ciclo                             |
+| *"Armá el informe de cierre de HU-001"*                                             | Resultados, bugs y go/no-go                                  |
 
 ---
 
@@ -231,27 +233,27 @@ Hay **un solo `.env`, en la raíz**. Lo usan los agentes, k0lmena y los scripts 
 
 Antes de analizar, planificar, escribir casos o automatizar una historia, los agentes **investigan su contexto completo** (skill `investigacion-contexto`) en lugar de suponer:
 
-| Fuente | Qué revisan |
-|--------|-------------|
-| Historia de Jira | Descripción, criterios, estado, labels, componentes y adjuntos |
-| Comentarios | **Todos**: las decisiones que se tomaron después (*"acordamos que el límite es 50"*) reemplazan a la descripción |
-| Subtareas, épica e issues vinculados | Reglas generales, historias hermanas y bugs conocidos del flujo |
-| Confluence y Figma | Páginas enlazadas o relacionadas; textos exactos, mensajes y estados del diseño |
-| Contratos y `input/` | Swagger, Postman y documentación local |
+| Fuente                               | Qué revisan                                                                                                      |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| Historia de Jira                     | Descripción, criterios, estado, labels, componentes y adjuntos                                                   |
+| Comentarios                          | **Todos**: las decisiones que se tomaron después (*"acordamos que el límite es 50"*) reemplazan a la descripción |
+| Subtareas, épica e issues vinculados | Reglas generales, historias hermanas y bugs conocidos del flujo                                                  |
+| Confluence y Figma                   | Páginas enlazadas o relacionadas; textos exactos, mensajes y estados del diseño                                  |
+| Contratos y `input/`                 | Swagger, Postman y documentación local                                                                           |
 
 El resultado es una **ficha de contexto** reutilizable (`output/contexto/contexto-HU-XXX.md`) con las fuentes consultadas, los hallazgos por criterio, las decisiones y las contradicciones. Si la historia no cambió, los demás agentes la reusan sin volver a investigar.
 
 **Lo que no aparece en ninguna fuente se marca como "Falta información"** con un ID por historia (`FI-01`, `FI-02`, …), que viaja a todos los reportes:
 
-| Dónde | Cómo se ve |
-|-------|-----------|
-| Planilla de casos (`.xlsx`) | Casos resaltados en ámbar, etiqueta `@falta-info`, detalle en Comentarios y hoja **Falta información** |
-| Coberturas y análisis | Sección **Falta información** (qué falta, dónde se buscó, a qué afecta, pregunta para el PO); criterios `Parcial (falta información)` |
-| `.feature` de k0lmena | Tags `@falta-info @FI-01` y comentario `# FALTA INFORMACIÓN (FI-01): …` |
-| Reporte de mapeo | Estado `Falta información`: el mapper **no usa la app para completar el dato** |
-| Reportes de k0lmena y de ejecución | Nota visible en el escenario y aviso en el resumen |
-| Informe de cierre | Sección **Falta información** con los ítems abiertos como riesgo |
-| Xray · QMetry · AIO | El comentario del resultado aclara que el caso depende de información faltante |
+| Dónde                              | Cómo se ve                                                                                                                            |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Planilla de casos (`.xlsx`)        | Casos resaltados en ámbar, etiqueta `@falta-info`, detalle en Comentarios y hoja **Falta información**                                |
+| Coberturas y análisis              | Sección **Falta información** (qué falta, dónde se buscó, a qué afecta, pregunta para el PO); criterios `Parcial (falta información)` |
+| `.feature` de k0lmena              | Tags `@falta-info @FI-01` y comentario `# FALTA INFORMACIÓN (FI-01): …`                                                               |
+| Reporte de mapeo                   | Estado `Falta información`: el mapper **no usa la app para completar el dato**                                                        |
+| Reportes de k0lmena y de ejecución | Nota visible en el escenario y aviso en el resumen                                                                                    |
+| Informe de cierre                  | Sección **Falta información** con los ítems abiertos como riesgo                                                                      |
+| Xray · QMetry · AIO                | El comentario del resultado aclara que el caso depende de información faltante                                                        |
 
 > *"Investigá el contexto de PROJ-12 y generá los casos"* → ficha de contexto + casos, con lo que falte marcado y las preguntas listas para el PO.
 
@@ -261,19 +263,20 @@ El resultado es una **ficha de contexto** reutilizable (`output/contexto/context
 
 [k0lmena](https://github.com/underc0delabs/k0lmena) vive en `herramientas/k0lmena/`. Los agentes *mapper* verifican tus casos contra la app real y escriben la automatización **una sola vez**; después la suite corre las veces que quieras, **sin tokens**. Las carpetas vienen vacías: todo lo generan los mappers para tu aplicación.
 
+Los comandos se pueden correr desde la raíz del repo (el `package.json` de la raíz los delega a k0lmena) o dentro de `herramientas/k0lmena`:
+
 ```bash
-cd herramientas/k0lmena
 npm test                          # web + API
 npm run test:web                  # también: test:api · test:mobile · test:all
 TAGS=@HU-001 npm test             # filtrar por tag (PowerShell: $env:TAGS="@HU-001"; npm test)
 npm run report:web                # reporte HTML (también: report:api · report:mobile)
 ```
 
-| Suite | Test que pasa | Test que falla |
-|-------|---------------|----------------|
-| 🌐 Web | Captura final (+ GIF opcional) | Video completo, captura, error, logs del navegador y de Node, trace de Playwright |
-| 🔗 API | Request y response (`Authorization` oculto) | Lo mismo + la validación que falló |
-| 📱 Mobile | Captura final (+ GIF opcional) | Video completo, captura, page source y logs del dispositivo |
+| Suite     | Test que pasa                               | Test que falla                                                                    |
+| --------- | ------------------------------------------- | --------------------------------------------------------------------------------- |
+| 🌐 Web    | Captura final (+ GIF opcional)              | Video completo, captura, error, logs del navegador y de Node, trace de Playwright |
+| 🔗 API    | Request y response (`Authorization` oculto) | Lo mismo + la validación que falló                                                |
+| 📱 Mobile | Captura final (+ GIF opcional)              | Video completo, captura, page source y logs del dispositivo                       |
 
 - `@bloqueado`: escenario con un paso que el mapper no pudo verificar; no se ejecuta hasta que se resuelva.
 - Mobile corre en `device`, `emulator` o `browserstack` según `MOBILE_TARGET`; el mobile-mapper necesita el conector Appium MCP.
@@ -294,13 +297,13 @@ npm run perf -- <script> load                  # carga objetivo (pide confirmaci
 npm run perf -- <script> stress --confirmar    # CI o con autorización previa
 ```
 
-| Perfil | Qué hace |
-|--------|----------|
-| `smoke` | Carga mínima: valida que el script funciona |
-| `load` | Sostiene la carga objetivo |
-| `stress` | 1x, 2x y 3x: busca el punto de quiebre |
-| `soak` | Larga duración: fugas de memoria y degradación |
-| `spike` | Pico brusco y recuperación |
+| Perfil   | Qué hace                                       |
+| -------- | ---------------------------------------------- |
+| `smoke`  | Carga mínima: valida que el script funciona    |
+| `load`   | Sostiene la carga objetivo                     |
+| `stress` | 1x, 2x y 3x: busca el punto de quiebre         |
+| `soak`   | Larga duración: fugas de memoria y degradación |
+| `spike`  | Pico brusco y recuperación                     |
 
 Cada corrida deja un **reporte HTML** en `reports/performance/` con veredicto, latencias p50/p95/p99, errores, umbrales y detalle por endpoint. Si un umbral no se cumple, el comando termina con error.
 
@@ -318,6 +321,15 @@ Configurá `GESTION_HERRAMIENTA` (`xray-cloud` · `xray-dc` · `qtm4j` · `aio`)
 - *"Subí los resultados de la última corrida al ciclo PROJ-60"* → **publicador-resultados** carga estado, error y evidencias (captura, GIF y video si falló).
 
 La trazabilidad (`output/gestion/<HU>-<herramienta>.json`) evita duplicados. También hay comandos manuales: [`scripts/gestion/README.md`](scripts/gestion/README.md).
+
+### Azure DevOps (Test Plans)
+
+Azure DevOps se integra por su conector MCP oficial (`azure-devops`), con `ADO_ORGANIZACION`, `ADO_PAT` y `ADO_PROYECTO` en el `.env` (ver [`CONECTORES.md`](CONECTORES.md#azure-devops)):
+
+- *"Leé la historia 1234 de Azure DevOps y analizala"* → los agentes leen el work item con sus comentarios, tareas, padre, vínculos y la Wiki.
+- *"Subí los casos de `casos-HU-001.xlsx` a Azure Test Plans, plan 'Sprint 5', suite 'HU-001 Registro', vinculados a la historia 1234"* → **gestor-pruebas** convierte los pasos con `scripts/gestion/para_azure_devops.py`, crea los *Test Cases*, los vincula a la historia y los agrega a la suite.
+
+Por ahora el conector no registra resultados de ejecución: **publicador-resultados** todavía no publica en Azure DevOps.
 
 ---
 
@@ -349,15 +361,17 @@ También se usa sin agente: `npm run bd -- conexiones | esquema | existe | consu
 
 ## 🔌 Conectores MCP
 
-| Conector | Para qué | Autenticación |
-|----------|----------|---------------|
-| `playwright` | Navegador para el ejecutor E2E y el web-mapper | Activo por defecto |
-| `atlassian` | **Jira y Confluence**: historias, criterios y documentación | Tu cuenta (OAuth) |
-| `figma` · `figma-desktop` | Diseños desde un link a un frame o archivo | Tu cuenta (OAuth) |
-| `appium-mcp` | Recorrer la app para el mobile-mapper | `ANDROID_HOME` |
-| `qmetry` · `qtm4j` · `aio-tests` | Consultar la herramienta de gestión desde el chat | API key / token |
+| Conector                         | Para qué                                                    | Autenticación      |
+| -------------------------------- | ----------------------------------------------------------- | ------------------ |
+| `playwright`                     | Navegador para el ejecutor E2E y el web-mapper              | Activo por defecto |
+| `atlassian`                      | **Jira y Confluence**: historias, criterios y documentación | Tu cuenta (OAuth)  |
+| `figma` · `figma-desktop`        | Diseños desde un link a un frame o archivo                  | Tu cuenta (OAuth)  |
+| `appium-mcp`                     | Recorrer la app para el mobile-mapper                       | `ANDROID_HOME`     |
+| `qmetry` · `qtm4j` · `aio-tests` | Consultar la herramienta de gestión desde el chat           | API key / token    |
+| `azure-devops`                   | **Azure DevOps**: historias, Wiki y casos en Test Plans     | PAT                |
+| `k0lmena-tmt`                    | Cargar y consultar casos en k0lmenaTMT                      | Token personal     |
 
-Para activar uno: copiá su entrada de `.mcp.json.example` a `.mcp.json`, agregalo a `enabledMcpjsonServers` en `.claude/settings.local.json`, reiniciá Claude Code y verificá con `/mcp`. Guía completa en [`CONECTORES.md`](CONECTORES.md).
+Todos están en `.mcp.json`, sin secretos: las credenciales se leen del `.env`. Para activar uno: completá sus variables en el `.env`, agregalo a `enabledMcpjsonServers` en `.claude/settings.local.json`, reiniciá Claude Code y verificá con `/mcp`. Guía completa en [`CONECTORES.md`](CONECTORES.md).
 
 ---
 
@@ -383,16 +397,16 @@ Para activar uno: copiá su entrada de `.mcp.json.example` a `.mcp.json`, agrega
 <details>
 <summary><b>Convenciones</b></summary>
 
-| Elemento | Formato |
-|----------|---------|
-| Historias · criterios | `HU-001` · `CA1` |
-| Casos manuales · de API | `CP-001` · `CP-API-001` |
-| Bugs | `BUG-001` |
-| Falta información | `FI-01` (por historia) · tags `@falta-info @FI-01` |
-| Severidad y prioridad | Crítica · Alta · Media · Baja |
-| Estado de un caso | N/A · Pendiente · En ejecución · Aprobado · Fallido · Bloqueado |
-| Tags en k0lmena | Feature: `@HU-001 @web` · Scenario: `@CP-001` (`@Smoke` si es crítico) · `@bloqueado` |
-| Automatización | `<tipo>/features/HU-001-<slug>.feature` · `steps/HU-001.steps.ts` · `locators/HU-001.locators.ts` |
+| Elemento                | Formato                                                                                           |
+| ----------------------- | ------------------------------------------------------------------------------------------------- |
+| Historias · criterios   | `HU-001` · `CA1`                                                                                  |
+| Casos manuales · de API | `CP-001` · `CP-API-001`                                                                           |
+| Bugs                    | `BUG-001`                                                                                         |
+| Falta información       | `FI-01` (por historia) · tags `@falta-info @FI-01`                                                |
+| Severidad y prioridad   | Crítica · Alta · Media · Baja                                                                     |
+| Estado de un caso       | N/A · Pendiente · En ejecución · Aprobado · Fallido · Bloqueado                                   |
+| Tags en k0lmena         | Feature: `@HU-001 @web` · Scenario: `@CP-001` (`@Smoke` si es crítico) · `@bloqueado`             |
+| Automatización          | `<tipo>/features/HU-001-<slug>.feature` · `steps/HU-001.steps.ts` · `locators/HU-001.locators.ts` |
 </details>
 
 <details>
@@ -404,8 +418,8 @@ k0lmenIA/
 ├── ARQUITECTURA.md         Cómo crece el repo
 ├── CONECTORES.md           Cómo activar los conectores MCP
 ├── .env.example            Plantilla de variables (copiar a .env)
-├── .mcp.json               Conexiones MCP activas (Playwright)
-├── .mcp.json.example       Conectores opcionales
+├── .mcp.json               Conectores MCP (sin secretos; activos según settings)
+├── package.json            Atajos para correr k0lmena desde la raíz (npm test…)
 ├── docs/                   Documentación web, PDF y diagramas
 ├── .claude/
 │   ├── agents/             Los 18 agentes
@@ -414,7 +428,8 @@ k0lmenIA/
 ├── output/                 Lo que generan los agentes (contexto/, casos, reportes, mapeos…)
 ├── plantillas/             Bug, planilla de casos, cobertura
 ├── scripts/                Casos, reportes HTML, plan, informe de cierre
-│   └── gestion/            Xray, QMetry (QTM4J) y AIO Tests
+│   ├── gestion/            Xray, QMetry (QTM4J), AIO Tests y casos para Azure DevOps
+│   └── mcp/                Lanzadores de los conectores MCP (leen el .env)
 └── herramientas/
     ├── newman/             Colecciones de Postman
     └── k0lmena/            web/ api/ mobile/ performance/ reports/
@@ -424,17 +439,17 @@ k0lmenIA/
 <details>
 <summary><b>Problemas frecuentes</b></summary>
 
-| Problema | Solución |
-|----------|----------|
-| Un agente nuevo no aparece | Reiniciá Claude Code. |
-| La suite web falla con viewport 0x0 o sin URL | Falta el `.env` de la raíz: `cp .env.example .env` y completalo. |
-| `npm test` corre 0 escenarios | Todavía no automatizaste nada o `TAGS` no coincide. |
-| Un escenario nunca se ejecuta | Tiene `@bloqueado`; el motivo está en un comentario arriba. |
-| "No encuentro k6" | `npm run bootstrap:k6` en `herramientas/k0lmena/`. |
-| `npm run perf` no corre un perfil con carga desde el agente | Es a propósito: necesita `--confirmar`, que el agente agrega tras tu confirmación. |
-| Una carpeta de Xray/QMetry/AIO sale como `C:/Program Files/Git/…` | En Git Bash escribí las carpetas sin `/` inicial. |
-| ¿Los tests verifican la base de datos siempre? | No: las verificaciones de BD se agregan a un `.feature` solo cuando las pedís; sin `DB_CONEXIONES`, la suite corre igual. |
-| Un conector MCP no conecta | Las variables van en el entorno donde lanzás `claude`; Atlassian y Figma se autorizan desde `/mcp`. |
+| Problema                                                          | Solución                                                                                                                  |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Un agente nuevo no aparece                                        | Reiniciá Claude Code.                                                                                                     |
+| La suite web falla con viewport 0x0 o sin URL                     | Falta el `.env` de la raíz: `cp .env.example .env` y completalo.                                                          |
+| `npm test` corre 0 escenarios                                     | Todavía no automatizaste nada o `TAGS` no coincide.                                                                       |
+| Un escenario nunca se ejecuta                                     | Tiene `@bloqueado`; el motivo está en un comentario arriba.                                                               |
+| "No encuentro k6"                                                 | `npm run bootstrap:k6` en `herramientas/k0lmena/`.                                                                        |
+| `npm run perf` no corre un perfil con carga desde el agente       | Es a propósito: necesita `--confirmar`, que el agente agrega tras tu confirmación.                                        |
+| Una carpeta de Xray/QMetry/AIO sale como `C:/Program Files/Git/…` | En Git Bash escribí las carpetas sin `/` inicial.                                                                         |
+| ¿Los tests verifican la base de datos siempre?                    | No: las verificaciones de BD se agregan a un `.feature` solo cuando las pedís; sin `DB_CONEXIONES`, la suite corre igual. |
+| Un conector MCP no conecta                                        | Las variables van en el entorno donde lanzás `claude`; Atlassian y Figma se autorizan desde `/mcp`.                       |
 </details>
 
 <details>
@@ -442,7 +457,7 @@ k0lmenIA/
 
 - **Agente**: un `.md` en `.claude/agents/` con `name` y `description` (es lo que usa Claude Code para decidir cuándo invocarlo) y el cuerpo en español: rol, entradas, proceso, salida y reglas.
 - **Skill**: una carpeta en `.claude/skills/` con su `SKILL.md`.
-- **Conector**: una entrada en `.mcp.json`, con los tokens siempre como `${VARIABLE}`.
+- **Conector**: una entrada en `.mcp.json`, sin secretos; los tokens se leen del `.env` con un script de `scripts/mcp/`.
 - **Herramienta**: una subcarpeta en `herramientas/` con su README.
 - **Documentación**: el sitio es [`docs/index.html`](docs/index.html), publicado en https://underc0delabs.github.io/k0lmenIA/ (GitHub Pages desde `docs/`); `node docs/generar.js` regenera los diagramas y el PDF.
 

@@ -1,6 +1,6 @@
 ---
 name: gestor-pruebas
-description: Organiza las pruebas en la herramienta de gestión (Xray Cloud o Server/DC, QMetry para Jira — QTM4J — o AIO Tests). Crea carpetas, sube ahí los casos de prueba (manuales desde el .xlsx o BDD desde el .feature), los vincula a la historia de usuario, crea ciclos de prueba (Test Executions en Xray), les agrega casos y los vincula a historias. Úsalo cuando el usuario pida subir, cargar o sincronizar casos a Xray / QMetry / AIO, crear una carpeta, un ciclo o una ejecución, o vincular casos o ciclos a una historia.
+description: Organiza las pruebas en la herramienta de gestión (Xray Cloud o Server/DC, QMetry para Jira — QTM4J —, AIO Tests o Azure DevOps Test Plans). Crea carpetas, sube ahí los casos de prueba (manuales desde el .xlsx o BDD desde el .feature), los vincula a la historia de usuario, crea ciclos de prueba (Test Executions en Xray), les agrega casos y los vincula a historias. Úsalo cuando el usuario pida subir, cargar o sincronizar casos a Xray / QMetry / AIO / Azure DevOps, crear una carpeta, un ciclo o una ejecución, o vincular casos o ciclos a una historia.
 ---
 
 # Agente: Gestor de pruebas
@@ -47,4 +47,40 @@ python scripts/gestion/gestion.py agregar-a-ciclo --ciclo PROJ-60 --traza HU-001
 - **No dupliques**: antes de subir, mirá la trazabilidad; el script ya saltea los casos que figuran ahí.
 - **No borres ni modifiques** casos, carpetas o ciclos existentes en la herramienta: este agente solo crea y vincula.
 - Las acciones crean datos compartidos del equipo: ante la duda sobre carpeta, historia o ciclo, preguntá antes de ejecutar.
+
+## Azure DevOps (Test Plans)
+
+Azure DevOps **no pasa por `gestion.py`**: se usa el conector MCP `azure-devops` (ver `CONECTORES.md`). Si no está activo, decilo y explicá cómo activarlo; no lo reemplaces con llamadas a mano a la API. Las equivalencias:
+
+```
++---------------+-----------------------------------------+
+| k0lmenIA      | Azure DevOps                            |
++===============+=========================================+
+| Carpeta       | Test Suite dentro de un Test Plan       |
++---------------+-----------------------------------------+
+| Caso (CP-XXX) | Work item *Test Case*                   |
++---------------+-----------------------------------------+
+| Historia      | Work item *User Story* / *Product       |
+|               | Backlog Item* (ID numérico, ej. `1234`) |
++---------------+-----------------------------------------+
+| Ciclo         | Test Plan (o una suite para la ronda)   |
++---------------+-----------------------------------------+
+```
+
+Proceso:
+
+1. **Confirmá** proyecto (o `ADO_PROYECTO` del `.env`), plan y suite destino, e ID de la historia. Listá lo que existe con `testplan` (`list_plans`, `list_suites`) antes de crear: **no dupliques** planes ni suites.
+2. **Convertí los casos con el script**, sin armar los pasos a mano:
+
+```bash
+python scripts/gestion/para_azure_devops.py output/casos-de-prueba/manuales/casos-HU-001.xlsx [--ids CP-001,CP-003]
+```
+
+   Devuelve por caso `title`, `priority` (1 a 4), `steps` en el formato del server y `etiquetas` (con los `FI-XX`).
+3. **Mostrá el resumen** (qué casos, a qué plan/suite, qué historia) y pedí confirmación si son más de 10 casos o es la primera carga en ese proyecto.
+4. **Creá** cada caso con `testplan_test_case_write` (`action: create`, `title`, `priority`, `steps` tal cual salen del script, `testsWorkItemId` = ID de la historia, y `areaPath` / `iterationPath` si la persona los indica). Después agregalos a la suite con `testplan_test_suite_write` (`action: add_test_cases`).
+5. **Trazabilidad**: guardá `output/gestion/<HU>-azure-devops.json` con el mismo criterio que las otras herramientas: `{"herramienta": "azure-devops", "proyecto": …, "plan": …, "suite": …, "historia": …, "casos": {"CP-001": 5678, …}}`. Antes de crear, leelo y salteá los casos que ya figuran.
+6. **Casos con falta información**: si un caso tiene etiquetas `FI-XX`, agregá un comentario en su work item con `wit_work_item_comment_write` (`FALTA INFORMACIÓN (FI-01): <qué falta>`), tomando el texto de la ficha `output/contexto/contexto-<HU>.md`.
+
+Limitación: el conector no registra resultados de ejecución; si piden publicar resultados en Azure DevOps, avisá que todavía no está soportado.
 - **Ahorro de tokens**: no leas los casos uno por uno para subirlos; el script lee el `.xlsx` / `.feature` directo.

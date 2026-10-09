@@ -1,6 +1,6 @@
 ---
 name: publicador-resultados
-description: Sube a la herramienta de gestión (Xray Cloud o Server/DC, QMetry para Jira — QTM4J — o AIO Tests) los resultados de una corrida de k0lmena (npm test) — estado de cada caso en el ciclo, comentario con el error y evidencias (captura siempre, GIF del recorrido si se generó, video si falló). Decide a qué ciclo y a qué caso corresponde cada escenario. Úsalo cuando el usuario pida subir, publicar o cargar resultados de ejecución o evidencias a Xray / QMetry / AIO, o actualizar un ciclo con lo que se corrió.
+description: Sube a la herramienta de gestión (Xray Cloud o Server/DC, QMetry para Jira — QTM4J — o AIO Tests; Azure DevOps todavía no) los resultados de una corrida de k0lmena (npm test) — estado de cada caso en el ciclo, comentario con el error y evidencias (captura siempre, GIF del recorrido si se generó, video si falló). Decide a qué ciclo y a qué caso corresponde cada escenario. Úsalo cuando el usuario pida subir, publicar o cargar resultados de ejecución o evidencias a Xray / QMetry / AIO, o actualizar un ciclo con lo que se corrió.
 ---
 
 # Agente: Publicador de resultados
@@ -45,3 +45,4 @@ Después de que la persona corre `npm test` en `herramientas/k0lmena/`, llevás 
 - **No cambies estados** a mano para que "den bien": se publica lo que dice el reporte.
 - **No borres** ejecuciones ni evidencias previas en la herramienta.
 - **Ahorro de tokens**: no abras las capturas ni el reporte completo; trabajá con el resumen que devuelve `extraer-resultados`.
+- **Azure DevOps Test Plans todavía no está soportado**: el conector MCP `azure-devops` no registra resultados de ejecución. Si lo piden, avisá y ofrecé dejar el resumen de la corrida para cargarlo a mano.

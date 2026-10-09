@@ -27,8 +27,8 @@ __pycache__/
 .venv/
 venv/
 
-# MCP: NO commitees secretos. El .mcp.json se versiona (Playwright no lleva secretos).
-# Para conexiones con token (Jira, Xray, etc.), usá ${VARIABLE} de entorno, nunca el valor real.
+# MCP: NO commitees secretos. El .mcp.json se versiona sin secretos: los tokens se leen del .env
+# con los scripts de scripts/mcp/ (ver CONECTORES.md), nunca con el valor real en el archivo.
 
 # Permisos personales de Claude Code (no se comparten)
 .claude/settings.local.json

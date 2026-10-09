@@ -71,7 +71,7 @@
   <div>
     <div class="k">Documentación del proyecto</div>
     <h1><span>k0lmenIA</span></h1>
-    <div class="l">Agentes de QA para Claude Code: diseño de pruebas, automatización con k0lmena e integración con Xray, QMetry y AIO Tests — todo en español.</div>
+    <div class="l">Agentes de QA para Claude Code: diseño de pruebas, automatización con k0lmena e integración con Xray, QMetry, AIO Tests y Azure DevOps — todo en español.</div>
     <div class="chips"><span>18 agentes</span><span>Web · API · Mobile · Performance</span><span>Playwright · Cucumber · Appium · k6 · Artillery</span><span>Xray · QMetry · AIO Tests</span><span>Jira · Confluence · Figma</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Suites sin tokens</span></div>
   </div>
   <div class="p"><span>QARMY · Underc0de</span><span>github.com/underc0delabs/k0lmenIA</span><span>Licencia MIT</span></div>
@@ -112,7 +112,7 @@
     <span class="tec"><i style="background:#3776ab"></i>Python</span>
     <span class="tec"><i style="background:#0052cc"></i>Jira · Confluence</span>
     <span class="tec"><i style="background:#a259ff"></i>Figma</span>
-    <span class="tec"><i style="background:#00c7b1"></i>Xray · QMetry · AIO Tests</span>
+    <span class="tec"><i style="background:#00c7b1"></i>Xray · QMetry · AIO Tests · Azure DevOps</span>
     <span class="tec"><i style="background:#4169e1"></i>PostgreSQL</span>
     <span class="tec"><i style="background:#4479a1"></i>MySQL · MariaDB</span>
     <span class="tec"><i style="background:#cc2927"></i>SQL Server</span>
@@ -136,7 +136,7 @@
   <div class="tarjetas">
     <div class="tarjeta c-violeta"><div class="ico">◆</div><h4>1 · Diseño</h4><p>Analizar historias, planificar, escribir casos manuales, BDD y de API, generar datos y redactar bugs.</p><div class="salida">Queda en <code>output/</code></div></div>
     <div class="tarjeta c-verde"><div class="ico">▶</div><h4>2 · Automatización</h4><p>Los agentes <i>mapper</i> escriben la automatización una sola vez; después corre con <code>npm</code>, sin tokens.</p><div class="salida">Queda en <code>herramientas/k0lmena/</code></div></div>
-    <div class="tarjeta c-cian"><div class="ico">⇄</div><h4>3 · Gestión</h4><p>Casos, ciclos y resultados con evidencias en Xray, QMetry o AIO Tests, y el informe de cierre.</p><div class="salida">Tu herramienta + <code>output/</code></div></div>
+    <div class="tarjeta c-cian"><div class="ico">⇄</div><h4>3 · Gestión</h4><p>Casos, ciclos y resultados con evidencias en Xray, QMetry o AIO Tests (casos también en Azure DevOps), y el informe de cierre.</p><div class="salida">Tu herramienta + <code>output/</code></div></div>
   </div>
 
   <h3>Principios</h3>
@@ -168,8 +168,8 @@
     <tr><td>Agentes</td><td>El "quién": un especialista por tarea.</td><td><code>.claude/agents/</code></td></tr>
     <tr><td>Skills</td><td>El "cómo": conocimiento que se carga cuando hace falta (técnicas de diseño, ejecución E2E y de API, convenciones de k0lmena).</td><td><code>.claude/skills/</code></td></tr>
     <tr><td>Plantillas y scripts</td><td>Formato de salida (planilla de casos, cobertura, bug) y reportes HTML determinísticos.</td><td><code>plantillas/</code> · <code>scripts/</code></td></tr>
-    <tr><td>Integración de gestión</td><td><code>gestion.py</code> con un adaptador por herramienta: Xray Cloud, Xray Server/DC, QTM4J y AIO Tests.</td><td><code>scripts/gestion/</code></td></tr>
-    <tr><td>Conectores MCP</td><td>Playwright (activo), Jira y Confluence, Figma, Appium, QMetry y AIO Tests.</td><td><code>.mcp.json</code></td></tr>
+    <tr><td>Integración de gestión</td><td><code>gestion.py</code> con un adaptador por herramienta: Xray Cloud, Xray Server/DC, QTM4J y AIO Tests. Azure DevOps va por su conector MCP.</td><td><code>scripts/gestion/</code></td></tr>
+    <tr><td>Conectores MCP</td><td>Playwright (activo), Jira y Confluence, Figma, Appium, QMetry, AIO Tests, k0lmenaTMT y Azure DevOps.</td><td><code>.mcp.json</code></td></tr>
     <tr><td>Herramientas</td><td>Newman para colecciones de Postman y k0lmena para web, API, mobile y performance.</td><td><code>herramientas/</code></td></tr>
     <tr><td>Entrada y salida</td><td>Insumos del usuario y artefactos generados, ordenados por tipo.</td><td><code>input/</code> · <code>output/</code></td></tr>
   </table></div>
@@ -242,7 +242,7 @@
 
   <div class="subtitulo-grupo"><h3>Gestión de pruebas</h3></div>
   <div class="tarjetas">
-    <div class="tarjeta c-cian"><h4>gestor-pruebas</h4><p>Carpetas, casos, vínculos con la historia y ciclos en Xray, QMetry (QTM4J) o AIO Tests.</p><div class="salida">La herramienta + <code>output/gestion/</code></div></div>
+    <div class="tarjeta c-cian"><h4>gestor-pruebas</h4><p>Carpetas, casos, vínculos con la historia y ciclos en Xray, QMetry (QTM4J), AIO Tests o Azure DevOps Test Plans.</p><div class="salida">La herramienta + <code>output/gestion/</code></div></div>
     <div class="tarjeta c-cian"><h4>publicador-resultados</h4><p>Sube los resultados de <code>npm test</code> al ciclo: estado, error y evidencias.</p><div class="salida">La herramienta</div></div>
   </div>
 </section>
@@ -285,8 +285,8 @@ claude                                             <span class="c"># la primera 
     <li><b>Sumá lo opcional</b>
       <div class="codigo"><pre>npx playwright install                             <span class="c"># ejecución E2E en vivo</span>
 npm install -g newman                              <span class="c"># colecciones de Postman</span>
+npm install                                        <span class="c"># k0lmena (desde la raíz)</span>
 cd herramientas/k0lmena
-npm install                                        <span class="c"># k0lmena</span>
 npx playwright install chromium
 npm run bootstrap:k6                               <span class="c"># performance de APIs con k6</span></pre></div></li>
   </ol>
@@ -309,6 +309,7 @@ npm run bootstrap:k6                               <span class="c"># performance
     <tr><td>Performance</td><td><code>PERF_VUS</code> <code>PERF_DURACION</code></td><td>Pisar la carga de los scripts k6</td></tr>
     <tr><td>Bases de datos</td><td><code>DB_CONEXIONES</code> + <code>DB_&lt;NOMBRE&gt;_MOTOR</code> <code>_HOST</code> <code>_PUERTO</code> <code>_BASE</code> <code>_USUARIO</code> <code>_CLAVE</code> (o <code>_URL</code>) <code>_ESCRITURA</code> <code>_PRODUCCION</code></td><td>Verificación en base de datos</td></tr>
     <tr><td>Gestión</td><td><code>GESTION_HERRAMIENTA</code> <code>GESTION_PROYECTO</code> + credenciales de la herramienta</td><td>Xray, QMetry y AIO Tests</td></tr>
+    <tr><td>Azure DevOps (MCP)</td><td><code>ADO_ORGANIZACION</code> <code>ADO_PAT</code> <code>ADO_PROYECTO</code></td><td>Boards, Wiki y Test Plans</td></tr>
   </table></div>
   <div class="aviso warn"><span class="ico">!</span><p>Usá credenciales de un entorno de prueba, nunca de producción. Los agentes leen los secretos del <code>.env</code>: nunca pegues un token en el chat ni lo escribas en un archivo versionado.</p></div>
 
@@ -506,6 +507,9 @@ python scripts/gestion/gestion.py crear-ciclo --nombre "Sprint 5" --historia PRO
 python scripts/gestion/gestion.py extraer-resultados --reporte &lt;cucumber-report.json&gt;
 python scripts/gestion/gestion.py publicar-resultados --ciclo PROJ-60 --resultados &lt;resultados.json&gt; --traza HU-001</pre></div>
   <p>Las carpetas van sin barra inicial (en Git Bash, <code>/HU-001</code> se convierte en una ruta de Windows). Referencia completa en <code>scripts/gestion/README.md</code>.</p>
+  <h3>Azure DevOps (Test Plans)</h3>
+  <p>Azure DevOps no pasa por <code>gestion.py</code>: se integra por su conector MCP oficial (<code>azure-devops</code>), con <code>ADO_ORGANIZACION</code>, <code>ADO_PAT</code> y <code>ADO_PROYECTO</code> en el <code>.env</code>. Los agentes leen las historias (con comentarios, tareas, padre y vínculos) y la Wiki, y <b>gestor-pruebas</b> crea los <i>Test Cases</i> con sus pasos (los arma <code>scripts/gestion/para_azure_devops.py</code>), los vincula a la historia y los agrega a una suite. Todavía no se publican resultados de ejecución en Azure DevOps.</p>
+  <div class="pedido">Subí los casos de casos-HU-001.xlsx a Azure Test Plans, plan 'Sprint 5', suite 'HU-001 Registro', vinculados a la historia 1234.</div>
 </section>
 
 <!-- ======================================================= 12 BASE DE DATOS -->
@@ -554,7 +558,7 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
 <section class="seccion" id="conectores">
   <div class="kicker">Guías</div>
   <h2>Conectores MCP</h2>
-  <p class="bajada">Conectan a Claude Code con sistemas externos. <code>.mcp.json</code> trae activo Playwright; el resto está en <code>.mcp.json.example</code>.</p>
+  <p class="bajada">Conectan a Claude Code con sistemas externos. Todos están en <code>.mcp.json</code>, sin secretos: las credenciales se leen del <code>.env</code>. Solo Playwright viene activo.</p>
   <div class="tabla"><table>
     <tr><th style="width:22%">Conector</th><th>Para qué</th><th style="width:18%">Autenticación</th></tr>
     <tr><td><code>playwright</code></td><td>Navegador para el ejecutor E2E y el web-mapper (headed y headless).</td><td>Activo</td></tr>
@@ -563,11 +567,12 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
     <tr><td><code>appium-mcp</code></td><td>Lo usa el mobile-mapper para recorrer la app.</td><td><code>ANDROID_HOME</code></td></tr>
     <tr><td><code>qmetry</code> · <code>qtm4j</code></td><td>Consultar QMetry desde el chat.</td><td>API key</td></tr>
     <tr><td><code>aio-tests</code></td><td>Consultar AIO Tests desde el chat.</td><td>Token</td></tr>
+    <tr><td><code>azure-devops</code></td><td>Azure DevOps: historias, Wiki y casos en Test Plans.</td><td>PAT</td></tr>
+    <tr><td><code>k0lmena-tmt</code></td><td>Cargar y consultar casos en k0lmenaTMT.</td><td>Token personal</td></tr>
   </table></div>
   <ol class="pasos">
-    <li><b>Copiá la entrada</b>De <code>.mcp.json.example</code> a <code>.mcp.json</code>.</li>
-    <li><b>Habilitala</b>Agregá su nombre a <code>enabledMcpjsonServers</code> en <code>.claude/settings.local.json</code>.</li>
-    <li><b>Autenticá</b>Si usa token, definilo en el entorno antes de lanzar <code>claude</code>. Atlassian y Figma se autorizan con tu cuenta desde <code>/mcp</code>.</li>
+    <li><b>Completá el .env</b>Si usa token, cargalo en el <code>.env</code> de la raíz. Atlassian y Figma se autorizan con tu cuenta desde <code>/mcp</code>.</li>
+    <li><b>Habilitalo</b>Agregá su nombre a <code>enabledMcpjsonServers</code> en <code>.claude/settings.local.json</code>.</li>
     <li><b>Verificá</b>Reiniciá Claude Code y revisá la conexión con <code>/mcp</code>.</li>
   </ol>
   <div class="pedido">Generá los casos de PROJ-12 usando la página de Confluence 'Reglas de facturación' y este diseño de Figma.</div>
@@ -623,8 +628,8 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
 ├── ARQUITECTURA.md         <span class="c">Cómo crece el repo</span>
 ├── CONECTORES.md           <span class="c">Cómo activar los conectores MCP</span>
 ├── .env.example            <span class="c">Plantilla de variables (copiar a .env)</span>
-├── .mcp.json               <span class="c">Conexiones MCP activas (Playwright)</span>
-├── .mcp.json.example       <span class="c">Conectores opcionales</span>
+├── .mcp.json               <span class="c">Conectores MCP (sin secretos; activos según settings)</span>
+├── package.json            <span class="c">Atajos para correr k0lmena desde la raíz (npm test…)</span>
 ├── docs/                   <span class="c">Este sitio, el PDF y los diagramas</span>
 ├── .claude/
 │   ├── agents/             <span class="c">Los 18 agentes</span>
@@ -633,7 +638,8 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
 ├── output/                 <span class="c">Lo que generan los agentes</span>
 ├── plantillas/             <span class="c">Bug, planilla de casos, cobertura</span>
 ├── scripts/                <span class="c">Casos, reportes HTML, plan, informe de cierre</span>
-│   └── gestion/            <span class="c">Xray, QMetry (QTM4J) y AIO Tests</span>
+│   ├── gestion/            <span class="c">Xray, QMetry (QTM4J), AIO Tests y casos para Azure DevOps</span>
+│   └── mcp/                <span class="c">Lanzadores de los conectores MCP (leen el .env)</span>
 └── herramientas/
     ├── newman/             <span class="c">Colecciones de Postman</span>
     └── k0lmena/
@@ -677,7 +683,7 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
   <h3>Skills, conectores y herramientas</h3>
   <div class="tarjetas">
     <div class="tarjeta"><h4>Skill</h4><p>Una carpeta en <code>.claude/skills/</code> con su <code>SKILL.md</code>; se carga solo cuando hace falta.</p></div>
-    <div class="tarjeta"><h4>Conector MCP</h4><p>Una entrada en <code>.mcp.json</code>; los tokens siempre como <code>${VARIABLE}</code>.</p></div>
+    <div class="tarjeta"><h4>Conector MCP</h4><p>Una entrada en <code>.mcp.json</code>, sin secretos; los tokens se leen del <code>.env</code> con un script de <code>scripts/mcp/</code>.</p></div>
     <div class="tarjeta"><h4>Herramienta</h4><p>Una subcarpeta en <code>herramientas/</code> con su README.</p></div>
   </div>
   <h3>Regenerar esta documentación</h3>

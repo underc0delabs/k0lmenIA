@@ -18,11 +18,17 @@ herramientas/k0lmena/
 
 ## Nombres y trazabilidad
 
-| Archivo  | Nombre                                    |
-| -------- | ----------------------------------------- |
-| Feature  | `<tipo>/features/HU-001-<slug>.feature`   |
-| Steps    | `<tipo>/steps/HU-001.steps.ts`            |
-| Locators | `<tipo>/locators/HU-001.locators.ts`      |
+```
++-----------+-----------------------------------------+
+| Archivo   | Nombre                                  |
++===========+=========================================+
+| Feature   | `<tipo>/features/HU-001-<slug>.feature` |
++-----------+-----------------------------------------+
+| Steps     | `<tipo>/steps/HU-001.steps.ts`          |
++-----------+-----------------------------------------+
+| Locators  | `<tipo>/locators/HU-001.locators.ts`    |
++-----------+-----------------------------------------+
+```
 
 - Tags del `Feature`: `@HU-001` y el tipo (`@web`, `@api` o `@mobile`).
 - Tags de cada `Scenario`: el ID del caso de origen (`@CP-001`, `@CP-API-001`) y, si es crítico, `@Smoke`.
@@ -176,10 +182,17 @@ When guardo el campo "id" de la consulta como "idPedido"
 
 Se corre con `npm run perf -- <script> <perfil>` (`run-perf.js`). Perfiles: `smoke` (carga mínima, valida el script), `load`, `stress`, `soak`, `spike`. Cada corrida deja en `reports/performance/<k6|artillery>/` el reporte HTML, un resumen JSON chico, el resultado crudo y el log; la consola muestra solo el resumen.
 
-| Herramienta           | Cuándo                                               | Archivos                                                                 |
-| --------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------ |
-| k6                    | APIs / HTTP (escala a miles de usuarios)             | `performance/k6/http/HU-001-<slug>.ts`                                   |
-| Artillery + Playwright | Flujos de navegador (pocos usuarios: cada uno es un Chromium) | `performance/artillery/HU-001-<slug>.yaml` + `HU-001-<slug>.ts` (processor) |
+```
++------------------------+------------------------------------------+----------------------------------------+
+| Herramienta            | Cuándo                                   | Archivos                               |
++========================+==========================================+========================================+
+| k6                     | APIs / HTTP (escala a miles de usuarios) | `performance/k6/http/HU-001-<slug>.ts` |
++------------------------+------------------------------------------+----------------------------------------+
+| Artillery + Playwright | Flujos de navegador (pocos usuarios:     | `performance/artillery/HU-001-         |
+|                        | cada uno es un Chromium)                 | <slug>.yaml` + `HU-001-<slug>.ts`      |
+|                        |                                          | (processor)                            |
++------------------------+------------------------------------------+----------------------------------------+
+```
 
 ### k6
 
@@ -270,11 +283,17 @@ TAGS=@HU-001 npm run test:web      # o test:api / test:mobile
 
 Al terminar, guardá `output/mapeos/mapeo-<HU>-<tipo>.md` con una tabla (luego `python scripts/formatear_tablas.py <archivo>`):
 
-| Caso   | Paso del caso                 | Paso automatizado                       | Estado      | Nota                                  |
-| ------ | ----------------------------- | --------------------------------------- | ----------- | ------------------------------------- |
-| CP-001 | Ingresar el email             | el usuario completa el email "..."      | Mapeado     |                                       |
-| CP-001 | Click en "Enviar"             | el usuario clickea el botón Registrar   | Ajustado    | El botón se llama "Registrar"         |
-| CP-002 | Ver mensaje de bienvenida     | -                                       | Bloqueado   | No aparece ningún mensaje; posible bug |
+```
++--------+---------------------------+---------------------------------------+-----------+----------------------------------------+
+| Caso   | Paso del caso             | Paso automatizado                     | Estado    | Nota                                   |
++========+===========================+=======================================+===========+========================================+
+| CP-001 | Ingresar el email         | el usuario completa el email "..."    | Mapeado   |                                        |
++--------+---------------------------+---------------------------------------+-----------+----------------------------------------+
+| CP-001 | Click en "Enviar"         | el usuario clickea el botón Registrar | Ajustado  | El botón se llama "Registrar"          |
++--------+---------------------------+---------------------------------------+-----------+----------------------------------------+
+| CP-002 | Ver mensaje de bienvenida | -                                     | Bloqueado | No aparece ningún mensaje; posible bug |
++--------+---------------------------+---------------------------------------+-----------+----------------------------------------+
+```
 
 Estados: `Mapeado` (igual al caso), `Ajustado` (el caso decía otra cosa y se corrigió según la app), `Bloqueado` (no se pudo ejecutar), `Falta información` (el paso o el resultado esperado depende de un `FI-XX`; en la nota, el ID y lo que muestra la app como observación). Si hay pasos `Falta información`, sumá al final la sección **Falta información** con los `FI-XX` involucrados y su pregunta. Cerrá con los archivos generados, el resultado de la validación y el comando para correrlo.
 

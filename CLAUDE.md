@@ -23,26 +23,100 @@ input/ → [ agente ] → output/
 
 ## Agentes disponibles
 
-| Agente | Para qué sirve | Guarda la salida en |
-|--------|----------------|---------------------|
-| `analista-historias` | Analiza historias y criterios de aceptación; detecta ambigüedades y arma preguntas de refinamiento | `output/analisis-historias/` |
-| `estratega-pruebas` | Plan/estrategia de pruebas (alcance, riesgos, tipos de prueba, criterios) como dashboard HTML en modo oscuro | `output/planes-de-prueba/` |
-| `generador-casos-manuales` | Casos de prueba en Excel (.xlsx) y Markdown (.md), + informe de cobertura (.md) con ambigüedades y preguntas para el PO | `output/casos-de-prueba/manuales/` |
-| `generador-casos-bdd` | Escenarios en Gherkin (keywords en inglés, contenido en español) + informe de cobertura por criterio (.md) | `output/casos-de-prueba/bdd/` |
-| `generador-reportes-bug` | Reportes de bug, siguiendo `plantillas/plantilla-reporte-bug.md` | `output/reportes-bug/` |
-| `generador-datos-prueba` | Datos de prueba realistas (Markdown o CSV) | `output/datos-de-prueba/` |
-| `generador-casos-api` | Casos de prueba de API (tabla resumen + detalle con JSON) a partir de contratos/endpoints | `output/casos-api/` |
-| `ejecutor-e2e` | Ejecuta los casos/escenarios pedidos en el navegador con Playwright MCP (pregunta headed o headless), reporta con evidencia y genera el reporte HTML de la corrida | `output/ejecuciones/` |
-| `ejecutor-api` | Ejecuta pruebas de API corriendo una colección de Postman con Newman y genera el reporte HTML de la corrida | `output/ejecuciones/` |
-| `generador-reporte-html` | Arma el reporte HTML (dashboard en modo oscuro, con indicadores y gráficos) de una ejecución, a partir de sus resultados | `output/ejecuciones/` |
-| `generador-reporte-cierre` | Informe de cierre de la ronda (resultados, bugs, recomendación go/no-go) como dashboard HTML en modo oscuro | `output/informes-cierre/` |
-| `web-mapper` | Recorre la web con Playwright MCP siguiendo casos manuales o BDD y genera la automatización de k0lmena (.feature ajustado, steps y locators) | `herramientas/k0lmena/web/` + `output/mapeos/` |
-| `api-mapper` | Lee una colección de Postman o un Swagger/OpenAPI, verifica los endpoints y genera los .feature de k0lmena con los steps genéricos | `herramientas/k0lmena/api/` + `output/mapeos/` |
-| `gestor-pruebas` | Crea carpetas y casos en Xray (Cloud o Server/DC), QTM4J o AIO Tests, los vincula a historias, crea ciclos y les agrega casos (vía `scripts/gestion/`) | La herramienta de gestión + `output/gestion/` |
-| `publicador-resultados` | Sube los resultados de una corrida de k0lmena (`npm test`) al ciclo: estado, comentario y evidencias (captura; video si falló) | La herramienta de gestión |
-| `verificador-datos` | Se conecta a las bases de datos del `.env` (PostgreSQL, MySQL/MariaDB, SQL Server, MongoDB) para verificar datos de las pruebas o lo que se le pida; suma verificaciones de BD a los `.feature` de k0lmena solo si se lo piden. Solo lectura; escribe solo con confirmación y nunca en producción | Respuesta en el chat (+ `output/verificaciones-datos/` si se pide) |
-| `mobile-mapper` | Recorre la app mobile con Appium MCP siguiendo los casos y genera la automatización de k0lmena (.feature, steps y locators) | `herramientas/k0lmena/mobile/` + `output/mapeos/` |
-| `performance-mapper` | Pruebas de performance (smoke, load, stress, soak, spike) con k6 para APIs o Artillery + Playwright para flujos web: pregunta carga y umbrales, genera el script, lo valida y lo corre con `npm run perf` (reporte HTML) | `herramientas/k0lmena/performance/` + `reports/performance/` + `output/mapeos/` |
+```
++----------------------------+------------------------------------------+---------------------------------------+
+| Agente                     | Para qué sirve                           | Guarda la salida en                   |
++============================+==========================================+=======================================+
+| `analista-historias`       | Analiza historias y criterios de         | `output/analisis-historias/`          |
+|                            | aceptación; detecta ambigüedades y arma  |                                       |
+|                            | preguntas de refinamiento                |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+| `estratega-pruebas`        | Plan/estrategia de pruebas (alcance,     | `output/planes-de-prueba/`            |
+|                            | riesgos, tipos de prueba, criterios)     |                                       |
+|                            | como dashboard HTML en modo oscuro       |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+| `generador-casos-manuales` | Casos de prueba en Excel (.xlsx) y       | `output/casos-de-prueba/manuales/`    |
+|                            | Markdown (.md), + informe de cobertura   |                                       |
+|                            | (.md) con ambigüedades y preguntas para  |                                       |
+|                            | el PO                                    |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+| `generador-casos-bdd`      | Escenarios en Gherkin (keywords en       | `output/casos-de-prueba/bdd/`         |
+|                            | inglés, contenido en español) + informe  |                                       |
+|                            | de cobertura por criterio (.md)          |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+| `generador-reportes-bug`   | Reportes de bug, siguiendo               | `output/reportes-bug/`                |
+|                            | `plantillas/plantilla-reporte-bug.md`    |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+| `generador-datos-prueba`   | Datos de prueba realistas (Markdown o    | `output/datos-de-prueba/`             |
+|                            | CSV)                                     |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+| `generador-casos-api`      | Casos de prueba de API (tabla resumen +  | `output/casos-api/`                   |
+|                            | detalle con JSON) a partir de            |                                       |
+|                            | contratos/endpoints                      |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+| `ejecutor-e2e`             | Ejecuta los casos/escenarios pedidos en  | `output/ejecuciones/`                 |
+|                            | el navegador con Playwright MCP          |                                       |
+|                            | (pregunta headed o headless), reporta    |                                       |
+|                            | con evidencia y genera el reporte HTML   |                                       |
+|                            | de la corrida                            |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+| `ejecutor-api`             | Ejecuta pruebas de API corriendo una     | `output/ejecuciones/`                 |
+|                            | colección de Postman con Newman y genera |                                       |
+|                            | el reporte HTML de la corrida            |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+| `generador-reporte-html`   | Arma el reporte HTML (dashboard en modo  | `output/ejecuciones/`                 |
+|                            | oscuro, con indicadores y gráficos) de   |                                       |
+|                            | una ejecución, a partir de sus           |                                       |
+|                            | resultados                               |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+| `generador-reporte-cierre` | Informe de cierre de la ronda            | `output/informes-cierre/`             |
+|                            | (resultados, bugs, recomendación go/no-  |                                       |
+|                            | go) como dashboard HTML en modo oscuro   |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+| `web-mapper`               | Recorre la web con Playwright MCP        | `herramientas/k0lmena/web/` +         |
+|                            | siguiendo casos manuales o BDD y genera  | `output/mapeos/`                      |
+|                            | la automatización de k0lmena (.feature   |                                       |
+|                            | ajustado, steps y locators)              |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+| `api-mapper`               | Lee una colección de Postman o un        | `herramientas/k0lmena/api/` +         |
+|                            | Swagger/OpenAPI, verifica los endpoints  | `output/mapeos/`                      |
+|                            | y genera los .feature de k0lmena con los |                                       |
+|                            | steps genéricos                          |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+| `gestor-pruebas`           | Crea carpetas y casos en Xray (Cloud o   | La herramienta de gestión +           |
+|                            | Server/DC), QTM4J o AIO Tests (vía       | `output/gestion/`                     |
+|                            | `scripts/gestion/`) o en Azure DevOps    |                                       |
+|                            | Test Plans (vía el MCP `azure-devops`),  |                                       |
+|                            | los vincula a historias, crea ciclos y   |                                       |
+|                            | les agrega casos                         |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+| `publicador-resultados`    | Sube los resultados de una corrida de    | La herramienta de gestión             |
+|                            | k0lmena (`npm test`) al ciclo: estado,   |                                       |
+|                            | comentario y evidencias (captura; video  |                                       |
+|                            | si falló)                                |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+| `verificador-datos`        | Se conecta a las bases de datos del      | Respuesta en el chat (+               |
+|                            | `.env` (PostgreSQL, MySQL/MariaDB, SQL   | `output/verificaciones-datos/` si se  |
+|                            | Server, MongoDB) para verificar datos de | pide)                                 |
+|                            | las pruebas o lo que se le pida; suma    |                                       |
+|                            | verificaciones de BD a los `.feature` de |                                       |
+|                            | k0lmena solo si se lo piden. Solo        |                                       |
+|                            | lectura; escribe solo con confirmación y |                                       |
+|                            | nunca en producción                      |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+| `mobile-mapper`            | Recorre la app mobile con Appium MCP     | `herramientas/k0lmena/mobile/` +      |
+|                            | siguiendo los casos y genera la          | `output/mapeos/`                      |
+|                            | automatización de k0lmena (.feature,     |                                       |
+|                            | steps y locators)                        |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+| `performance-mapper`       | Pruebas de performance (smoke, load,     | `herramientas/k0lmena/performance/` + |
+|                            | stress, soak, spike) con k6 para APIs o  | `reports/performance/` +              |
+|                            | Artillery + Playwright para flujos web:  | `output/mapeos/`                      |
+|                            | pregunta carga y umbrales, genera el     |                                       |
+|                            | script, lo valida y lo corre con `npm    |                                       |
+|                            | run perf` (reporte HTML)                 |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
+```
 
 ---
 
@@ -122,12 +196,12 @@ El repo se apoya en estas piezas: **agentes** (`.claude/agents/`, el quién), **
 
 ## Herramientas de gestión de pruebas
 
-`scripts/gestion/gestion.py` integra **Xray Cloud, Xray Server/DC, QTM4J y AIO Tests** con los mismos comandos (configurados en el `.env` de la raíz con `GESTION_HERRAMIENTA` y `GESTION_PROYECTO`). La trazabilidad local `output/gestion/<HU>-<herramienta>.json` guarda qué `CP-XXX` es qué key remota. Detalle en `scripts/gestion/README.md`.
+`scripts/gestion/gestion.py` integra **Xray Cloud, Xray Server/DC, QTM4J y AIO Tests** con los mismos comandos (configurados en el `.env` de la raíz con `GESTION_HERRAMIENTA` y `GESTION_PROYECTO`). **Azure DevOps** (Boards y Test Plans) se integra por el conector MCP `azure-devops`, configurado también en el `.env` (`ADO_ORGANIZACION`, `ADO_PAT`, `ADO_PROYECTO`); los pasos de los casos los arma `scripts/gestion/para_azure_devops.py`. La trazabilidad local `output/gestion/<HU>-<herramienta>.json` guarda qué `CP-XXX` es qué key remota. Detalle en `scripts/gestion/README.md`.
 
 ## Automatización con k0lmena (ahorro de tokens)
 
 `herramientas/k0lmena/` es el framework de automatización (web, api, mobile y performance). Los agentes **mapper** escriben la automatización **una sola vez** (skill `automatizacion-k0lmena`); después la suite corre **sin agentes ni tokens** con `cd herramientas/k0lmena && npm test` (performance: `npm run perf -- <script> <perfil>`). Para correr pruebas ya automatizadas, preferí `npm test` antes que los ejecutores en vivo (`ejecutor-e2e` / `ejecutor-api`), que gastan tokens en cada corrida.
 
-Secretos (tokens, credenciales): van en variables de entorno con `${VARIABLE}` o en un `.env` local (gitignored), **nunca** commiteados; hay una plantilla `.env.example`. El `.mcp.json` está versionado y trae la conexión a Playwright (sin secretos); `.mcp.json.example` es la plantilla para sumar conexiones (Jira y Confluence, Figma, QMetry/QTM4J, AIO Tests, Appium); cómo activarlas está en `CONECTORES.md`.
+Secretos (tokens, credenciales): van en el `.env` local (gitignored) o en variables de entorno, **nunca** commiteados; hay una plantilla `.env.example`. El `.mcp.json` está versionado con **todos** los conectores (Playwright, Jira y Confluence, Figma, QMetry/QTM4J, AIO Tests, k0lmenaTMT, Azure DevOps, Appium) y sin secretos: los que piden token lo leen del `.env` con los scripts de `scripts/mcp/`. Solo Playwright viene habilitado; cada persona habilita los demás en su `.claude/settings.local.json`. Cómo activarlos está en `CONECTORES.md`.
 
-**Fuentes externas por MCP:** si la persona da una key de Jira, una página de Confluence o un link de Figma y el conector (`atlassian` o `figma`) está activo, cualquier agente puede leerlos como insumo, igual que un archivo de `input/` (trazabilidad: citá la key, la página o el link). Si el conector no está activo, pedí el contenido o indicá cómo activarlo (`CONECTORES.md`); no lo supongas.
+**Fuentes externas por MCP:** si la persona da una key de Jira, un work item de Azure DevOps, una página de Confluence o de la Wiki de Azure DevOps, o un link de Figma y el conector (`atlassian`, `azure-devops` o `figma`) está activo, cualquier agente puede leerlos como insumo, igual que un archivo de `input/` (trazabilidad: citá la key, la página o el link). Si el conector no está activo, pedí el contenido o indicá cómo activarlo (`CONECTORES.md`); no lo supongas.

@@ -9,6 +9,58 @@
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "@playwright/mcp@latest", "--headless", "--output-dir", "output/ejecuciones/evidencia"]
+    },
+    "atlassian": {
+      "type": "http",
+      "url": "https://mcp.atlassian.com/v2/mcp"
+    },
+    "figma": {
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp"
+    },
+    "figma-desktop": {
+      "type": "http",
+      "url": "http://127.0.0.1:3845/mcp"
+    },
+    "azure-devops": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["scripts/mcp/azure-devops.js"]
+    },
+    "qmetry": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["scripts/mcp/con-env.js", "qmetry",
+               "--requeridas", "QMETRY_API_KEY",
+               "--opcionales", "QMETRY_BASE_URL=https://testmanagement.qmetry.com",
+               "--", "npx", "-y", "@smartbear/mcp@latest"],
+      "env": { "MCP_CLIENTS": "QMetry" }
+    },
+    "qtm4j": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["scripts/mcp/con-env.js", "qtm4j",
+               "--requeridas", "QTM4J_API_KEY",
+               "--opcionales", "QTM4J_BASE_URL=https://qtmcloud.qmetry.com,QTM4J_AUTOMATION_API_KEY",
+               "--", "npx", "-y", "@smartbear/mcp@latest"],
+      "env": { "MCP_CLIENTS": "QTM4J" }
+    },
+    "aio-tests": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["scripts/mcp/aio-tests.js"]
+    },
+    "k0lmena-tmt": {
+      "type": "http",
+      "url": "${K0LMENA_TMT_URL:-http://localhost:4000/api/v1/mcp}",
+      "headersHelper": "node scripts/mcp/k0lmena-tmt-headers.js"
+    },
+    "appium-mcp": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["scripts/mcp/con-env.js", "appium-mcp",
+               "--opcionales", "ANDROID_HOME",
+               "--", "npx", "-y", "appium-mcp@latest"]
     }
   }
 }
