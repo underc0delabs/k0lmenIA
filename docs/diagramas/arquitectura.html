@@ -39,7 +39,7 @@
       <div class="caja acento-gris"><div class="et">Entrada</div><h3><code>input/</code></h3>
         <ul><li>historias/</li><li>documentacion/</li><li>api/ (Postman, contratos)</li><li>bugs/</li></ul></div>
       <div class="caja acento-gris"><div class="et">O por MCP</div><h3>Fuentes vivas</h3>
-        <ul><li>Jira / Confluence</li><li>Figma</li><li>Swagger por URL</li></ul></div>
+        <ul><li>Jira / Confluence</li><li>Azure DevOps</li><li>Figma</li><li>Swagger por URL</li></ul></div>
     </div>
 
     <div>
@@ -49,7 +49,7 @@
           <div class="caja acento-violeta"><div class="et">Análisis y diseño</div>
             <ul><li>analista-historias</li><li>estratega-pruebas</li><li>generador-casos-manuales</li><li>generador-casos-bdd</li><li>generador-casos-api</li><li>generador-datos-prueba</li><li>generador-reportes-bug</li></ul></div>
           <div class="caja acento-naranja"><div class="et">Ejecución en vivo <span class="pill token">usa tokens</span></div>
-            <ul><li>ejecutor-e2e</li><li>ejecutor-api</li><li>generador-reporte-html</li><li>generador-reporte-cierre</li></ul></div>
+            <ul><li>ejecutor-e2e</li><li>ejecutor-api</li><li>analista-seguridad (ZAP)</li><li>generador-reporte-html</li><li>generador-reporte-cierre</li></ul></div>
           <div class="caja acento-verde"><div class="et">Automatización (mappers)</div>
             <ul><li>web-mapper</li><li>api-mapper</li><li>mobile-mapper</li><li>performance-mapper</li><li>verificador-datos (BD)</li></ul>
             <p class="nota">Escriben el código una sola vez</p></div>
@@ -63,11 +63,11 @@
       <div class="bloque"><div class="bloque-tit">Soporte <span class="tenue">· el "cómo" y el formato</span></div>
         <div class="fila f-soporte">
           <div class="caja acento-violeta"><div class="et">Skills · <code>.claude/skills/</code></div>
-            <ul><li>investigacion-contexto</li><li>tecnicas-de-diseno</li><li>ejecucion-e2e · ejecucion-api</li><li>automatizacion-k0lmena</li></ul></div>
+            <ul><li>investigacion-contexto</li><li>tecnicas-de-diseno</li><li>ejecucion-e2e · ejecucion-api</li><li>automatizacion-k0lmena</li><li>guia-performance</li></ul></div>
           <div class="caja acento-gris"><div class="et">Plantillas + scripts Python</div>
-            <ul><li>generar_casos.py → .xlsx + .md</li><li>formatear_tablas.py</li><li>generar_plan / generar_reporte / generar_informe_cierre</li><li>newman_a_resultados.py</li></ul></div>
+            <ul><li>generar_casos.py → .xlsx + .md</li><li>formatear_tablas.py</li><li>generar_plan / generar_reporte / generar_informe_cierre</li><li>generar_informe_performance / generar_informe_seguridad</li><li>newman_a_resultados.py</li></ul></div>
           <div class="caja acento-cian"><div class="et">Integración de gestión · <code>scripts/gestion/</code></div>
-            <ul><li>gestion.py: carpetas, casos, vínculos, ciclos, resultados</li><li>Adaptadores: Xray Cloud · Xray DC · QTM4J · AIO</li><li>Trazabilidad CP-XXX → key remota</li></ul></div>
+            <ul><li>gestion.py: carpetas, casos, vínculos, ciclos, resultados</li><li>Adaptadores: Xray Cloud · Xray DC · QTM4J · AIO</li><li>Trazabilidad CP-XXX → key remota</li><li>Azure DevOps: por su MCP + para_azure_devops.py</li></ul></div>
         </div>
       </div>
       <div class="flecha">▼</div>
@@ -81,7 +81,7 @@
         </div>
         <div class="bloque"><div class="bloque-tit">Herramientas <span class="tenue">· <code>herramientas/</code></span></div>
           <div class="caja acento-verde">
-            <div style="display:flex; justify-content:space-between; align-items:baseline"><h3>k0lmena <span class="pill ok">sin tokens</span></h3><span class="tenue">+ Newman para colecciones de Postman</span></div>
+            <div style="display:flex; justify-content:space-between; align-items:baseline"><h3>k0lmena <span class="pill ok">sin tokens</span></h3><span class="tenue">+ Newman (Postman) · OWASP ZAP (seguridad)</span></div>
             <div class="k0">
               <div class="mini"><b>web/</b><span>Playwright + Cucumber · auto-healing · video, trace, GIF</span></div>
               <div class="mini"><b>api/</b><span>axios + Cucumber · steps genéricos en español</span></div>
@@ -97,7 +97,7 @@
     <!-- output -->
     <div class="lateral">
       <div class="caja acento-gris"><div class="et">Salida</div><h3><code>output/</code></h3>
-        <ul><li>analisis-historias/</li><li>planes-de-prueba/</li><li>casos-de-prueba/</li><li>casos-api/</li><li>datos-de-prueba/</li><li>reportes-bug/</li><li>ejecuciones/</li><li>informes-cierre/</li><li>mapeos/</li><li>gestion/</li><li>contexto/</li></ul></div>
+        <ul><li>analisis-historias/</li><li>planes-de-prueba/</li><li>casos-de-prueba/</li><li>casos-api/</li><li>datos-de-prueba/</li><li>reportes-bug/</li><li>ejecuciones/</li><li>informes-cierre/</li><li>mapeos/</li><li>gestion/</li><li>performance/</li><li>seguridad/</li><li>contexto/</li></ul></div>
       <div class="caja acento-gris"><div class="et">Reportes de k0lmena</div><h3><code>reports/</code></h3>
         <ul><li>web, api, mobile: HTML con evidencias</li><li>performance: HTML y resumen</li></ul></div>
     </div>
@@ -112,7 +112,7 @@
       <div class="caja acento-gris centrado"><h3>Jira · Confluence</h3><p>historias y documentación</p></div>
       <div class="caja acento-gris centrado"><h3>Figma</h3><p>diseños</p></div>
       <div class="caja acento-gris centrado"><h3>Bases de datos</h3><p>PostgreSQL · MySQL · SQL Server · MongoDB</p></div>
-      <div class="caja acento-cian centrado"><h3>Xray · QMetry · AIO</h3><p>casos, ciclos y resultados</p></div>
+      <div class="caja acento-cian centrado"><h3>Xray · QMetry · AIO · Azure DevOps</h3><p>casos, ciclos y resultados</p></div>
     </div>
   </div>
 </div></body></html>

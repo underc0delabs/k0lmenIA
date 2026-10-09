@@ -11,7 +11,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 
 [![Licencia MIT](https://img.shields.io/badge/licencia-MIT-22c55e?style=flat-square)](#licencia)
 [![Idioma](https://img.shields.io/badge/idioma-español-0ea5e9?style=flat-square)](#)
-[![Agentes](https://img.shields.io/badge/agentes-18-8b5cf6?style=flat-square)](#-agentes)
+[![Agentes](https://img.shields.io/badge/agentes-19-8b5cf6?style=flat-square)](#-agentes)
 [![Suites sin tokens](https://img.shields.io/badge/suites-sin%20tokens-10b981?style=flat-square)](#️-automatización-con-k0lmena)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-D97757?style=flat-square&logo=anthropic&logoColor=white)](https://docs.claude.com/en/docs/claude-code/overview)
 
@@ -24,6 +24,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 ![k6](https://img.shields.io/badge/k6-7D64FF?style=flat-square&logo=k6&logoColor=white)
 ![Artillery](https://img.shields.io/badge/Artillery-E94F37?style=flat-square)
 ![JMeter](https://img.shields.io/badge/JMeter-D22128?style=flat-square&logo=apachejmeter&logoColor=white)
+![OWASP ZAP](https://img.shields.io/badge/OWASP%20ZAP-00549E?style=flat-square&logo=owasp&logoColor=white)
 ![Postman](https://img.shields.io/badge/Postman%20·%20Newman-FF6C37?style=flat-square&logo=postman&logoColor=white)
 ![BrowserStack](https://img.shields.io/badge/BrowserStack-F4813F?style=flat-square&logo=browserstack&logoColor=white)
 
@@ -128,6 +129,7 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 <tr><td><code>mobile-mapper</code></td><td>Recorre la app con Appium y genera <code>.feature</code>, steps y locators</td></tr>
 <tr><td><code>performance-mapper</code></td><td>Carga, estrés, soak y picos con k6, Artillery o JMeter; pregunta carga y umbrales</td></tr>
 <tr><td><code>verificador-datos</code></td><td>Verifica datos en PostgreSQL, MySQL/MariaDB, SQL Server o MongoDB y suma verificaciones de BD a los tests</td></tr>
+<tr><td><code>analista-seguridad</code></td><td>Escaneo de seguridad web pasivo con OWASP ZAP e informe HTML con hallazgos, evidencia y cómo corregirlos</td></tr>
 <tr><td rowspan="2"><b>🗂️ Gestión</b></td>
   <td><code>gestor-pruebas</code></td><td>Carpetas, casos, vínculos con la historia y ciclos en Xray, QMetry, AIO Tests o Azure DevOps</td></tr>
 <tr><td><code>publicador-resultados</code></td><td>Sube los resultados de <code>npm test</code> al ciclo con sus evidencias</td></tr>
@@ -144,6 +146,7 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 | Ejecutar E2E en vivo      | **Node.js 18+** y navegadores de Playwright                                                               |
 | Colecciones de Postman    | **Newman**                                                                                                |
 | Automatizar con k0lmena   | **Node.js 20+**                                                                                           |
+| Seguridad web (ZAP)       | **Docker** (Docker Desktop)                                                                               |
 | Automatizar mobile        | **Node.js 22+**, JDK y Android SDK (o macOS con Xcode), o BrowserStack                                    |
 | Performance con JMeter    | **Java 8+** (`npm run bootstrap:jmeter` descarga JMeter)                                                  |
 
@@ -345,6 +348,21 @@ Por ahora el conector no registra resultados de ejecución: **publicador-resulta
 
 ---
 
+## 🛡️ Seguridad web
+
+El **analista-seguridad** revisa la seguridad de tu aplicación con **OWASP ZAP** (libre y gratuito) en modo **pasivo**: recorre el sitio y analiza las respuestas sin enviar ataques ni modificar datos. Encuentra encabezados de seguridad faltantes, cookies inseguras, información expuesta, contenido mixto y otras configuraciones débiles.
+
+1. Declará en el `.env` los sitios que podés escanear (propios o con autorización por escrito): `SEGURIDAD_URLS_AUTORIZADAS=https://staging.mi-app.com`
+2. Abrí **Docker Desktop** (ZAP corre en un contenedor).
+3. Pedí: *"Revisá la seguridad de https://staging.mi-app.com para HU-001"*.
+
+El agente te confirma la URL, corre el escaneo, analiza los hallazgos (prioriza, descarta falsos positivos y los explica en español) y genera el **informe de seguridad** en HTML: hallazgos por riesgo, dónde aparece cada uno, evidencia, cómo se corrige y recomendaciones priorizadas. Queda en `output/seguridad/`. Detalle en [`herramientas/zap/README.md`](herramientas/zap/README.md).
+
+> [!IMPORTANT]
+> Solo se escanean sitios autorizados en el `.env`, y nunca en modo activo. Un escaneo pasivo sin hallazgos no garantiza que el sitio sea seguro: no reemplaza una prueba de penetración.
+
+---
+
 ## 🗄️ Verificación en base de datos
 
 El **verificador-datos** se conecta a las bases configuradas en el `.env` (**PostgreSQL, MySQL / MariaDB, SQL Server y MongoDB**, con varias conexiones con nombre) y verifica lo que necesites: qué guardó un test web o de API, si existe un dato, en qué estado quedó un registro.
@@ -434,7 +452,7 @@ k0lmenIA/
 ├── package.json            Atajos para correr k0lmena desde la raíz (npm test…)
 ├── docs/                   Documentación web, PDF y diagramas
 ├── .claude/
-│   ├── agents/             Los 18 agentes
+│   ├── agents/             Los 19 agentes
 │   └── skills/             Investigación de contexto, diseño, ejecución E2E y API, k0lmena
 ├── input/                  historias/ documentacion/ api/ bugs/
 ├── output/                 Lo que generan los agentes (contexto/, casos, reportes, mapeos…)
@@ -444,6 +462,7 @@ k0lmenIA/
 │   └── mcp/                Lanzadores de los conectores MCP (leen el .env)
 └── herramientas/
     ├── newman/             Colecciones de Postman
+    ├── zap/                OWASP ZAP: seguridad web (escaneo pasivo)
     └── k0lmena/            web/ api/ mobile/ performance/ reports/
 ```
 </details>

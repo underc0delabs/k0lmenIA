@@ -61,25 +61,30 @@
         <div class="terminal">cd herramientas/k0lmena<br>npm test <span class="c">           # web + api (TAGS=@HU-001)</span><br>npm run test:mobile<br>npm run report:web <span class="c"> # HTML con evidencias</span></div></div></div>
       <div class="bajada">▼</div>
       <div class="paso"><div class="n">7</div><div><div class="pedido">"Armá una prueba de carga del login para 50 usuarios"</div>
-        <div class="quien">performance-mapper: pregunta ambiente, carga y umbrales · k6, Artillery o JMeter</div>
-        <div class="terminal">npm run perf -- HU-001-login smoke<br>npm run perf -- HU-001-login load <span class="c"> # pide confirmación</span></div></div></div>
+        <div class="quien">guía paso a paso (tipo de prueba, herramienta, usuarios, umbrales) · performance-mapper con k6, Artillery o JMeter</div>
+        <div class="terminal">npm run perf -- HU-001-login smoke<br>npm run perf -- HU-001-login load <span class="c"> # pide confirmación</span></div>
+        <div class="sale">informe de performance con métricas, gráficos y recomendaciones</div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">8</div><div><div class="pedido">"Revisá la seguridad de https://staging.tu-app.com"</div>
+        <div class="quien">analista-seguridad: OWASP ZAP en modo pasivo, solo URLs autorizadas</div>
+        <div class="sale">informe de seguridad: hallazgos por riesgo, evidencia y cómo corregirlos</div></div></div>
       <div class="bucle">¿Una prueba puntual que no vale la pena automatizar? → "Ejecutá el escenario X contra https://…" (ejecutor-e2e / ejecutor-api, en vivo)</div>
     </div>
 
     <!-- 3 -->
     <div class="etapa">
       <h2><span class="num-etapa" style="background:var(--cian)">3</span>Gestión y cierre</h2>
-      <p>Xray · QMetry (QTM4J) · AIO Tests</p>
-      <div class="paso"><div class="n">8</div><div><div class="pedido">"Subí los casos de HU-001 a Xray en 'HU-001 Registro', vinculados a PROJ-12"</div>
+      <p>Xray · QMetry (QTM4J) · AIO Tests · Azure DevOps</p>
+      <div class="paso"><div class="n">9</div><div><div class="pedido">"Subí los casos de HU-001 a Xray en 'HU-001 Registro', vinculados a PROJ-12"</div>
         <div class="quien">gestor-pruebas</div><div class="sale">carpeta + casos vinculados a la historia</div></div></div>
       <div class="bajada">▼</div>
-      <div class="paso"><div class="n">9</div><div><div class="pedido">"Creá el ciclo Sprint 5 con esos casos"</div>
+      <div class="paso"><div class="n">10</div><div><div class="pedido">"Creá el ciclo Sprint 5 con esos casos"</div>
         <div class="quien">gestor-pruebas</div><div class="sale">ciclo (Test Execution) vinculado a PROJ-12</div></div></div>
       <div class="bajada">▼</div>
-      <div class="paso"><div class="n">10</div><div><div class="pedido">"Subí los resultados de la última corrida al ciclo PROJ-60"</div>
+      <div class="paso"><div class="n">11</div><div><div class="pedido">"Subí los resultados de la última corrida al ciclo PROJ-60"</div>
         <div class="quien">publicador-resultados</div><div class="sale">estado + error + captura, GIF y video (si falló) por caso</div></div></div>
       <div class="bajada">▼</div>
-      <div class="paso"><div class="n">11</div><div><div class="pedido">"Armá el informe de cierre de HU-001"</div>
+      <div class="paso"><div class="n">12</div><div><div class="pedido">"Armá el informe de cierre de HU-001"</div>
         <div class="quien">generador-reporte-cierre</div><div class="sale">resultados, bugs, riesgos y go / no-go</div></div></div>
     </div>
   </div>

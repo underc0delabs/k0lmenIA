@@ -56,6 +56,7 @@
   <a href="#performance">Performance</a>
   <a href="#gestion">Xray, QMetry y AIO Tests</a>
   <a href="#base-de-datos">Verificación en base de datos</a>
+  <a href="#seguridad">Seguridad web</a>
   <a href="#conectores">Conectores MCP</a>
   <div class="grupo">Referencia</div>
   <a href="#convenciones">Convenciones</a>
@@ -72,7 +73,7 @@
     <div class="k">Documentación del proyecto</div>
     <h1><span>k0lmenIA</span></h1>
     <div class="l">Agentes de QA para Claude Code: diseño de pruebas, automatización con k0lmena e integración con Xray, QMetry, AIO Tests y Azure DevOps — todo en español.</div>
-    <div class="chips"><span>18 agentes</span><span>Web · API · Mobile · Performance</span><span>Playwright · Cucumber · Appium · k6 · Artillery · JMeter</span><span>Xray · QMetry · AIO Tests</span><span>Jira · Confluence · Figma</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Suites sin tokens</span></div>
+    <div class="chips"><span>19 agentes</span><span>Web · API · Mobile · Performance</span><span>Playwright · Cucumber · Appium · k6 · Artillery · JMeter</span><span>Xray · QMetry · AIO Tests</span><span>Jira · Confluence · Figma</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Suites sin tokens</span></div>
   </div>
   <div class="p"><span>QARMY · Underc0de</span><span>github.com/underc0delabs/k0lmenIA</span><span>Licencia MIT</span></div>
 </section>
@@ -82,8 +83,8 @@
     <li><span>1</span>Qué es k0lmenIA</li><li><span>2</span>Arquitectura</li><li><span>3</span>Cómo se usa</li><li><span>4</span>Agentes</li>
     <li><span>5</span>Requisitos</li><li><span>6</span>Instalación</li><li><span>7</span>Configuración: el archivo .env</li>
     <li><span>8</span>Investigación de contexto y falta información</li><li><span>9</span>Guía por tarea: diseño y ejecución</li><li><span>10</span>Automatización con k0lmena</li><li><span>11</span>Pruebas de performance</li>
-    <li><span>12</span>Gestión de pruebas: Xray, QMetry y AIO Tests</li><li><span>13</span>Verificación en base de datos</li><li><span>14</span>Conectores MCP</li>
-    <li><span>15</span>Convenciones</li><li><span>16</span>Estructura del repositorio</li><li><span>17</span>Problemas frecuentes</li><li><span>18</span>Extender el proyecto</li>
+    <li><span>12</span>Gestión de pruebas: Xray, QMetry y AIO Tests</li><li><span>13</span>Verificación en base de datos</li><li><span>14</span>Seguridad web</li><li><span>15</span>Conectores MCP</li>
+    <li><span>16</span>Convenciones</li><li><span>17</span>Estructura del repositorio</li><li><span>18</span>Problemas frecuentes</li><li><span>19</span>Extender el proyecto</li>
   </ol>
 </section>
 
@@ -107,6 +108,7 @@
     <span class="tec"><i style="background:#7d64ff"></i>k6</span>
     <span class="tec"><i style="background:#e94f37"></i>Artillery</span>
     <span class="tec"><i style="background:#d22128"></i>JMeter</span>
+    <span class="tec"><i style="background:#00549e"></i>OWASP ZAP</span>
     <span class="tec"><i style="background:#ff6c37"></i>Postman · Newman</span>
     <span class="tec"><i style="background:#3178c6"></i>TypeScript</span>
     <span class="tec"><i style="background:#5fa04e"></i>Node.js</span>
@@ -120,7 +122,7 @@
     <span class="tec"><i style="background:#47a248"></i>MongoDB</span>
   </div>
   <div class="metricas">
-    <div class="metrica"><div class="n">18</div><div class="t">agentes especializados</div></div>
+    <div class="metrica"><div class="n">19</div><div class="t">agentes especializados</div></div>
     <div class="metrica"><div class="n">4</div><div class="t">tipos de automatización</div></div>
     <div class="metrica"><div class="n">4</div><div class="t">herramientas de gestión</div></div>
     <div class="metrica"><div class="n">0</div><div class="t">tokens para correr las suites</div></div>
@@ -239,6 +241,7 @@
     <div class="tarjeta c-verde"><h4>mobile-mapper</h4><p>Recorre la app con Appium y genera <code>.feature</code>, steps y locators.</p><div class="salida"><code>k0lmena/mobile/</code></div></div>
     <div class="tarjeta c-verde"><h4>performance-mapper</h4><p>Carga, estrés, soak y picos con k6, Artillery o JMeter; pregunta carga y umbrales.</p><div class="salida"><code>k0lmena/performance/</code></div></div>
     <div class="tarjeta c-verde"><h4>verificador-datos</h4><p>Verifica datos en PostgreSQL, MySQL, SQL Server o MongoDB y suma verificaciones de BD a los tests.</p><div class="salida">Chat · steps en <code>.feature</code></div></div>
+    <div class="tarjeta c-naranja"><h4>analista-seguridad</h4><p>Escaneo de seguridad web pasivo con OWASP ZAP e informe con hallazgos, evidencia y cómo corregirlos.</p><div class="salida"><code>output/seguridad/</code></div></div>
   </div>
 
   <div class="subtitulo-grupo"><h3>Gestión de pruebas</h3></div>
@@ -558,6 +561,24 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
   <div class="aviso warn"><span class="ico">!</span><p>Para preparar o limpiar datos, la conexión necesita <code>DB_&lt;NOMBRE&gt;_ESCRITURA=si</code> y el agente muestra la sentencia y pide confirmación antes de cada operación. Con <code>DB_&lt;NOMBRE&gt;_PRODUCCION=si</code> nunca escribe. Recomendado: un usuario de base de datos con permisos de solo lectura.</p></div>
 </section>
 
+<!-- ======================================================= SEGURIDAD -->
+<section class="seccion" id="seguridad">
+  <div class="kicker">Guías</div>
+  <h2>Seguridad web</h2>
+  <p class="bajada">El <b>analista-seguridad</b> revisa la seguridad de tu aplicación con <b>OWASP ZAP</b> (libre y gratuito) en modo <b>pasivo</b>: recorre el sitio y analiza las respuestas sin enviar ataques ni modificar datos.</p>
+  <div class="aviso warn"><span class="ico">!</span><p>Solo se escanean sitios propios o con autorización por escrito, declarados en <code>SEGURIDAD_URLS_AUTORIZADAS</code> del <code>.env</code>. Un escaneo pasivo no reemplaza una prueba de penetración.</p></div>
+  <div class="guia"><h4>analista-seguridad</h4>
+    <div class="pedido">Revisá la seguridad de https://staging.mi-app.com para HU-001.</div>
+    <ol>
+      <li><b>Confirma</b> la URL (tiene que estar autorizada) y la duración del recorrido.</li>
+      <li><b>Escanea</b> con ZAP baseline en Docker (abrí Docker Desktop antes).</li>
+      <li><b>Analiza</b> los hallazgos: los prioriza, descarta falsos positivos con su motivo y los explica en español.</li>
+      <li><b>Arma el informe</b> HTML: hallazgos por riesgo, dónde aparece cada uno, evidencia, cómo se corrige y recomendaciones.</li>
+    </ol></div>
+  <div class="codigo"><pre>python herramientas/zap/escanear.py --url https://staging.mi-app.com --historia HU-001</pre></div>
+  <p>Salida en <code>output/seguridad/&lt;HU o host&gt;/&lt;fecha&gt;/</code>. Detalle en <code>herramientas/zap/README.md</code>.</p>
+</section>
+
 <!-- ======================================================= 13 CONECTORES -->
 <section class="seccion" id="conectores">
   <div class="kicker">Guías</div>
@@ -636,7 +657,7 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
 ├── package.json            <span class="c">Atajos para correr k0lmena desde la raíz (npm test…)</span>
 ├── docs/                   <span class="c">Este sitio, el PDF y los diagramas</span>
 ├── .claude/
-│   ├── agents/             <span class="c">Los 18 agentes</span>
+│   ├── agents/             <span class="c">Los 19 agentes</span>
 │   └── skills/             <span class="c">Contexto, diseño, ejecución E2E y API, k0lmena</span>
 ├── input/                  <span class="c">historias/ documentacion/ api/ bugs/</span>
 ├── output/                 <span class="c">Lo que generan los agentes</span>
@@ -646,6 +667,7 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
 │   └── mcp/                <span class="c">Lanzadores de los conectores MCP (leen el .env)</span>
 └── herramientas/
     ├── newman/             <span class="c">Colecciones de Postman</span>
+    ├── zap/                <span class="c">OWASP ZAP: seguridad web (pasivo)</span>
     └── k0lmena/
         ├── web/            <span class="c">features/ steps/ locators/ + framework</span>
         ├── api/            <span class="c">features/ steps/ (steps genéricos)</span>

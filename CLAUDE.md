@@ -121,6 +121,15 @@ input/ → [ agente ] → output/
 |                            | HTML con métricas, gráficos y            |                                       |
 |                            | recomendaciones                          |                                       |
 +----------------------------+------------------------------------------+---------------------------------------+
+| `analista-seguridad`       | Revisa la seguridad de una web propia o  | `output/seguridad/`                   |
+|                            | autorizada con un escaneo pasivo de      |                                       |
+|                            | OWASP ZAP (Docker), analiza los          |                                       |
+|                            | hallazgos (prioriza, descarta falsos     |                                       |
+|                            | positivos, explica en español) y arma el |                                       |
+|                            | informe HTML con riesgo, evidencia,      |                                       |
+|                            | corrección y recomendaciones. Solo URLs  |                                       |
+|                            | de SEGURIDAD_URLS_AUTORIZADAS            |                                       |
++----------------------------+------------------------------------------+---------------------------------------+
 ```
 
 ---
@@ -188,6 +197,7 @@ Reglas (valen para **todos** los agentes y cualquier sección, incluidas las que
 - Casos manuales: `casos-HU-001.xlsx` + `casos-HU-001.md` + `casos-HU-001-cobertura.md`
 - Casos BDD: `HU-001-registro.feature` + `HU-001-cobertura.md`
 - Reporte de bug: `BUG-001.md`
+- Seguridad web: `output/seguridad/<HU o host>/<fecha>/` con `zap.json`, `analisis.json` e `informe-seguridad.html`
 - Datos de prueba: `datos-HU-001.md` (o `.csv`)
 - Casos de API: `casos-api-auth.md`
 - Mapeo a automatización: `herramientas/k0lmena/<web|api|mobile>/features/HU-001-<slug>.feature` + `steps/HU-001.steps.ts` + `locators/HU-001.locators.ts`, y el reporte `output/mapeos/mapeo-HU-001-<web|api|mobile>.md`.
@@ -198,7 +208,7 @@ Reglas (valen para **todos** los agentes y cualquier sección, incluidas las que
 
 ## Arquitectura (cómo crece el repo)
 
-El repo se apoya en estas piezas: **agentes** (`.claude/agents/`, el quién), **skills** (`.claude/skills/`, el cómo, cargados on-demand), **MCP** (`.mcp.json`, conexiones a sistemas externos — un solo archivo que escala a muchas conexiones: Jira, Xray, Playwright…), **herramientas** (`herramientas/`, herramientas externas de testing, una subcarpeta por herramienta: Newman y **k0lmena**) y **scripts** (`scripts/`, utilidades internas determinísticas). El detalle y cómo extender cada una está en `ARQUITECTURA.md`.
+El repo se apoya en estas piezas: **agentes** (`.claude/agents/`, el quién), **skills** (`.claude/skills/`, el cómo, cargados on-demand), **MCP** (`.mcp.json`, conexiones a sistemas externos — un solo archivo que escala a muchas conexiones: Jira, Xray, Playwright…), **herramientas** (`herramientas/`, herramientas externas de testing, una subcarpeta por herramienta: Newman, **k0lmena** y OWASP ZAP) y **scripts** (`scripts/`, utilidades internas determinísticas). El detalle y cómo extender cada una está en `ARQUITECTURA.md`.
 
 ## Herramientas de gestión de pruebas
 
