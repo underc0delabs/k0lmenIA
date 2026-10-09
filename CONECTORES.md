@@ -2,7 +2,7 @@
 
 Cómo conectar k0lmenIA por MCP a **Jira y Confluence** (Atlassian), **Figma**, **QMetry**, **AIO Tests**, **k0lmenaTMT**, **Azure DevOps** y **Appium**. Xray se integra sin MCP (ver abajo).
 
-Todas las conexiones están en el `.mcp.json` del proyecto y **ninguna lleva secretos**: las credenciales se leen del `.env` de la raíz o se autorizan con tu cuenta (OAuth). Solo Playwright viene habilitado; cada persona habilita en su `.claude/settings.local.json` las que usa.
+Todas las conexiones están en el `.mcp.json` del proyecto y **ninguna lleva secretos**: las credenciales se leen del `.env` de la raíz o se autorizan con tu cuenta (OAuth). Vienen habilitados Playwright y **Atlassian (Jira y Confluence)**; cada persona habilita en su `.claude/settings.local.json` los demás que use.
 
 ## Resumen
 
@@ -35,6 +35,57 @@ Todas las conexiones están en el `.mcp.json` del proyecto y **ninguna lleva sec
 
 ---
 
+## Qué configurar según tu equipo
+
+Todos los conectores ya están en `.mcp.json` y todas las variables, en `.env.example` (un bloque por herramienta, comentado). Cada QA completa solo lo de las herramientas que usa su equipo:
+
+```
++---------------------------+---------------------------------------+------------------------------------------+---------------------------------+
+| Si tu equipo usa…         | Conector / integración                | Variables en el `.env`                   | Habilitado por defecto          |
++===========================+=======================================+==========================================+=================================+
+| Jira y Confluence         | `atlassian` (MCP)                     | Ninguna con OAuth; con token:            | Sí                              |
+|                           |                                       | `ATLASSIAN_MCP_AUTENTICACION=token`,     |                                 |
+|                           |                                       | `JIRA_EMAIL`, `JIRA_API_TOKEN`           |                                 |
++---------------------------+---------------------------------------+------------------------------------------+---------------------------------+
+| Azure DevOps              | `azure-devops` (MCP)                  | `ADO_ORGANIZACION`, `ADO_PAT`,           | No                              |
+|                           |                                       | `ADO_PROYECTO`                           |                                 |
++---------------------------+---------------------------------------+------------------------------------------+---------------------------------+
+| Figma                     | `figma` o `figma-desktop` (MCP)       | Ninguna (OAuth)                          | No                              |
++---------------------------+---------------------------------------+------------------------------------------+---------------------------------+
+| Xray Cloud                | `scripts/gestion` (sin MCP)           | `GESTION_HERRAMIENTA=xray-cloud`,        | Listo al completar el `.env`    |
+|                           |                                       | `GESTION_PROYECTO`,                      |                                 |
+|                           |                                       | `XRAY_CLOUD_CLIENT_ID`,                  |                                 |
+|                           |                                       | `XRAY_CLOUD_CLIENT_SECRET` + las de Jira |                                 |
++---------------------------+---------------------------------------+------------------------------------------+---------------------------------+
+| Xray Server / Data Center | `scripts/gestion` (sin MCP)           | `GESTION_HERRAMIENTA=xray-dc`,           | Listo al completar el `.env`    |
+|                           |                                       | `GESTION_PROYECTO`, `XRAY_DC_URL`,       |                                 |
+|                           |                                       | `XRAY_DC_TOKEN`                          |                                 |
++---------------------------+---------------------------------------+------------------------------------------+---------------------------------+
+| QMetry para Jira (QTM4J)  | `scripts/gestion` + `qtm4j` (MCP)     | `GESTION_HERRAMIENTA=qtm4j`,             | `scripts/gestion`: sí · MCP: no |
+|                           |                                       | `GESTION_PROYECTO`, `QTM4J_API_KEY`      |                                 |
++---------------------------+---------------------------------------+------------------------------------------+---------------------------------+
+| QMetry Test Management    | `qmetry` (MCP)                        | `QMETRY_API_KEY`                         | No                              |
++---------------------------+---------------------------------------+------------------------------------------+---------------------------------+
+| AIO Tests                 | `scripts/gestion` + `aio-tests` (MCP) | `GESTION_HERRAMIENTA=aio`,               | `scripts/gestion`: sí · MCP: no |
+|                           |                                       | `GESTION_PROYECTO`, `AIO_API_TOKEN`,     |                                 |
+|                           |                                       | `AIO_MCP_URL`                            |                                 |
++---------------------------+---------------------------------------+------------------------------------------+---------------------------------+
+| k0lmenaTMT                | `k0lmena-tmt` (MCP)                   | `K0LMENA_TMT_TOKEN`                      | No                              |
++---------------------------+---------------------------------------+------------------------------------------+---------------------------------+
+```
+
+**Los conectores MCP que no vienen habilitados** se activan sumándolos a `enabledMcpjsonServers` en tu `.claude/settings.local.json` (no se versiona, así que no afecta al resto del equipo):
+
+```json
+{
+  "enabledMcpjsonServers": ["playwright", "playwright-headless", "atlassian", "azure-devops"]
+}
+```
+
+Después reiniciá Claude Code y verificá con `/mcp`. **Las integraciones de `scripts/gestion`** (Xray, QTM4J y AIO) no necesitan habilitarse: funcionan en cuanto el `.env` tiene sus variables.
+
+---
+
 ## Pasos para activar un conector
 
 1. **Completá sus variables en el `.env`** de la raíz (están en `.env.example` y en la sección de cada conector). `atlassian` y `figma` no usan variables: se autorizan con tu cuenta.
@@ -63,6 +114,10 @@ Todas las conexiones están en el `.mcp.json` del proyecto y **ninguna lleva sec
 +--------------------------+---------------------------+------------------------------------------+
 | `k0lmena-tmt-headers.js` | k0lmena-tmt               | Devuelve el header `Authorization` (es   |
 |                          |                           | un `headersHelper`)                      |
++--------------------------+---------------------------+------------------------------------------+
+| `atlassian-headers.js`   | atlassian                 | Con ATLASSIAN_MCP_AUTENTICACION=token    |
+|                          |                           | arma el header con el API token; con     |
+|                          |                           | oauth (por defecto) no agrega nada       |
 +--------------------------+---------------------------+------------------------------------------+
 ```
 
@@ -174,11 +229,14 @@ Ejemplos de uso:
 
 El conector `atlassian` es el server MCP **oficial de Atlassian** (Rovo MCP Server). Con **una sola conexión** da acceso a **Jira y Confluence** Cloud, con los permisos de tu usuario: los agentes pueden leer historias y sus criterios desde Jira y la documentación funcional desde páginas de Confluence, en lugar de copiarlas a `input/`.
 
-- **No usa token**: se autentica con tu cuenta de Atlassian por OAuth. No hace falta ninguna variable de entorno.
-- Para activarlo:
-  1. Agregá `"atlassian"` a `enabledMcpjsonServers` en `.claude/settings.local.json`.
-  2. Reiniciá Claude Code, ejecutá `/mcp`, elegí `atlassian` y autorizá el acceso en el navegador.
-- Si tu organización restringe las apps de IA, un admin de Atlassian tiene que habilitar el Rovo MCP Server para el sitio.
+**Viene habilitado por defecto.** Tiene dos formas de autenticarse, que se eligen con `ATLASSIAN_MCP_AUTENTICACION` en el `.env`:
+
+- **`oauth` (por defecto, recomendado para uso interactivo)**: no usa token. La primera vez ejecutá `/mcp`, elegí `atlassian` y autorizá el acceso con tu cuenta en el navegador.
+- **`token`**: usa `JIRA_EMAIL` y `JIRA_API_TOKEN` (las mismas que usa la integración con Xray Cloud) y arma el header `Authorization: Basic …`. Para una cuenta de servicio, poné su API key en `ATLASSIAN_API_KEY` y se envía como `Bearer`. **Requisito**: un admin de Atlassian tiene que habilitar el API token en *Atlassian Administration > Rovo > Rovo MCP server > Authentication*. El token se crea en https://id.atlassian.com/manage-profile/security/api-tokens.
+
+La entrada de `.mcp.json` usa `headersHelper` (`scripts/mcp/atlassian-headers.js`): con `oauth` no agrega nada y con `token` arma el header leyendo el `.env`. El token nunca queda en `.mcp.json`.
+
+Si tu organización restringe las apps de IA, un admin de Atlassian tiene que habilitar el Rovo MCP Server para el sitio.
 
 Ejemplos de uso:
 
@@ -304,6 +362,7 @@ Se activa igual que los demás conectores, habilitando `appium-mcp`. `ANDROID_HO
 ## Fuentes
 
 - Atlassian Rovo MCP Server: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/
+- Atlassian Rovo MCP Server, autenticación por API token: https://support.atlassian.com/atlassian-rovo-mcp-server/docs/configuring-authentication-via-api-token/
 - Figma MCP Server (remoto): https://help.figma.com/hc/en-us/articles/35281350665623
 - Figma MCP Server con Claude Code: https://help.figma.com/hc/en-us/articles/39888612464151
 - SmartBear MCP (QMetry y QTM4J): https://github.com/SmartBear/smartbear-mcp

@@ -583,11 +583,11 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
 <section class="seccion" id="conectores">
   <div class="kicker">Guías</div>
   <h2>Conectores MCP</h2>
-  <p class="bajada">Conectan a Claude Code con sistemas externos. Todos están en <code>.mcp.json</code>, sin secretos: las credenciales se leen del <code>.env</code>. Solo Playwright viene activo.</p>
+  <p class="bajada">Conectan a Claude Code con sistemas externos. Todos están en <code>.mcp.json</code>, sin secretos: las credenciales se leen del <code>.env</code>. Vienen activos Playwright y Atlassian (Jira y Confluence); el <code>.env.example</code> trae un bloque comentado por herramienta para completar solo los de tu equipo.</p>
   <div class="tabla"><table>
     <tr><th style="width:22%">Conector</th><th>Para qué</th><th style="width:18%">Autenticación</th></tr>
     <tr><td><code>playwright</code></td><td>Navegador para el ejecutor E2E y el web-mapper (headed y headless).</td><td>Activo</td></tr>
-    <tr><td><code>atlassian</code></td><td>Jira y Confluence: historias, criterios y documentación funcional directamente.</td><td>Cuenta (OAuth)</td></tr>
+    <tr><td><code>atlassian</code></td><td>Jira y Confluence: historias, criterios y documentación funcional directamente.</td><td>Activo · OAuth o API token</td></tr>
     <tr><td><code>figma</code></td><td>Diseños desde un link a un frame o archivo: textos, estados y componentes. Requiere asiento Full o Dev.</td><td>Cuenta (OAuth)</td></tr>
     <tr><td><code>appium-mcp</code></td><td>Lo usa el mobile-mapper para recorrer la app.</td><td><code>ANDROID_HOME</code></td></tr>
     <tr><td><code>qmetry</code> · <code>qtm4j</code></td><td>Consultar QMetry desde el chat.</td><td>API key</td></tr>

@@ -28,7 +28,7 @@ Para tocar sistemas de afuera (Jira, Xray, un navegador…), un agente usa un **
 }
 ```
 
-En este repo, `.mcp.json` viene **versionado con todos los conectores** (Playwright, Jira y Confluence, Figma, QMetry, AIO Tests, k0lmenaTMT, Azure DevOps, Appium) y **ninguno lleva secretos**: los que necesitan token arrancan con un script de `scripts/mcp/` que lo lee del `.env`. Solo Playwright viene habilitado (headed y headless), así la ejecución E2E funciona out-of-the-box; cada persona habilita los demás en su `.claude/settings.local.json`. El paso a paso de cada conector está en [`CONECTORES.md`](CONECTORES.md).
+En este repo, `.mcp.json` viene **versionado con todos los conectores** (Playwright, Jira y Confluence, Figma, QMetry, AIO Tests, k0lmenaTMT, Azure DevOps, Appium) y **ninguno lleva secretos**: los que necesitan token arrancan con un script de `scripts/mcp/` que lo lee del `.env`. Vienen habilitados Playwright (headed y headless), así la ejecución E2E funciona out-of-the-box, y Atlassian (Jira y Confluence, con OAuth o API token); cada persona habilita los demás en su `.claude/settings.local.json` según las herramientas de su equipo. El paso a paso de cada conector está en [`CONECTORES.md`](CONECTORES.md).
 
 > **Regla de oro de los secretos:** tokens y credenciales van en el `.env` local (gitignored) o en variables de entorno, **nunca** con el valor real en `.mcp.json` ni en otro archivo versionado. Hay una plantilla `.env.example` con los nombres de variable; se copia a `.env` y se completan los valores reales. Si se commitea un secreto, rotalo de inmediato.
 

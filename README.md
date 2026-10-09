@@ -391,17 +391,17 @@ También se usa sin agente: `npm run bd -- conexiones | esquema | existe | consu
 
 ## 🔌 Conectores MCP
 
-| Conector                         | Para qué                                                    | Autenticación      |
-| -------------------------------- | ----------------------------------------------------------- | ------------------ |
-| `playwright`                     | Navegador para el ejecutor E2E y el web-mapper              | Activo por defecto |
-| `atlassian`                      | **Jira y Confluence**: historias, criterios y documentación | Tu cuenta (OAuth)  |
-| `figma` · `figma-desktop`        | Diseños desde un link a un frame o archivo                  | Tu cuenta (OAuth)  |
-| `appium-mcp`                     | Recorrer la app para el mobile-mapper                       | `ANDROID_HOME`     |
-| `qmetry` · `qtm4j` · `aio-tests` | Consultar la herramienta de gestión desde el chat           | API key / token    |
-| `azure-devops`                   | **Azure DevOps**: historias, Wiki y casos en Test Plans     | PAT                |
-| `k0lmena-tmt`                    | Cargar y consultar casos en k0lmenaTMT                      | Token personal     |
+| Conector                         | Para qué                                                    | Autenticación                                     |
+| -------------------------------- | ----------------------------------------------------------- | ------------------------------------------------- |
+| `playwright`                     | Navegador para el ejecutor E2E y el web-mapper              | Activo por defecto                                |
+| `atlassian`                      | **Jira y Confluence**: historias, criterios y documentación | Activo por defecto: tu cuenta (OAuth) o API token |
+| `figma` · `figma-desktop`        | Diseños desde un link a un frame o archivo                  | Tu cuenta (OAuth)                                 |
+| `appium-mcp`                     | Recorrer la app para el mobile-mapper                       | `ANDROID_HOME`                                    |
+| `qmetry` · `qtm4j` · `aio-tests` | Consultar la herramienta de gestión desde el chat           | API key / token                                   |
+| `azure-devops`                   | **Azure DevOps**: historias, Wiki y casos en Test Plans     | PAT                                               |
+| `k0lmena-tmt`                    | Cargar y consultar casos en k0lmenaTMT                      | Token personal                                    |
 
-Todos están en `.mcp.json`, sin secretos: las credenciales se leen del `.env`. Para activar uno: completá sus variables en el `.env`, agregalo a `enabledMcpjsonServers` en `.claude/settings.local.json`, reiniciá Claude Code y verificá con `/mcp`. Guía completa en [`CONECTORES.md`](CONECTORES.md).
+Todos están en `.mcp.json`, sin secretos: las credenciales se leen del `.env`, que trae un bloque comentado por herramienta (Jira, Azure DevOps, Figma, Xray, QMetry, AIO Tests, k0lmenaTMT): cada QA completa solo los de su equipo. Vienen activos Playwright y Atlassian. Para activar otro: completá sus variables en el `.env`, agregalo a `enabledMcpjsonServers` en `.claude/settings.local.json`, reiniciá Claude Code y verificá con `/mcp`. Guía completa en [`CONECTORES.md`](CONECTORES.md).
 
 ---
 

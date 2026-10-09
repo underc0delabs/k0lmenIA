@@ -1,5 +1,5 @@
 {
-  "enabledMcpjsonServers": ["playwright", "playwright-headless"],
+  "enabledMcpjsonServers": ["playwright", "playwright-headless", "atlassian"],
   "permissions": {
     "allow": [
       "mcp__playwright__*",
