@@ -33,8 +33,8 @@ El HTML es autocontenido (CSS y SVG inline), no usa internet.
 import sys
 import json
 
-from _estilos_reporte import (e, page, meta, section, kpi_tiles, donut, bar_chart,
-                              banner, doc_list, table, nivel_badge, NIVEL_COLOR)
+from _estilos_reporte import (e, page, meta, section, kpi_tiles, donut, bar_chart, legend,
+                              banner, doc_list, table, nivel_badge, NIVEL_COLOR, ESTADO_COLOR)
 
 SEVERIDADES = ["Crítica", "Alta", "Media", "Baja"]
 
@@ -51,9 +51,8 @@ def _tono_recomendacion(rec):
 
 
 def _legend(apr, fal, blo):
-    items = [("Aprobado", apr, "#3FB950"), ("Fallido", fal, "#F85149"), ("Bloqueado", blo, "#8B949E")]
-    parts = "".join(f'<span><i style="background:{c}"></i>{n} ({v})</span>' for n, v, c in items)
-    return f'<div class="legend">{parts}</div>'
+    return legend([("Aprobado", ESTADO_COLOR["Aprobado"], apr), ("Fallido", ESTADO_COLOR["Fallido"], fal),
+                   ("Bloqueado", ESTADO_COLOR["Bloqueado"], blo)])
 
 
 def build_html(data):
@@ -73,7 +72,8 @@ def build_html(data):
         body.append(banner(rec, tono))
 
     # Hero: dona de aprobados + KPIs
-    dn = donut([(apr, "#3FB950"), (fal, "#F85149"), (blo, "#8B949E")], pct, "aprobados")
+    dn = donut([(apr, ESTADO_COLOR["Aprobado"], "Aprobados"), (fal, ESTADO_COLOR["Fallido"], "Fallidos"),
+                (blo, ESTADO_COLOR["Bloqueado"], "Bloqueados")], pct, "aprobados")
     kpis = kpi_tiles([
         ("Total", total, ""),
         ("Aprobados", apr, "ok"),
@@ -100,7 +100,7 @@ def build_html(data):
                        f'<strong style="color:var(--ink)">{planeado}</strong> casos planificados '
                        f'(<strong style="color:var(--ink)">{cob}%</strong>).</p>'
                        f'<div class="bar-track" style="width:100%;margin-top:12px">'
-                       f'<span class="seg" style="width:{cob}%;background:#3FB950"></span></div>')
+                       f'<span class="seg" style="width:{cob}%;background:{ESTADO_COLOR["Aprobado"]}"></span></div>')
         if nota:
             partes += f'<p style="margin-top:12px">{e(nota)}</p>'
         partes += '</div>'

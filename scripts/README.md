@@ -13,7 +13,7 @@ Actuales:
 - `generar_informe_performance.py` — genera el **informe de performance** en HTML (dashboard oscuro): toma las métricas de los resúmenes de `npm run perf` y suma el plan, los hallazgos y las recomendaciones del JSON del `performance-mapper`.
 - `gestion/` — integración con **Xray (Cloud y Server/DC), QMetry para Jira (QTM4J) y AIO Tests**: carpetas, casos, vínculos con historias, ciclos y publicación de resultados. Incluye `para_azure_devops.py`, que convierte los casos (`.xlsx` / `.feature`) al formato de Azure Test Plans para el conector MCP `azure-devops`
 - `mcp/` — lanzadores de los conectores MCP de `.mcp.json`: leen las credenciales del `.env` y se las pasan al server sin escribirlas en ningún archivo versionado (ver `CONECTORES.md`) con evidencias. La usan los agentes `gestor-pruebas` y `publicador-resultados`. Ver `gestion/README.md`.
-- `_estilos_reporte.py` — módulo común con la paleta, el CSS y los gráficos del modo oscuro (lo usan `generar_plan.py` y `generar_informe_cierre.py`); centraliza el tema para que todos los reportes se vean igual.
+- `_estilos_reporte.py` — sistema de diseño de todos los reportes HTML (plan, ejecución, cierre, performance y seguridad): modo oscuro, paleta categórica y de estado validadas para daltonismo y contraste, indicadores, pastillas con ícono, tooltips y gráficos (dona, barras, barras apiladas, columnas agrupadas y líneas con crosshair, siempre con un solo eje). Los reportes de k0lmena usan los mismos colores (`herramientas/k0lmena/reports/tema-oscuro.js` y el reporte de performance).
 
 Necesitan **Python 3** (ver `requirements.txt`).
 

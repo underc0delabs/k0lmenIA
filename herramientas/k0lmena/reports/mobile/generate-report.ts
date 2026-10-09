@@ -1,32 +1,42 @@
-// reports/mobile/generate-report.ts
+// reports/mobile/generate-report.ts — reporte HTML de la suite mobile (npm run report:mobile),
+// con el tema oscuro de k0lmenIA.
 
+import { hostname } from 'os';
 import { resolve } from 'path';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { opcionesReporte, aplicarTema, esperarHtml } = require('../tema-oscuro');
 
 // multiple-cucumber-html-reporter v4 es solo ESM: se carga con import() dinámico
 // (con new Function para que TypeScript no lo convierta en require).
 const loadReporter = new Function('m', 'return import(m)') as (m: string) => Promise<any>;
 
-loadReporter('multiple-cucumber-html-reporter').then(({ generate }) => generate({
-  // Directorio donde se encuentra el JSON generado por Cucumber
-  jsonDir: resolve(__dirname),
-  // Directorio donde se generará el HTML
-  reportPath: resolve(__dirname, 'html'),
-  metadata: {
-    browser: {
-      name: 'Appium',
-      version: 'N/A'
+const salida = resolve(__dirname, 'html');
+
+loadReporter('multiple-cucumber-html-reporter')
+  .then(({ generate }) => generate({
+    ...opcionesReporte('Mobile'),
+    // Directorio donde se encuentra el JSON generado por Cucumber
+    jsonDir: resolve(__dirname),
+    // Directorio donde se generará el HTML
+    reportPath: salida,
+    metadata: {
+      browser: { name: 'Appium', version: '-' },
+      device: process.env.MOBILE_DEVICE_NAME || hostname(),
+      platform: {
+        name: process.env.MOBILE_PLATFORM || 'Android',
+        version: process.env.MOBILE_PLATFORM_VERSION || '-',
+      },
     },
-    device: 'Android device',
-    platform: {
-      name: 'Android',
-      version: '11.0'  // Actualizá según corresponda
-    }
-  },
-  customData: {
-    title: 'Información de la Ejecución',
-    data: [
-      { label: 'Proyecto', value: 'k0lmena Mobile Automation' },
-      { label: 'Ejecutado', value: new Date().toLocaleString() }
-    ]
-  }
-}));
+    customData: {
+      Proyecto: 'k0lmena · Mobile',
+      Ejecutado: new Date().toLocaleString('es-AR'),
+      Destino: process.env.MOBILE_TARGET || '—',
+    },
+  }))
+  .then(() => esperarHtml(salida))
+  .then(() => console.log(`[k0lmena] Reporte mobile con tema oscuro (${aplicarTema(salida)} páginas).`))
+  .catch((e: unknown) => {
+    console.error('[k0lmena] No se pudo generar el reporte mobile:', e);
+    process.exitCode = 1;
+  });

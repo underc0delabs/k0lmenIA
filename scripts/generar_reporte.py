@@ -34,127 +34,12 @@ El HTML es autocontenido: CSS y gráficos van inline (SVG/CSS), no usa internet.
 """
 import sys
 import json
-import html
-import math
+
+from _estilos_reporte import (e, page, meta, section, kpi_tiles, donut, legend, banner, table,
+                              stacked_bars, bar_chart, nivel_badge, estado_pill, ESTADO_COLOR, SERIES)
 
 ESTADOS = ["Aprobado", "Fallido", "Bloqueado"]
 PRIOS = ["Crítica", "Alta", "Media", "Baja"]
-COLOR = {"Aprobado": "#3FB950", "Fallido": "#F85149", "Bloqueado": "#8B949E"}
-COLOR_SOFT = {"Aprobado": "rgba(63,185,80,.15)", "Fallido": "rgba(248,81,73,.15)", "Bloqueado": "rgba(139,148,158,.15)"}
-COLOR_INK = {"Aprobado": "#56D364", "Fallido": "#FF7B72", "Bloqueado": "#B1BAC4"}
-PRIO_DOT = {"Crítica": "#F85149", "Alta": "#DB6D28", "Media": "#D29922", "Baja": "#8B949E"}
-
-CSS = """
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0E1116; --surface:#161B22; --tile:#1C222B; --border:#272E38;
-  --ink:#E6EAF0; --body:#AEB6C2; --muted:#6E7681;
-}
-html{-webkit-text-size-adjust:100%}
-body{
-  background:var(--bg); color:var(--ink);
-  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  line-height:1.5; padding:40px 20px;
-}
-.wrap{max-width:980px;margin:0 auto}
-.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
-.muted{color:var(--muted)}
-.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.14em;font-weight:600;color:var(--muted)}
-
-header{margin-bottom:32px}
-.brand{display:inline-flex;align-items:center;gap:7px;margin-bottom:14px}
-.brand .dot{font-size:15px}
-h1{font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1.15;color:var(--ink)}
-.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--body);
-  background:var(--tile);border:1px solid var(--border);border-radius:999px;padding:5px 11px}
-.chip .k{color:var(--muted)}
-.chip a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--border)}
-
-.card{background:var(--surface);border:1px solid var(--border);border-radius:14px}
-.section{margin-top:28px}
-.section-title{margin-bottom:14px}
-
-.hero{display:grid;grid-template-columns:200px 1fr;gap:22px;align-items:center;padding:24px}
-.gauge{display:flex;flex-direction:column;align-items:center;gap:10px}
-.donut-num{font-size:34px;font-weight:700;fill:var(--ink);font-variant-numeric:tabular-nums}
-.donut-lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;fill:var(--muted);font-weight:600}
-.legend{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-size:12px;color:var(--body)}
-.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;vertical-align:middle}
-
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.kpi{padding:16px 14px;border:1px solid var(--border);border-radius:12px;background:var(--tile)}
-.kpi .n{font-size:30px;font-weight:700;letter-spacing:-.01em;font-variant-numeric:tabular-nums;line-height:1;color:var(--ink)}
-.kpi .l{font-size:12px;color:var(--muted);margin-top:6px}
-.kpi.ok .n{color:#3FB950} .kpi.bad .n{color:#F85149} .kpi.blk .n{color:#8B949E}
-
-.bars{padding:20px 22px;display:flex;flex-direction:column;gap:12px}
-.bar-row{display:flex;align-items:center;gap:12px}
-.bar-label{width:64px;font-size:13px;color:var(--body);flex:none}
-.bar-track{height:14px;border-radius:7px;overflow:hidden;display:flex;min-width:2px;background:var(--bg)}
-.bar-track .seg{height:100%;display:block}
-.bar-count{font-size:13px;color:var(--muted);flex:none;font-variant-numeric:tabular-nums}
-
-table{width:100%;border-collapse:collapse;font-size:14px}
-thead th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;
-  color:var(--muted);font-weight:600;padding:0 14px 10px}
-tbody td{padding:13px 14px;border-top:1px solid var(--border);color:var(--body);vertical-align:top}
-.tablecard{padding:18px 8px 8px}
-.pill{display:inline-block;font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap}
-.prio{font-size:12px;color:var(--body)}
-.fi{display:inline-block;margin-top:6px;font-size:11.5px;font-weight:600;color:#E3B341;
-  background:rgba(210,153,34,.14);border:1px solid rgba(210,153,34,.35);border-radius:6px;padding:1px 7px}
-.fi-aviso{margin-top:16px;padding:12px 16px;border-radius:12px;border:1px solid rgba(210,153,34,.35);
-  background:rgba(210,153,34,.10);color:#E3B341;font-size:14px}
-.fi-list{list-style:none;padding:6px 22px 18px}
-.fi-list li{padding:10px 0;border-bottom:1px solid var(--border);color:var(--body);font-size:14px}
-.fi-list li:last-child{border-bottom:0}
-.fi-list b{color:#E3B341;margin-right:8px}
-.fi-list .q{display:block;color:var(--muted);font-size:13px;margin-top:2px}
-.prio b{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:middle}
-.ev{color:var(--body);text-decoration:none;border-bottom:1px solid var(--border)}
-td .id{font-weight:600;color:var(--ink)}
-
-footer{margin-top:28px;text-align:center;font-size:12px;color:var(--muted)}
-
-@media (max-width:720px){
-  body{padding:24px 14px}
-  .hero{grid-template-columns:1fr}
-  .kpis{grid-template-columns:repeat(2,1fr)}
-  h1{font-size:23px}
-}
-"""
-
-
-def _e(s):
-    return html.escape(str(s if s is not None else ""))
-
-
-def _donut(counts, total):
-    r, cx, cy, w = 66, 90, 90, 20
-    C = 2 * math.pi * r
-    track = f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="#272E38" stroke-width="{w}"/>'
-    segs, acc = "", 0.0
-    for est in ESTADOS:
-        n = counts.get(est, 0)
-        if not n:
-            continue
-        frac = n / total
-        dash = frac * C
-        segs += (f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="{COLOR[est]}" '
-                 f'stroke-width="{w}" stroke-dasharray="{dash:.2f} {C - dash:.2f}" '
-                 f'stroke-dashoffset="{-acc * C:.2f}" transform="rotate(-90 {cx} {cy})"/>')
-        acc += frac
-    pct = round(counts.get("Aprobado", 0) / total * 100) if total else 0
-    return (f'<svg viewBox="0 0 180 180" width="170" height="170" role="img" '
-            f'aria-label="Aprobados {pct} por ciento">{track}{segs}'
-            f'<text x="{cx}" y="{cy - 2}" text-anchor="middle" class="donut-num">{pct}%</text>'
-            f'<text x="{cx}" y="{cy + 18}" text-anchor="middle" class="donut-lbl">aprobados</text></svg>')
-
-
-def _legend(counts):
-    parts = [f'<span><i style="background:{COLOR[e]}"></i>{e} ({counts.get(e, 0)})</span>' for e in ESTADOS]
-    return f'<div class="legend">{"".join(parts)}</div>'
 
 
 def _fi_ids(c):
@@ -164,130 +49,84 @@ def _fi_ids(c):
     return [str(x).strip() for x in v if str(x).strip()]
 
 
-def _fi_aviso(casos):
-    afectados = [c for c in casos if _fi_ids(c)]
-    if not afectados:
-        return ""
-    ids = sorted({i for c in afectados for i in _fi_ids(c)})
-    n = len(afectados)
-    return (f'<div class="fi-aviso"><b>Falta información:</b> {n} caso{"s" if n != 1 else ""} '
-            f'depende{"n" if n != 1 else ""} de datos que no están definidos ({_e(", ".join(ids))}). '
-            f'Su resultado puede cambiar cuando se resuelvan.</div>')
+def _estado(c):
+    return (c.get("estado") or "").strip()
 
 
-def _fi_seccion(data):
-    items = data.get("falta_informacion") or []
-    if not items:
-        return ""
-    lis = "".join(
-        f'<li><b>{_e(f.get("id", ""))}</b>{_e(f.get("que_falta", ""))}'
-        f'{" · " + _e(f.get("estado", "Abierto")) if f.get("estado", "Abierto") else ""}'
-        f'{("<span class=q>Pregunta: " + _e(f["pregunta"]) + "</span>") if f.get("pregunta") else ""}</li>'
-        for f in items)
-    return (f'<div class="section"><div class="eyebrow section-title">Falta información</div>'
-            f'<div class="card"><ul class="fi-list">{lis}</ul></div></div>')
+def _hero(casos):
+    total = len(casos)
+    counts = {s: sum(1 for c in casos if _estado(c) == s) for s in ESTADOS}
+    pct = round(counts["Aprobado"] / total * 100) if total else 0
+    dn = donut([(counts[s], ESTADO_COLOR[s], s) for s in ESTADOS], pct, "aprobados")
+    ley = legend([(s, ESTADO_COLOR[s], counts[s]) for s in ESTADOS])
+    durs = [c.get("duracion_s") for c in casos if isinstance(c.get("duracion_s"), (int, float))]
+    kpis = kpi_tiles([
+        ("Casos ejecutados", total, "", f"{sum(durs):.1f} s en total" if durs else ""),
+        ("Aprobados", counts["Aprobado"], "ok", f"{pct} % del total"),
+        ("Fallidos", counts["Fallido"], "bad" if counts["Fallido"] else "ok"),
+        ("Bloqueados", counts["Bloqueado"], "blk" if counts["Bloqueado"] else ""),
+    ])
+    return f'<div class="card hero"><div class="gauge">{dn}{ley}</div>{kpis}</div>'
 
 
-def _kpis(counts, total):
-    cards = [("Total", total, ""), ("Aprobados", counts.get("Aprobado", 0), "ok"),
-             ("Fallidos", counts.get("Fallido", 0), "bad"), ("Bloqueados", counts.get("Bloqueado", 0), "blk")]
-    out = "".join(f'<div class="kpi {cls}"><div class="n">{n}</div><div class="l">{label}</div></div>'
-                  for label, n, cls in cards)
-    return f'<div class="kpis">{out}</div>'
-
-
-def _barras(casos):
-    data, maxtot = {}, 0
+def _por_prioridad(casos):
+    filas = []
     for p in PRIOS:
         cs = [c for c in casos if (c.get("prioridad") or "").strip() == p]
-        if not cs:
-            continue
-        cnt = {e: sum(1 for c in cs if (c.get("estado") or "").strip() == e) for e in ESTADOS}
-        data[p] = (cnt, len(cs))
-        maxtot = max(maxtot, len(cs))
-    if not data:
-        return '<p class="muted" style="padding:0 22px 20px">Sin datos de prioridad.</p>'
-    rows = ""
-    for p, (cnt, tot) in data.items():
-        wtrack = tot / maxtot * 100 if maxtot else 0
-        segs = "".join(f'<span class="seg" style="width:{cnt[e] / tot * 100:.1f}%;background:{COLOR[e]}" title="{e}: {cnt[e]}"></span>'
-                       for e in ESTADOS if cnt[e])
-        rows += (f'<div class="bar-row"><div class="bar-label">{_e(p)}</div>'
-                 f'<div class="bar-track" style="width:{wtrack:.1f}%">{segs}</div>'
-                 f'<div class="bar-count">{tot}</div></div>')
-    return f'<div class="bars">{rows}</div>'
+        if cs:
+            filas.append((p, [sum(1 for c in cs if _estado(c) == s) for s in ESTADOS]))
+    return stacked_bars(filas, [(s, ESTADO_COLOR[s]) for s in ESTADOS])
+
+
+def _duraciones(casos):
+    con = [c for c in casos if isinstance(c.get("duracion_s"), (int, float))]
+    if not con:
+        return ""
+    con = sorted(con, key=lambda c: -c["duracion_s"])[:15]
+    filas = [(f'{c.get("id")} · {c.get("titulo", "")}', round(c["duracion_s"], 1), SERIES[0]) for c in con]
+    return section("Duración por caso", bar_chart(filas, ancho_etiqueta=260), "segundos · los 15 más largos")
 
 
 def _tabla(casos):
-    rows = ""
+    filas = []
     for c in casos:
-        est = (c.get("estado") or "").strip()
-        prio = (c.get("prioridad") or "").strip()
         ev = c.get("evidencia")
-        ev_html = f'<a class="ev" href="{_e(ev)}" target="_blank" rel="noopener">ver</a>' if ev else '<span class="muted">—</span>'
-        motivo = _e(c.get("motivo") or "")
-        det = motivo if motivo else '<span class="muted">—</span>'
+        ev_html = f'<a href="{e(ev)}" target="_blank" rel="noopener">ver</a>' if ev else '<span class="muted">—</span>'
+        det = e(c.get("motivo") or "") or '<span class="muted">—</span>'
         if _fi_ids(c):
-            det += f'<br><span class="fi">Falta información: {_e(", ".join(_fi_ids(c)))}</span>'
-        pill = (f'<span class="pill" style="background:{COLOR_SOFT.get(est, "rgba(139,148,158,.15)")};'
-                f'color:{COLOR_INK.get(est, "#B1BAC4")}">{_e(est) or "—"}</span>')
-        prio_html = f'<span class="prio"><b style="background:{PRIO_DOT.get(prio, "#8B949E")}"></b>{_e(prio) or "—"}</span>'
-        rows += (f'<tr><td class="mono"><span class="id">{_e(c.get("id"))}</span></td>'
-                 f'<td>{_e(c.get("titulo"))}</td><td>{prio_html}</td><td>{pill}</td>'
-                 f'<td>{det}</td><td>{ev_html}</td></tr>')
-    return (f'<table><thead><tr><th>ID</th><th>Caso</th><th>Prioridad</th>'
-            f'<th>Estado</th><th>Detalle</th><th>Evidencia</th></tr></thead><tbody>{rows}</tbody></table>')
-
-
-def _chips(data):
-    chips = []
-    if data.get("historia"):
-        chips.append(f'<span class="chip"><span class="k">Historia</span> {_e(data["historia"])}</span>')
-    if data.get("fecha"):
-        chips.append(f'<span class="chip"><span class="k">Fecha</span> {_e(data["fecha"])}</span>')
-    if data.get("modo"):
-        chips.append(f'<span class="chip"><span class="k">Modo</span> {_e(data["modo"])}</span>')
-    if data.get("url"):
-        u = _e(data["url"])
-        chips.append(f'<span class="chip"><span class="k">URL</span> <a href="{u}">{u}</a></span>')
-    return f'<div class="meta">{"".join(chips)}</div>' if chips else ""
+            det += f'<br><span style="color:#F7CD6E">Falta información: {e(", ".join(_fi_ids(c)))}</span>'
+        dur = c.get("duracion_s")
+        filas.append([f'<span class="id mono">{e(c.get("id"))}</span>', e(c.get("titulo")),
+                      nivel_badge(c.get("prioridad")), estado_pill(_estado(c)),
+                      f"{dur:.1f} s" if isinstance(dur, (int, float)) else '<span class="muted">—</span>', det, ev_html])
+    return table(["ID", "Caso", "Prioridad", "Estado", "Duración", "Detalle", "Evidencia"], filas)
 
 
 def build_html(data):
-    casos = data.get("casos", [])
-    total = len(casos)
-    counts = {e: sum(1 for c in casos if (c.get("estado") or "").strip() == e) for e in ESTADOS}
-    titulo = data.get("titulo") or "Reporte de ejecución"
-    body = f"""<div class="wrap">
-  <header>
-    <span class="brand"><span class="dot">🪖</span><span class="eyebrow">k0lmenIA · Reporte de ejecución</span></span>
-    <h1>{_e(titulo)}</h1>
-    {_chips(data)}
-  </header>
+    casos = data.get("casos", []) or []
+    body = [_hero(casos)]
 
-  <div class="card hero">
-    <div class="gauge">{_donut(counts, total)}{_legend(counts)}</div>
-    {_kpis(counts, total)}
-  </div>
-  {_fi_aviso(casos)}
+    afectados = [c for c in casos if _fi_ids(c)]
+    if afectados:
+        ids = sorted({i for c in afectados for i in _fi_ids(c)})
+        n = len(afectados)
+        body.append(f'<div style="margin-top:16px">' + banner(
+            f'Falta información: {n} caso{"s" if n != 1 else ""} depende{"n" if n != 1 else ""} de datos que no están '
+            f'definidos ({", ".join(ids)}). Su resultado puede cambiar cuando se resuelvan.', "warn") + '</div>')
 
-  <div class="section">
-    <div class="eyebrow section-title">Resultados por prioridad</div>
-    <div class="card">{_barras(casos)}</div>
-  </div>
+    body.append(section("Resultados por prioridad", _por_prioridad(casos)))
+    body.append(_duraciones(casos))
+    body.append(section("Detalle de casos", _tabla(casos), f"{len(casos)} casos"))
 
-  <div class="section">
-    <div class="eyebrow section-title">Detalle de casos</div>
-    <div class="card tablecard">{_tabla(casos)}</div>
-  </div>
-  {_fi_seccion(data)}
+    faltan = data.get("falta_informacion") or []
+    if faltan:
+        filas = [[f'<span class="id mono">{e(f.get("id", ""))}</span>', e(f.get("que_falta", "")),
+                  e(f.get("pregunta", "")) or '<span class="muted">—</span>', e(f.get("estado", "Abierto"))] for f in faltan]
+        body.append(section("Falta información", table(["ID", "Qué falta", "Pregunta", "Estado"], filas)))
 
-  <footer>Generado por k0lmenIA</footer>
-</div>"""
-    return (f'<!doctype html>\n<html lang="es"><head><meta charset="utf-8">'
-            f'<meta name="viewport" content="width=device-width, initial-scale=1">'
-            f'<title>{_e(titulo)} — Reporte k0lmenIA</title><style>{CSS}</style></head>'
-            f'<body>{body}</body></html>\n')
+    meta_html = meta([("Historia", data.get("historia")), ("Fecha", data.get("fecha")),
+                      ("Modo", data.get("modo")), ("URL", data.get("url"))])
+    return page(data.get("titulo") or "Reporte de ejecución", "Reporte de ejecución", meta_html, "".join(body))
 
 
 def main():

@@ -27,16 +27,17 @@ import json
 import re
 import sys
 
-from _estilos_reporte import e, page, meta, section, kpi_tiles, banner, doc_list, table, bar_chart, nivel_badge
+from _estilos_reporte import (e, page, meta, section, kpi_tiles, banner, doc_list, table, bar_chart, nivel_badge,
+                              CRITICO, SERIO, AVISO, NEUTRO)
 
-RIESGOS = [(3, "Alto", "#F85149"), (2, "Medio", "#DB6D28"), (1, "Bajo", "#D29922"), (0, "Informativo", "#8B949E")]
+RIESGOS = [(3, "Alto", CRITICO), (2, "Medio", SERIO), (1, "Bajo", AVISO), (0, "Informativo", NEUTRO)]
 NOMBRE_RIESGO = {c: n for c, n, _ in RIESGOS}
 COLOR_RIESGO = {c: col for c, _, col in RIESGOS}
 CONFIANZA = {"0": "Falso positivo", "1": "Baja", "2": "Media", "3": "Alta", "4": "Confirmada"}
 
 CSS_EXTRA = """
 <style>
-.hallazgo{padding:18px 22px;border-top:1px solid var(--border)}
+.hallazgo{padding:20px 24px;border-top:1px solid var(--border-soft)}
 .hallazgo:first-child{border-top:0}
 .hallazgo h3{font-size:16px;color:var(--ink);margin-bottom:6px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .hallazgo .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin:12px 0 4px}
@@ -46,7 +47,6 @@ CSS_EXTRA = """
 .hallazgo li{word-break:break-all}
 .ev{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;white-space:pre-wrap;word-break:break-all;color:var(--body)}
 .fp{opacity:.6}
-.tablecard{overflow-x:auto}
 </style>
 """
 

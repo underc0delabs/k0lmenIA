@@ -47,21 +47,14 @@ import sys
 from pathlib import Path
 
 from _estilos_reporte import (e, page, meta, section, kpi_tiles, banner, doc_list, table,
-                              nivel_badge, two_col)
-
-AZUL, NARANJA, ROJO, VERDE, VIOLETA = "#58A6FF", "#F0883E", "#F85149", "#3FB950", "#BC8CFF"
-GRIS = "#272E38"
+                              nivel_badge, two_col, grouped_columns, line_chart, SERIES, CRITICO)
 
 CSS_EXTRA = """
 <style>
-.chart{padding:18px 22px}
-.chart svg{width:100%;height:auto;display:block}
-.chart .ley{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--body);margin-top:8px}
-.chart .ley i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
-.ok-t{color:#56D364}.bad-t{color:#FF7B72}.warn-t{color:#E3B341}
-.plan dl{display:grid;grid-template-columns:190px 1fr;gap:8px 16px}
+.ok-t{color:#7BE07B;font-weight:600}.bad-t{color:#F59A9A;font-weight:600}.warn-t{color:#F7CD6E;font-weight:600}
+.ok-t::before{content:"✓ "}.bad-t::before{content:"✕ "}.warn-t::before{content:"! "}
+.plan dl{display:grid;grid-template-columns:190px 1fr;gap:9px 16px}
 .plan dt{color:var(--muted);font-size:13px}.plan dd{color:var(--ink)}
-.tablecard{overflow-x:auto}
 @media (max-width:720px){.plan dl{grid-template-columns:1fr}}
 </style>
 """
@@ -130,69 +123,23 @@ def cargar_corridas(entradas, base_html):
     return corridas
 
 
-# ------------------------------------------------------------------ gráficos SVG
-def barras_agrupadas(grupos, series, unidad_ms=True, ancho=760):
-    """grupos: etiquetas del eje X. series: lista de (nombre, color, valores por grupo).
-    ancho: ancho del lienzo (380 para la grilla de dos columnas, así el texto no se achica)."""
-    valores = [v for _, _, vs in series for v in vs if v is not None]
-    if not valores:
-        return '<div class="cardbody"><p class="muted">Sin datos.</p></div>'
-    W, H, izq, abajo, arriba = ancho, 280, 64, 46, 16
-    maxv = max(valores) * 1.12 or 1
-    alto = H - abajo - arriba
-    ancho_grupo = (W - izq - 10) / len(grupos)
-    ancho_barra = min(34, ancho_grupo * 0.8 / len(series))
-    svg = []
-    for i in range(5):
-        y = arriba + alto - alto * i / 4
-        v = maxv * i / 4
-        svg.append(f'<line x1="{izq}" x2="{W - 10}" y1="{y:.1f}" y2="{y:.1f}" stroke="{GRIS}"/>')
-        svg.append(f'<text x="{izq - 8}" y="{y + 4:.1f}" text-anchor="end" font-size="11" fill="#6E7681">'
-                   f'{e(ms(v) if unidad_ms else num(v))}</text>')
-    for g, nombre in enumerate(grupos):
-        x0 = izq + g * ancho_grupo + (ancho_grupo - ancho_barra * len(series)) / 2
-        for s, (_, color, vs) in enumerate(series):
-            v = vs[g]
-            if v is None:
-                continue
-            h = alto * v / maxv
-            x = x0 + s * ancho_barra
-            svg.append(f'<rect x="{x:.1f}" y="{arriba + alto - h:.1f}" width="{ancho_barra - 3:.1f}" '
-                       f'height="{h:.1f}" rx="3" fill="{color}"><title>{e(ms(v) if unidad_ms else num(v))}</title></rect>')
-        svg.append(f'<text x="{izq + g * ancho_grupo + ancho_grupo / 2:.1f}" y="{H - 18}" text-anchor="middle" '
-                   f'font-size="12" fill="#AEB6C2">{e(nombre if len(nombre) <= ancho_grupo / 6.5 else nombre[:int(ancho_grupo / 6.5) - 1] + "…")}'
-                   f'<title>{e(nombre)}</title></text>')
-    ley = "".join(f'<span><i style="background:{c}"></i>{e(n)}</span>' for n, c, _ in series)
-    return (f'<div class="chart"><svg viewBox="0 0 {W} {H}" role="img">{"".join(svg)}</svg>'
-            f'<div class="ley">{ley}</div></div>')
-
-
-def linea_tiempo(puntos, herramienta):
-    """Req/s (azul) y p95 (naranja), cada uno en su escala, como en el reporte de cada corrida."""
-    pts = [p for p in puntos or [] if p.get("rps") is not None or p.get("p95") is not None]
-    if len(pts) < 2:
-        if herramienta == "k6":
-            return '<p class="muted">k6 entrega solo el resumen final: sin evolución en el tiempo.</p>'
-        return '<p class="muted">Corrida demasiado corta: menos de dos intervalos de 10 s para mostrar la evolución.</p>'
-    W, H, izq, der, arriba, abajo = 760, 200, 14, 14, 26, 26
-    t0, t1 = pts[0]["t"], pts[-1]["t"]
-    rango = (t1 - t0) or 1
-    maxr = max((p["rps"] or 0) for p in pts) or 1
-    maxp = max((p["p95"] or 0) for p in pts) or 1
-
-    def camino(clave, maxv):
-        coords = [(izq + (p["t"] - t0) / rango * (W - izq - der), arriba + (H - arriba - abajo) * (1 - (p[clave] or 0) / maxv))
-                  for p in pts if p.get(clave) is not None]
-        return " ".join(f'{"M" if i == 0 else "L"}{x:.1f},{y:.1f}' for i, (x, y) in enumerate(coords))
-
-    svg = (f'<line x1="{izq}" x2="{W - der}" y1="{H - abajo}" y2="{H - abajo}" stroke="{GRIS}"/>'
-           f'<path d="{camino("rps", maxr)}" fill="none" stroke="{AZUL}" stroke-width="2.2"/>'
-           f'<path d="{camino("p95", maxp)}" fill="none" stroke="{NARANJA}" stroke-width="2.2"/>'
-           f'<text x="{W - der}" y="14" text-anchor="end" font-size="11" fill="{AZUL}">req/s máx. {maxr:.1f}</text>'
-           f'<text x="{W - der - 130}" y="14" text-anchor="end" font-size="11" fill="{NARANJA}">p95 máx. {e(ms(maxp))}</text>'
-           f'<text x="{izq}" y="{H - 8}" font-size="11" fill="#6E7681">0 s</text>'
-           f'<text x="{W - der}" y="{H - 8}" text-anchor="end" font-size="11" fill="#6E7681">{e(duracion(rango / 1000))}</text>')
-    return f'<svg viewBox="0 0 {W} {H}" role="img">{svg}</svg>'
+# ------------------------------------------------------------------ evolución en el tiempo
+def evolucion(corridas, clave, fmt):
+    """Una línea por corrida sobre el tiempo relativo a su inicio (segundos), en un solo eje."""
+    series, tiempos = [], set()
+    for i, c in enumerate(corridas):
+        pts = [p for p in c.get("linea_tiempo") or [] if p.get(clave) is not None]
+        if len(pts) < 2:
+            continue
+        t0 = pts[0]["t"]
+        datos = {round((p["t"] - t0) / 1000): p[clave] for p in pts}
+        tiempos.update(datos)
+        series.append((c["_nombre"], SERIES[i % len(SERIES)], datos))
+    if not series:
+        return '<p class="muted">Sin evolución en el tiempo: k6 entrega solo el resumen final, o las corridas duraron menos de dos intervalos de 10 s.</p>'
+    x = sorted(tiempos)
+    return line_chart(x, [(n, col, [d.get(s) for s in x]) for n, col, d in series], fmt=fmt,
+                      fmt_x=lambda s: duracion(s), area=len(series) == 1)
 
 
 # ------------------------------------------------------------------ armado
@@ -259,20 +206,22 @@ def build_html(data, corridas):
 
     # Gráficos comparativos
     grupos = [c["_nombre"] for c in corridas]
-    lat = barras_agrupadas(grupos, [
-        ("p50", AZUL, [(c.get("latencia") or {}).get("p50") for c in corridas]),
-        ("p95", NARANJA, [(c.get("latencia") or {}).get("p95") for c in corridas]),
-        ("p99", ROJO, [(c.get("latencia") or {}).get("p99") for c in corridas]),
-    ])
-    body.append(section("Latencia por corrida", lat))
-    thr = barras_agrupadas(grupos, [("Req/s", VERDE, [(c.get("kpis") or {}).get("rps") for c in corridas])], unidad_ms=False, ancho=380)
-    err = barras_agrupadas(grupos, [("% de error", ROJO, [(c.get("kpis") or {}).get("error_pct") for c in corridas])], unidad_ms=False, ancho=380)
-    body.append(two_col(section("Throughput (req/s)", thr), section("Errores (%)", err)))
+    lat = grouped_columns(grupos, [
+        ("p50", SERIES[0], [(c.get("latencia") or {}).get("p50") for c in corridas]),
+        ("p95", SERIES[1], [(c.get("latencia") or {}).get("p95") for c in corridas]),
+        ("p99", SERIES[2], [(c.get("latencia") or {}).get("p99") for c in corridas]),
+    ], fmt=ms)
+    body.append(section("Latencia por corrida", lat, "percentiles del tiempo de respuesta"))
+    thr = grouped_columns(grupos, [("Req/s", SERIES[0], [(c.get("kpis") or {}).get("rps") for c in corridas])], alto=240, ancho=380)
+    err = grouped_columns(grupos, [("% de error", CRITICO, [(c.get("kpis") or {}).get("error_pct") for c in corridas])],
+                          fmt=lambda v: f"{v:.0f} %", alto=240, ancho=380)
+    body.append(two_col(section("Throughput", thr, "requests por segundo"), section("Errores", err, "% de requests fallidos")))
 
-    # Evolución en el tiempo de cada corrida
-    evol = "".join(f'<div class="subhead" style="margin-top:{14 if i else 0}px">{e(c["_nombre"])}</div>{linea_tiempo(c.get("linea_tiempo"), c.get("herramienta"))}'
-                   for i, c in enumerate(corridas))
-    body.append(section("Evolución en el tiempo · req/s (azul) y p95 (naranja)", f'<div class="chart">{evol}</div>'))
+    # Evolución en el tiempo: un gráfico por métrica (nunca dos escalas en el mismo gráfico)
+    body.append(section("Evolución del throughput", f'<div class="chart">{evolucion(corridas, "rps", lambda v: f"{v:.0f}" if v >= 10 else f"{v:.1f}" if v >= 1 else f"{v:.2f}")}</div>',
+                        "req/s por intervalo de 10 s, desde el inicio de cada corrida"))
+    body.append(section("Evolución del p95", f'<div class="chart">{evolucion(corridas, "p95", ms)}</div>',
+                        "p95 por intervalo de 10 s, desde el inicio de cada corrida"))
 
     # Umbrales
     filas = []

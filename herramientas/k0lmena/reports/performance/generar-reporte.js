@@ -318,33 +318,118 @@ function desdeJMeter(texto, defUmbrales) {
 }
 
 // ---------------------------------------------------------------- HTML
-function barras(items, unidad) {
+// Mismo sistema de diseño que los informes de k0lmenIA (scripts/_estilos_reporte.py): modo
+// oscuro, paleta categórica y de estado validadas (CVD y contraste), un solo eje por gráfico,
+// tooltips al pasar el mouse y el estado siempre con ícono + texto, nunca solo color.
+const SERIES = ['#3987E5', '#D95926', '#199E70', '#C98500'];
+const ESTADO = { ok: '#0CA30C', warn: '#FAB219', serio: '#EC835A', err: '#D03B3B', neutro: '#8B949E' };
+
+const CSS = `*{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:dark;--bg:#0D1117;--surface:#161B22;--tile:#1C2330;--border:#283040;--border-soft:#202836;
+  --ink:#E8ECF2;--body:#B4BCC8;--muted:#7D8693;--ok:#0CA30C;--warn:#FAB219;--err:#D03B3B;--neutral:#8B949E}
+body{background:radial-gradient(1200px 500px at 15% -10%,rgba(57,135,229,.16),transparent 60%),radial-gradient(900px 400px at 100% 0%,rgba(144,133,233,.1),transparent 55%),var(--bg);
+  background-attachment:fixed;color:var(--ink);font:14px/1.55 "Inter","Segoe UI Variable","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;font-feature-settings:"tnum" 1;padding:40px 20px 56px}
+.wrap{max-width:1160px;margin:0 auto}
+.brand{display:inline-flex;align-items:center;gap:8px;margin-bottom:14px;padding:5px 12px 5px 8px;border:1px solid var(--border);border-radius:999px;background:rgba(22,27,34,.7);
+  font-size:11px;text-transform:uppercase;letter-spacing:.14em;font-weight:650;color:var(--muted)}
+.brand i{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#3987E5,#9085E9);display:inline-block}
+h1{font-size:30px;font-weight:750;letter-spacing:-.025em;line-height:1.15}
+h2{font-size:16px;font-weight:680;margin-bottom:4px}
+.sub{font-size:12.5px;color:var(--muted);margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{background:var(--tile);border:1px solid var(--border);border-radius:999px;padding:5px 12px;color:var(--muted);font-size:12.5px}
+.chip b{color:var(--ink);font-weight:600}
+main{display:grid;gap:16px;grid-template-columns:repeat(12,1fr);margin-top:26px}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.025),transparent 120px),var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px 22px;grid-column:span 12;min-width:0;
+  box-shadow:0 12px 32px -18px rgba(0,0,0,.7)}
+.c6{grid-column:span 6}
+@media(max-width:860px){.c6{grid-column:span 12}body{padding:24px 14px}h1{font-size:24px}}
+.banner{display:flex;align-items:center;gap:12px;padding:15px 18px;border-radius:14px;border:1px solid;font-weight:650;font-size:15.5px}
+.banner .bic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#0D1117;font-weight:800;flex:none}
+.banner.ok{background:linear-gradient(90deg,rgba(12,163,12,.16),rgba(12,163,12,.04));border-color:rgba(12,163,12,.45);color:#7BE07B}.banner.ok .bic{background:var(--ok)}
+.banner.err{background:linear-gradient(90deg,rgba(208,59,59,.18),rgba(208,59,59,.04));border-color:rgba(208,59,59,.5);color:#F59A9A}.banner.err .bic{background:var(--err)}
+.banner.warn{background:linear-gradient(90deg,rgba(250,178,25,.15),rgba(250,178,25,.03));border-color:rgba(250,178,25,.45);color:#F7CD6E}.banner.warn .bic{background:var(--warn)}
+.nota{color:var(--muted);margin-top:12px}.nota.err{color:#F59A9A}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:12px;margin-top:16px}
+.kpi{position:relative;background:var(--tile);border:1px solid var(--border);border-radius:14px;padding:14px 14px 12px;overflow:hidden}
+.kpi::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--border)}
+.kpi.ok::before{background:var(--ok)}.kpi.err::before{background:var(--err)}
+.kpi .v{font-size:24px;font-weight:750;letter-spacing:-.02em;line-height:1.1}
+.kpi .et{color:var(--muted);font-size:12px;margin-top:6px}
+.barras{display:flex;flex-direction:column;gap:11px;margin-top:6px}
+.barra{display:grid;grid-template-columns:110px 1fr 76px;gap:12px;align-items:center}
+.barra .et{color:var(--body);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pista{height:12px;background:rgba(255,255,255,.04);border-radius:0 4px 4px 0;overflow:hidden}
+.relleno{display:block;height:100%;border-radius:0 4px 4px 0}
+.barra .val{text-align:right;font-weight:600}
+svg{width:100%;height:auto;display:block;overflow:visible}
+.axis{font-size:11px;fill:var(--muted)}.grid{stroke:var(--border-soft)}.base{stroke:var(--border)}
+.hit rect{fill:transparent}.hit .cross{stroke:var(--muted);stroke-dasharray:3 3;opacity:0}.hit:hover .cross{opacity:1}
+.hit circle{opacity:0}.hit:hover circle{opacity:1}
+.tabla{overflow-x:auto;margin:0 -8px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.09em;font-weight:650;text-align:left;padding:10px 12px;white-space:nowrap}
+td{padding:11px 12px;border-top:1px solid var(--border-soft);color:var(--body);white-space:nowrap}
+td:first-child{white-space:normal;word-break:break-word}
+tbody tr:hover td{background:rgba(255,255,255,.025)}
+code{font-family:"JetBrains Mono","Cascadia Code",ui-monospace,Consolas,monospace;font-size:12.5px;color:var(--ink)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:650;padding:3px 10px;border-radius:999px;color:var(--ink)}
+.pill.ok{background:rgba(12,163,12,.16);box-shadow:inset 0 0 0 1px rgba(12,163,12,.45)}.pill.ok b{color:var(--ok)}
+.pill.err{background:rgba(208,59,59,.16);box-shadow:inset 0 0 0 1px rgba(208,59,59,.5)}.pill.err b{color:var(--err)}
+.muted{color:var(--muted)}.vacio{color:#7BE07B}
+#tip{position:fixed;z-index:10;pointer-events:none;opacity:0;transition:opacity .12s;background:#0B0F15;border:1px solid var(--border);border-radius:10px;padding:8px 11px;
+  font-size:12.5px;color:var(--ink);box-shadow:0 10px 28px rgba(0,0,0,.55);white-space:pre-line}#tip.on{opacity:1}
+footer{max-width:1160px;margin:28px auto 0;color:var(--muted);font-size:12px;text-align:center}`;
+
+const JS = `(function(){var t=document.createElement('div');t.id='tip';document.body.appendChild(t);
+document.addEventListener('mousemove',function(e){var el=e.target.closest('[data-tip]');if(!el){t.className='';return;}
+t.textContent=el.getAttribute('data-tip');t.className='on';var w=t.offsetWidth,h=t.offsetHeight;
+t.style.left=Math.min(e.clientX+14,innerWidth-w-8)+'px';t.style.top=(e.clientY-h-12<4?e.clientY+16:e.clientY-h-12)+'px';});})();`;
+
+function barras(items, fmt) {
+  if (!items.length) return '<p class="muted">Sin datos.</p>';
   const max = Math.max(1, ...items.map((i) => i.valor || 0));
-  return items.map((i) => `
-    <div class="barra"><span class="et">${esc(i.etiqueta)}</span>
-      <span class="pista"><span class="relleno ${i.clase || ''}" style="width:${Math.max(1, ((i.valor || 0) / max) * 100).toFixed(1)}%"></span></span>
-      <span class="val">${unidad === 'ms' ? ms(i.valor) : entero(i.valor)}</span></div>`).join('');
+  return `<div class="barras">${items.map((i) => `
+    <div class="barra" data-tip="${esc(i.etiqueta)}: ${esc(fmt(i.valor))}"><span class="et">${esc(i.etiqueta)}</span>
+      <span class="pista"><span class="relleno" style="width:${Math.max(0.8, ((i.valor || 0) / max) * 100).toFixed(1)}%;background:${i.color || SERIES[0]}"></span></span>
+      <span class="val">${esc(fmt(i.valor))}</span></div>`).join('')}</div>`;
 }
 
-function svgLinea(puntos) {
-  if (puntos.length < 2) return '<p class="muted">Sin datos de evolución en el tiempo para esta corrida.</p>';
-  const W = 760, H = 220, P = 34;
-  const t0 = puntos[0].t, t1 = puntos[puntos.length - 1].t || t0 + 1;
-  const x = (t) => P + ((t - t0) / (t1 - t0 || 1)) * (W - 2 * P);
-  const serie = (clave, color) => {
-    const vals = puntos.map((p) => p[clave]).filter((v) => v != null);
-    if (!vals.length) return '';
-    const max = Math.max(...vals) || 1;
-    const pts = puntos.filter((p) => p[clave] != null).map((p) => `${x(p.t).toFixed(1)},${(H - P - (p[clave] / max) * (H - 2 * P)).toFixed(1)}`).join(' ');
-    return `<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round"/>
-      <text x="${W - P}" y="${clave === 'rps' ? 16 : 32}" text-anchor="end" fill="${color}" font-size="12">${clave === 'rps' ? 'req/s' : 'p95'} máx: ${clave === 'rps' ? max.toFixed(1) : ms(max)}</text>`;
-  };
-  return `<svg viewBox="0 0 ${W} ${H}" class="linea" role="img" aria-label="Evolución de req/s y p95">
-    <line x1="${P}" y1="${H - P}" x2="${W - P}" y2="${H - P}" stroke="var(--linea)"/>
-    ${serie('rps', 'var(--info)')}${serie('p95', 'var(--warn)')}
-    <text x="${P}" y="${H - 10}" fill="var(--muted)" font-size="12">0 s</text>
-    <text x="${W - P}" y="${H - 10}" text-anchor="end" fill="var(--muted)" font-size="12">${duracion((t1 - t0) / 1000)}</text>
-  </svg>`;
+// Máximo "redondo" para 4 líneas de grilla.
+function escala(max) {
+  if (!(max > 0)) return [1, 0.25];
+  const exp = 10 ** Math.floor(Math.log10(max));
+  for (const m of [1, 2, 2.5, 5, 10]) if ((m * exp) >= max) return [m * exp, (m * exp) / 4];
+  return [max, max / 4];
+}
+
+// Línea de una sola serie sobre un eje (área suave), con crosshair y tooltip por intervalo.
+function grafLinea(puntos, clave, color, fmt, nombre, W = 520) {
+  const pts = puntos.filter((p) => p[clave] != null);
+  if (pts.length < 2) return '<p class="muted">Corrida demasiado corta: menos de dos intervalos de 10 s.</p>';
+  const H = 240, izq = 58, der = 12, arriba = 12, abajo = 28;
+  const [max, paso] = escala(Math.max(...pts.map((p) => p[clave])));
+  const t0 = pts[0].t, rango = (pts[pts.length - 1].t - t0) || 1;
+  const px = (t) => izq + ((t - t0) / rango) * (W - izq - der);
+  const py = (v) => arriba + (H - arriba - abajo) * (1 - v / max);
+  let svg = '';
+  for (let v = 0; v <= max + 1e-9; v += paso) {
+    svg += `<line class="${v === 0 ? 'base' : 'grid'}" x1="${izq}" x2="${W - der}" y1="${py(v).toFixed(1)}" y2="${py(v).toFixed(1)}"/>`
+      + `<text class="axis" x="${izq - 8}" y="${(py(v) + 4).toFixed(1)}" text-anchor="end">${esc(fmt(v))}</text>`;
+  }
+  const d = pts.map((p, i) => `${i ? 'L' : 'M'}${px(p.t).toFixed(1)},${py(p[clave]).toFixed(1)}`).join(' ');
+  svg += `<path d="${d} L${px(pts[pts.length - 1].t).toFixed(1)},${py(0).toFixed(1)} L${px(t0).toFixed(1)},${py(0).toFixed(1)} Z" fill="${color}" opacity=".13"/>`
+    + `<path d="${d}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  pts.forEach((p, i) => {
+    const a = i ? (px(pts[i - 1].t) + px(p.t)) / 2 : px(p.t);
+    const b = i < pts.length - 1 ? (px(p.t) + px(pts[i + 1].t)) / 2 : px(p.t);
+    svg += `<g class="hit" data-tip="${esc(duracion((p.t - t0) / 1000))}\n${esc(nombre)}: ${esc(fmt(p[clave]))}${p.errores ? `\nerrores: ${p.errores}` : ''}">`
+      + `<rect x="${a.toFixed(1)}" y="${arriba}" width="${Math.max(b - a, 1).toFixed(1)}" height="${H - arriba - abajo}"/>`
+      + `<line class="cross" x1="${px(p.t).toFixed(1)}" x2="${px(p.t).toFixed(1)}" y1="${arriba}" y2="${H - abajo}"/>`
+      + `<circle cx="${px(p.t).toFixed(1)}" cy="${py(p[clave]).toFixed(1)}" r="4.5" fill="${color}" stroke="#161B22" stroke-width="2"/></g>`;
+  });
+  svg += `<text class="axis" x="${izq}" y="${H - 6}">0 s</text><text class="axis" x="${W - der}" y="${H - 6}" text-anchor="end">${esc(duracion(rango / 1000))}</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolución de ${esc(nombre)}">${svg}</svg>`;
 }
 
 function tabla(encabezados, filas) {
@@ -355,34 +440,24 @@ function tabla(encabezados, filas) {
 
 function html(r) {
   const k = r.kpis, l = r.latencia;
-  const ver = { cumple: ['ok', 'Cumple los umbrales'], 'no cumple': ['err', 'No cumple los umbrales'], 'sin umbrales': ['warn', 'Sin umbrales definidos'], error: ['err', 'La corrida terminó con error'] }[r.veredicto];
-  const kpi = (et, val, clase = '') => `<div class="kpi"><div class="et">${et}</div><div class="v ${clase}">${val}</div></div>`;
-  const codigos = Object.entries(r.codigos).map(([c, n]) => ({ etiqueta: c, valor: n, clase: c === 'sin respuesta' || Number(c) >= 400 ? 'err' : Number(c) >= 300 ? 'warn' : 'ok' }));
+  const ver = { cumple: ['ok', '✓', 'Cumple los umbrales'], 'no cumple': ['err', '✕', 'No cumple los umbrales'],
+    'sin umbrales': ['warn', '!', 'Sin umbrales definidos'], error: ['err', '✕', 'La corrida terminó con error'] }[r.veredicto];
+  const kpi = (et, val, clase = '') => `<div class="kpi ${clase}"><div class="v">${val}</div><div class="et">${et}</div></div>`;
+  const colorCodigo = (c) => (c === 'sin respuesta' || Number(c) >= 500 ? ESTADO.err : Number(c) >= 400 ? ESTADO.serio : Number(c) >= 300 ? ESTADO.warn : ESTADO.ok);
+  const codigos = Object.entries(r.codigos).map(([c, n]) => ({ etiqueta: c, valor: n, color: colorCodigo(c) }));
+  const pill = (ok) => (ok ? '<span class="pill ok"><b>✓</b>Cumple</span>' : '<span class="pill err"><b>✕</b>No cumple</span>');
+  const evolucion = r.herramienta === 'k6'
+    ? '<section class="card"><h2>Evolución en el tiempo</h2><p class="muted">k6 entrega solo el resumen final; la evolución está disponible en las corridas de Artillery y JMeter.</p></section>'
+    : `<section class="card c6"><h2>Throughput</h2><p class="sub">req/s por intervalo de 10 s</p>${grafLinea(r.linea_tiempo, 'rps', SERIES[0], (v) => (v >= 10 ? v.toFixed(0) : v >= 1 ? v.toFixed(1) : v.toFixed(2)), 'req/s')}</section>
+  <section class="card c6"><h2>Latencia p95</h2><p class="sub">p95 por intervalo de 10 s</p>${grafLinea(r.linea_tiempo, 'p95', SERIES[1], ms, 'p95')}</section>`;
 
   return `<!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Performance · ${esc(r.script)} · ${esc(r.perfil)}</title>
-<style>
-:root{--bg:#0b0f17;--panel:#121826;--linea:#232c3d;--texto:#e6edf3;--muted:#8b97a8;--ok:#22c55e;--warn:#f59e0b;--err:#ef4444;--info:#60a5fa}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--texto);font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-header{padding:24px 16px 8px;max-width:1200px;margin:auto}h1{margin:0 0 6px;font-size:22px}h2{font-size:15px;margin:0 0 12px}
-.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{background:var(--panel);border:1px solid var(--linea);border-radius:999px;padding:3px 10px;color:var(--muted);font-size:12px}
-.chip b{color:var(--texto);font-weight:600}main{max-width:1200px;margin:auto;padding:8px 16px 32px;display:grid;gap:14px;grid-template-columns:repeat(12,1fr)}
-.card{background:var(--panel);border:1px solid var(--linea);border-radius:14px;padding:16px;grid-column:span 12;min-width:0}.c6{grid-column:span 6}
-@media(max-width:860px){.c6{grid-column:span 12}}
-.veredicto{display:flex;align-items:center;gap:12px;font-size:18px;font-weight:700}.punto{width:14px;height:14px;border-radius:50%}
-.ok{color:var(--ok)}.err{color:var(--err)}.warn{color:var(--warn)}.bg-ok{background:var(--ok)}.bg-err{background:var(--err)}.bg-warn{background:var(--warn)}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}.kpi{background:#0e1420;border:1px solid var(--linea);border-radius:10px;padding:10px 12px}
-.kpi .et{color:var(--muted);font-size:12px}.kpi .v{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
-.barra{display:grid;grid-template-columns:110px 1fr 80px;gap:10px;align-items:center;margin:6px 0}.et{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pista{background:#0e1420;border-radius:6px;height:12px;overflow:hidden}.relleno{display:block;height:100%;background:var(--info);border-radius:6px}
-.relleno.ok{background:var(--ok)}.relleno.err{background:var(--err)}.relleno.warn{background:var(--warn)}.val{text-align:right;font-variant-numeric:tabular-nums}
-.tabla{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--linea);white-space:nowrap}
-th{color:var(--muted);font-weight:600}td:first-child{white-space:normal;word-break:break-word}.muted{color:var(--muted)}
-.linea{width:100%;height:auto}code{background:#0e1420;padding:1px 6px;border-radius:6px}footer{max-width:1200px;margin:auto;padding:0 16px 24px;color:var(--muted);font-size:12px}
-</style></head><body>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="dark">
+<title>Performance · ${esc(r.script)} · ${esc(r.perfil)}</title><style>${CSS}</style></head><body>
+<div class="wrap">
 <header>
-  <h1>Performance · ${esc(r.script)}</h1>
+  <span class="brand"><i></i>k0lmena · performance</span>
+  <h1>${esc(r.script)}</h1>
   <div class="chips">
     <span class="chip">Herramienta <b>${esc(r.herramienta)}</b></span><span class="chip">Perfil <b>${esc(r.perfil)}</b></span>
     <span class="chip">Destino <b>${esc(r.destino || '—')}</b></span><span class="chip">Fecha <b>${esc(fecha(r.fecha))}</b></span>
@@ -390,10 +465,10 @@ th{color:var(--muted);font-weight:600}td:first-child{white-space:normal;word-bre
   </div>
 </header>
 <main>
-  <section class="card"><div class="veredicto"><span class="punto bg-${ver[0]}"></span><span class="${ver[0]}">${ver[1]}</span></div>
-    ${r.perfil === 'smoke' ? '<p class="muted">Perfil smoke: carga mínima para validar que el script funciona; no representa la carga objetivo.</p>' : ''}
-    ${r.error ? `<p class="err">${esc(r.error)}</p>` : ''}
-    <div class="kpis" style="margin-top:12px">
+  <section class="card"><div class="banner ${ver[0]}"><span class="bic">${ver[1]}</span>${ver[2]}</div>
+    ${r.perfil === 'smoke' ? '<p class="nota">Perfil smoke: carga mínima para validar que el script funciona; no representa la carga objetivo.</p>' : ''}
+    ${r.error ? `<p class="nota err">${esc(r.error)}</p>` : ''}
+    <div class="kpis">
       ${kpi('Requests', entero(k.requests))}${kpi('Req/s promedio', k.rps == null ? '—' : k.rps.toFixed(2))}
       ${kpi('Errores', k.error_pct == null ? '—' : `${k.error_pct.toFixed(2)} %`, k.error_pct > 0 ? 'err' : 'ok')}
       ${kpi('p50', ms(l.p50))}${kpi('p95', ms(l.p95))}${kpi('p99', ms(l.p99))}
@@ -401,23 +476,24 @@ th{color:var(--muted);font-weight:600}td:first-child{white-space:normal;word-bre
       ${kpi({ k6: 'Iteraciones', artillery: 'Flujos completos', jmeter: 'Muestras con error' }[r.herramienta], entero(k.iteraciones))}
     </div>
   </section>
-  <section class="card"><h2>Umbrales</h2>
-    ${r.umbrales.length ? tabla(['Métrica', 'Condición', 'Valor medido', 'Resultado'], r.umbrales.map((u) => [`<code>${esc(u.metrica)}</code>`, esc(u.condicion), esc(u.valor), u.ok ? '<span class="ok">Cumple</span>' : '<span class="err">No cumple</span>'])) : '<p class="warn">El script no define umbrales: la corrida no tiene criterio de aceptación.</p>'}
+  <section class="card"><h2>Umbrales</h2><p class="sub">criterio de aceptación de la corrida</p>
+    ${r.umbrales.length ? tabla(['Métrica', 'Condición', 'Valor medido', 'Resultado'], r.umbrales.map((u) => [`<code>${esc(u.metrica)}</code>`, esc(u.condicion), esc(u.valor), pill(u.ok)])) : '<p class="muted">El script no define umbrales: la corrida no tiene criterio de aceptación.</p>'}
   </section>
-  <section class="card c6"><h2>Latencia</h2><p class="muted" style="margin-top:-6px">${esc(l.fuente)}</p>
-    ${barras([{ etiqueta: 'p50', valor: l.p50 }, { etiqueta: 'p90', valor: l.p90 }, { etiqueta: 'p95', valor: l.p95 }, { etiqueta: 'p99', valor: l.p99 }, { etiqueta: 'promedio', valor: l.avg }, { etiqueta: 'máximo', valor: l.max }].filter((b) => b.valor != null), 'ms')}
+  ${evolucion}
+  <section class="card c6"><h2>Latencia</h2><p class="sub">${esc(l.fuente)}</p>
+    ${barras([{ etiqueta: 'p50', valor: l.p50 }, { etiqueta: 'p90', valor: l.p90 }, { etiqueta: 'p95', valor: l.p95 }, { etiqueta: 'p99', valor: l.p99 }, { etiqueta: 'promedio', valor: l.avg }, { etiqueta: 'máximo', valor: l.max }].filter((b) => b.valor != null), ms)}
   </section>
-  <section class="card c6"><h2>Códigos de respuesta</h2>${codigos.length ? barras(codigos) : '<p class="muted">Sin datos de códigos de respuesta.</p>'}</section>
-  <section class="card"><h2>Evolución en el tiempo</h2>${r.herramienta === 'k6' ? '<p class="muted">k6 entrega solo el resumen final; la evolución está disponible en las corridas de Artillery y JMeter.</p>' : `<p class="muted" style="margin-top:-6px">Req/s (azul) y p95 de la latencia (naranja), cada una en su propia escala, por intervalo de 10 s.</p>${svgLinea(r.linea_tiempo)}`}</section>
-  <section class="card"><h2>${esc(r.detalle.titulo)}</h2>
+  <section class="card c6"><h2>Códigos de respuesta</h2><p class="sub">cantidad de respuestas por código HTTP</p>${codigos.length ? barras(codigos, entero) : '<p class="muted">Sin datos de códigos de respuesta.</p>'}</section>
+  <section class="card"><h2>${esc(r.detalle.titulo)}</h2><p class="sub">ordenado por cantidad</p>
     ${tabla(['Nombre', 'Cantidad', 'Promedio', 'p95', 'p99', 'Máximo'], r.detalle.filas.map((f) => [`<code>${esc(f.nombre)}</code>`, entero(f.requests), ms(f.avg), ms(f.p95), ms(f.p99), ms(f.max)]))}
   </section>
-  ${r.checks.length ? `<section class="card c6"><h2>Checks</h2>${tabla(['Check', 'Pasan', 'Fallan'], r.checks.map((c) => [esc(c.nombre), entero(c.pasan), c.fallan ? `<span class="err">${entero(c.fallan)}</span>` : '0']))}</section>` : ''}
+  ${r.checks.length ? `<section class="card c6"><h2>Checks</h2>${tabla(['Check', 'Pasan', 'Fallan'], r.checks.map((c) => [esc(c.nombre), entero(c.pasan), c.fallan ? `<span class="pill err"><b>✕</b>${entero(c.fallan)}</span>` : '0']))}</section>` : ''}
   <section class="card ${r.checks.length ? 'c6' : ''}"><h2>Errores</h2>
-    ${Object.keys(r.errores).length ? tabla(['Error', 'Cantidad'], Object.entries(r.errores).sort((a, b) => b[1] - a[1]).map(([e, n]) => [esc(e), `<span class="err">${entero(n)}</span>`])) : '<p class="ok">Sin errores.</p>'}
+    ${Object.keys(r.errores).length ? tabla(['Error', 'Cantidad'], Object.entries(r.errores).sort((a, b) => b[1] - a[1]).map(([e, n]) => [esc(e), `<span class="pill err"><b>✕</b>${entero(n)}</span>`])) : '<p class="vacio">✓ Sin errores.</p>'}
   </section>
 </main>
 <footer>k0lmenIA · En esta carpeta: resultado crudo <code>${esc(path.basename(r.archivos.crudo))}</code> · log <code>${esc(path.basename(r.archivos.log))}</code></footer>
+</div><script>${JS}</script>
 </body></html>`;
 }
 

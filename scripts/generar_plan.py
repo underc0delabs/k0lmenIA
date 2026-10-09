@@ -71,7 +71,7 @@ def build_html(data):
     body.append(section("Objetivos", doc_list(objetivos)))
 
     # Alcance (dos columnas)
-    body.append('<div class="section"><div class="eyebrow section-title">Alcance</div>'
+    body.append('<div class="section"><div class="section-title"><h2>Alcance</h2></div>'
                 + two_col(_scope_card("Incluye", "ok", incluye),
                           _scope_card("Fuera de alcance", "bad", excluye)) + '</div>')
 
@@ -103,7 +103,7 @@ def build_html(data):
 
     # Criterios de entrada / salida (dos columnas)
     if c_entrada or c_salida:
-        body.append('<div class="section"><div class="eyebrow section-title">Criterios</div>'
+        body.append('<div class="section"><div class="section-title"><h2>Criterios</h2></div>'
                     + two_col(_scope_card("De entrada", "ok", c_entrada),
                               _scope_card("De salida", "ok", c_salida)) + '</div>')
 
