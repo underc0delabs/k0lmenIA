@@ -1,6 +1,6 @@
 ---
 name: automatizacion-k0lmena
-description: Convenciones para generar pruebas automatizadas en k0lmena (herramientas/k0lmena) — dónde va cada .feature, steps y locators de web, api y mobile, cómo nombrarlos y taggearlos, cómo reutilizar steps sin duplicar, qué helpers usar y cómo validar con npm; los steps de verificación en base de datos; y los scripts de performance (k6 y Artillery). Úsalo al mapear casos de prueba a automatización (web-mapper, api-mapper, mobile-mapper, performance-mapper, verificador-datos).
+description: Convenciones para generar pruebas automatizadas en k0lmena (herramientas/k0lmena) — dónde va cada .feature, steps y locators de web, api y mobile, cómo nombrarlos y taggearlos, cómo reutilizar steps sin duplicar, qué helpers usar y cómo validar con npm; los steps de verificación en base de datos; y los scripts de performance (k6, Artillery y JMeter). Úsalo al mapear casos de prueba a automatización (web-mapper, api-mapper, mobile-mapper, performance-mapper, verificador-datos).
 ---
 
 # Automatización con k0lmena
@@ -12,7 +12,7 @@ herramientas/k0lmena/
 ├── web/      features/  steps/  locators/   (Playwright + Cucumber; hooks/, utils/ ya existen)
 ├── api/      features/  steps/              (axios + Cucumber; steps/comunes.steps.ts ya existe)
 ├── mobile/   features/  steps/  locators/   (WebdriverIO + Appium; support/ ya existe; apps/ = .apk/.ipa)
-├── performance/  k6/http/  artillery/       (k6 y Artillery; lo genera el performance-mapper)
+├── performance/  k6/http/  artillery/  jmeter/   (k6, Artillery y JMeter; lo genera el performance-mapper)
 ├── cucumber.js  run-tests.js  env.js      (env.js carga el .env ÚNICO de la raíz del repo)
 ```
 
@@ -178,20 +178,25 @@ When guardo el campo "id" de la consulta como "idPedido"
 - MongoDB: la tabla es la colección y la consulta libre es un JSON: `{"coleccion": "usuarios", "filtro": {"estado": "ACTIVO"}}`.
 - Cada verificación adjunta al reporte la consulta y las filas encontradas (con los datos sensibles enmascarados).
 
-## Performance — k6 y Artillery
+## Performance — k6, Artillery y JMeter
 
-Se corre con `npm run perf -- <script> <perfil>` (`run-perf.js`). Perfiles: `smoke` (carga mínima, valida el script), `load`, `stress`, `soak`, `spike`. Cada corrida deja en `reports/performance/<k6|artillery>/` el reporte HTML, un resumen JSON chico, el resultado crudo y el log; la consola muestra solo el resumen.
+Se corre con `npm run perf -- <script> <perfil>` (`run-perf.js`). Perfiles: `smoke` (carga mínima, valida el script), `load`, `stress`, `soak`, `spike`. Cada corrida deja en `reports/performance/<k6|artillery|jmeter>/` el reporte HTML, un resumen JSON chico, el resultado crudo y el log; la consola muestra solo el resumen.
 
 ```
-+------------------------+------------------------------------------+----------------------------------------+
-| Herramienta            | Cuándo                                   | Archivos                               |
-+========================+==========================================+========================================+
-| k6                     | APIs / HTTP (escala a miles de usuarios) | `performance/k6/http/HU-001-<slug>.ts` |
-+------------------------+------------------------------------------+----------------------------------------+
-| Artillery + Playwright | Flujos de navegador (pocos usuarios:     | `performance/artillery/HU-001-         |
-|                        | cada uno es un Chromium)                 | <slug>.yaml` + `HU-001-<slug>.ts`      |
-|                        |                                          | (processor)                            |
-+------------------------+------------------------------------------+----------------------------------------+
++------------------------+------------------------------------------+------------------------------------------+
+| Herramienta            | Cuándo                                   | Archivos                                 |
++========================+==========================================+==========================================+
+| k6                     | APIs / HTTP (escala a miles de usuarios) | `performance/k6/http/HU-001-<slug>.ts`   |
++------------------------+------------------------------------------+------------------------------------------+
+| Artillery + Playwright | Flujos de navegador (pocos usuarios:     | `performance/artillery/HU-001-           |
+|                        | cada uno es un Chromium)                 | <slug>.yaml` + `HU-001-<slug>.ts`        |
+|                        |                                          | (processor)                              |
++------------------------+------------------------------------------+------------------------------------------+
+| JMeter                 | APIs / HTTP cuando el equipo ya trabaja  | `performance/jmeter/HU-001-<slug>.jmx` + |
+|                        | con JMeter o trae un `.jmx` para reusar, | `HU-001-<slug>.json`                     |
+|                        | o para protocolos que no son HTTP (JDBC, |                                          |
+|                        | JMS, SOAP, TCP…)                         |                                          |
++------------------------+------------------------------------------+------------------------------------------+
 ```
 
 ### k6
@@ -266,6 +271,35 @@ export async function flujo(page, _vu, _events, test) {
 
 - Usá los mismos selectores que `web/locators/HU-XXX.locators.ts` (role/label/placeholder) si la historia ya está automatizada.
 - `arrivalRate` = usuarios nuevos por segundo; `maxVusers` = tope de simultáneos. Cada usuario es un navegador: en una PC común, más de 10-20 simultáneos satura la máquina y mide la PC, no la app.
+
+### JMeter
+
+Se parte de la plantilla `performance/jmeter/plantilla/plantilla.jmx` + `plantilla.json` (copiá las dos y renombralas `HU-001-<slug>`). Requiere Java 8+ y JMeter (`npm run bootstrap:jmeter`, queda en `tools/jmeter`; o `JMETER_HOME`).
+
+El `.json` va al lado del `.jmx`, con el destino, la carga de cada perfil y los umbrales (todo lo define la persona):
+
+```json
+{
+  "destino": "API_BASEURL",
+  "perfiles": {
+    "smoke": { "usuarios": 1,  "rampa": 1,  "duracion": 30 },
+    "load":  { "usuarios": 50, "rampa": 60, "duracion": 300 }
+  },
+  "umbrales": {
+    "error_pct": 1, "p95": 500, "p99": 1000,
+    "por_muestra": { "POST /usuarios": { "p95": 800 } }
+  }
+}
+```
+
+- `destino`: el nombre de una variable del `.env` (`API_BASEURL`, `BASEURL`) o una URL. Llega al `.jmx` como `${__P(base_url)}`; cada request usa `${__P(base_url)}/path` en el campo *Path*.
+- Cada clave del perfil llega como propiedad: `${__P(usuarios,1)}`, `${__P(rampa,1)}`, `${__P(duracion,30)}` en el Thread Group (con *scheduler* y loops `-1`). Se pueden sumar claves propias (ej. `pico`) y leerlas igual.
+- Umbrales (todos en ms, salvo `error_pct` en %): `error_pct`, `p50`, `p90`, `p95`, `p99`, `avg`, `max`, y `por_muestra` con el nombre exacto del request. Los evalúa el reporte de k0lmena: JMeter no los conoce.
+- Cada HTTP Request se nombra `MÉTODO /path` (es la "muestra" del reporte) y lleva una **Response Assertion** con el código esperado; sin aserción, un 404 cuenta como éxito.
+- Credenciales: `${__groovy(System.getenv('API_TOKEN') ?: '')}` (o cualquier variable del `.env`); nunca escritas en el `.jmx`.
+- Datos variables: `${__threadNum}` y `${__counter(FALSE,)}` para no repetir (ej. emails únicos).
+- `--vus` y `--duracion` pisan `usuarios` y `duracion` en una corrida. Además del reporte de k0lmena, cada corrida deja el dashboard nativo de JMeter en `<corrida>-dashboard/index.html`.
+- Si la persona trae un `.jmx` propio: adaptalo a estas convenciones (propiedades en el Thread Group, `base_url`, nombres `MÉTODO /path`, aserciones) en lugar de reescribirlo desde cero.
 
 ## Validar lo generado (una sola vez)
 

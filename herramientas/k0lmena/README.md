@@ -23,7 +23,7 @@ casos de prueba (output/casos-de-prueba/)
         ├── mobile-mapper  → recorre la app (Appium MCP)        → mobile/features + steps + locators
         │                                                                │
         │                                                          npm test  (sin tokens)
-        └── performance-mapper → carga y umbrales (pregunta)     → performance/k6 · performance/artillery
+        └── performance-mapper → carga y umbrales (pregunta)     → performance/k6 · artillery · jmeter
                                                                          │
                                                                npm run perf  (sin tokens)
 ```
@@ -44,7 +44,7 @@ herramientas/k0lmena/
 │   ├── features/ steps/ locators/
 │   ├── support/    wdio.conf.ts (dispositivo, emulador o BrowserStack) y hooks
 │   └── apps/       tu .apk / .ipa (no se versiona)
-├── performance/    k6 (k6/http/) y Artillery + Playwright (artillery/)
+├── performance/    k6 (k6/http/), Artillery + Playwright (artillery/) y JMeter (jmeter/)
 ├── reports/        reportes HTML de cada tipo
 ├── tools/          crawler de locators, link tester, recorder, debug
 ├── cucumber.js     perfiles web / api / debug
@@ -118,17 +118,18 @@ Se elige en el `.env` de la raíz, sin tocar código:
 
 ```bash
 npm run bootstrap:k6                       # una vez: descarga k6 en tools/k6 (o tenelo en el PATH)
-npm run perf                               # lista los scripts (k6 y Artillery)
+npm run bootstrap:jmeter                   # una vez: descarga JMeter en tools/jmeter (necesita Java 8+)
+npm run perf                               # lista los scripts (k6, Artillery y JMeter)
 npm run perf -- <script> smoke             # valida el script con carga mínima
 npm run perf -- <script> load              # carga objetivo: pide confirmación
 npm run perf -- <script> stress --confirmar   # sin pregunta (CI o agente con autorización)
-npm run perf -- <script> load --vus 20 --duracion 2m   # k6: pisa la carga del script
+npm run perf -- <script> load --vus 20 --duracion 2m   # k6 y JMeter: pisa la carga del script
 ```
 
 - **Perfiles**: `smoke` (carga mínima, valida el script), `load` (carga objetivo sostenida), `stress` (1x, 2x y 3x), `soak` (larga duración) y `spike` (pico brusco). Los perfiles con carga piden confirmación.
-- **Scripts**: k6 en `performance/k6/http/<script>.ts` (base en `performance/k6/lib/k0lmena.ts`); Artillery en `performance/artillery/<script>.yaml` + processor `.ts`. Plantillas en el skill `automatizacion-k0lmena`.
-- **Umbrales**: en el script (`umbrales` en k6, `ensure` en Artillery). Si alguno no se cumple, la corrida termina con código 1.
-- **Salida** en `reports/performance/<k6|artillery>/`: reporte HTML (dashboard), resumen JSON, resultado crudo y log de la herramienta. La consola muestra solo el resumen.
+- **Scripts**: k6 en `performance/k6/http/<script>.ts` (base en `performance/k6/lib/k0lmena.ts`); Artillery en `performance/artillery/<script>.yaml` + processor `.ts`; JMeter en `performance/jmeter/<script>.jmx` + `<script>.json` (destino, carga por perfil y umbrales; plantilla en `performance/jmeter/plantilla/`). Plantillas en el skill `automatizacion-k0lmena`.
+- **Umbrales**: en el script (`umbrales` en k6, `ensure` en Artillery) o en el `.json` del `.jmx` (JMeter). Si alguno no se cumple, la corrida termina con código 1.
+- **Salida** en `reports/performance/<k6|artillery|jmeter>/`: reporte HTML (dashboard), resumen JSON, resultado crudo y log de la herramienta; con JMeter, también su dashboard nativo (`<corrida>-dashboard/`). La consola muestra solo el resumen.
 
 ## Base de datos
 

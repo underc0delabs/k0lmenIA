@@ -23,6 +23,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 ![Appium](https://img.shields.io/badge/Appium-662D91?style=flat-square&logo=appium&logoColor=white)
 ![k6](https://img.shields.io/badge/k6-7D64FF?style=flat-square&logo=k6&logoColor=white)
 ![Artillery](https://img.shields.io/badge/Artillery-E94F37?style=flat-square)
+![JMeter](https://img.shields.io/badge/JMeter-D22128?style=flat-square&logo=apachejmeter&logoColor=white)
 ![Postman](https://img.shields.io/badge/Postman%20·%20Newman-FF6C37?style=flat-square&logo=postman&logoColor=white)
 ![BrowserStack](https://img.shields.io/badge/BrowserStack-F4813F?style=flat-square&logo=browserstack&logoColor=white)
 
@@ -67,7 +68,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 🧠 **Diseño de pruebas**              | Analiza historias, arma el plan, escribe casos manuales (Excel), BDD (Gherkin) y de API, genera datos y redacta bugs.                                                                 |
 | 🤖 **Automatización sin tokens**      | Los agentes *mapper* recorren tu app **una sola vez** y escriben la automatización en k0lmena. Después corre con `npm test`, sin agentes.                                             |
-| 🌐 **Web, API, mobile y performance** | Playwright + Cucumber, axios + Cucumber, WebdriverIO + Appium (dispositivo, emulador o BrowserStack), k6 y Artillery.                                                                 |
+| 🌐 **Web, API, mobile y performance** | Playwright + Cucumber, axios + Cucumber, WebdriverIO + Appium (dispositivo, emulador o BrowserStack), k6, Artillery y JMeter.                                                         |
 | 📸 **Evidencia completa**             | Captura (y GIF) de cada test que pasa; video, logs, trace y error de cada test que falla, en reportes HTML.                                                                           |
 | 🗂️ **Gestión de pruebas**             | Carpetas, casos, ciclos y resultados con evidencias en **Xray** (Cloud y Server/DC), **QMetry (QTM4J)** y **AIO Tests**; casos y suites en **Azure DevOps Test Plans**.               |
 | 🗄️ **Verificación en base de datos**  | Revisa lo que dejaron guardado tus pruebas en **PostgreSQL, MySQL/MariaDB, SQL Server o MongoDB**, a pedido o, si lo pedís, como steps dentro de los tests. Solo lectura por defecto. |
@@ -125,7 +126,7 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
   <td><code>web-mapper</code></td><td>Recorre la web siguiendo tus casos y genera <code>.feature</code>, steps y locators</td></tr>
 <tr><td><code>api-mapper</code></td><td>Lee Postman o Swagger/OpenAPI, verifica los endpoints y genera los <code>.feature</code></td></tr>
 <tr><td><code>mobile-mapper</code></td><td>Recorre la app con Appium y genera <code>.feature</code>, steps y locators</td></tr>
-<tr><td><code>performance-mapper</code></td><td>Carga, estrés, soak y picos con k6 o Artillery; pregunta carga y umbrales</td></tr>
+<tr><td><code>performance-mapper</code></td><td>Carga, estrés, soak y picos con k6, Artillery o JMeter; pregunta carga y umbrales</td></tr>
 <tr><td><code>verificador-datos</code></td><td>Verifica datos en PostgreSQL, MySQL/MariaDB, SQL Server o MongoDB y suma verificaciones de BD a los tests</td></tr>
 <tr><td rowspan="2"><b>🗂️ Gestión</b></td>
   <td><code>gestor-pruebas</code></td><td>Carpetas, casos, vínculos con la historia y ciclos en Xray, QMetry, AIO Tests o Azure DevOps</td></tr>
@@ -144,6 +145,7 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 | Colecciones de Postman    | **Newman**                                                                                                |
 | Automatizar con k0lmena   | **Node.js 20+**                                                                                           |
 | Automatizar mobile        | **Node.js 22+**, JDK y Android SDK (o macOS con Xcode), o BrowserStack                                    |
+| Performance con JMeter    | **Java 8+** (`npm run bootstrap:jmeter` descarga JMeter)                                                  |
 
 ---
 
@@ -175,6 +177,7 @@ npm install                             # k0lmena (desde la raíz; instala en he
 cd herramientas/k0lmena
 npx playwright install chromium
 npm run bootstrap:k6                    # performance de APIs con k6
+npm run bootstrap:jmeter                # performance con JMeter (necesita Java 8+)
 ```
 
 Claude Code también se instala con `npm install -g @anthropic-ai/claude-code` (Node.js 18+). Guía oficial: https://docs.claude.com/en/docs/claude-code/overview
@@ -220,7 +223,7 @@ Hay **un solo `.env`, en la raíz**. Lo usan los agentes, k0lmena y los scripts 
 | *"Tomá la observación de input/bugs/ y armá el reporte"*                            | `BUG-001.md`                                                 |
 | *"Ejecutá el escenario de registro válido contra https://tu-app.com"*               | Reporte HTML de la corrida con evidencia                     |
 | *"Automatizá en k0lmena los casos de HU-001 contra https://tu-app.com"*             | `.feature` + steps + locators                                |
-| *"Armá una prueba de carga del login para 20 usuarios"*                             | Script k6/Artillery + reporte HTML                           |
+| *"Armá una prueba de carga del login para 20 usuarios"*                             | Script k6/Artillery/JMeter + reporte HTML                    |
 | *"Verificá en la base si se creó el usuario ana@test.com y en qué estado quedó"*    | Consulta y resultado (solo lectura)                          |
 | *"Sumá al test de registro la verificación en la base de datos"*                    | Steps de BD en el `.feature`                                 |
 | *"Subí los casos de HU-001 a Xray, vinculados a PROJ-12, y creá el ciclo Sprint 5"* | Casos y ciclo en Xray                                        |
@@ -288,7 +291,16 @@ Detalle en [`herramientas/k0lmena/README.md`](herramientas/k0lmena/README.md).
 
 ## ⚡ Pruebas de performance
 
-El **performance-mapper** te pregunta ambiente, carga objetivo y umbrales (p95, p99, % de error), elige **k6** (APIs) o **Artillery + Playwright** (flujos web), escribe el script y lo valida con un smoke.
+Pedí algo como *"quiero hacer una prueba de carga del login"* y Claude te **guía paso a paso**, con una pregunta por vez y una sugerencia justificada en cada una:
+
+1. **Objetivo y tipo de prueba**: qué querés averiguar y qué prueba lo responde (load, stress, soak, spike).
+2. **Herramienta**: **k6** (APIs), **Artillery + Playwright** (flujos en el navegador) o **JMeter** (si tu equipo ya lo usa, traés un `.jmx` o necesitás otros protocolos), con una recomendación y su porqué.
+3. **Ambiente y alcance**: URL (nunca producción sin autorización), endpoints o pasos y su peso.
+4. **Carga**: usuarios concurrentes, rampa, duración y tiempo de pensamiento. Si no sabés cuántos usuarios, te ayuda a calcularlos desde el volumen de negocio.
+5. **Umbrales**: p95, p99 y % de error, desde el requisito o con valores de referencia que confirmás.
+6. **Plan**: lo resume en `output/performance/<HU>/` y te pide confirmación.
+
+Después, el **performance-mapper** escribe el script, lo valida con un smoke, corre cada prueba con carga **solo cuando la confirmás** y arma el **informe de performance**: dashboard HTML con veredicto, capacidad observada, métricas por corrida, gráficos de latencia, throughput, errores y evolución en el tiempo, umbrales, p95 por endpoint, hallazgos y **recomendaciones**. Las tres herramientas usan los mismos perfiles y el mismo formato de reporte.
 
 ```bash
 npm run perf                                   # lista los scripts
@@ -305,7 +317,7 @@ npm run perf -- <script> stress --confirmar    # CI o con autorización previa
 | `soak`   | Larga duración: fugas de memoria y degradación |
 | `spike`  | Pico brusco y recuperación                     |
 
-Cada corrida deja un **reporte HTML** en `reports/performance/` con veredicto, latencias p50/p95/p99, errores, umbrales y detalle por endpoint. Si un umbral no se cumple, el comando termina con error.
+Cada corrida deja además su propio **reporte HTML** en `herramientas/k0lmena/reports/performance/` con veredicto, latencias p50/p95/p99, errores, umbrales y detalle por endpoint. Si un umbral no se cumple, el comando termina con error. Los scripts quedan versionados: volvés a correrlos con `npm run perf`, sin agentes ni tokens.
 
 > [!CAUTION]
 > Una prueba de carga genera tráfico real: corrédla solo contra ambientes de prueba o con autorización.
@@ -446,6 +458,7 @@ k0lmenIA/
 | `npm test` corre 0 escenarios                                     | Todavía no automatizaste nada o `TAGS` no coincide.                                                                       |
 | Un escenario nunca se ejecuta                                     | Tiene `@bloqueado`; el motivo está en un comentario arriba.                                                               |
 | "No encuentro k6"                                                 | `npm run bootstrap:k6` en `herramientas/k0lmena/`.                                                                        |
+| "No encuentro JMeter" / "JMeter necesita Java"                    | `npm run bootstrap:jmeter` (o `JMETER_HOME`) e instalá Java 8+ en el PATH (o `JAVA_HOME`).                                |
 | `npm run perf` no corre un perfil con carga desde el agente       | Es a propósito: necesita `--confirmar`, que el agente agrega tras tu confirmación.                                        |
 | Una carpeta de Xray/QMetry/AIO sale como `C:/Program Files/Git/…` | En Git Bash escribí las carpetas sin `/` inicial.                                                                         |
 | ¿Los tests verifican la base de datos siempre?                    | No: las verificaciones de BD se agregan a un `.feature` solo cuando las pedís; sin `DB_CONEXIONES`, la suite corre igual. |

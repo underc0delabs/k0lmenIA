@@ -1,13 +1,14 @@
-// run-perf.js — runner de `npm run perf` (k6 y Artillery, en Windows, Linux, macOS y CI).
+// run-perf.js — runner de `npm run perf` (k6, Artillery y JMeter, en Windows, Linux, macOS y CI).
 //
 //   npm run perf                                   lista los scripts disponibles
 //   npm run perf -- <script> [perfil] [opciones]
 //
-//   script   nombre sin extensión: performance/k6/http/<script>.ts o performance/artillery/<script>.yaml
+//   script   nombre sin extensión: performance/k6/http/<script>.ts, performance/artillery/<script>.yaml
+//            o performance/jmeter/<script>.jmx (+ <script>.json con destino, perfiles y umbrales)
 //   perfil   smoke (default) | load | stress | soak | spike
 //   --confirmar        no pregunta antes de un perfil con carga (para CI o para el agente,
 //                      que ya lo confirmó con la persona)
-//   --vus N --duracion 2m   (solo k6) pisan la carga del script en esta corrida
+//   --vus N --duracion 2m   (k6 y JMeter) pisan la carga del script en esta corrida
 //
 // Salida en reports/performance/<herramienta>/: reporte HTML, resumen JSON (chico), resultado
 // crudo y log. La consola muestra solo el resumen; el detalle de la herramienta queda en el log.
@@ -21,6 +22,7 @@ const RAIZ = __dirname;
 const PERFILES = ['smoke', 'load', 'stress', 'soak', 'spike'];
 const DIR_K6 = path.join(RAIZ, 'performance/k6/http');
 const DIR_ART = path.join(RAIZ, 'performance/artillery');
+const DIR_JM = path.join(RAIZ, 'performance/jmeter');
 const rel = (p) => path.relative(RAIZ, p).split(path.sep).join('/');
 
 function salir(msg, codigo = 2) {
@@ -31,10 +33,12 @@ function salir(msg, codigo = 2) {
 function listar() {
   const k6 = fs.existsSync(DIR_K6) ? fs.readdirSync(DIR_K6).filter((f) => f.endsWith('.ts')).map((f) => f.slice(0, -3)) : [];
   const art = fs.existsSync(DIR_ART) ? fs.readdirSync(DIR_ART).filter((f) => /\.ya?ml$/.test(f)).map((f) => f.replace(/\.ya?ml$/, '')) : [];
+  const jm = fs.existsSync(DIR_JM) ? fs.readdirSync(DIR_JM).filter((f) => f.endsWith('.jmx')).map((f) => f.slice(0, -4)) : [];
   console.log('Scripts de performance:\n');
-  if (!k6.length && !art.length) console.log('  (todavía no hay: los genera el agente performance-mapper)');
+  if (!k6.length && !art.length && !jm.length) console.log('  (todavía no hay: los genera el agente performance-mapper)');
   for (const s of k6) console.log(`  k6         ${s}`);
   for (const s of art) console.log(`  artillery  ${s}`);
+  for (const s of jm) console.log(`  jmeter     ${s}`);
   console.log(`\nUso: npm run perf -- <script> [${PERFILES.join('|')}] [--confirmar]`);
 }
 
@@ -52,7 +56,7 @@ if (!pos.length) {
   listar();
   process.exit(0);
 }
-const nombre = path.basename(pos[0]).replace(/\.(ts|js|ya?ml)$/, '');
+const nombre = path.basename(pos[0]).replace(/\.(ts|js|ya?ml|jmx)$/, '');
 const perfil = (pos[1] || 'smoke').toLowerCase();
 if (!PERFILES.includes(perfil)) salir(`Perfil desconocido "${perfil}". Opciones: ${PERFILES.join(', ')}.`);
 
@@ -60,15 +64,37 @@ let herramienta, fuente;
 if (fs.existsSync(path.join(DIR_K6, `${nombre}.ts`))) {
   herramienta = 'k6';
   fuente = path.join(DIR_K6, `${nombre}.ts`);
+} else if (fs.existsSync(path.join(DIR_JM, `${nombre}.jmx`))) {
+  herramienta = 'jmeter';
+  fuente = path.join(DIR_JM, `${nombre}.jmx`);
 } else {
   const yml = ['yaml', 'yml'].map((e) => path.join(DIR_ART, `${nombre}.${e}`)).find((f) => fs.existsSync(f));
-  if (!yml) salir(`No encontré el script "${nombre}" en performance/k6/http/ ni en performance/artillery/. Corré "npm run perf" para ver la lista.`);
+  if (!yml) salir(`No encontré el script "${nombre}" en performance/k6/http/, performance/artillery/ ni performance/jmeter/. Corré "npm run perf" para ver la lista.`);
   herramienta = 'artillery';
   fuente = yml;
 }
 
+// JMeter: la carga de cada perfil, el destino y los umbrales van en <script>.json, al lado del .jmx.
+function configJMeter() {
+  const archivo = path.join(DIR_JM, `${nombre}.json`);
+  if (!fs.existsSync(archivo)) salir(`Falta ${rel(archivo)} (destino, perfiles y umbrales del script de JMeter).`);
+  let cfg;
+  try {
+    cfg = JSON.parse(fs.readFileSync(archivo, 'utf8'));
+  } catch (e) {
+    salir(`${rel(archivo)} no es un JSON válido: ${e.message}`);
+  }
+  if (!cfg.perfiles || !cfg.perfiles[perfil]) salir(`${rel(archivo)} no define el perfil "${perfil}" (perfiles.${perfil}).`);
+  // destino: el nombre de una variable del .env (ej. API_BASEURL) o una URL.
+  const base = /^[A-Z][A-Z0-9_]*$/.test(cfg.destino || '') ? process.env[cfg.destino] : cfg.destino;
+  if (!base) salir(`${rel(archivo)}: el destino "${cfg.destino || ''}" está vacío (si es una variable, definila en el .env de la raíz).`);
+  return { ...cfg, base: base.replace(/\/+$/, '') };
+}
+const cfgJM = herramienta === 'jmeter' ? configJMeter() : null;
+
 // ------------------------------------------------------------ destino (para mostrar y confirmar)
 function destino() {
+  if (herramienta === 'jmeter') return cfgJM.base;
   const texto = fs.readFileSync(fuente, 'utf8');
   if (herramienta === 'artillery') {
     const yaml = require('js-yaml');
@@ -114,6 +140,37 @@ function binarioK6() {
   salir('No encuentro k6. Instalalo con "npm run bootstrap:k6" (queda en tools/k6) o tenelo en el PATH.');
 }
 
+// JMeter corre con `java -jar ApacheJMeter.jar` (sin .bat ni shell: las rutas pueden tener espacios).
+// El .jtl sale en CSV (el formato por defecto de JMeter). Las propiedades van en un archivo (-q) y no
+// como -J: con varios -J el lanzador de Java 8 en Windows se cae antes de arrancar.
+function jarJMeter() {
+  const candidatos = [];
+  if (process.env.JMETER_HOME) candidatos.push(path.join(process.env.JMETER_HOME, 'bin/ApacheJMeter.jar'));
+  const dirTools = path.join(RAIZ, 'tools/jmeter');
+  if (fs.existsSync(dirTools)) {
+    for (const d of fs.readdirSync(dirTools).filter((x) => x.startsWith('apache-jmeter-')).sort().reverse()) {
+      candidatos.push(path.join(dirTools, d, 'bin/ApacheJMeter.jar'));
+    }
+  }
+  const jar = candidatos.find((f) => fs.existsSync(f));
+  if (!jar) salir('No encuentro JMeter. Instalalo con "npm run bootstrap:jmeter" (queda en tools/jmeter) o definí JMETER_HOME.');
+  return jar;
+}
+
+function binarioJava() {
+  const java = process.env.JAVA_HOME ? path.join(process.env.JAVA_HOME, 'bin', process.platform === 'win32' ? 'java.exe' : 'java') : 'java';
+  const r = spawnSync(java, ['-version'], { encoding: 'utf8' });
+  if (r.error || r.status !== 0) salir('JMeter necesita Java 8 o superior: instalalo y dejalo en el PATH, o definí JAVA_HOME.');
+  return java;
+}
+
+// "90", "90s", "5m", "2h" → segundos (para --duracion en JMeter)
+function segundos(texto) {
+  const m = String(texto).trim().match(/^(\d+)\s*(s|m|h)?$/i);
+  if (!m) salir(`Duración inválida "${texto}": usá segundos o un sufijo s, m o h (ej. 90, 2m, 1h).`);
+  return Number(m[1]) * { s: 1, m: 60, h: 3600 }[(m[2] || 's').toLowerCase()];
+}
+
 function correr(cmd, cmdArgs, env, logFile) {
   return new Promise((resolver) => {
     const log = fs.createWriteStream(logFile);
@@ -139,7 +196,7 @@ async function main() {
   const dir = path.join(RAIZ, 'reports/performance', herramienta);
   fs.mkdirSync(dir, { recursive: true });
   const base = path.join(dir, `${nombre}-${perfil}-${ts}`);
-  const crudo = `${base}-crudo.json`;
+  const crudo = `${base}-crudo.${herramienta === 'jmeter' ? 'jtl' : 'json'}`;
   const logFile = `${base}.log`;
   const env = { ...process.env, PERFIL: perfil };
 
@@ -157,13 +214,31 @@ async function main() {
     env.K0LMENA_PERF_SALIDA = crudo;
     const dist = path.join(RAIZ, 'performance/k6/dist/http', `${nombre}.js`);
     codigo = await correr(k6, ['run', '--no-color', dist], env, logFile);
+  } else if (herramienta === 'jmeter') {
+    const java = binarioJava();
+    const jar = jarJMeter();
+    // Cada clave del perfil llega al .jmx como propiedad: ${__P(usuarios,1)}, ${__P(duracion,30)}...
+    const props = { ...cfgJM.perfiles[perfil], base_url: cfgJM.base };
+    if (flags.vus) props.usuarios = flags.vus;
+    if (flags.duracion) props.duracion = segundos(flags.duracion);
+    const archivoProps = `${base}.properties`;
+    // Formato .properties: la barra invertida es escape y cada propiedad va en una línea.
+    const escapar = (v) => String(v).replace(/\\/g, '\\\\').replace(/\r?\n/g, ' ');
+    fs.writeFileSync(archivoProps, Object.entries(props).map(([k, v]) => `${k}=${escapar(v)}`).join('\n') + '\n');
+    const dashboard = `${base}-dashboard`;
+    codigo = await correr(java, [
+      '-jar', jar, '-n', '-t', rel(fuente), '-l', rel(crudo), '-j', rel(`${base}-jmeter.log`),
+      '-q', rel(archivoProps), '-e', '-o', rel(dashboard),
+    ], env, logFile);
+    if (fs.existsSync(path.join(dashboard, 'index.html'))) console.log(`Dashboard de JMeter: ${rel(path.join(dashboard, 'index.html'))}`);
   } else {
-    if (flags.vus || flags.duracion) console.log('Aviso: --vus y --duracion son solo para k6; en Artillery la carga está en las fases del .yaml.');
+    if (flags.vus || flags.duracion) console.log('Aviso: --vus y --duracion son solo para k6 y JMeter; en Artillery la carga está en las fases del .yaml.');
     const bin = path.join(RAIZ, 'node_modules/artillery/bin/run');
     codigo = await correr(process.execPath, [bin, 'run', rel(fuente), '--environment', perfil, '--output', crudo], { ...env, NO_COLOR: '1' }, logFile);
   }
 
-  const r = generarReporte({ herramienta, script: nombre, perfil, destino: target, crudo, log: logFile, salida: base, codigoSalida: codigo });
+  const r = generarReporte({ herramienta, script: nombre, perfil, destino: target, crudo, log: logFile, salida: base, codigoSalida: codigo,
+    umbrales: cfgJM && cfgJM.umbrales });
 
   // Resumen corto en consola (es lo que lee el agente).
   const k = r.kpis, l = r.latencia;

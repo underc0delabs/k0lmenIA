@@ -1,0 +1,18 @@
+{
+  "destino": "API_BASEURL",
+  "perfiles": {
+    "smoke": { "usuarios": 1, "rampa": 1, "duracion": 30 },
+    "load": { "usuarios": 50, "rampa": 60, "duracion": 300 },
+    "stress": { "usuarios": 150, "rampa": 300, "duracion": 600 },
+    "soak": { "usuarios": 30, "rampa": 60, "duracion": 7200 },
+    "spike": { "usuarios": 200, "rampa": 5, "duracion": 120 }
+  },
+  "umbrales": {
+    "error_pct": 1,
+    "p95": 500,
+    "p99": 1000,
+    "por_muestra": {
+      "POST /recurso": { "p95": 800 }
+    }
+  }
+}

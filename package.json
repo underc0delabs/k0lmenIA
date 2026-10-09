@@ -15,6 +15,7 @@
     "perf": "npm --prefix herramientas/k0lmena run perf --",
     "bd": "npm --prefix herramientas/k0lmena run bd --",
     "bootstrap:k6": "npm --prefix herramientas/k0lmena run bootstrap:k6 --",
+    "bootstrap:jmeter": "npm --prefix herramientas/k0lmena run bootstrap:jmeter --",
     "debug": "npm --prefix herramientas/k0lmena run debug --"
   }
 }

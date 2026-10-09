@@ -72,7 +72,7 @@
     <div class="k">Documentación del proyecto</div>
     <h1><span>k0lmenIA</span></h1>
     <div class="l">Agentes de QA para Claude Code: diseño de pruebas, automatización con k0lmena e integración con Xray, QMetry, AIO Tests y Azure DevOps — todo en español.</div>
-    <div class="chips"><span>18 agentes</span><span>Web · API · Mobile · Performance</span><span>Playwright · Cucumber · Appium · k6 · Artillery</span><span>Xray · QMetry · AIO Tests</span><span>Jira · Confluence · Figma</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Suites sin tokens</span></div>
+    <div class="chips"><span>18 agentes</span><span>Web · API · Mobile · Performance</span><span>Playwright · Cucumber · Appium · k6 · Artillery · JMeter</span><span>Xray · QMetry · AIO Tests</span><span>Jira · Confluence · Figma</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Suites sin tokens</span></div>
   </div>
   <div class="p"><span>QARMY · Underc0de</span><span>github.com/underc0delabs/k0lmenIA</span><span>Licencia MIT</span></div>
 </section>
@@ -106,6 +106,7 @@
     <span class="tec"><i style="background:#662d91"></i>Appium</span>
     <span class="tec"><i style="background:#7d64ff"></i>k6</span>
     <span class="tec"><i style="background:#e94f37"></i>Artillery</span>
+    <span class="tec"><i style="background:#d22128"></i>JMeter</span>
     <span class="tec"><i style="background:#ff6c37"></i>Postman · Newman</span>
     <span class="tec"><i style="background:#3178c6"></i>TypeScript</span>
     <span class="tec"><i style="background:#5fa04e"></i>Node.js</span>
@@ -201,7 +202,7 @@
     <tr><td>5</td><td>"Automatizá en k0lmena los casos de HU-001 contra https://tu-app.com"</td><td><code>.feature</code> + steps + locators</td></tr>
     <tr><td>6</td><td><code>npm test</code> · <code>npm run report:web</code></td><td>Reporte HTML con evidencias</td></tr>
     <tr><td>7</td><td>"Subí los resultados al ciclo del Sprint 5"</td><td>Estados y evidencias en Xray</td></tr>
-    <tr><td>8</td><td>"Armá una prueba de carga del login para 20 usuarios"</td><td>Script k6/Artillery + reporte HTML</td></tr>
+    <tr><td>8</td><td>"Armá una prueba de carga del login para 20 usuarios"</td><td>Script k6/Artillery/JMeter + reporte HTML</td></tr>
     <tr><td>9</td><td>"Armá el informe de cierre de HU-001"</td><td>Go / no-go</td></tr>
   </table></div>
 </section>
@@ -236,7 +237,7 @@
     <div class="tarjeta c-verde"><h4>web-mapper</h4><p>Recorre la web siguiendo tus casos y genera <code>.feature</code>, steps y locators.</p><div class="salida"><code>k0lmena/web/</code></div></div>
     <div class="tarjeta c-verde"><h4>api-mapper</h4><p>Lee Postman o Swagger/OpenAPI, verifica los endpoints y genera los <code>.feature</code>.</p><div class="salida"><code>k0lmena/api/</code></div></div>
     <div class="tarjeta c-verde"><h4>mobile-mapper</h4><p>Recorre la app con Appium y genera <code>.feature</code>, steps y locators.</p><div class="salida"><code>k0lmena/mobile/</code></div></div>
-    <div class="tarjeta c-verde"><h4>performance-mapper</h4><p>Carga, estrés, soak y picos con k6 o Artillery; pregunta carga y umbrales.</p><div class="salida"><code>k0lmena/performance/</code></div></div>
+    <div class="tarjeta c-verde"><h4>performance-mapper</h4><p>Carga, estrés, soak y picos con k6, Artillery o JMeter; pregunta carga y umbrales.</p><div class="salida"><code>k0lmena/performance/</code></div></div>
     <div class="tarjeta c-verde"><h4>verificador-datos</h4><p>Verifica datos en PostgreSQL, MySQL, SQL Server o MongoDB y suma verificaciones de BD a los tests.</p><div class="salida">Chat · steps en <code>.feature</code></div></div>
   </div>
 
@@ -288,7 +289,8 @@ npm install -g newman                              <span class="c"># colecciones
 npm install                                        <span class="c"># k0lmena (desde la raíz)</span>
 cd herramientas/k0lmena
 npx playwright install chromium
-npm run bootstrap:k6                               <span class="c"># performance de APIs con k6</span></pre></div></li>
+npm run bootstrap:k6                               <span class="c"># performance de APIs con k6</span>
+npm run bootstrap:jmeter                           <span class="c"># performance con JMeter (Java 8+)</span></pre></div></li>
   </ol>
 </section>
 
@@ -395,7 +397,7 @@ npm run bootstrap:k6                               <span class="c"># performance
     <div class="tarjeta c-azul"><div class="ico">◎</div><h4>Web</h4><p>Playwright + Cucumber, video, trace y GIF. Con <code>K0LMENA_AUTO_HEALING=on</code> recupera locators rotos.</p></div>
     <div class="tarjeta c-violeta"><div class="ico">{ }</div><h4>API</h4><p>axios + Cucumber con steps genéricos en español: no hace falta programar.</p></div>
     <div class="tarjeta c-verde"><div class="ico">▢</div><h4>Mobile</h4><p>WebdriverIO + Appium en dispositivo, emulador o BrowserStack.</p></div>
-    <div class="tarjeta c-naranja"><div class="ico">⚡</div><h4>Performance</h4><p>k6 para APIs y Artillery + Playwright para flujos web.</p></div>
+    <div class="tarjeta c-naranja"><div class="ico">⚡</div><h4>Performance</h4><p>k6 para APIs, Artillery + Playwright para flujos web y JMeter para quien ya trabaja con .jmx.</p></div>
   </div>
   <div class="aviso info"><span class="ico">i</span><p>Las carpetas de k0lmena vienen vacías: todo lo que hay adentro lo generan los mappers para tu aplicación.</p></div>
 
@@ -457,10 +459,12 @@ npm run report:web                        <span class="c"># también: report:api
   <div class="guia"><h4>performance-mapper</h4>
     <div class="pedido">Armá una prueba de carga de los endpoints de /pet para 50 usuarios.</div>
     <ol>
-      <li><b>Pregunta</b> el ambiente (y que no sea producción), el flujo o los endpoints, la carga objetivo, los umbrales (p95, p99, % de error), los perfiles y si puede usar métodos con efecto.</li>
-      <li><b>Elige la herramienta</b>: k6 para APIs (escala a miles de usuarios) o Artillery + Playwright para flujos de navegador (pocos usuarios: cada uno es un Chromium).</li>
+      <li><b>Te guía paso a paso</b>, una pregunta por vez y con una sugerencia justificada en cada una: objetivo y tipo de prueba, herramienta, ambiente (y que no sea producción) y endpoints, usuarios concurrentes, rampa, duración y tiempo de pensamiento (te ayuda a calcularlos desde el volumen de negocio), umbrales y perfiles a correr.</li>
+      <li><b>Deja el plan</b> en <code>output/performance/&lt;HU&gt;/</code> y te pide confirmación.</li>
+      <li><b>Te recomienda la herramienta</b> (la decisión es tuya): k6 para APIs (escala a miles de usuarios) Artillery + Playwright para flujos de navegador (pocos usuarios: cada uno es un Chromium) o JMeter si tu equipo ya lo usa, traés un <code>.jmx</code> o necesitás otros protocolos.</li>
       <li><b>Escribe el script</b> una vez y lo valida con un smoke.</li>
       <li><b>Corre con carga</b> solo con tu confirmación explícita para cada corrida.</li>
+      <li><b>Arma el informe de performance</b>: dashboard con veredicto, capacidad observada, métricas y gráficos por corrida, umbrales, p95 por endpoint, hallazgos y recomendaciones.</li>
     </ol></div>
 
   <h3>Comandos</h3>
@@ -468,7 +472,7 @@ npm run report:web                        <span class="c"># también: report:api
 npm run perf -- &lt;script&gt; smoke                     <span class="c"># valida el script con carga mínima</span>
 npm run perf -- &lt;script&gt; load                      <span class="c"># carga objetivo (pide confirmación)</span>
 npm run perf -- &lt;script&gt; stress --confirmar        <span class="c"># sin pregunta: CI o con autorización</span>
-npm run perf -- &lt;script&gt; load --vus 20 --duracion 2m   <span class="c"># k6: pisa la carga</span></pre></div>
+npm run perf -- &lt;script&gt; load --vus 20 --duracion 2m   <span class="c"># k6 y JMeter: pisa la carga</span></pre></div>
   <div class="tabla"><table>
     <tr><th style="width:16%">Perfil</th><th>Qué hace</th></tr>
     <tr><td><code>smoke</code></td><td>Carga mínima para validar que el script funciona.</td></tr>
@@ -477,7 +481,7 @@ npm run perf -- &lt;script&gt; load --vus 20 --duracion 2m   <span class="c"># k
     <tr><td><code>soak</code></td><td>Carga objetivo durante mucho tiempo: fugas de memoria y degradación.</td></tr>
     <tr><td><code>spike</code></td><td>Salto brusco a un pico y vuelta: cómo se recupera.</td></tr>
   </table></div>
-  <p>Cada corrida deja en <code>reports/performance/&lt;k6|artillery&gt;/</code> un reporte HTML con el veredicto, requests, req/s, errores, latencias p50/p95/p99, umbrales con el valor medido, detalle por endpoint o paso, códigos de respuesta, checks y, en Artillery, la evolución en el tiempo. Si un umbral no se cumple, el comando termina con error.</p>
+  <p>Cada corrida deja en <code>reports/performance/&lt;k6|artillery|jmeter&gt;/</code> un reporte HTML con el veredicto, requests, req/s, errores, latencias p50/p95/p99, umbrales con el valor medido, detalle por endpoint o paso, códigos de respuesta, checks y, en Artillery, la evolución en el tiempo. Si un umbral no se cumple, el comando termina con error.</p>
 </section>
 
 <!-- ======================================================= 11 GESTIÓN -->
@@ -614,7 +618,7 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
     <tr><td>Casos BDD</td><td><code>HU-001-registro.feature</code> + <code>HU-001-cobertura.md</code></td></tr>
     <tr><td>Bug</td><td><code>BUG-001.md</code></td></tr>
     <tr><td>Automatización</td><td><code>&lt;tipo&gt;/features/HU-001-&lt;slug&gt;.feature</code> · <code>steps/HU-001.steps.ts</code> · <code>locators/HU-001.locators.ts</code></td></tr>
-    <tr><td>Performance</td><td><code>performance/k6/http/HU-001-&lt;slug&gt;.ts</code> · <code>performance/artillery/HU-001-&lt;slug&gt;.yaml</code></td></tr>
+    <tr><td>Performance</td><td><code>performance/k6/http/HU-001-&lt;slug&gt;.ts</code> · <code>performance/artillery/HU-001-&lt;slug&gt;.yaml</code> · <code>performance/jmeter/HU-001-&lt;slug&gt;.jmx</code></td></tr>
     <tr><td>Mapeo</td><td><code>output/mapeos/mapeo-HU-001-&lt;tipo&gt;.md</code></td></tr>
   </table></div>
 </section>
@@ -646,7 +650,7 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
         ├── web/            <span class="c">features/ steps/ locators/ + framework</span>
         ├── api/            <span class="c">features/ steps/ (steps genéricos)</span>
         ├── mobile/         <span class="c">features/ steps/ locators/ support/ apps/</span>
-        ├── performance/    <span class="c">k6/http/ y artillery/</span>
+        ├── performance/    <span class="c">k6/http/, artillery/ y jmeter/</span>
         ├── reports/        <span class="c">Reportes HTML</span>
         ├── run-tests.js    <span class="c">Runner de npm test</span>
         └── run-perf.js     <span class="c">Runner de npm run perf</span></pre></div>
@@ -662,6 +666,7 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
   <details class="faq"><summary><code>npm test</code> corre 0 escenarios</summary><div>Todavía no automatizaste nada (las carpetas vienen vacías) o el filtro <code>TAGS</code> no coincide con ningún escenario.</div></details>
   <details class="faq"><summary>Un escenario nunca se ejecuta</summary><div>Tiene el tag <code>@bloqueado</code>: el mapper no pudo verificar un paso. El motivo está en un comentario arriba del escenario.</div></details>
   <details class="faq"><summary>"No encuentro k6"</summary><div>Corré <code>npm run bootstrap:k6</code> en <code>herramientas/k0lmena/</code> o instalá k6 en el PATH.</div></details>
+  <details class="faq"><summary>"No encuentro JMeter" o "JMeter necesita Java"</summary><div>Corré <code>npm run bootstrap:jmeter</code> (o definí <code>JMETER_HOME</code>) e instalá Java 8 o superior en el PATH (o definí <code>JAVA_HOME</code>).</div></details>
   <details class="faq"><summary><code>npm run perf</code> no corre un perfil con carga desde el agente</summary><div>Es a propósito: fuera de una terminal interactiva hace falta <code>--confirmar</code>, que el agente agrega solo después de tu confirmación.</div></details>
   <details class="faq"><summary>Una carpeta de Xray/QMetry/AIO aparece como <code>C:/Program Files/Git/…</code></summary><div>En Git Bash escribí las carpetas sin <code>/</code> inicial: <code>"HU-001 Registro"</code>.</div></details>
   <details class="faq"><summary>Un conector MCP no conecta</summary><div>Las variables tienen que estar en el entorno donde lanzás <code>claude</code> (no en el <code>.env</code>). Atlassian y Figma se autorizan desde <code>/mcp</code>.</div></details>

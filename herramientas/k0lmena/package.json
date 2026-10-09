@@ -17,6 +17,7 @@
     "bootstrap:k6:win": "powershell -ExecutionPolicy Bypass -File performance/k6/scripts/bootstrap-k6.ps1",
     "bootstrap:k6:nix": "bash performance/k6/scripts/bootstrap-k6.sh",
     "bootstrap:k6": "node -e \"process.platform==='win32'?process.exit(0):process.exit(1)\" && npm run bootstrap:k6:win || npm run bootstrap:k6:nix",
+    "bootstrap:jmeter": "node performance/jmeter/bootstrap-jmeter.js",
     "k6:build": "node performance/k6/esbuild.k6.config.mjs",
     "crawler": "ts-node -r ./env.js tools/crawler/locators-generator.ts",
     "link-tester": "npx ts-node -r ./env.js tools/link-tester/tester.ts",

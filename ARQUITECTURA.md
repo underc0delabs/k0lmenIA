@@ -34,7 +34,7 @@ En este repo, `.mcp.json` viene **versionado con todos los conectores** (Playwri
 
 ### Herramientas — herramientas externas de testing (`herramientas/`)
 
-Herramientas que el agente **ejecuta** por línea de comandos, con sus plantillas y configuraciones. Hay dos integradas: **Newman** (la CLI de Postman), que usa `ejecutor-api` para correr pruebas de API, y **k0lmena**, el framework de automatización (web, api, mobile y performance con Artillery y k6, más verificaciones en bases de datos PostgreSQL, MySQL / MariaDB, SQL Server y MongoDB). En k0lmena los agentes *mapper* escriben la automatización una sola vez y después corre con `npm test`, **sin agentes ni tokens**. Cada herramienta va en su **propia subcarpeta**, así escala: sumar una herramienta = sumar una carpeta (ver `herramientas/README.md`).
+Herramientas que el agente **ejecuta** por línea de comandos, con sus plantillas y configuraciones. Hay dos integradas: **Newman** (la CLI de Postman), que usa `ejecutor-api` para correr pruebas de API, y **k0lmena**, el framework de automatización (web, api, mobile y performance con k6, Artillery y JMeter, más verificaciones en bases de datos PostgreSQL, MySQL / MariaDB, SQL Server y MongoDB). En k0lmena los agentes *mapper* escriben la automatización una sola vez y después corre con `npm test`, **sin agentes ni tokens**. Cada herramienta va en su **propia subcarpeta**, así escala: sumar una herramienta = sumar una carpeta (ver `herramientas/README.md`).
 
 ### Scripts — utilidades internas (`scripts/`)
 

@@ -1,6 +1,6 @@
 // reports/performance/generar-reporte.js
 //
-// Reporte de performance de k0lmenIA (k6 y Artillery con el mismo formato).
+// Reporte de performance de k0lmenIA (k6, Artillery y JMeter con el mismo formato).
 // Lo llama run-perf.js al terminar cada corrida:
 //   - normaliza el resultado crudo de la herramienta a un "resumen" común (JSON chico,
 //     es lo que lee el agente: no hace falta abrir el crudo ni el log),
@@ -194,6 +194,129 @@ function desdeArtillery(data, log) {
   };
 }
 
+// ---------------------------------------------------------------- JMeter
+// CSV con comillas dobles ("" escapa una comilla), como lo escribe JMeter en el .jtl.
+function filasCsv(texto) {
+  const filas = [];
+  let fila = [], campo = '', comillas = false;
+  for (let i = 0; i < texto.length; i++) {
+    const ch = texto[i];
+    if (comillas) {
+      if (ch === '"' && texto[i + 1] === '"') { campo += '"'; i++; }
+      else if (ch === '"') comillas = false;
+      else campo += ch;
+    } else if (ch === '"') comillas = true;
+    else if (ch === ',') { fila.push(campo); campo = ''; }
+    else if (ch === '\n' || ch === '\r') {
+      if (ch === '\r' && texto[i + 1] === '\n') i++;
+      fila.push(campo); campo = '';
+      if (fila.length > 1 || fila[0]) filas.push(fila);
+      fila = [];
+    } else campo += ch;
+  }
+  if (campo || fila.length) { fila.push(campo); filas.push(fila); }
+  return filas;
+}
+
+function percentil(ordenados, p) {
+  if (!ordenados.length) return null;
+  return ordenados[Math.min(ordenados.length - 1, Math.ceil((p / 100) * ordenados.length) - 1)];
+}
+
+function estadisticas(tiempos) {
+  const o = [...tiempos].sort((a, b) => a - b);
+  const suma = o.reduce((s, x) => s + x, 0);
+  return { n: o.length, p50: percentil(o, 50), p90: percentil(o, 90), p95: percentil(o, 95), p99: percentil(o, 99), avg: o.length ? suma / o.length : null, max: o.length ? o[o.length - 1] : null };
+}
+
+// Umbrales del archivo <script>.json: { error_pct, p50, p90, p95, p99, avg, max, por_muestra: { "<label>": {...} } }
+const METRICAS_JM = { error_pct: '% de errores', p50: 'p50', p90: 'p90', p95: 'p95', p99: 'p99', avg: 'promedio', max: 'máximo' };
+function umbralesJMeter(def, global, porLabel) {
+  const salida = [];
+  const evaluar = (limites, est, prefijo) => {
+    for (const [clave, limite] of Object.entries(limites || {})) {
+      if (!(clave in METRICAS_JM) || typeof limite !== 'number') continue;
+      const v = est[clave];
+      salida.push({
+        metrica: `${prefijo}${METRICAS_JM[clave]}`,
+        condicion: clave === 'error_pct' ? `<= ${limite} %` : `<= ${limite} ms`,
+        valor: v == null ? '—' : clave === 'error_pct' ? `${v.toFixed(2)} %` : ms(v),
+        ok: v != null && v <= limite,
+      });
+    }
+  };
+  evaluar(def, global, '');
+  for (const [label, limites] of Object.entries((def && def.por_muestra) || {})) {
+    const est = porLabel[label];
+    if (est) evaluar(limites, est, `${label} · `);
+    else salida.push({ metrica: `${label} · (sin muestras)`, condicion: 'la muestra existe', valor: '—', ok: false });
+  }
+  return salida;
+}
+
+function desdeJMeter(texto, defUmbrales) {
+  const [enc, ...filas] = filasCsv(texto);
+  const col = (n) => enc.indexOf(n);
+  const [cTs, cEl, cLb, cCod, cOk, cMsg, cHilos] = ['timeStamp', 'elapsed', 'label', 'responseCode', 'success', 'failureMessage', 'allThreads'].map(col);
+  if (cTs < 0 || cEl < 0 || cLb < 0) throw new Error('El .jtl no tiene las columnas timeStamp, elapsed y label (¿se guardó en CSV?).');
+
+  const tiempos = [], porLabel = {}, codigos = {}, errores = {}, baldes = {};
+  let inicio = Infinity, fin = 0, fallidas = 0, hilosMax = 0;
+  for (const f of filas) {
+    const ts = Number(f[cTs]), el = Number(f[cEl]), label = f[cLb];
+    if (!isFinite(ts) || !isFinite(el)) continue;
+    const ok = cOk < 0 || f[cOk] === 'true';
+    tiempos.push(el);
+    (porLabel[label] = porLabel[label] || { tiempos: [], fallas: 0 }).tiempos.push(el);
+    inicio = Math.min(inicio, ts);
+    fin = Math.max(fin, ts + el);
+    if (cHilos >= 0) hilosMax = Math.max(hilosMax, Number(f[cHilos]) || 0);
+    const cod = cCod >= 0 ? f[cCod] : '';
+    const codigo = /^\d{3}$/.test(cod) ? cod : 'sin respuesta';
+    codigos[codigo] = (codigos[codigo] || 0) + 1;
+    if (!ok) {
+      fallidas++;
+      porLabel[label].fallas++;
+      // Los mensajes de las aserciones de JMeter vienen en varias líneas: se dejan en una.
+      const motivo = ((cMsg >= 0 && f[cMsg]) || (codigo === 'sin respuesta' ? `sin respuesta: ${cod}` : `HTTP ${codigo}`))
+        .replace(/\s+/g, ' ').trim().slice(0, 160);
+      errores[motivo] = (errores[motivo] || 0) + 1;
+    }
+    const b = Math.floor(ts / 10000) * 10000;
+    (baldes[b] = baldes[b] || { tiempos: [], fallas: 0 }).tiempos.push(el);
+    if (!ok) baldes[b].fallas++;
+  }
+
+  const seg = tiempos.length ? (fin - inicio) / 1000 : null;
+  const global = { ...estadisticas(tiempos), error_pct: tiempos.length ? (fallidas / tiempos.length) * 100 : null };
+  const estLabel = {};
+  for (const [label, x] of Object.entries(porLabel)) estLabel[label] = { ...estadisticas(x.tiempos), error_pct: (x.fallas / x.tiempos.length) * 100 };
+
+  return {
+    duracion_s: seg,
+    kpis: {
+      requests: tiempos.length,
+      rps: seg ? tiempos.length / seg : null,
+      error_pct: global.error_pct,
+      usuarios_max: hilosMax || null,
+      iteraciones: fallidas,
+    },
+    latencia: { fuente: 'elapsed (cada muestra)', p50: global.p50, p90: global.p90, p95: global.p95, p99: global.p99, avg: global.avg, max: global.max },
+    umbrales: umbralesJMeter(defUmbrales, global, estLabel),
+    detalle: {
+      titulo: 'Por muestra (label)',
+      filas: Object.entries(estLabel).map(([nombre, e]) => ({ nombre, requests: e.n, avg: e.avg, p95: e.p95, p99: e.p99, max: e.max })).sort((a, b) => b.requests - a.requests),
+    },
+    codigos,
+    checks: [],
+    errores,
+    linea_tiempo: Object.keys(baldes).map(Number).sort((a, b) => a - b).map((ts) => {
+      const x = baldes[ts];
+      return { t: ts, rps: x.tiempos.length / 10, p95: estadisticas(x.tiempos).p95, errores: x.fallas };
+    }),
+  };
+}
+
 // ---------------------------------------------------------------- HTML
 function barras(items, unidad) {
   const max = Math.max(1, ...items.map((i) => i.valor || 0));
@@ -274,8 +397,8 @@ th{color:var(--muted);font-weight:600}td:first-child{white-space:normal;word-bre
       ${kpi('Requests', entero(k.requests))}${kpi('Req/s promedio', k.rps == null ? '—' : k.rps.toFixed(2))}
       ${kpi('Errores', k.error_pct == null ? '—' : `${k.error_pct.toFixed(2)} %`, k.error_pct > 0 ? 'err' : 'ok')}
       ${kpi('p50', ms(l.p50))}${kpi('p95', ms(l.p95))}${kpi('p99', ms(l.p99))}
-      ${kpi(r.herramienta === 'k6' ? 'Usuarios máx.' : 'Usuarios creados', entero(k.usuarios_max))}
-      ${kpi(r.herramienta === 'k6' ? 'Iteraciones' : 'Flujos completos', entero(k.iteraciones))}
+      ${kpi(r.herramienta === 'artillery' ? 'Usuarios creados' : 'Usuarios máx.', entero(k.usuarios_max))}
+      ${kpi({ k6: 'Iteraciones', artillery: 'Flujos completos', jmeter: 'Muestras con error' }[r.herramienta], entero(k.iteraciones))}
     </div>
   </section>
   <section class="card"><h2>Umbrales</h2>
@@ -285,7 +408,7 @@ th{color:var(--muted);font-weight:600}td:first-child{white-space:normal;word-bre
     ${barras([{ etiqueta: 'p50', valor: l.p50 }, { etiqueta: 'p90', valor: l.p90 }, { etiqueta: 'p95', valor: l.p95 }, { etiqueta: 'p99', valor: l.p99 }, { etiqueta: 'promedio', valor: l.avg }, { etiqueta: 'máximo', valor: l.max }].filter((b) => b.valor != null), 'ms')}
   </section>
   <section class="card c6"><h2>Códigos de respuesta</h2>${codigos.length ? barras(codigos) : '<p class="muted">Sin datos de códigos de respuesta.</p>'}</section>
-  <section class="card"><h2>Evolución en el tiempo</h2>${r.herramienta === 'k6' ? '<p class="muted">k6 entrega solo el resumen final; la evolución está disponible en las corridas de Artillery.</p>' : `<p class="muted" style="margin-top:-6px">Req/s (azul) y p95 de la latencia (naranja), cada una en su propia escala, por intervalo de 10 s.</p>${svgLinea(r.linea_tiempo)}`}</section>
+  <section class="card"><h2>Evolución en el tiempo</h2>${r.herramienta === 'k6' ? '<p class="muted">k6 entrega solo el resumen final; la evolución está disponible en las corridas de Artillery y JMeter.</p>' : `<p class="muted" style="margin-top:-6px">Req/s (azul) y p95 de la latencia (naranja), cada una en su propia escala, por intervalo de 10 s.</p>${svgLinea(r.linea_tiempo)}`}</section>
   <section class="card"><h2>${esc(r.detalle.titulo)}</h2>
     ${tabla(['Nombre', 'Cantidad', 'Promedio', 'p95', 'p99', 'Máximo'], r.detalle.filas.map((f) => [`<code>${esc(f.nombre)}</code>`, entero(f.requests), ms(f.avg), ms(f.p95), ms(f.p99), ms(f.max)]))}
   </section>
@@ -300,11 +423,13 @@ th{color:var(--muted);font-weight:600}td:first-child{white-space:normal;word-bre
 
 // ---------------------------------------------------------------- API
 /**
- * @param {object} o { herramienta: 'k6'|'artillery', script, perfil, destino, crudo, log, salida, codigoSalida }
+ * @param {object} o { herramienta: 'k6'|'artillery'|'jmeter', script, perfil, destino, crudo, log, salida, codigoSalida,
+ *                     umbrales (solo JMeter: los del <script>.json) }
  * @returns {object} resumen (también lo escribe en <salida>.json y el HTML en <salida>.html)
  */
 function generarReporte(o) {
-  const crudo = fs.existsSync(o.crudo) ? JSON.parse(fs.readFileSync(o.crudo, 'utf8')) : null;
+  const texto = fs.existsSync(o.crudo) ? fs.readFileSync(o.crudo, 'utf8') : '';
+  const crudo = !texto.trim() ? null : o.herramienta === 'jmeter' ? texto : JSON.parse(texto);
   const log = fs.existsSync(o.log) ? fs.readFileSync(o.log, 'utf8') : '';
   const base = { herramienta: o.herramienta, script: o.script, perfil: o.perfil, destino: o.destino, fecha: new Date().toISOString() };
   let r;
@@ -312,9 +437,11 @@ function generarReporte(o) {
     r = { ...base, duracion_s: null, kpis: {}, latencia: { fuente: '—' }, umbrales: [], detalle: { titulo: 'Detalle', filas: [] }, codigos: {}, checks: [], errores: {}, linea_tiempo: [],
       error: `La herramienta no generó resultados (código de salida ${o.codigoSalida}). Revisá el log.` };
   } else {
-    r = { ...base, ...(o.herramienta === 'k6' ? desdeK6(crudo) : desdeArtillery(crudo, log)) };
+    const desde = { k6: () => desdeK6(crudo), artillery: () => desdeArtillery(crudo, log), jmeter: () => desdeJMeter(crudo, o.umbrales) };
+    r = { ...base, ...desde[o.herramienta]() };
   }
   // k6 sale con 99 y Artillery con 1 cuando falla un umbral; cualquier otro código es un error de la corrida.
+  // JMeter sale con 0 aunque fallen muestras: los umbrales los evalúa este reporte.
   const fallaUmbral = r.umbrales.some((u) => !u.ok);
   if (!crudo || (o.codigoSalida && !fallaUmbral && ![0, 99].includes(o.codigoSalida))) {
     r.veredicto = 'error';

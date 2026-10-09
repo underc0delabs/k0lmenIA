@@ -110,11 +110,16 @@ input/ → [ agente ] → output/
 |                            | steps y locators)                        |                                       |
 +----------------------------+------------------------------------------+---------------------------------------+
 | `performance-mapper`       | Pruebas de performance (smoke, load,     | `herramientas/k0lmena/performance/` + |
-|                            | stress, soak, spike) con k6 para APIs o  | `reports/performance/` +              |
-|                            | Artillery + Playwright para flujos web:  | `output/mapeos/`                      |
-|                            | pregunta carga y umbrales, genera el     |                                       |
-|                            | script, lo valida y lo corre con `npm    |                                       |
-|                            | run perf` (reporte HTML)                 |                                       |
+|                            | stress, soak, spike) con k6, Artillery + | `output/performance/<HU>/` +          |
+|                            | Playwright o JMeter. Antes, la           | `reports/performance/` +              |
+|                            | conversación principal guía a la persona | `output/mapeos/`                      |
+|                            | con el skill guia-performance (tipo de   |                                       |
+|                            | prueba, herramienta, usuarios, rampa,    |                                       |
+|                            | duración y umbrales, con sugerencias);   |                                       |
+|                            | el agente genera el script, lo valida,   |                                       |
+|                            | corre lo confirmado y arma el informe    |                                       |
+|                            | HTML con métricas, gráficos y            |                                       |
+|                            | recomendaciones                          |                                       |
 +----------------------------+------------------------------------------+---------------------------------------+
 ```
 
@@ -186,6 +191,7 @@ Reglas (valen para **todos** los agentes y cualquier sección, incluidas las que
 - Datos de prueba: `datos-HU-001.md` (o `.csv`)
 - Casos de API: `casos-api-auth.md`
 - Mapeo a automatización: `herramientas/k0lmena/<web|api|mobile>/features/HU-001-<slug>.feature` + `steps/HU-001.steps.ts` + `locators/HU-001.locators.ts`, y el reporte `output/mapeos/mapeo-HU-001-<web|api|mobile>.md`.
+- Performance: plan `output/performance/HU-001/plan-performance-HU-001.md` + informe `informe-performance-HU-001.html` (y su `.json`) en la misma carpeta; cada corrida deja además su reporte en `herramientas/k0lmena/reports/performance/`.
 - Ejecución E2E (un reporte por corrida): `reporte-HU-001-<fecha-hora>.html` (dashboard, modo oscuro) + `_resultados-HU-001-<fecha-hora>.json` (datos), en `output/ejecuciones/`; evidencia en `output/ejecuciones/evidencia/`. Cada reporte cubre solo los casos de esa ejecución.
 
 ---
