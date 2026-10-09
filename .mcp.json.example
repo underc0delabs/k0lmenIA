@@ -46,6 +46,11 @@
         "Authorization": "Bearer ${AIO_API_TOKEN}"
       }
     },
+    "k0lmena-tmt": {
+      "type": "http",
+      "url": "${K0LMENA_TMT_URL:-http://localhost:4000/api/v1/mcp}",
+      "headersHelper": "node scripts/mcp/k0lmena-tmt-headers.js"
+    },
     "appium-mcp": {
       "type": "stdio",
       "command": "npx",

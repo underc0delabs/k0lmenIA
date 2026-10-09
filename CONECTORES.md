@@ -1,6 +1,6 @@
 # Conectores MCP
 
-Cómo conectar k0lmenIA por MCP a **Jira y Confluence** (Atlassian), **Figma**, **QMetry**, **AIO Tests** y **Appium**. Xray se integra sin MCP (ver abajo).
+Cómo conectar k0lmenIA por MCP a **Jira y Confluence** (Atlassian), **Figma**, **QMetry**, **AIO Tests**, **k0lmenaTMT** y **Appium**. Xray se integra sin MCP (ver abajo).
 
 Las conexiones están definidas en `.mcp.json.example`. No vienen activas en `.mcp.json` porque cada una necesita credenciales o una cuenta propia. Activá solo las que uses.
 
@@ -22,6 +22,9 @@ Las conexiones están definidas en `.mcp.json.example`. No vienen activas en `.m
 | qtm4j     | QMetry Test Management for Jira (QTM4J) | @smartbear/mcp                          | Oficial     | stdio      |
 +-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
 | aio-tests | AIO Tests for Jira                      | Server remoto de AIO Tests (por tenant) | Oficial     | http       |
++-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
+| k0lmena-  | k0lmenaTMT                              | Server MCP de k0lmenaTMT (local o       | Oficial     | http       |
+| tmt       |                                         | propio)                                 |             |            |
 +-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
 ```
 
@@ -109,6 +112,44 @@ Usa el server MCP **oficial** de AIO Tests, que es remoto (no hay que instalar n
 ```
 
 **Alternativa sin token (OAuth):** AIO Tests también acepta OAuth 2.1 si usás la versión Forge de la app. En ese caso borrá el bloque `headers` del conector y Claude Code abre el login en el navegador la primera vez (`/mcp` > *Authenticate*).
+
+---
+
+## k0lmenaTMT
+
+Conecta los agentes con **k0lmenaTMT** por su server MCP, para cargar y consultar casos de prueba desde el chat. Se autentica con un **token personal** (`kolm_pat_...`) que se genera en k0lmenaTMT.
+
+```
++-------------------+-------------+------------------------------------------+
+| Variable          | Obligatoria | Descripción                              |
++===================+=============+==========================================+
+| K0LMENA_TMT_TOKEN | Sí          | Token personal de k0lmenaTMT. Va en el   |
+|                   |             | .env de la raíz                          |
++-------------------+-------------+------------------------------------------+
+| K0LMENA_TMT_URL   | No          | Por defecto                              |
+|                   |             | http://localhost:4000/api/v1/mcp; para   |
+|                   |             | otra URL, definila en el entorno         |
++-------------------+-------------+------------------------------------------+
+```
+
+A diferencia de los otros conectores, **el token se lee del `.env`**: la entrada usa `headersHelper`, que ejecuta `scripts/mcp/k0lmena-tmt-headers.js` cada vez que Claude Code se conecta. El script toma `K0LMENA_TMT_TOKEN` del entorno o, si no está, del `.env`, y arma el header `Authorization: Bearer …`. El token nunca queda en `.mcp.json`.
+
+Para activarlo:
+
+1. Agregá `K0LMENA_TMT_TOKEN=<tu token>` al `.env` de la raíz.
+2. Copiá la entrada `k0lmena-tmt` de `.mcp.json.example` a `.mcp.json` y agregá `"k0lmena-tmt"` a `enabledMcpjsonServers` en `.claude/settings.local.json`. Si preferís no tocar el `.mcp.json` versionado, registralo solo para vos:
+
+```bash
+claude mcp add-json k0lmena-tmt --scope local '{"type":"http","url":"http://localhost:4000/api/v1/mcp","headersHelper":"node scripts/mcp/k0lmena-tmt-headers.js"}'
+```
+
+3. Con k0lmenaTMT levantado, reiniciá Claude Code y verificá con `/mcp`.
+
+> No uses `claude mcp add ... --header "Authorization: Bearer <token>"`: deja el token escrito en la configuración de Claude Code.
+
+Ejemplos de uso:
+
+> *"Cargá en k0lmenaTMT los casos de `output/casos-de-prueba/manuales/casos-HU-001.xlsx`."* · *"¿Qué casos de HU-001 hay en k0lmenaTMT?"*
 
 ---
 
