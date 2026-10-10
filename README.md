@@ -107,7 +107,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 
 ## 🤖 Agentes
 
-Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"usá el web-mapper para…"*).
+Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"usá el web-mapper para…"*). **El catálogo completo** —cuándo usar cada agente, un pedido de ejemplo, qué skills, scripts, herramientas y conectores usa, qué entrega y qué te confirma antes— está en [`AGENTES.md`](AGENTES.md).
 
 <table>
 <tr><th>Familia</th><th>Agente</th><th>Qué hace</th></tr>
@@ -463,6 +463,7 @@ npm run conector -- activar azure-devops    # queda solo para vos; reiniciá Cla
 ```
 k0lmenIA/
 ├── CLAUDE.md               Contexto y estándares (Claude Code lo lee siempre)
+├── AGENTES.md              Catálogo de agentes: skills, herramientas, conectores y salidas
 ├── ARQUITECTURA.md         Cómo crece el repo
 ├── CONECTORES.md           Cómo activar los conectores MCP
 ├── CHANGELOG.md            Cambios de cada versión

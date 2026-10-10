@@ -6,7 +6,7 @@ Este repo está pensado para crecer de forma ordenada. Cubre tanto **planificar 
 
 ### Agentes — el *quién* (`.claude/agents/`)
 
-Cada agente es un subagente de Claude Code con su rol, su proceso y sus reglas. Es a quién se le delega una tarea entera. Hoy hay diecinueve, agrupados en análisis y diseño, ejecución en vivo, automatización con k0lmena, seguridad y gestión (la tabla completa está en `CLAUDE.md`). Como corren como subagentes, no pueden hacerle preguntas a la persona a mitad del trabajo: si les falta un dato, terminan devolviendo "Necesito que confirmes" y la conversación principal pregunta y los continúa. La clave de cada uno está en el `description` de su frontmatter: es lo que usa Claude Code para saber cuándo invocarlo.
+Cada agente es un subagente de Claude Code con su rol, su proceso y sus reglas. Es a quién se le delega una tarea entera. Hoy hay diecinueve, agrupados en análisis y diseño, ejecución en vivo, automatización con k0lmena, seguridad y gestión (el catálogo, con los skills, herramientas y conectores de cada uno, está en `AGENTES.md`). Como corren como subagentes, no pueden hacerle preguntas a la persona a mitad del trabajo: si les falta un dato, terminan devolviendo "Necesito que confirmes" y la conversación principal pregunta y los continúa. La clave de cada uno está en el `description` de su frontmatter: es lo que usa Claude Code para saber cuándo invocarlo.
 
 ### Skills — el *cómo* (`.claude/skills/`)
 

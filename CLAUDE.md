@@ -33,6 +33,8 @@ Los agentes corren como subagentes y **no pueden hacerle preguntas a la persona 
 
 ## Agentes disponibles
 
+El detalle de cada agente (skills, scripts, herramientas, conectores, entradas, salidas y qué confirma) está en `AGENTES.md`.
+
 ```
 +----------------------------+------------------------------------------+---------------------------------------+
 | Agente                     | Para qué sirve                           | Guarda la salida en                   |

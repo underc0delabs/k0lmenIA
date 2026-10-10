@@ -141,6 +141,8 @@ hr { border: 0; border-top: 1px solid var(--borde); margin: 2.5rem 0; }
 .tarjeta h4 { margin: 0 0 6px; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
 .tarjeta p { font-size: .92rem; margin: 0; }
 .tarjeta .ico { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; margin-bottom: 12px; font-size: 18px; }
+.tarjeta .usa { margin-top: 10px; font-size: .8rem; line-height: 1.5; color: var(--texto-2); overflow-wrap: anywhere; }
+.tarjeta .usa b { color: var(--texto-3); font-weight: 600; margin-right: 4px; }
 .tarjeta .salida { margin-top: 10px; font-size: .8rem; color: var(--texto-3); }
 .tarjeta .salida code { font-size: .78rem; }
 .c-violeta .ico { background: color-mix(in srgb, var(--violeta) 16%, transparent); color: var(--violeta); }

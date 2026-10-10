@@ -213,42 +213,52 @@
 <section class="seccion" id="agentes">
   <div class="kicker">Introducción</div>
   <h2>Agentes</h2>
-  <p class="bajada">Claude Code elige el agente según lo que pidas. Están en <code>.claude/agents/</code> y se agrupan en cuatro familias.</p>
+  <p class="bajada">Claude Code elige el agente según lo que pidas. Están en <code>.claude/agents/</code> y se agrupan en cuatro familias. El catálogo completo (cuándo usar cada uno, pedido de ejemplo, entradas, salidas y qué confirma) está en <a href="https://github.com/underc0delabs/k0lmenIA/blob/main/AGENTES.md"><code>AGENTES.md</code></a>.</p>
 
   <div class="subtitulo-grupo"><h3>Análisis y diseño</h3></div>
   <div class="tarjetas">
-    <div class="tarjeta c-violeta"><h4>analista-historias</h4><p>Investiga el contexto de la historia y detecta ambigüedades, vacíos, riesgos y Falta información.</p><div class="salida"><code>output/analisis-historias/</code></div></div>
-    <div class="tarjeta c-violeta"><h4>estratega-pruebas</h4><p>Plan de pruebas: alcance, riesgos, tipos de prueba, entorno y criterios, en HTML.</p><div class="salida"><code>output/planes-de-prueba/</code></div></div>
-    <div class="tarjeta c-violeta"><h4>generador-casos-manuales</h4><p>Casos en Excel y Markdown + informe de cobertura con preguntas para el PO.</p><div class="salida"><code>output/casos-de-prueba/manuales/</code></div></div>
-    <div class="tarjeta c-violeta"><h4>generador-casos-bdd</h4><p>Escenarios Gherkin (keywords en inglés, contenido en español) + cobertura.</p><div class="salida"><code>output/casos-de-prueba/bdd/</code></div></div>
-    <div class="tarjeta c-violeta"><h4>generador-casos-api</h4><p>Casos de API positivos, negativos, de schema y de autorización.</p><div class="salida"><code>output/casos-api/</code></div></div>
-    <div class="tarjeta c-violeta"><h4>generador-datos-prueba</h4><p>Datos válidos, inválidos y de borde en Markdown o CSV.</p><div class="salida"><code>output/datos-de-prueba/</code></div></div>
-    <div class="tarjeta c-violeta"><h4>generador-reportes-bug</h4><p>Reporte de bug profesional según la plantilla, con severidad y prioridad justificadas.</p><div class="salida"><code>output/reportes-bug/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>analista-historias</h4><p>Investiga el contexto de la historia y detecta ambigüedades, vacíos, riesgos y Falta información.</p><div class="usa"><b>Skills</b> investigacion-contexto<br><b>Usa</b> formatear_tablas.py<br><b>Conectores</b> atlassian, azure-devops, figma</div><div class="salida"><code>output/analisis-historias/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>estratega-pruebas</h4><p>Plan de pruebas: alcance, riesgos, tipos de prueba, entorno y criterios, en HTML.</p><div class="usa"><b>Skills</b> investigacion-contexto<br><b>Usa</b> generar_plan.py<br><b>Conectores</b> atlassian, azure-devops, figma</div><div class="salida"><code>output/planes-de-prueba/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>generador-casos-manuales</h4><p>Casos en Excel y Markdown + informe de cobertura con preguntas para el PO.</p><div class="usa"><b>Skills</b> investigacion-contexto, tecnicas-de-diseno<br><b>Usa</b> generar_casos.py<br><b>Conectores</b> atlassian, azure-devops, figma</div><div class="salida"><code>output/casos-de-prueba/manuales/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>generador-casos-bdd</h4><p>Escenarios Gherkin (keywords en inglés, contenido en español) + cobertura.</p><div class="usa"><b>Skills</b> investigacion-contexto, tecnicas-de-diseno<br><b>Usa</b> formatear_tablas.py<br><b>Conectores</b> atlassian, azure-devops, figma</div><div class="salida"><code>output/casos-de-prueba/bdd/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>generador-casos-api</h4><p>Casos de API positivos, negativos, de schema y de autorización.</p><div class="usa"><b>Skills</b> investigacion-contexto, tecnicas-de-diseno<br><b>Usa</b> formatear_tablas.py<br><b>Conectores</b> atlassian, azure-devops</div><div class="salida"><code>output/casos-api/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>generador-datos-prueba</h4><p>Datos válidos, inválidos y de borde en Markdown o CSV.</p><div class="usa"><b>Skills</b> investigacion-contexto<br><b>Usa</b> formatear_tablas.py<br><b>Conectores</b> atlassian, azure-devops</div><div class="salida"><code>output/datos-de-prueba/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>generador-reportes-bug</h4><p>Reporte de bug profesional según la plantilla, con severidad y prioridad justificadas.</p><div class="usa"><b>Usa</b> plantilla de bug, formatear_tablas.py<br><b>Conectores</b> atlassian, azure-devops</div><div class="salida"><code>output/reportes-bug/</code></div></div>
   </div>
 
   <div class="subtitulo-grupo"><h3>Ejecución en vivo</h3><span class="etiqueta tok">usa tokens en cada corrida</span></div>
   <div class="tarjetas">
-    <div class="tarjeta c-naranja"><h4>ejecutor-e2e</h4><p>Ejecuta casos en un navegador real con Playwright MCP (headed o headless), con evidencia.</p><div class="salida"><code>output/ejecuciones/</code></div></div>
-    <div class="tarjeta c-naranja"><h4>ejecutor-api</h4><p>Corre una colección de Postman con Newman.</p><div class="salida"><code>output/ejecuciones/</code></div></div>
-    <div class="tarjeta c-naranja"><h4>generador-reporte-html</h4><p>Dashboard HTML de los resultados de una ejecución.</p><div class="salida"><code>output/ejecuciones/</code></div></div>
-    <div class="tarjeta c-naranja"><h4>generador-reporte-cierre</h4><p>Informe de cierre de la ronda con recomendación go/no-go.</p><div class="salida"><code>output/informes-cierre/</code></div></div>
+    <div class="tarjeta c-naranja"><h4>ejecutor-e2e</h4><p>Ejecuta casos en un navegador real con Playwright MCP (headed o headless), con evidencia.</p><div class="usa"><b>Skills</b> ejecucion-e2e<br><b>Usa</b> generar_reporte.py<br><b>Conectores</b> playwright, playwright-headless</div><div class="salida"><code>output/ejecuciones/</code></div></div>
+    <div class="tarjeta c-naranja"><h4>ejecutor-api</h4><p>Corre una colección de Postman con Newman.</p><div class="usa"><b>Skills</b> ejecucion-api<br><b>Usa</b> Newman, correr_newman.py</div><div class="salida"><code>output/ejecuciones/</code></div></div>
+    <div class="tarjeta c-naranja"><h4>generador-reporte-html</h4><p>Dashboard HTML de los resultados de una ejecución.</p><div class="usa"><b>Usa</b> generar_reporte.py</div><div class="salida"><code>output/ejecuciones/</code></div></div>
+    <div class="tarjeta c-naranja"><h4>generador-reporte-cierre</h4><p>Informe de cierre de la ronda con recomendación go/no-go.</p><div class="usa"><b>Usa</b> recolectar_resultados.py, generar_informe_cierre.py</div><div class="salida"><code>output/informes-cierre/</code></div></div>
   </div>
 
   <div class="subtitulo-grupo"><h3>Automatización con k0lmena</h3><span class="etiqueta sin">después corre sin tokens</span></div>
   <div class="tarjetas">
-    <div class="tarjeta c-verde"><h4>web-mapper</h4><p>Recorre la web siguiendo tus casos y genera <code>.feature</code>, steps y locators.</p><div class="salida"><code>k0lmena/web/</code></div></div>
-    <div class="tarjeta c-verde"><h4>api-mapper</h4><p>Lee Postman o Swagger/OpenAPI, verifica los endpoints y genera los <code>.feature</code>.</p><div class="salida"><code>k0lmena/api/</code></div></div>
-    <div class="tarjeta c-verde"><h4>mobile-mapper</h4><p>Recorre la app con Appium y genera <code>.feature</code>, steps y locators.</p><div class="salida"><code>k0lmena/mobile/</code></div></div>
-    <div class="tarjeta c-verde"><h4>performance-mapper</h4><p>Carga, estrés, soak y picos con k6, Artillery o JMeter; pregunta carga y umbrales.</p><div class="salida"><code>k0lmena/performance/</code></div></div>
-    <div class="tarjeta c-verde"><h4>verificador-datos</h4><p>Verifica datos en PostgreSQL, MySQL, SQL Server o MongoDB y suma verificaciones de BD a los tests.</p><div class="salida">Chat · steps en <code>.feature</code></div></div>
-    <div class="tarjeta c-naranja"><h4>analista-seguridad</h4><p>Escaneo de seguridad web pasivo con OWASP ZAP e informe con hallazgos, evidencia y cómo corregirlos.</p><div class="salida"><code>output/seguridad/</code></div></div>
+    <div class="tarjeta c-verde"><h4>web-mapper</h4><p>Recorre la web siguiendo tus casos y genera <code>.feature</code>, steps y locators.</p><div class="usa"><b>Skills</b> automatizacion-k0lmena, ejecucion-e2e, investigacion-contexto<br><b>Usa</b> k0lmena (Playwright + Cucumber)<br><b>Conectores</b> playwright, playwright-headless</div><div class="salida"><code>k0lmena/web/</code></div></div>
+    <div class="tarjeta c-verde"><h4>api-mapper</h4><p>Lee Postman o Swagger/OpenAPI, verifica los endpoints y genera los <code>.feature</code>.</p><div class="usa"><b>Skills</b> automatizacion-k0lmena, investigacion-contexto, tecnicas-de-diseno<br><b>Usa</b> k0lmena (axios + Cucumber)</div><div class="salida"><code>k0lmena/api/</code></div></div>
+    <div class="tarjeta c-verde"><h4>mobile-mapper</h4><p>Recorre la app con Appium y genera <code>.feature</code>, steps y locators.</p><div class="usa"><b>Skills</b> automatizacion-k0lmena, investigacion-contexto<br><b>Usa</b> k0lmena (WebdriverIO + Appium)<br><b>Conectores</b> appium-mcp</div><div class="salida"><code>k0lmena/mobile/</code></div></div>
+    <div class="tarjeta c-verde"><h4>performance-mapper</h4><p>Carga, estrés, soak y picos con k6, Artillery o JMeter; pregunta carga y umbrales.</p><div class="usa"><b>Skills</b> guia-performance, automatizacion-k0lmena<br><b>Usa</b> k6, Artillery, JMeter, generar_informe_performance.py</div><div class="salida"><code>k0lmena/performance/</code></div></div>
+    <div class="tarjeta c-verde"><h4>verificador-datos</h4><p>Verifica datos en PostgreSQL, MySQL, SQL Server o MongoDB y suma verificaciones de BD a los tests.</p><div class="usa"><b>Skills</b> automatizacion-k0lmena<br><b>Usa</b> npm run bd</div><div class="salida">Chat · steps en <code>.feature</code></div></div>
+    <div class="tarjeta c-naranja"><h4>analista-seguridad</h4><p>Escaneo de seguridad web pasivo con OWASP ZAP e informe con hallazgos, evidencia y cómo corregirlos.</p><div class="usa"><b>Usa</b> OWASP ZAP (Docker), generar_informe_seguridad.py</div><div class="salida"><code>output/seguridad/</code></div></div>
   </div>
 
   <div class="subtitulo-grupo"><h3>Gestión de pruebas</h3></div>
   <div class="tarjetas">
-    <div class="tarjeta c-cian"><h4>gestor-pruebas</h4><p>Carpetas, casos, vínculos con la historia y ciclos en Xray, QMetry (QTM4J), AIO Tests o Azure DevOps Test Plans.</p><div class="salida">La herramienta + <code>output/gestion/</code></div></div>
-    <div class="tarjeta c-cian"><h4>publicador-resultados</h4><p>Sube los resultados de <code>npm test</code> al ciclo: estado, error y evidencias.</p><div class="salida">La herramienta</div></div>
+    <div class="tarjeta c-cian"><h4>gestor-pruebas</h4><p>Carpetas, casos, vínculos con la historia y ciclos en Xray, QMetry (QTM4J), AIO Tests o Azure DevOps Test Plans.</p><div class="usa"><b>Usa</b> scripts/gestion/gestion.py<br><b>Conectores</b> azure-devops (Azure Test Plans)</div><div class="salida">La herramienta + <code>output/gestion/</code></div></div>
+    <div class="tarjeta c-cian"><h4>publicador-resultados</h4><p>Sube los resultados de <code>npm test</code> al ciclo: estado, error y evidencias.</p><div class="usa"><b>Usa</b> scripts/gestion/gestion.py</div><div class="salida">La herramienta</div></div>
   </div>
+  <div class="subtitulo-grupo"><h3>Skills: el cómo que usan los agentes</h3></div>
+  <div class="tabla"><table>
+    <tr><th style="width:24%">Skill</th><th>Qué enseña</th><th style="width:30%">Lo usan</th></tr>
+    <tr><td><code>investigacion-contexto</code></td><td>Investigar la historia completa (comentarios, subtareas, épica, Confluence, Figma, contratos) y registrar la Falta información (<code>FI-XX</code>)</td><td>analista-historias, estratega-pruebas, generadores de casos y datos, web-mapper, api-mapper, mobile-mapper</td></tr>
+    <tr><td><code>tecnicas-de-diseno</code></td><td>Equivalencia, valores límite, tabla de decisión, transición de estados y pairwise</td><td>generadores de casos manuales, BDD y API; api-mapper</td></tr>
+    <tr><td><code>ejecucion-e2e</code></td><td>Ejecutar en el navegador con Playwright MCP: modos, snapshots, esperas y evidencia</td><td>ejecutor-e2e, web-mapper</td></tr>
+    <tr><td><code>ejecucion-api</code></td><td>Correr colecciones con Newman: base_url, token, validaciones y resultados</td><td>ejecutor-api</td></tr>
+    <tr><td><code>automatizacion-k0lmena</code></td><td>Convenciones de k0lmena: features, steps, locators, tags, steps de BD y scripts de performance</td><td>los mappers y verificador-datos</td></tr>
+    <tr><td><code>guia-performance</code></td><td>Planificar con la persona una prueba de performance paso a paso</td><td>la conversación principal y performance-mapper</td></tr>
+  </table></div>
 </section>
 
 <!-- ======================================================= 5 REQUISITOS -->
