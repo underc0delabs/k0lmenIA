@@ -66,6 +66,16 @@ const nombre = path.basename(pos[0]).replace(/\.(ts|js|ya?ml|jmx)$/, '');
 const perfil = (pos[1] || 'smoke').toLowerCase();
 if (!PERFILES.includes(perfil)) salir(`Perfil desconocido "${perfil}". Opciones: ${PERFILES.join(', ')}.`);
 
+// Un mismo nombre en dos herramientas es ambiguo: se pide renombrar en lugar de elegir uno en silencio.
+const coincidencias = [
+  fs.existsSync(path.join(DIR_K6, `${nombre}.ts`)) && 'k6',
+  fs.existsSync(path.join(DIR_JM, `${nombre}.jmx`)) && 'jmeter',
+  ['yaml', 'yml'].some((e) => fs.existsSync(path.join(DIR_ART, `${nombre}.${e}`))) && 'artillery',
+].filter(Boolean);
+if (coincidencias.length > 1) {
+  salir(`Hay scripts "${nombre}" en ${coincidencias.join(' y ')}: renombrá uno (ej. ${nombre}-${coincidencias[1]}) para que no sea ambiguo.`);
+}
+
 let herramienta, fuente;
 if (fs.existsSync(path.join(DIR_K6, `${nombre}.ts`))) {
   herramienta = 'k6';

@@ -7,9 +7,9 @@ Uso (desde la raíz del repo; en Mac/Linux, python3):
                                     [--carpeta "Login"] [--environment env.json] [--base-url URL]
 
 Qué hace:
-1. Toma del .env de la raíz API_TOKEN (variable {{token}} de la colección) y API_BASEURL
-   (variable {{base_url}}), salvo que se pase --base-url. Funciona igual en PowerShell, bash y zsh:
-   no hace falta cargar el .env en la shell.
+1. Toma del .env de la raíz API_TOKEN (variable {{token}} de la colección). La URL ({{base_url}})
+   sale, en este orden, de --base-url, del environment o de la colección, y si ninguno la define,
+   de API_BASEURL del .env. Funciona igual en PowerShell, bash y zsh: no hace falta cargar el .env.
 2. Corre Newman (instalado globalmente o con npx) y exporta su JSON.
 3. Lo convierte al formato de resultados (scripts/newman_a_resultados.py), con la historia.
 4. Genera el reporte HTML (scripts/generar_reporte.py) y borra el JSON crudo de Newman.
@@ -39,6 +39,21 @@ def newman():
     if shutil.which("npx"):
         return ["npx", "-y", "newman@6"]
     sys.exit("No encuentro Newman ni npx. Instalá Node.js y después: npm install -g newman")
+
+
+def base_url_propia(coleccion, environment):
+    """El base_url que ya traen el environment o la colección (si lo traen, no se pisa con el .env)."""
+    for archivo, clave in ((environment, "values"), (coleccion, "variable")):
+        if not archivo:
+            continue
+        try:
+            datos = json.loads(Path(archivo).read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        for v in datos.get(clave) or []:
+            if v.get("key") == "base_url" and v.get("value") and v.get("enabled", True) is not False:
+                return v["value"]
+    return None
 
 
 def main():
@@ -71,9 +86,11 @@ def main():
         cmd += ["-e", a.environment]
     if a.carpeta:
         cmd += ["--folder", a.carpeta]
-    base = a.base_url or env.get("API_BASEURL")
+    propia = base_url_propia(coleccion, a.environment)
+    base = a.base_url or (None if propia else env.get("API_BASEURL"))
     if base:
-        cmd += ["--env-var", f"base_url={base}"]
+        cmd += ["--env-var", f"base_url={base}"]  # --env-var le gana al environment y a la colección
+    base = base or propia
     if env.get("API_TOKEN"):
         cmd += ["--env-var", f"token={env['API_TOKEN']}"]  # solo en la línea del proceso, nunca en archivos
 

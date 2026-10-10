@@ -2,6 +2,12 @@
 
 Los cambios más relevantes, del más nuevo al más viejo. El detalle de cada uno está en el historial de git.
 
+## 2026-10-09 (3) — Verificación funcional
+- `correr_newman.py` respeta el `base_url` del environment o de la colección; `API_BASEURL` del `.env` se usa solo si no lo definen (la demo terminaba pegándole a Petstore).
+- `npm run doctor` acepta Xray Server/DC con usuario y contraseña, y Azure DevOps sin PAT (login interactivo o `az login`).
+- `npm run perf` avisa si un mismo nombre de script existe en dos herramientas, en vez de elegir uno en silencio.
+- `npm run test:repo` funciona también con Node 20.
+
 ## 2026-10-09 (2) — Revisión completa: robustez, seguridad, tests y documentación
 
 **Correcciones**

@@ -72,3 +72,13 @@ def test_conversion_azure_devops(tmp_path):
     for linea in login["steps"].splitlines():
         assert "|" in linea and linea.split("|", 1)[1].strip()
     assert "Then entro" in login["steps"]
+
+
+def test_newman_respeta_el_base_url_de_la_coleccion(tmp_path):
+    import correr_newman
+    coleccion = RAIZ / "input" / "api" / "demo.postman_collection.json"
+    environment = RAIZ / "input" / "api" / "demo.postman_environment.json"
+    assert "jsonplaceholder" in correr_newman.base_url_propia(coleccion, str(environment))
+    vacia = tmp_path / "c.json"
+    vacia.write_text('{"info": {"name": "x"}, "item": []}', encoding="utf-8")
+    assert correr_newman.base_url_propia(vacia, None) is None  # entonces se usa API_BASEURL del .env

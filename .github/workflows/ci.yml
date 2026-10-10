@@ -36,7 +36,7 @@ jobs:
         run: python -m pytest tests -q
 
       - name: Tests de Node
-        run: node --test "tests/node/**/*.test.js"
+        run: npm run test:repo
 
       - name: JSON de configuración válidos
         run: |

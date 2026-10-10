@@ -29,3 +29,11 @@ def test_reglas_basicas(tmp_path):
 
 def test_archivo_inexistente(tmp_path):
     assert leer_env(tmp_path / "no-existe.env") == {}
+
+
+def test_doctor_variables_alternativas():
+    import doctor
+    # Xray Server/DC: token, o usuario y contraseña
+    assert doctor.faltantes(["XRAY_DC_TOKEN|XRAY_DC_USER+XRAY_DC_PASSWORD"], {"XRAY_DC_USER": "u", "XRAY_DC_PASSWORD": "p"}) == []
+    assert doctor.faltantes(["XRAY_DC_TOKEN|XRAY_DC_USER+XRAY_DC_PASSWORD"], {"XRAY_DC_USER": "u"}) != []
+    assert doctor.faltantes(["A", "B"], {"A": "1"}) == ["B"]

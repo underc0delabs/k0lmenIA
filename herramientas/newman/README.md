@@ -25,7 +25,7 @@ El agente corre una **colección de Postman** y arma el mismo reporte HTML oscur
 python scripts/correr_newman.py input/api/demo.postman_collection.json --historia HU-001
 ```
 
-El script corre Newman (instalado o con `npx`), toma `API_TOKEN` y `API_BASEURL` del `.env`, convierte el resultado (`scripts/newman_a_resultados.py`) y genera el reporte (`scripts/generar_reporte.py`) en `output/ejecuciones/reporte-HU-001-<fecha-hora>.html`. Opciones: `--carpeta`, `--environment`, `--base-url` y `--titulo`. El agente `ejecutor-api` lo usa solo; normalmente no lo corrés a mano.
+El script corre Newman (instalado o con `npx`), toma `API_TOKEN` del `.env`; la URL (`{{base_url}}`) sale de `--base-url`, del environment o de la colección, y solo si ninguno la define, de `API_BASEURL` del `.env`; convierte el resultado (`scripts/newman_a_resultados.py`) y genera el reporte (`scripts/generar_reporte.py`) en `output/ejecuciones/reporte-HU-001-<fecha-hora>.html`. Opciones: `--carpeta`, `--environment`, `--base-url` y `--titulo`. El agente `ejecutor-api` lo usa solo; normalmente no lo corrés a mano.
 
 ## Dónde van las colecciones
 

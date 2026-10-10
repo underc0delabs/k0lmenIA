@@ -17,7 +17,7 @@
     "bootstrap:k6": "npm --prefix herramientas/k0lmena run bootstrap:k6 --",
     "bootstrap:jmeter": "npm --prefix herramientas/k0lmena run bootstrap:jmeter --",
     "debug": "npm --prefix herramientas/k0lmena run debug --",
-    "test:repo": "node --test \"tests/node/**/*.test.js\"",
+    "test:repo": "node tests/node/correr.js",
     "doctor": "node -e \"const r=require('child_process').spawnSync(process.platform==='win32'?'python':'python3',['scripts/doctor.py'],{stdio:'inherit'});process.exit(r.status===null?1:r.status)\"",
     "crawler": "npm --prefix herramientas/k0lmena run crawler --",
     "link-tester": "npm --prefix herramientas/k0lmena run link-tester --",

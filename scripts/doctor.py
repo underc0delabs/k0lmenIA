@@ -26,6 +26,7 @@ OK, AVISO, FALTA = "OK  ", "!   ", "X   "
 resumen = {"ok": 0, "aviso": 0, "falta": 0}
 
 # Variables que necesita cada conector MCP para funcionar (las de OAuth no necesitan nada).
+# "A|B+C" = A, o bien B y C juntas. ADO_PAT solo hace falta si la autenticación es por PAT.
 VARIABLES_CONECTOR = {
     "azure-devops": ["ADO_ORGANIZACION", "ADO_PAT"],
     "qtm4j": ["QTM4J_API_KEY"],
@@ -35,10 +36,20 @@ VARIABLES_CONECTOR = {
 }
 VARIABLES_GESTION = {
     "xray-cloud": ["GESTION_PROYECTO", "XRAY_CLOUD_CLIENT_ID", "XRAY_CLOUD_CLIENT_SECRET", "JIRA_BASE_URL", "JIRA_EMAIL", "JIRA_API_TOKEN"],
-    "xray-dc": ["GESTION_PROYECTO", "XRAY_DC_URL", "XRAY_DC_TOKEN"],
+    "xray-dc": ["GESTION_PROYECTO", "XRAY_DC_URL", "XRAY_DC_TOKEN|XRAY_DC_USER+XRAY_DC_PASSWORD"],
     "qtm4j": ["GESTION_PROYECTO", "QTM4J_API_KEY"],
     "aio": ["GESTION_PROYECTO", "AIO_API_TOKEN"],
 }
+
+
+def faltantes(nombres, env):
+    """Las variables que faltan; "A|B+C" se cumple con A o con B y C."""
+    salida = []
+    for nombre in nombres:
+        opciones = [o.split("+") for o in nombre.split("|")]
+        if not any(all(env.get(v) for v in grupo) for grupo in opciones):
+            salida.append(" o ".join("+".join(g) for g in opciones))
+    return salida
 
 
 def linea(estado, texto, ayuda=""):
@@ -137,7 +148,7 @@ def main():
                 linea(AVISO, f"{nombre} vacía: {para}", f"Completala en {archivo.name}")
     herramienta = env.get("GESTION_HERRAMIENTA", "")
     if herramienta:
-        faltan = [n for n in VARIABLES_GESTION.get(herramienta, []) if not env.get(n)]
+        faltan = faltantes(VARIABLES_GESTION.get(herramienta, []), env)
         if herramienta not in VARIABLES_GESTION:
             linea(FALTA, f"GESTION_HERRAMIENTA={herramienta} no es válida", "Usá xray-cloud, xray-dc, qtm4j o aio")
         elif faltan:
@@ -153,7 +164,10 @@ def main():
         except (OSError, ValueError):
             pass
     for nombre in dict.fromkeys(habilitados):
-        faltan = [n for n in VARIABLES_CONECTOR.get(nombre, []) if not env.get(n)]
+        requeridas = VARIABLES_CONECTOR.get(nombre, [])
+        if nombre == "azure-devops" and (env.get("ADO_AUTENTICACION") or "pat").lower() != "pat":
+            requeridas = ["ADO_ORGANIZACION"]  # interactive / azcli / env: sin PAT
+        faltan = faltantes(requeridas, env)
         if faltan:
             linea(FALTA, f"{nombre}: faltan {', '.join(faltan)}", "Completalas en el .env (ver CONECTORES.md)")
         elif nombre in ("atlassian", "figma"):

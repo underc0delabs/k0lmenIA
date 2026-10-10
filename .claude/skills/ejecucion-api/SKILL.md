@@ -40,7 +40,7 @@ Validá lo que importa: **status code**, **campos clave** del cuerpo, y si hace 
 - **`base_url`** (no es secreto): va en el **environment** (`input/api/*.postman_environment.json`) o como variable de la colección. En los requests se usa `{{base_url}}/loquesea`.
 - **Token / credenciales** (secreto): **nunca** en la colección ni en el environment. Va en el `.env` (gitignored) y se pasa al correr:
   ```bash
-  python scripts/correr_newman.py <coleccion> --historia HU-001   # toma API_TOKEN y API_BASEURL del .env (PowerShell, bash y zsh)
+  python scripts/correr_newman.py <coleccion> --historia HU-001   # token del .env; base_url de --base-url, del environment/colección o, si no la definen, de API_BASEURL
   ```
   En la colección, el header usa la variable: `Authorization: Bearer {{token}}`. Usá un entorno de prueba, no producción.
 

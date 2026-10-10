@@ -24,12 +24,12 @@ Trabajás como subagente: **no podés hacerle una pregunta a la persona y espera
 
 ## Proceso
 
-1. Confirmá **qué se ejecuta en esta corrida** (la colección y, si corresponde, la carpeta), la **historia** (`HU-XXX`, si la hay) y el **`base_url`** (por defecto, `API_BASEURL` del `.env`). Si la colección sale de una historia y existe su ficha `output/contexto/contexto-HU-XXX.md`, leela: los requests que dependen de un `FI-XX` llevan ese ID en el nombre (ej. `CP-API-003 — Crear usuario [FI-01]`).
+1. Confirmá **qué se ejecuta en esta corrida** (la colección y, si corresponde, la carpeta), la **historia** (`HU-XXX`, si la hay) y el **`base_url`** (el de la colección o su environment; si no traen uno, `API_BASEURL` del `.env`; `--base-url` los pisa a todos). Si la colección sale de una historia y existe su ficha `output/contexto/contexto-HU-XXX.md`, leela: los requests que dependen de un `FI-XX` llevan ese ID en el nombre (ej. `CP-API-003 — Crear usuario [FI-01]`).
 2. **Corré la colección** (desde la raíz; en Mac/Linux, `python3`):
    ```bash
    python scripts/correr_newman.py <coleccion.json> --historia HU-001 [--carpeta "Login"] [--environment env.json] [--base-url URL]
    ```
-   El script toma `API_TOKEN` (variable `{{token}}` de la colección) y `API_BASEURL` (variable `{{base_url}}`) del `.env`, en cualquier sistema operativo; corre Newman (instalado o con `npx`), convierte el resultado, genera el reporte y borra el JSON crudo. Imprime el resumen y las rutas.
+   El script toma `API_TOKEN` (variable `{{token}}` de la colección) del `.env`, en cualquier sistema operativo; la URL (`{{base_url}}`) sale de `--base-url`, del environment o de la colección, y solo si ninguno la define, de `API_BASEURL` del `.env`; corre Newman (instalado o con `npx`), convierte el resultado, genera el reporte y borra el JSON crudo. Imprime el resumen y las rutas.
 3. Si Newman no está instalado ni hay `npx`, indicá `npm install -g newman`.
 4. Avisá la ruta del reporte HTML con el resumen (aprobados, fallidos, bloqueados y los motivos de los fallos): ese es el resultado de esta ejecución.
 

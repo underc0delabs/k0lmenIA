@@ -128,6 +128,7 @@ npm run perf -- <script> load --vus 20 --duracion 2m   # k6 y JMeter: pisa la ca
 
 - **Perfiles**: `smoke` (carga mínima, valida el script), `load` (carga objetivo sostenida), `stress` (1x, 2x y 3x), `soak` (larga duración) y `spike` (pico brusco). Los perfiles con carga piden confirmación.
 - **Scripts**: k6 en `performance/k6/http/<script>.ts` (base en `performance/k6/lib/k0lmena.ts`); Artillery en `performance/artillery/<script>.yaml` + processor `.ts`; JMeter en `performance/jmeter/<script>.jmx` + `<script>.json` (destino, carga por perfil y umbrales; plantilla en `performance/jmeter/plantilla/`). Plantillas en el skill `automatizacion-k0lmena`.
+- **Nombres únicos**: un mismo nombre de script no puede estar en dos herramientas (por ejemplo, `HU-001-login.ts` en k6 y `HU-001-login.jmx` en JMeter): `npm run perf` corta y pide renombrar uno, para no correr el equivocado.
 - **Umbrales**: en el script (`umbrales` en k6, `ensure` en Artillery) o en el `.json` del `.jmx` (JMeter). Si alguno no se cumple, la corrida termina con código 1.
 - **Salida** en `reports/performance/<k6|artillery|jmeter>/`: reporte HTML (dashboard), resumen JSON, resultado crudo y log de la herramienta; con JMeter, también su dashboard nativo (`<corrida>-dashboard/`). La consola muestra solo el resumen.
 

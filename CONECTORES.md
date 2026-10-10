@@ -61,7 +61,8 @@ Todos los conectores ya están en `.mcp.json` y todas las variables, en `.env.ex
 +---------------------------+---------------------------------------+------------------------------------------+---------------------------------+
 | Xray Server / Data Center | `scripts/gestion` (sin MCP)           | `GESTION_HERRAMIENTA=xray-dc`,           | Listo al completar el `.env`    |
 |                           |                                       | `GESTION_PROYECTO`, `XRAY_DC_URL`,       |                                 |
-|                           |                                       | `XRAY_DC_TOKEN`                          |                                 |
+|                           |                                       | `XRAY_DC_TOKEN` (o `XRAY_DC_USER` +      |                                 |
+|                           |                                       | `XRAY_DC_PASSWORD`)                      |                                 |
 +---------------------------+---------------------------------------+------------------------------------------+---------------------------------+
 | QMetry para Jira (QTM4J)  | `scripts/gestion` + `qtm4j` (MCP)     | `GESTION_HERRAMIENTA=qtm4j`,             | `scripts/gestion`: sí · MCP: no |
 |                           |                                       | `GESTION_PROYECTO`, `QTM4J_API_KEY`      |                                 |
