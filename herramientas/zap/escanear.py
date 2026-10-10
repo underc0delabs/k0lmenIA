@@ -31,16 +31,11 @@ IMAGEN_POR_DEFECTO = "ghcr.io/zaproxy/zaproxy:stable"
 
 
 def leer_env():
-    valores = {}
-    archivo = RAIZ / ".env"
-    if archivo.exists():
-        for linea in archivo.read_text(encoding="utf-8").splitlines():
-            m = re.match(r"^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)\s*$", linea)
-            if m:
-                v = m.group(2)
-                v = v[1:-1] if re.match(r"^(['\"]).*\1$", v) else re.sub(r"\s+#.*$", "", v)
-                valores[m.group(1)] = v
-    # Las variables del entorno pisan a las del .env.
+    """El .env de la raíz (o K0LMENA_ENV_FILE), con el lector común de k0lmenIA; las variables
+    SEGURIDAD_* y ZAP_* del entorno pisan a las del archivo."""
+    sys.path.insert(0, str(RAIZ / "scripts"))
+    from _env import leer_env as _leer
+    valores = _leer()
     valores.update({k: v for k, v in os.environ.items() if k.startswith(("SEGURIDAD_", "ZAP_"))})
     return valores
 
@@ -84,6 +79,8 @@ def main():
         salir("La URL tiene que empezar con http:// o https://.")
     if not 1 <= args.minutos <= 10:
         salir("--minutos tiene que estar entre 1 y 10.")
+    if args.historia and not re.match(r"^[A-Za-z]+-\d+$", args.historia):
+        salir("--historia tiene que ser un ID como HU-001.")
     env = leer_env()
     autorizada(args.url, env)
 
@@ -108,7 +105,12 @@ def main():
            "-J", "zap.json", "-r", "zap-nativo.html", "-I"]
     print(f"ZAP baseline (pasivo) · {args.url} · salida en {carpeta.relative_to(RAIZ).as_posix()}")
     with open(carpeta / "zap.log", "w", encoding="utf-8") as log:
-        r = subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, env={**os.environ, "MSYS_NO_PATHCONV": "1"})
+        try:
+            # Tope: el recorrido pedido + 15 minutos para descargar la imagen, el análisis pasivo y el reporte.
+            r = subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, env={**os.environ, "MSYS_NO_PATHCONV": "1"},
+                               timeout=(args.minutos + 15) * 60)
+        except subprocess.TimeoutExpired:
+            salir(f"El escaneo superó el tiempo máximo ({args.minutos + 15} min). Revisá {carpeta.relative_to(RAIZ).as_posix()}/zap.log.", 1)
     # zap-baseline: 0 sin alertas, 1 FAIL, 2 WARN, 3 error del escaneo (con -I, WARN no hace fallar).
     resultado = carpeta / "zap.json"
     if not resultado.exists():
@@ -119,8 +121,10 @@ def main():
     g = subprocess.run([sys.executable, str(RAIZ / "scripts" / "generar_informe_seguridad.py"), str(resultado), str(informe),
                         "--url", args.url] + (["--historia", args.historia] if args.historia else []),
                        capture_output=True, text=True)
-    print(g.stdout.strip() or g.stderr.strip())
     print(f"Resultado: {resultado.relative_to(RAIZ).as_posix()}")
+    if g.returncode != 0:
+        detalle = (g.stderr or g.stdout).strip()[-800:]
+        salir(f"ZAP terminó, pero no se pudo generar el informe:\n{detalle}", 1)
     print(f"Informe:   {informe.relative_to(RAIZ).as_posix()}")
 
 

@@ -5,7 +5,7 @@ Genera un Informe de Cierre de pruebas en HTML (dashboard, modo oscuro) desde un
 Uso:
     python scripts/generar_informe_cierre.py <cierre.json> <salida.html>
 
-JSON de entrada:
+JSON de entrada (los números, mejor desde "datos": ver más abajo):
 {
   "titulo": "Informe de cierre — Registro de cuenta",
   "historia": "HU-001",
@@ -27,14 +27,21 @@ JSON de entrada:
   "conclusion": "Texto de cierre."
 }
 
+"datos" (recomendado): ruta al JSON de scripts/recolectar_resultados.py. Si está, los resultados,
+los bugs, la performance y la seguridad salen de ahí (de los archivos reales de la ronda) y no se
+escriben a mano: el JSON del informe solo aporta el análisis (resumen, recomendación, riesgos…).
+
+    python scripts/recolectar_resultados.py --historia HU-001 --salida output/informes-cierre/datos-HU-001.json
+
 Estados: Aprobado | Fallido | Bloqueado     Severidad: Crítica | Alta | Media | Baja
 El HTML es autocontenido (CSS y SVG inline), no usa internet.
 """
 import sys
 import json
+from pathlib import Path
 
 from _estilos_reporte import (e, page, meta, section, kpi_tiles, donut, bar_chart, legend,
-                              banner, doc_list, table, nivel_badge, NIVEL_COLOR, ESTADO_COLOR)
+                              banner, doc_list, table, nivel_badge, estado_pill, NIVEL_COLOR, ESTADO_COLOR)
 
 SEVERIDADES = ["Crítica", "Alta", "Media", "Baja"]
 
@@ -131,6 +138,27 @@ def build_html(data):
         titulo = f"Falta información ({len(abiertos)} abierto{'s' if len(abiertos) != 1 else ''})"
         body.append(section(titulo, doc_list(items)))
 
+    # Lo que viene de recolectar_resultados.py (fuentes, performance, seguridad, casos)
+    datos = data.get("_datos") or {}
+    if datos.get("fuentes"):
+        chips = "".join(f'<span class="chip">{e(f)}</span>' for f in datos["fuentes"])
+        body.append(section("Fuentes de los resultados", f'<div class="cardbody"><div class="meta" style="margin-top:0">{chips}</div>'
+                            f'<p style="margin-top:12px">Un caso ejecutado varias veces cuenta una sola vez, con su resultado más reciente.</p></div>'))
+    if datos.get("performance"):
+        filas = [[e(x["informe"]), e(x["veredicto"]), e(x["capacidad"] or "—"), e(x["corridas"])] for x in datos["performance"]]
+        body.append(section("Performance", table(["Informe", "Veredicto", "Capacidad observada", "Corridas"], filas)))
+    if datos.get("seguridad"):
+        filas = [[e(x["escaneo"])] + [e(x["hallazgos"][n]) for n in ("Alto", "Medio", "Bajo", "Informativo")] for x in datos["seguridad"]]
+        body.append(section("Seguridad web", table(["Escaneo", "Alto", "Medio", "Bajo", "Informativo"], filas),
+                            "hallazgos del escaneo pasivo, sin los falsos positivos descartados"))
+    casos = datos.get("casos") or []
+    if casos:
+        filas = [[f'<span class="id mono">{e(c["id"])}</span>', e(c.get("titulo", "")), estado_pill(c["estado"]), e(c["fuente"])]
+                 for c in casos]
+        body.append(section("Detalle de casos", table(["Caso", "Título", "Estado", "Fuente"], filas), f"{len(casos)} casos"))
+    if (datos.get("bugs") or {}).get("sin_estado"):
+        body.append(section("Bugs sin estado", doc_list([f'{b}: el reporte no tiene el campo Estado; se cuenta como abierto' for b in datos["bugs"]["sin_estado"]])))
+
     # Riesgos y pendientes
     if data.get("riesgos_pendientes"):
         body.append(section("Riesgos y pendientes", doc_list(data["riesgos_pendientes"])))
@@ -154,6 +182,16 @@ def main():
         sys.exit(1)
     with open(entrada, encoding="utf-8") as f:
         data = json.load(f)
+    if data.get("datos"):
+        ruta = Path(data["datos"])
+        if not ruta.is_absolute() and not ruta.exists():
+            ruta = Path(entrada).resolve().parent / ruta
+        if not ruta.exists():
+            sys.exit(f"[!] No encuentro los datos recolectados: {data['datos']} (generalos con scripts/recolectar_resultados.py)")
+        datos = json.loads(ruta.read_text(encoding="utf-8"))
+        data["resultados"] = datos["resultados"]
+        data["bugs"] = {"por_severidad": datos["bugs"]["por_severidad"], "criticos_abiertos": datos["bugs"]["criticos_abiertos"]}
+        data["_datos"] = datos
     with open(salida, "w", encoding="utf-8") as f:
         f.write(build_html(data))
     print(f"OK: {salida}")

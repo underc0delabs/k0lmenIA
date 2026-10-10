@@ -11,8 +11,9 @@ newman run coleccion.json
 # Con environment (define base_url y otras variables no secretas)
 newman run coleccion.json -e environment.json
 
-# Pasar un secreto desde tu entorno (no queda en ningún archivo)
-newman run coleccion.json --env-var "token=$API_TOKEN"
+# Pasar un secreto sin escribirlo en ningún archivo: en este repo lo hace scripts/correr_newman.py,
+# que toma API_TOKEN del .env (en bash sería --env-var "token=$API_TOKEN"; en PowerShell, $env:API_TOKEN)
+python scripts/correr_newman.py coleccion.json --historia HU-001
 
 # Reporters: consola + JSON exportado a un archivo
 newman run coleccion.json -r cli,json --reporter-json-export salida.json

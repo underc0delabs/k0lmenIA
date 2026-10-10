@@ -7,28 +7,30 @@ Todas las conexiones están en el `.mcp.json` del proyecto y **ninguna lleva sec
 ## Resumen
 
 ```
-+-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
-| Conector  | Herramienta                             | Server MCP                              | Tipo        | Transporte |
-+===========+=========================================+=========================================+=============+============+
-| atlassian | Jira y Confluence (Cloud)               | Atlassian Rovo MCP Server (remoto)      | Oficial     | http       |
-+-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
-| figma     | Figma (diseños)                         | Figma MCP Server remoto                 | Oficial     | http       |
-+-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
-| figma-    | Figma (app de escritorio)               | Figma MCP Server de escritorio          | Oficial     | http       |
-| desktop   |                                         | (local)                                 |             |            |
-+-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
-| qmetry    | QMetry Test Management                  | @smartbear/mcp                          | Oficial     | stdio      |
-+-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
-| qtm4j     | QMetry Test Management for Jira (QTM4J) | @smartbear/mcp                          | Oficial     | stdio      |
-+-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
-| aio-tests | AIO Tests for Jira                      | Server remoto de AIO Tests (por tenant) | Oficial     | stdio      |
-+-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
-| k0lmena-  | k0lmenaTMT                              | Server MCP de k0lmenaTMT (local o       | Oficial     | http       |
-| tmt       |                                         | propio)                                 |             |            |
-+-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
-| azure-    | Azure DevOps (Boards, Test Plans, Wiki) | @azure-devops/mcp (Microsoft)           | Oficial     | stdio      |
-| devops    |                                         |                                         |             |            |
-+-----------+-----------------------------------------+-----------------------------------------+-------------+------------+
++----------------------------------+-----------------------------------------+-----------------------------------------+---------+--------------+--------------------------+
+| Conector                         | Herramienta                             | Server MCP                              | Tipo    | Transporte   | Habilitado por defecto   |
++==================================+=========================================+=========================================+=========+==============+==========================+
+| playwright · playwright-headless | Navegador (ejecutor-e2e, web-mapper)    | @playwright/mcp                         | Oficial | stdio        | Sí                       |
++----------------------------------+-----------------------------------------+-----------------------------------------+---------+--------------+--------------------------+
+| atlassian                        | Jira y Confluence (Cloud)               | Atlassian Rovo MCP Server (remoto)      | Oficial | http         | Sí                       |
++----------------------------------+-----------------------------------------+-----------------------------------------+---------+--------------+--------------------------+
+| azure-devops                     | Azure DevOps (Boards, Test Plans, Wiki) | @azure-devops/mcp (Microsoft)           | Oficial | stdio        | No                       |
++----------------------------------+-----------------------------------------+-----------------------------------------+---------+--------------+--------------------------+
+| figma                            | Figma (diseños)                         | Figma MCP Server remoto                 | Oficial | http         | No                       |
++----------------------------------+-----------------------------------------+-----------------------------------------+---------+--------------+--------------------------+
+| figma-desktop                    | Figma (app de escritorio)               | Figma MCP Server de escritorio (local)  | Oficial | http         | No                       |
++----------------------------------+-----------------------------------------+-----------------------------------------+---------+--------------+--------------------------+
+| qmetry                           | QMetry Test Management                  | @smartbear/mcp                          | Oficial | stdio        | No                       |
++----------------------------------+-----------------------------------------+-----------------------------------------+---------+--------------+--------------------------+
+| qtm4j                            | QMetry Test Management for Jira (QTM4J) | @smartbear/mcp                          | Oficial | stdio        | No                       |
++----------------------------------+-----------------------------------------+-----------------------------------------+---------+--------------+--------------------------+
+| aio-tests                        | AIO Tests for Jira                      | Server remoto de AIO Tests (por tenant) | Oficial | stdio        | No                       |
++----------------------------------+-----------------------------------------+-----------------------------------------+---------+--------------+--------------------------+
+| k0lmena-tmt                      | k0lmenaTMT                              | Server MCP de k0lmenaTMT (local o       | Oficial | http         | No                       |
+|                                  |                                         | propio)                                 |         |              |                          |
++----------------------------------+-----------------------------------------+-----------------------------------------+---------+--------------+--------------------------+
+| appium-mcp                       | Appium (mobile-mapper)                  | appium-mcp                              | Oficial | stdio        | No                       |
++----------------------------------+-----------------------------------------+-----------------------------------------+---------+--------------+--------------------------+
 ```
 
 > **Para crear carpetas, casos, ciclos y publicar resultados no hace falta ningún MCP**: lo hace la integración propia `scripts/gestion/` (agentes `gestor-pruebas` y `publicador-resultados`), que soporta **Xray Cloud, Xray Server/Data Center, QTM4J y AIO Tests** con sus APIs oficiales. Configuración en [`scripts/gestion/README.md`](scripts/gestion/README.md). La excepción es **Azure DevOps**, que se integra por su MCP (ver [Azure DevOps](#azure-devops)). Los MCP de esta página son opcionales, para consultar o explorar la herramienta desde el chat.
@@ -82,7 +84,11 @@ Todos los conectores ya están en `.mcp.json` y todas las variables, en `.env.ex
 }
 ```
 
-Después reiniciá Claude Code y verificá con `/mcp`. **Las integraciones de `scripts/gestion`** (Xray, QTM4J y AIO) no necesitan habilitarse: funcionan en cuanto el `.env` tiene sus variables.
+- **Si el archivo no existe** (recién clonaste el repo), crealo con ese contenido.
+- **Si ya existe** (Claude Code lo crea cuando aprobás permisos), sumale la clave `enabledMcpjsonServers` sin borrar lo que tiene.
+- Poné la **lista completa** de los que querés usar, incluidos `playwright`, `playwright-headless` y `atlassian`, así no dependés de cómo se combine con la lista del proyecto.
+
+Después reiniciá Claude Code y verificá con `/mcp`; `npm run doctor` te dice qué variables le faltan a cada conector habilitado. **Las integraciones de `scripts/gestion`** (Xray, QTM4J y AIO) no necesitan habilitarse: funcionan en cuanto el `.env` tiene sus variables.
 
 ---
 
@@ -100,28 +106,42 @@ Después reiniciá Claude Code y verificá con `/mcp`. **Las integraciones de `s
 **Cómo llegan los tokens al server sin quedar en `.mcp.json`:** los conectores con credenciales no llaman al server directo, sino a un script de `scripts/mcp/` que lee las variables del entorno o, si no están, del `.env`, y arranca el server pasándoselas solo por variable de entorno:
 
 ```
-+--------------------------+---------------------------+------------------------------------------+
-| Script                   | Conectores                | Qué hace                                 |
-+==========================+===========================+==========================================+
-| `con-env.js`             | qmetry, qtm4j, appium-mcp | Pasa al server las variables que pide la |
-|                          |                           | entrada (y nada más del `.env`)          |
-+--------------------------+---------------------------+------------------------------------------+
-| `azure-devops.js`        | azure-devops              | Arma el PAT en el formato del server y   |
-|                          |                           | elige las áreas habilitadas              |
-+--------------------------+---------------------------+------------------------------------------+
-| `aio-tests.js`           | aio-tests                 | Conecta con la URL de tu tenant vía      |
-|                          |                           | `mcp-remote`, con el token en el header  |
-+--------------------------+---------------------------+------------------------------------------+
-| `k0lmena-tmt-headers.js` | k0lmena-tmt               | Devuelve el header `Authorization` (es   |
-|                          |                           | un `headersHelper`)                      |
-+--------------------------+---------------------------+------------------------------------------+
-| `atlassian-headers.js`   | atlassian                 | Con ATLASSIAN_MCP_AUTENTICACION=token    |
-|                          |                           | arma el header con el API token; con     |
-|                          |                           | oauth (por defecto) no agrega nada       |
-+--------------------------+---------------------------+------------------------------------------+
++--------------------------+---------------------------------+------------------------------------------+
+| Script                   | Conectores                      | Qué hace                                 |
++==========================+=================================+==========================================+
+| `playwright.js`          | playwright, playwright-headless | Arranca Playwright con la carpeta de     |
+|                          |                                 | evidencias y, si existe el `.env`, con   |
+|                          |                                 | `--secrets .env` (oculta esos valores en |
+|                          |                                 | las respuestas)                          |
++--------------------------+---------------------------------+------------------------------------------+
+| `con-env.js`             | qmetry, qtm4j, appium-mcp       | Pasa al server las variables que pide la |
+|                          |                                 | entrada (y nada más del `.env`)          |
++--------------------------+---------------------------------+------------------------------------------+
+| `azure-devops.js`        | azure-devops                    | Arma el PAT en el formato del server y   |
+|                          |                                 | elige las áreas habilitadas              |
++--------------------------+---------------------------------+------------------------------------------+
+| `aio-tests.js`           | aio-tests                       | Conecta con la URL de tu tenant vía      |
+|                          |                                 | `mcp-remote`, con el token en el header  |
++--------------------------+---------------------------------+------------------------------------------+
+| `k0lmena-tmt-headers.js` | k0lmena-tmt                     | Devuelve el header `Authorization` (es   |
+|                          |                                 | un `headersHelper`)                      |
++--------------------------+---------------------------------+------------------------------------------+
+| `atlassian-headers.js`   | atlassian                       | Con `ATLASSIAN_MCP_AUTENTICACION=token`  |
+|                          |                                 | arma el header con el API token; con     |
+|                          |                                 | `oauth` (por defecto) no agrega nada     |
++--------------------------+---------------------------------+------------------------------------------+
+| `lanzar.js`              | todos los de `npx`              | Versiones fijas de cada paquete,         |
+|                          |                                 | lanzamiento en Windows y cierre del      |
+|                          |                                 | árbol de procesos                        |
++--------------------------+---------------------------------+------------------------------------------+
+| `leer-env.js`            | todos                           | Lee el `.env` con las mismas reglas que  |
+|                          |                                 | k0lmena y `scripts/_env.py`              |
++--------------------------+---------------------------------+------------------------------------------+
 ```
 
 Si falta una variable, el script corta enseguida con un mensaje claro (por ejemplo *"qtm4j: falta QTM4J_API_KEY en el .env de la raíz"*), que se ve en `/mcp`.
+
+**Versiones fijas**: los servers que se instalan con `npx` (Playwright, Azure DevOps, QMetry/QTM4J, Appium y `mcp-remote` de AIO) usan una versión concreta, definida en `scripts/mcp/lanzar.js`, nunca `@latest`: así una versión nueva no revisada no recibe tus tokens sin que alguien lo decida. Para actualizar, cambiá la versión ahí (para probar una sin tocar el archivo: `PLAYWRIGHT_MCP_MCP_VERSION=0.0.84`, `AZURE_DEVOPS_MCP_MCP_VERSION=…`, etc.).
 
 > Nunca pongas el valor real de un token en `.mcp.json`. Para sumar un conector nuevo con credenciales, usá `con-env.js` o un script propio en `scripts/mcp/`.
 
@@ -152,19 +172,20 @@ Usa el server oficial de SmartBear, [`@smartbear/mcp`](https://github.com/SmartB
 **`qtm4j` — QMetry Test Management for Jira (Cloud):**
 
 ```
-+--------------------------+-------------+---------------------------------------+
-| Variable                 | Obligatoria | Descripción                           |
-+==========================+=============+=======================================+
-| QTM4J_API_KEY            | Sí          | API Key de QTM4J                      |
-+--------------------------+-------------+---------------------------------------+
-| QTM4J_BASE_URL           | No          | US (por defecto):                     |
-|                          |             | https://qtmcloud.qmetry.com ·         |
-|                          |             | Australia: https://syd-               |
-|                          |             | qtmcloud.qmetry.com                   |
-+--------------------------+-------------+---------------------------------------+
-| QTM4J_AUTOMATION_API_KEY | No          | Solo para las herramientas de         |
-|                          |             | automatización; vacía las deshabilita |
-+--------------------------+-------------+---------------------------------------+
++--------------------------+---------------+------------------------------------------+
+| Variable                 | Obligatoria   | Descripción                              |
++==========================+===============+==========================================+
+| QTM4J_API_KEY            | Sí            | API Key de QTM4J                         |
++--------------------------+---------------+------------------------------------------+
+| QTM4J_BASE_URL           | No            | US (por defecto):                        |
+|                          |               | https://qtmcloud.qmetry.com · Australia: |
+|                          |               | https://syd-qtmcloud.qmetry.com ·        |
+|                          |               | Europa: https://eu-                      |
+|                          |               | qtm4j-cloud.qmetry.com                   |
++--------------------------+---------------+------------------------------------------+
+| QTM4J_AUTOMATION_API_KEY | No            | Solo para las herramientas de            |
+|                          |               | automatización; vacía las deshabilita    |
++--------------------------+---------------+------------------------------------------+
 ```
 
 Las dos entradas ejecutan `scripts/mcp/con-env.js`, que toma estas variables del entorno o, si no están, del `.env`.

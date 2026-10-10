@@ -97,7 +97,8 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 - [Investigación de contexto y "Falta información"](#-investigación-de-contexto-y-falta-información)
 - [Automatización con k0lmena](#️-automatización-con-k0lmena)
 - [Pruebas de performance](#-pruebas-de-performance)
-- [Gestión de pruebas: Xray, QMetry y AIO Tests](#️-gestión-de-pruebas-xray-qmetry-y-aio-tests)
+- [Gestión de pruebas: Xray, QMetry, AIO Tests y Azure DevOps](#️-gestión-de-pruebas-xray-qmetry-aio-tests-y-azure-devops)
+- [Seguridad web](#️-seguridad-web)
 - [Verificación en base de datos](#️-verificación-en-base-de-datos)
 - [Conectores MCP](#-conectores-mcp)
 - [Referencia](#-referencia): flujo completo, convenciones, estructura, problemas frecuentes y cómo extenderlo
@@ -123,7 +124,7 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 <tr><td><code>ejecutor-api</code></td><td>Corre una colección de Postman con Newman</td></tr>
 <tr><td><code>generador-reporte-html</code></td><td>Dashboard HTML de una ejecución</td></tr>
 <tr><td><code>generador-reporte-cierre</code></td><td>Informe de cierre con recomendación go/no-go</td></tr>
-<tr><td rowspan="5"><b>⚙️ Automatización<br>k0lmena</b><br><sub>después sin tokens</sub></td>
+<tr><td rowspan="6"><b>⚙️ Automatización<br>k0lmena</b><br><sub>después sin tokens</sub></td>
   <td><code>web-mapper</code></td><td>Recorre la web siguiendo tus casos y genera <code>.feature</code>, steps y locators</td></tr>
 <tr><td><code>api-mapper</code></td><td>Lee Postman o Swagger/OpenAPI, verifica los endpoints y genera los <code>.feature</code></td></tr>
 <tr><td><code>mobile-mapper</code></td><td>Recorre la app con Appium y genera <code>.feature</code>, steps y locators</td></tr>
@@ -142,10 +143,10 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 | Para…                     | Necesitás                                                                                                 |
 | ------------------------- | --------------------------------------------------------------------------------------------------------- |
 | Usar los agentes          | **Claude Code** + cuenta de Claude (Pro, Max, Team o Enterprise) o API de Anthropic. VS Code recomendado. |
-| Casos, reportes y gestión | **Python 3** (`pip install -r requirements.txt`)                                                          |
-| Ejecutar E2E en vivo      | **Node.js 18+** y navegadores de Playwright                                                               |
+| Casos, reportes y gestión | **Python 3.10+** (`pip install -r requirements.txt`; en Mac/Linux, `pip3`)                                |
+| Ejecutar E2E en vivo      | **Node.js 20+** (22 LTS recomendado) y navegadores de Playwright                                          |
 | Colecciones de Postman    | **Newman**                                                                                                |
-| Automatizar con k0lmena   | **Node.js 20+**                                                                                           |
+| Automatizar con k0lmena   | **Node.js 20+** (22 LTS recomendado; también lo piden los conectores de Azure DevOps y QMetry)            |
 | Seguridad web (ZAP)       | **Docker** (Docker Desktop)                                                                               |
 | Automatizar mobile        | **Node.js 22+**, JDK y Android SDK (o macOS con Xcode), o BrowserStack                                    |
 | Performance con JMeter    | **Java 8+** (`npm run bootstrap:jmeter` descarga JMeter)                                                  |
@@ -155,19 +156,25 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 ## 🚀 Instalación
 
 ```bash
-# 1. Claude Code (macOS / Linux; en Windows seguí la guía oficial)
+# 1. Claude Code (macOS / Linux; en Windows seguí la guía oficial, abajo)
 curl -fsSL https://claude.ai/install.sh | bash
 
-# 2. El repositorio
+# 2. El repositorio (si ya lo tenés clonado con otro nombre, entrá a esa carpeta)
 git clone https://github.com/underc0delabs/k0lmenIA.git
 cd k0lmenIA
-pip install -r requirements.txt
-cp .env.example .env              # y completalo
+pip install -r requirements.txt   # en Mac/Linux: pip3 install -r requirements.txt
+npm install                       # k0lmena (se instala en herramientas/k0lmena)
+cp .env.example .env              # y completalo (en PowerShell: copy .env.example .env)
 
-# 3. A trabajar
+# 3. Revisá que esté todo listo
+npm run doctor                    # dice qué falta y cómo resolverlo
+
+# 4. A trabajar
 code .
 claude                            # en la terminal de VS Code
 ```
+
+> En Windows el comando de Python es `python`; en Mac y Linux, `python3` y `pip3`. Si en Mac `pip3` responde *externally-managed-environment*, usá un entorno virtual: `python3 -m venv .venv && source .venv/bin/activate` (`.venv/` ya está en `.gitignore`).
 
 <details>
 <summary><b>Instalar lo opcional</b> (ejecución en vivo, Newman, k0lmena, k6)</summary>
@@ -183,7 +190,7 @@ npm run bootstrap:k6                    # performance de APIs con k6
 npm run bootstrap:jmeter                # performance con JMeter (necesita Java 8+)
 ```
 
-Claude Code también se instala con `npm install -g @anthropic-ai/claude-code` (Node.js 18+). Guía oficial: https://docs.claude.com/en/docs/claude-code/overview
+Claude Code también se instala con `npm install -g @anthropic-ai/claude-code` (con Node.js 22 LTS cubrís Claude Code y todo el proyecto). Guía oficial: https://docs.claude.com/en/docs/claude-code/overview
 </details>
 
 ---
@@ -327,7 +334,7 @@ Cada corrida deja además su propio **reporte HTML** en `herramientas/k0lmena/re
 
 ---
 
-## 🗂️ Gestión de pruebas: Xray, QMetry y AIO Tests
+## 🗂️ Gestión de pruebas: Xray, QMetry, AIO Tests y Azure DevOps
 
 Configurá `GESTION_HERRAMIENTA` (`xray-cloud` · `xray-dc` · `qtm4j` · `aio`), `GESTION_PROYECTO` y las credenciales en el `.env`, y pedí:
 
@@ -405,6 +412,18 @@ Todos están en `.mcp.json`, sin secretos: las credenciales se leen del `.env`, 
 
 ---
 
+**Habilitar un conector** (por ejemplo, Azure DevOps): creá el archivo `.claude/settings.local.json` (no se versiona, así que solo te afecta a vos) con la lista completa de los que querés usar, y reiniciá Claude Code:
+
+```json
+{
+  "enabledMcpjsonServers": ["playwright", "playwright-headless", "atlassian", "azure-devops"]
+}
+```
+
+`npm run doctor` te dice qué variables le faltan a cada conector habilitado. Detalle por herramienta en [`CONECTORES.md`](CONECTORES.md#qué-configurar-según-tu-equipo).
+
+---
+
 ## 📎 Referencia
 
 <details>
@@ -435,7 +454,7 @@ Todos están en `.mcp.json`, sin secretos: las credenciales se leen del `.env`, 
 | Falta información       | `FI-01` (por historia) · tags `@falta-info @FI-01`                                                |
 | Severidad y prioridad   | Crítica · Alta · Media · Baja                                                                     |
 | Estado de un caso       | N/A · Pendiente · En ejecución · Aprobado · Fallido · Bloqueado                                   |
-| Tags en k0lmena         | Feature: `@HU-001 @web` · Scenario: `@CP-001` (`@Smoke` si es crítico) · `@bloqueado`             |
+| Tags en k0lmena         | Feature: `@HU-001 @web` · Scenario: `@CP-001` (`@smoke` si es crítico) · `@bloqueado`             |
 | Automatización          | `<tipo>/features/HU-001-<slug>.feature` · `steps/HU-001.steps.ts` · `locators/HU-001.locators.ts` |
 </details>
 
@@ -447,17 +466,22 @@ k0lmenIA/
 ├── CLAUDE.md               Contexto y estándares (Claude Code lo lee siempre)
 ├── ARQUITECTURA.md         Cómo crece el repo
 ├── CONECTORES.md           Cómo activar los conectores MCP
+├── CHANGELOG.md            Cambios de cada versión
+├── LICENSE                 Licencia MIT
 ├── .env.example            Plantilla de variables (copiar a .env)
 ├── .mcp.json               Conectores MCP (sin secretos; activos según settings)
 ├── package.json            Atajos para correr k0lmena desde la raíz (npm test…)
 ├── docs/                   Documentación web, PDF y diagramas
+├── tests/                  Tests de los scripts del repo (pytest y node --test)
+├── .github/workflows/      CI: los tests en Ubuntu y Windows
 ├── .claude/
 │   ├── agents/             Los 19 agentes
-│   └── skills/             Investigación de contexto, diseño, ejecución E2E y API, k0lmena
-├── input/                  historias/ documentacion/ api/ bugs/
+│   ├── skills/             Contexto, diseño, guía de performance, ejecución E2E y API, k0lmena
+│   └── settings.json       Conectores habilitados y permisos del proyecto
+├── input/                  historias/ documentacion/ api/ bugs/ (ver input/README.md)
 ├── output/                 Lo que generan los agentes (contexto/, casos, reportes, mapeos…)
 ├── plantillas/             Bug, planilla de casos, cobertura
-├── scripts/                Casos, reportes HTML, plan, informe de cierre
+├── scripts/                Casos, reportes HTML, informes, Newman, recolector y doctor
 │   ├── gestion/            Xray, QMetry (QTM4J), AIO Tests y casos para Azure DevOps
 │   └── mcp/                Lanzadores de los conectores MCP (leen el .env)
 └── herramientas/
@@ -481,7 +505,9 @@ k0lmenIA/
 | `npm run perf` no corre un perfil con carga desde el agente       | Es a propósito: necesita `--confirmar`, que el agente agrega tras tu confirmación.                                        |
 | Una carpeta de Xray/QMetry/AIO sale como `C:/Program Files/Git/…` | En Git Bash escribí las carpetas sin `/` inicial.                                                                         |
 | ¿Los tests verifican la base de datos siempre?                    | No: las verificaciones de BD se agregan a un `.feature` solo cuando las pedís; sin `DB_CONEXIONES`, la suite corre igual. |
-| Un conector MCP no conecta                                        | Las variables van en el entorno donde lanzás `claude`; Atlassian y Figma se autorizan desde `/mcp`.                       |
+| Un conector MCP no conecta                                        | Corré `npm run doctor`: dice qué variable falta en el `.env`. Atlassian y Figma se autorizan desde `/mcp`.                |
+| No sé qué me falta instalar                                       | `npm run doctor` revisa Python, Node, k0lmena, Playwright, Newman, Java, Docker, el `.env` y los conectores.              |
+| Un agente devuelve "Necesito que confirmes"                       | Es a propósito: los agentes no pueden preguntar a mitad del trabajo. Respondé y Claude lo continúa.                       |
 </details>
 
 <details>
@@ -491,6 +517,7 @@ k0lmenIA/
 - **Skill**: una carpeta en `.claude/skills/` con su `SKILL.md`.
 - **Conector**: una entrada en `.mcp.json`, sin secretos; los tokens se leen del `.env` con un script de `scripts/mcp/`.
 - **Herramienta**: una subcarpeta en `herramientas/` con su README.
+- **Tests del repo**: `python -m pytest tests` y `npm run test:repo` (corren también en CI, en Ubuntu y Windows). Sumá un test cuando cambies un script.
 - **Documentación**: el sitio es [`docs/index.html`](docs/index.html), publicado en https://underc0delabs.github.io/k0lmenIA/ (GitHub Pages desde `docs/`); `node docs/generar.js` regenera los diagramas y el PDF.
 
 Más detalle en [`ARQUITECTURA.md`](ARQUITECTURA.md).

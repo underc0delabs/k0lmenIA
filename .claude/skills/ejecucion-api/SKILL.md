@@ -1,6 +1,6 @@
 ---
 name: ejecucion-api
-description: Cómo ejecutar pruebas de API con Newman (la CLI de Postman) — correr una colección de Postman contra una API real, escribir validaciones, manejar base_url y token, e interpretar los resultados para el reporte. Úsalo al ejecutar, correr o automatizar pruebas de API.
+description: Cómo ejecutar pruebas de API con Newman (la CLI de Postman) — correr una colección de Postman contra una API real, escribir validaciones, manejar base_url y token, e interpretar los resultados para el reporte. Úsalo al correr colecciones de Postman con Newman (ejecutor-api).
 ---
 
 # Ejecución de API con Newman
@@ -40,7 +40,7 @@ Validá lo que importa: **status code**, **campos clave** del cuerpo, y si hace 
 - **`base_url`** (no es secreto): va en el **environment** (`input/api/*.postman_environment.json`) o como variable de la colección. En los requests se usa `{{base_url}}/loquesea`.
 - **Token / credenciales** (secreto): **nunca** en la colección ni en el environment. Va en el `.env` (gitignored) y se pasa al correr:
   ```bash
-  newman run <coleccion> --env-var "token=$API_TOKEN"
+  python scripts/correr_newman.py <coleccion> --historia HU-001   # toma API_TOKEN y API_BASEURL del .env (PowerShell, bash y zsh)
   ```
   En la colección, el header usa la variable: `Authorization: Bearer {{token}}`. Usá un entorno de prueba, no producción.
 

@@ -1,0 +1,43 @@
+# Verificación del propio repo de k0lmenIA: los scripts de Python y Node que usan los agentes.
+# No corre las suites de k0lmena (esas necesitan la app bajo prueba): para eso, npm test.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: Tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Dependencias de Python
+        run: python -m pip install -r requirements-dev.txt
+
+      - name: Tests de Python (pytest)
+        run: python -m pytest tests -q
+
+      - name: Tests de Node
+        run: node --test "tests/node/**/*.test.js"
+
+      - name: JSON de configuración válidos
+        run: |
+          node -e "for (const f of ['.mcp.json', '.claude/settings.json', 'package.json', 'herramientas/k0lmena/package.json']) JSON.parse(require('fs').readFileSync(f, 'utf8'))"

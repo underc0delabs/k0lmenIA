@@ -85,6 +85,18 @@ def casos_desde_args(args, traza, adaptador):
     return [{"cid": i, **traza.datos["casos"][i]} for i in ids]
 
 
+def validar_keys(args):
+    """Las keys de historia, ciclo y casos van a JQL y a rutas de la API: solo el formato de una key."""
+    patron = re.compile(r"^[A-Za-z][A-Za-z0-9_]*-\d+$")
+    for campo in ("historia", "ciclo"):
+        valor = getattr(args, campo, None)
+        if valor and not patron.match(valor):
+            raise ErrorGestion(f"--{campo} tiene que ser una key como PROJ-12 (recibí {valor!r}).")
+    for valor in lista(getattr(args, "casos", None)):
+        if not patron.match(valor):
+            raise ErrorGestion(f"--casos: {valor!r} no es una key válida (ej. PROJ-45).")
+
+
 def cmd_carpeta(args, ad):
     ruta = ruta_carpeta(args.ruta)
     return {"ruta": ruta, "id": ad.crear_carpeta(ruta)}
@@ -95,27 +107,52 @@ def cmd_subir_casos(args, ad):
     casos = lectores.leer_casos(args.origen, lista(args.ids))
     traza = Trazabilidad(args.traza or args.historia or Path(args.origen).stem, ad.nombre)
     traza.datos.update({"proyecto": ad.proyecto, "origen": str(args.origen)})
+    if args.traza and re.match(r"^HU-\d+$", args.traza, re.I):
+        traza.datos["hu"] = args.traza.upper()
     if args.historia:
         traza.datos["historia"] = args.historia
     carpeta_id = ad.crear_carpeta(args.carpeta)
     traza.datos["carpeta"] = {"ruta": args.carpeta, "id": carpeta_id}
 
-    creados, existentes = [], []
+    creados, existentes, sin_vinculo = [], [], []
+
+    def vincular(cid, remoto):
+        """Vincula el caso a la historia y deja constancia en la trazabilidad; si falla, queda
+        marcado para reintentarlo en la próxima corrida (sin volver a crear el caso)."""
+        if not args.historia:
+            return
+        try:
+            ad.vincular_caso_historia(remoto, args.historia)
+            traza.datos["casos"][cid]["vinculado"] = args.historia
+        except ErrorGestion as e:
+            traza.datos["casos"][cid]["vinculado"] = False
+            sin_vinculo.append({"caso": cid, "key": remoto.get("key"), "error": str(e)[:300]})
+        if not ad.dry_run:
+            traza.guardar()
+
     for caso in casos:
-        if traza.key_de(caso["id"]):
-            existentes.append({"caso": caso["id"], "key": traza.key_de(caso["id"])})
+        cid = caso["id"]
+        if traza.key_de(cid):
+            existentes.append({"caso": cid, "key": traza.key_de(cid)})
+            if args.historia and traza.datos["casos"][cid].get("vinculado") is False:
+                vincular(cid, traza.datos["casos"][cid])  # reintento del vínculo que falló antes
             continue
         remoto = ad.crear_caso(caso, carpeta_id, args.carpeta)
-        if args.historia:
-            ad.vincular_caso_historia(remoto, args.historia)
-        traza.datos["casos"][caso["id"]] = {**remoto, "titulo": caso["titulo"]}
+        # Se registra apenas se crea: si después falla algo, el reintento no lo duplica.
+        traza.datos["casos"][cid] = {**remoto, "titulo": caso["titulo"]}
         if not ad.dry_run:
-            traza.guardar()  # se guarda caso a caso: si algo falla a mitad, no se duplican
-        creados.append({"caso": caso["id"], "key": remoto.get("key"), "id": remoto.get("id")})
+            traza.guardar()
+        vincular(cid, remoto)
+        creados.append({"caso": cid, "key": remoto.get("key"), "id": remoto.get("id")})
     if not ad.dry_run:
         traza.guardar()
-    return {"carpeta": args.carpeta, "historia": args.historia, "creados": creados,
-            "ya_existian": existentes, "trazabilidad": str(traza.ruta)}
+    salida_cmd = {"carpeta": args.carpeta, "historia": args.historia, "creados": creados,
+                  "ya_existian": existentes, "trazabilidad": str(traza.ruta)}
+    if sin_vinculo:
+        salida_cmd["sin_vincular"] = sin_vinculo
+        salida_cmd["aviso"] = ("Estos casos se crearon pero no se pudieron vincular a la historia. "
+                               "Volvé a correr el mismo comando: no se duplican y se reintenta el vínculo.")
+    return salida_cmd
 
 
 def cmd_vincular(args, ad):
@@ -172,16 +209,38 @@ def cmd_extraer_resultados(args, _ad):
                          "evidencias": len(r["evidencias"])} for r in resultados]}
 
 
+def _historia_de_traza(traza):
+    """La historia (HU-XXX) a la que pertenece la trazabilidad, si se puede saber."""
+    if not traza:
+        return None
+    if traza.datos.get("hu"):
+        return str(traza.datos["hu"]).upper()
+    m = re.match(r"^(HU-\d+)-", traza.ruta.stem, re.I)  # HU-001-xray-cloud.json
+    return m.group(1).upper() if m else None
+
+
 def _key_del_resultado(resultado, traza, patron_key):
-    """El caso de un escenario se identifica por tag: una key directa (@PROJ-45) o un
-    ID local (@CP-001) que se traduce con la trazabilidad."""
-    for tag in resultado["tags"]:
-        if re.match(r"^CP(-API)?-\d+$", tag) and traza and traza.key_de(tag):
-            return traza.key_de(tag)
+    """El caso de un escenario se identifica por tag: una key directa (@PROJ-45) o un ID
+    local (@CP-001) que se traduce con la trazabilidad. Los CP-XXX se repiten en cada
+    historia, así que solo se traducen si el escenario lleva el @HU de esa trazabilidad.
+    Devuelve (key, motivo_si_no_hay_key)."""
     for tag in resultado["tags"]:
         if re.match(patron_key, tag):
-            return tag
-    return None
+            return tag, None
+    cps = [t for t in resultado["tags"] if re.match(r"^CP(-API)?-\d+$", t)]
+    if not cps:
+        return None, "sin tag @CP-XXX ni key del caso"
+    if not traza:
+        return None, "tiene @CP-XXX pero falta --traza para traducirlo"
+    historia = _historia_de_traza(traza)
+    hus = [t.upper() for t in resultado["tags"] if re.match(r"^HU-\d+$", t, re.I)]
+    if historia and historia not in hus:
+        return None, (f"es de otra historia ({', '.join(hus)})" if hus else
+                      f"no tiene tag @{historia}: no se puede asegurar que sea de esa historia")
+    for tag in cps:
+        if traza.key_de(tag):
+            return traza.key_de(tag), None
+    return None, f"{', '.join(cps)} no figura en {traza.ruta.name} (¿se subió el caso?)"
 
 
 def cmd_publicar_resultados(args, ad):
@@ -191,9 +250,9 @@ def cmd_publicar_resultados(args, ad):
     ciclo = {"key": args.ciclo, "id": None}
     publicados, sin_caso, avisos = [], [], []
     for r in resultados:
-        key = r.get("caso") or _key_del_resultado(r, traza, patron_key)
+        key, motivo = (r["caso"], None) if r.get("caso") else _key_del_resultado(r, traza, patron_key)
         if not key:
-            sin_caso.append(r["escenario"])
+            sin_caso.append({"escenario": r["escenario"], "motivo": motivo})
             continue
         evid = [e["archivo"] for e in r["evidencias"]
                 if e["tipo"] in ("captura", "gif") or (e["tipo"] == "video" and r["estado"] == "fallido" and not args.sin_video)]
@@ -243,12 +302,16 @@ def main():
         if args.comando == "extraer-resultados":  # no necesita credenciales
             salida(cmd_extraer_resultados(args, None))
             return
+        validar_keys(args)
         herramienta = args.herramienta or env("GESTION_HERRAMIENTA")
         adaptador = crear_adaptador(herramienta, args.dry_run)
         comando = globals()["cmd_" + args.comando.replace("-", "_")]
         salida(comando(args, adaptador))
     except ErrorGestion as e:
         salida({"error": str(e)})
+        sys.exit(1)
+    except Exception as e:  # red caída, JSON inválido en el .env, etc.: el agente lee un JSON, no un traceback
+        salida({"error": f"{type(e).__name__}: {e}"})
         sys.exit(1)
 
 

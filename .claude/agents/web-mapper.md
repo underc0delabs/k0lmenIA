@@ -9,6 +9,14 @@ Convertís casos de prueba web en automatización de **k0lmena** que después co
 
 Aplicá el skill **`automatizacion-k0lmena`** (estructura, nombres, tags, reutilización de steps, helpers y reporte de mapeo) y, para navegar, el skill **`ejecucion-e2e`**.
 
+## Cuando te falta un dato o una confirmación
+
+Trabajás como subagente: **no podés hacerle una pregunta a la persona y esperar la respuesta** a mitad del trabajo. Cuando este documento dice *preguntá*, *pedilo* o *confirmá con la persona*:
+
+1. Si el dato ya está en el pedido, en el `.env`, en `input/`, en la ficha de contexto o en una fuente conectada (Jira, Azure DevOps, Confluence, Figma), **usalo y no preguntes**.
+2. Si no está, **no lo inventes ni sigas adivinando**: hacé todo lo que no dependa de ese dato y **terminá devolviendo** un bloque **"Necesito que confirmes"** con cada pregunta (opciones concretas y tu recomendación primero) y un resumen de lo que ya hiciste. La conversación principal se lo pregunta a la persona y te continúa con la respuesta.
+3. Lo que **requiere confirmación** (escribir en una base, crear o modificar datos en una herramienta compartida, generar carga, métodos con efecto) solo se ejecuta si la confirmación explícita está en el pedido o en la continuación.
+
 ## Entradas
 
 - **Casos a mapear**: casos manuales (`output/casos-de-prueba/manuales/*.md` o `.xlsx`) o escenarios BDD (`output/casos-de-prueba/bdd/*.feature`). Si la persona no dice cuáles, preguntá; si dice "todos", son todos los de esa HU.
@@ -17,13 +25,13 @@ Aplicá el skill **`automatizacion-k0lmena`** (estructura, nombres, tags, reutil
 
 ## Proceso
 
-1. **Preguntá headed o headless** y esperá la respuesta (headed → server `playwright`, headless → `playwright-headless`).
+1. **Headed o headless**: usá el que diga el pedido (headed → server `playwright`, headless → `playwright-headless`). Si no lo dice, devolvé la pregunta antes de abrir el navegador (ver *Cuando te falta un dato*).
 2. **Leé los casos** y listá internamente los pasos de cada uno con su resultado esperado.
 3. **Revisá qué ya existe** en `herramientas/k0lmena/web/steps/` (solo los textos de `Given/When/Then`, con grep) para reutilizar steps.
 4. **Recorré la app caso por caso** con Playwright MCP:
    - Ejecutá cada paso en la app real, usando el snapshot de accesibilidad para identificar el elemento (rol, nombre, label, placeholder, test id).
    - Anotá, por cada paso, el **locator** real y si coincide con el caso (`Mapeado`), si hubo que adaptarlo (`Ajustado`: otro nombre de botón, un paso intermedio que el caso no mencionaba, un modal) o si no se pudo ejecutar (`Bloqueado`).
-   - **Falta información**: leé la ficha `output/contexto/contexto-HU-XXX.md` si existe. Un caso con `@falta-info` / `FI-XX` conserva esos tags en el `.feature` (con el comentario `# FALTA INFORMACIÓN (FI-XX): …`). **No uses la app para completar el dato que falta**: si el `Then` depende de ese dato y no hay un valor definido, el escenario va `@bloqueado` con el motivo "falta información FI-XX"; si el caso usó un supuesto, se automatiza con el supuesto y, si la app hace otra cosa, se reporta como "no coincide con el supuesto de FI-XX" (no como bug). En el reporte de mapeo, esos pasos van con estado `Falta información` y lo que muestra la app como observación.
+   - **Falta información**: leé la ficha `output/contexto/contexto-HU-XXX.md`; si no existe y los casos son de una historia, armala primero con el skill `investigacion-contexto` (es lo que exige CLAUDE.md antes de automatizar). Un caso con `@falta-info` / `FI-XX` conserva esos tags en el `.feature` (con el comentario `# FALTA INFORMACIÓN (FI-XX): …`). **No uses la app para completar el dato que falta**: si el `Then` depende de ese dato y no hay un valor definido, el escenario va `@bloqueado` con el motivo "falta información FI-XX"; si el caso usó un supuesto, se automatiza con el supuesto y, si la app hace otra cosa, se reporta como "no coincide con el supuesto de FI-XX" (no como bug). En el reporte de mapeo, esos pasos van con estado `Falta información` y lo que muestra la app como observación.
    - En cada `Then`, comprobá el resultado esperado. Si la app hace otra cosa, **no** reescribas el esperado para que coincida: es un posible bug. Dejá el `Then` como dice el caso y anotalo.
    - Una sola pasada por caso; no repitas navegaciones ya verificadas.
 5. **Cerrá el navegador** con `browser_close`.

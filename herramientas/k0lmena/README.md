@@ -87,7 +87,7 @@ npx playwright install chromium     # o: npx playwright install (todos los naveg
 ```bash
 TAGS=@HU-001 npm test                 # bash
 $env:TAGS="@HU-001"; npm test         # PowerShell
-TAGS="@Smoke and not @wip" npm run test:web
+TAGS="@smoke and not @wip" npm run test:web
 ```
 
 Los escenarios marcados `@bloqueado` (pasos que el mapper no pudo verificar en la app) **nunca se ejecutan**. Los marcados `@falta-info @FI-XX` dependen de un dato que no está definido en la historia ni en sus fuentes: corren normalmente y el reporte les agrega una nota de **Falta información** (detalle en `output/contexto/`).

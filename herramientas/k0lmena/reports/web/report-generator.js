@@ -5,7 +5,7 @@ const loadReporter = () => import("multiple-cucumber-html-reporter");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
-const { opcionesReporte, temaEnHtml } = require("../tema-oscuro");
+const { opcionesReporte, temaEnHtml, urlSegura } = require("../tema-oscuro");
 
 /**
  * Este script vive dentro de reports/web
@@ -29,7 +29,7 @@ const REPORT_DIR = path.resolve(__dirname);
     customData: {
       Proyecto: "k0lmena · Web",
       Ejecutado: new Date().toLocaleString("es-AR"),
-      "URL base": process.env.BASEURL || process.env.APP_URL || "—",
+      "URL base": urlSegura(process.env.BASEURL || process.env.APP_URL),
     },
   });
 

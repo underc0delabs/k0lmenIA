@@ -19,6 +19,16 @@ input/ → [ agente ] → output/
    plantillas/ + scripts/  (formato)
 ```
 
+### Preguntas y confirmaciones (conversación principal ↔ agentes)
+
+Los agentes corren como subagentes y **no pueden hacerle preguntas a la persona a mitad del trabajo**. Por eso:
+
+- **Antes de invocar un agente**, la conversación principal resuelve con la persona lo que el agente seguro va a necesitar y no está en el pedido. Por ejemplo: headed o headless (`ejecutor-e2e`, `web-mapper`), qué historia si hay varias, la URL o el ambiente, y la key de la historia en Jira o Azure DevOps para la gestión.
+- **Si un agente termina devolviendo "Necesito que confirmes"**, la conversación principal le hace esas preguntas a la persona (con opciones, la recomendada primero) y **continúa al mismo agente** con las respuestas; no empieza uno nuevo.
+- Las acciones con efecto (escribir en una base, crear o modificar datos en Jira/Xray/QMetry/AIO/Azure DevOps, correr carga, métodos con efecto) se confirman **con la persona** y se le pasan al agente explícitamente; nunca se asumen.
+- **Performance**: la planificación guiada la hace la conversación principal con el skill `guia-performance`; el `performance-mapper` trabaja con el plan confirmado.
+- **Correr pruebas ya automatizadas**: es `npm test` en k0lmena (sin agentes ni tokens). Los ejecutores en vivo (`ejecutor-e2e`, `ejecutor-api`) son para casos sueltos que no vale la pena automatizar.
+
 ---
 
 ## Agentes disponibles
@@ -150,7 +160,7 @@ Estos principios aplican a **todos** los agentes:
 
 - Historias de usuario: `HU-001`, `HU-002`, …
 - Criterios de aceptación: `CA1`, `CA2`, … (dentro de cada historia)
-- Casos de prueba manuales: `CP-001`, `CP-002`, …
+- Casos de prueba manuales: `CP-001`, `CP-002`, … (numeración **por historia**). Los escenarios BDD usan la **misma** numeración como tag `@CP-XXX`, y la `Feature` lleva `@HU-XXX`: el par `@HU` + `@CP` identifica cada caso en la automatización, la gestión y los resultados.
 - Casos de prueba de API: `CP-API-001`, `CP-API-002`, …
 - Bugs: `BUG-001`, `BUG-002`, …
 - Falta información: `FI-01`, `FI-02`, … (por historia; tags `@falta-info @FI-01`)
@@ -183,10 +193,16 @@ Reglas (valen para **todos** los agentes y cualquier sección, incluidas las que
 
 ## Requisitos del entorno
 
-**Python 3** lo usan los scripts que dan formato a las salidas. Instalan `openpyxl`/`tabulate` solo si faltan; o se instalan con `pip install -r requirements.txt`. Si falta una librería y no se puede instalar, el script avisa con un mensaje claro (no falla en silencio).
+**Versiones**: Python 3.10+, Node.js 20+ (22 LTS recomendado; mobile necesita 22+). Opcionales: Java 8+ (JMeter), Docker (seguridad web con ZAP), JDK + Android SDK o Xcode (mobile). Para revisar todo de una vez: `npm run doctor` (o `python scripts/doctor.py`), que dice qué falta y cómo resolverlo.
+
+**Python**: en Windows el comando es `python`; en Mac y Linux, `python3` (y `pip3`). Los agentes usan el que corresponda al sistema. Los scripts instalan `openpyxl`/`tabulate`/`requests` solo si faltan; o se instalan con `pip install -r requirements.txt`. Si falta una librería y no se puede instalar, el script avisa con un mensaje claro (no falla en silencio).
 
 - `scripts/generar_casos.py` → arma la planilla `.xlsx` y el `.md` de casos de prueba. Acepta `--limpiar` para borrar su JSON de entrada al terminar (cross-platform, sin depender de `rm`).
 - `scripts/formatear_tablas.py` → alinea las tablas de cualquier `.md` (lo usan todos los agentes que generan informes).
+- `scripts/correr_newman.py` → corre una colección de Postman con el token y la URL del `.env` y genera su reporte (`ejecutor-api`).
+- `scripts/recolectar_resultados.py` → junta los resultados de una historia (ejecuciones en vivo, `npm test`, bugs, performance y seguridad) para el informe de cierre.
+- `scripts/doctor.py` → revisa el entorno y la configuración.
+- **Tests del repo**: `python -m pytest tests` y `npm run test:repo` (también corren en CI, en Ubuntu y Windows).
 
 ---
 
@@ -203,6 +219,11 @@ Reglas (valen para **todos** los agentes y cualquier sección, incluidas las que
 - Mapeo a automatización: `herramientas/k0lmena/<web|api|mobile>/features/HU-001-<slug>.feature` + `steps/HU-001.steps.ts` + `locators/HU-001.locators.ts`, y el reporte `output/mapeos/mapeo-HU-001-<web|api|mobile>.md`.
 - Performance: plan `output/performance/HU-001/plan-performance-HU-001.md` + informe `informe-performance-HU-001.html` (y su `.json`) en la misma carpeta; cada corrida deja además su reporte en `herramientas/k0lmena/reports/performance/`.
 - Ejecución E2E (un reporte por corrida): `reporte-HU-001-<fecha-hora>.html` (dashboard, modo oscuro) + `_resultados-HU-001-<fecha-hora>.json` (datos), en `output/ejecuciones/`; evidencia en `output/ejecuciones/evidencia/`. Cada reporte cubre solo los casos de esa ejecución.
+- Ejecución de API (`ejecutor-api`): `reporte-HU-001-<fecha-hora>.html` + `_resultados-HU-001-<fecha-hora>.json` en `output/ejecuciones/` (o `API` en lugar de la historia si la corrida no es de una).
+- Evidencias E2E: `output/ejecuciones/evidencia/<fecha-hora>-<id>.png` (la misma marca de tiempo de la corrida: no se pisan).
+- Plan de pruebas: `output/planes-de-prueba/plan-HU-001-<fecha>.html`.
+- Informe de cierre: `output/informes-cierre/cierre-HU-001-<fecha>.html`, con sus datos recolectados en `datos-HU-001.json` (`scripts/recolectar_resultados.py`).
+- Mapeo de performance: `output/mapeos/mapeo-HU-001-performance.md`.
 
 ---
 

@@ -3,7 +3,7 @@
 // multiple-cucumber-html-reporter v4 es solo ESM: se carga con import() dinámico.
 const os = require("os");
 const path = require("path");
-const { opcionesReporte, aplicarTema, esperarHtml } = require("../tema-oscuro");
+const { opcionesReporte, aplicarTema, esperarHtml, urlSegura } = require("../tema-oscuro");
 
 const DIR = path.resolve(__dirname);
 
@@ -21,10 +21,10 @@ const DIR = path.resolve(__dirname);
     customData: {
       Proyecto: "k0lmena · API",
       Ejecutado: new Date().toLocaleString("es-AR"),
-      "URL base": process.env.API_BASEURL || "—",
+      "URL base": urlSegura(process.env.API_BASEURL),
     },
   });
-  await esperarHtml(DIR);
+  if (!(await esperarHtml(DIR))) console.error('[k0lmena] Aviso: el reporter no terminó de escribir index.html a tiempo; el tema se aplicó a lo que había.');
   console.log(`[k0lmena] Reporte de API con tema oscuro (${aplicarTema(DIR)} páginas).`);
 })().catch((e) => {
   console.error("[k0lmena] No se pudo generar el reporte de API:", e);

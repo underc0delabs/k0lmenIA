@@ -87,7 +87,8 @@ publicar-resultados ──► estado + comentario + captura (y video si falló) 
 ```
 
 - **Trazabilidad** (`output/gestion/<HU>-<herramienta>.json`): qué `CP-XXX` es qué key remota. Evita duplicados (un caso ya subido no se vuelve a crear) y permite publicar resultados.
-- **Escenario → caso**: por el tag `@CP-XXX` del escenario (vía trazabilidad) o por un tag con la key directa (`@PROJ-45`).
+- **Escenario → caso**: por el tag `@CP-XXX` del escenario (vía trazabilidad) o por un tag con la key directa (`@PROJ-45`). Como los `CP-XXX` se repiten en cada historia, con `--traza HU-001` solo se traducen los escenarios que llevan `@HU-001`; los demás quedan en `sin_caso_asociado` con el motivo (otra historia, sin `@HU`, caso no subido). Si una corrida tiene varias historias, se publica una vez por historia.
+- **Reintentos seguros**: `subir-casos` registra cada caso en la trazabilidad apenas lo crea; si falla el vínculo con la historia, queda marcado y se reintenta al volver a correr el mismo comando, sin duplicar el caso. Los adjuntos se reenvían completos si la API pide reintentar (429/5xx) y los cortes de red se reintentan solos.
 - **Evidencias**: captura siempre; GIF del recorrido si la corrida se hizo con `EVIDENCE=ambos`; video completo solo si el caso falló. Si un archivo supera el límite de la herramienta, se omite y se avisa.
 
 ```

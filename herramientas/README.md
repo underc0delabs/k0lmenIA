@@ -12,7 +12,7 @@ herramientas/
 ├── k0lmena/         # Framework de automatización (integrado): web, api, mobile y performance
 │   ├── web/ api/ mobile/ performance/
 │   └── README.md    # instalación, npm test y cómo lo usan los mappers
-└── ...              # otras (JMeter, etc.)
+└── ...              # otras: una subcarpeta + su README
 ```
 
 Hay tres integradas:
@@ -24,6 +24,6 @@ Hay tres integradas:
 Las que vengan se suman con el mismo patrón: una subcarpeta + su README.
 
 > ¿En qué se diferencia de `scripts/` y de `.mcp.json`?
-> - **`herramientas/`** → herramientas externas que se ejecutan por CLI (JMeter, k6…), con sus plantillas y configs.
+> - **`herramientas/`** → herramientas externas que se ejecutan por CLI (Newman, ZAP, k0lmena con k6, Artillery y JMeter…), con sus plantillas y configs.
 > - **`scripts/`** → utilidades en Python propias del repo (generan o dan formato a los artefactos).
 > - **`.mcp.json`** → conexiones a sistemas externos por protocolo MCP (Jira, Xray, navegador vía Playwright…).

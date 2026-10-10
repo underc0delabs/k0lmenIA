@@ -4,9 +4,9 @@ Detalle del skill `ejecucion-e2e`: setup, tools principales, robustez y un ejemp
 
 ## Setup (recordatorio)
 
-- Registrar el server: `claude mcp add playwright npx @playwright/mcp@latest` (el oficial es `@playwright/mcp` de Microsoft). En este repo ya está en `.mcp.json` (con modo headed y headless).
+- En este repo el server ya está en `.mcp.json` (headed y headless): lo arranca `scripts/mcp/playwright.js` con el oficial de Microsoft (`@playwright/mcp`), la carpeta de evidencias y `--secrets .env` (oculta esos valores en las respuestas).
 - Navegadores: `npx playwright install` (ocupan ~700 MB; en Linux además `npx playwright install-deps`).
-- Para configs compartidas conviene **pinear la versión** (`@playwright/mcp@<versión>`) en lugar de `@latest`, para evitar fallos por cambios entre versiones.
+- La versión está fijada en `scripts/mcp/lanzar.js` (nunca `@latest`), para evitar fallos por cambios entre versiones; para probar otra: `PLAYWRIGHT_MCP_MCP_VERSION=<versión>`.
 - Gotcha: la primera vez, nombrá **"Playwright MCP"** en el pedido; si no, a veces se intenta correr Playwright por Bash en lugar del MCP.
 
 ## Tools principales

@@ -6,8 +6,8 @@
 // nunca queda en .mcp.json ni se imprime.
 //
 // Por stdout solo habla el server MCP: los mensajes de este script van a stderr.
-const { spawn } = require('child_process');
 const { variable } = require('./leer-env');
+const { lanzarNpx } = require('./lanzar');
 
 function salirConError(mensaje) {
   console.error(`azure-devops: ${mensaje} (ver .env.example y CONECTORES.md).`);
@@ -42,19 +42,11 @@ const equipo = variable('ADO_EQUIPO');
 if (proyecto) env.ado_mcp_project = proyecto;
 if (equipo) env.ado_mcp_team = equipo;
 
-const args = ['-y', '@azure-devops/mcp@latest', organizacion, '-a', autenticacion, '-d', ...dominios];
+const args = [organizacion, '-a', autenticacion, '-d', ...dominios];
 const tenant = variable('ADO_TENANT');
 if (tenant) {
   if (!/^[A-Za-z0-9.-]+$/.test(tenant)) salirConError('ADO_TENANT debe ser el ID (GUID) o el dominio del tenant');
   args.push('-t', tenant);
 }
 
-// En Windows npx es un .cmd y necesita shell: se arma la línea a mano (los argumentos ya
-// están validados y no llevan espacios ni caracteres especiales).
-const opciones = { stdio: 'inherit', env };
-const hijo = process.platform === 'win32'
-  ? spawn(['npx', ...args].join(' '), { ...opciones, shell: true })
-  : spawn('npx', args, opciones);
-hijo.on('error', (e) => salirConError(`no se pudo iniciar el server (${e.message})`));
-hijo.on('exit', (codigo) => process.exit(codigo ?? 1));
-for (const senal of ['SIGINT', 'SIGTERM']) process.on(senal, () => hijo.kill(senal));
+lanzarNpx('azure-devops', '@azure-devops/mcp', args, env);

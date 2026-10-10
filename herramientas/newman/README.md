@@ -2,7 +2,7 @@
 
 **Newman** es el ejecutor de colecciones de **Postman** por línea de comandos. Corre una colección `.json` (los requests + sus validaciones) contra una API real y reporta qué pasó. Es la herramienta que usa el agente [`ejecutor-api`](../../.claude/agents/ejecutor-api.md) para **ejecutar pruebas de API**.
 
-> Es la primera herramienta "real" de `herramientas/`. El patrón es el mismo para las que vengan (k6, JMeter…): una subcarpeta + este README.
+> Fue la primera herramienta de `herramientas/`. Las demás siguen el mismo patrón: una subcarpeta + su README.
 
 ## Instalación (una vez)
 
@@ -19,31 +19,18 @@ newman --version
 
 ## Cómo se usa en este repo
 
-El agente corre una **colección de Postman** y arma el mismo reporte HTML oscuro que las pruebas E2E. El flujo son tres pasos:
+El agente corre una **colección de Postman** y arma el mismo reporte HTML oscuro que las pruebas E2E, con un solo comando (igual en PowerShell, bash y zsh; en Mac/Linux, `python3`):
 
 ```bash
-# 1) Newman corre la colección y exporta el resultado en JSON
-newman run input/api/demo.postman_collection.json \
-  -e input/api/demo.postman_environment.json \
-  -r cli,json --reporter-json-export output/ejecuciones/_newman-<fecha-hora>.json
-
-# 2) Se convierte ese JSON al formato del reporte del repo
-python scripts/newman_a_resultados.py \
-  output/ejecuciones/_newman-<fecha-hora>.json \
-  output/ejecuciones/_resultados-API-<fecha-hora>.json "Demo API k0lmenIA"
-
-# 3) Se genera el reporte HTML (dashboard, modo oscuro)
-python scripts/generar_reporte.py \
-  output/ejecuciones/_resultados-API-<fecha-hora>.json \
-  output/ejecuciones/reporte-API-<fecha-hora>.html
+python scripts/correr_newman.py input/api/demo.postman_collection.json --historia HU-001
 ```
 
-El agente `ejecutor-api` hace estos tres pasos solo; normalmente no los corrés a mano.
+El script corre Newman (instalado o con `npx`), toma `API_TOKEN` y `API_BASEURL` del `.env`, convierte el resultado (`scripts/newman_a_resultados.py`) y genera el reporte (`scripts/generar_reporte.py`) en `output/ejecuciones/reporte-HU-001-<fecha-hora>.html`. Opciones: `--carpeta`, `--environment`, `--base-url` y `--titulo`. El agente `ejecutor-api` lo usa solo; normalmente no lo corrés a mano.
 
 ## Dónde van las colecciones
 
 - Las **colecciones** y **environments** de Postman van en `input/api/` (hay un ejemplo: `demo.postman_collection.json` + `demo.postman_environment.json`, que apuntan a una API pública de demo). Exportá las tuyas desde Postman y dejalas ahí.
-- El **id** y la **prioridad** de cada caso se codifican (opcional) en el **nombre del request** en Postman: `API-001 — Crear post (Alta)`. El conversor los usa para el reporte. Si no los ponés, el id se autonumera y la prioridad queda vacía.
+- El **id** y la **prioridad** de cada caso se codifican (opcional) en el **nombre del request** en Postman: `CP-API-001 — Crear post (Alta)`; si depende de un dato que falta, sumale su ID: `CP-API-003 — Crear usuario [FI-01]`. El conversor los usa para el reporte. Si no los ponés, el id se autonumera y la prioridad queda vacía.
 
 ## Credenciales / token
 
@@ -51,10 +38,7 @@ Los secretos **no van en la colección ni en el environment** (se commitean). Si
 
 1. Guardá el token en el `.env` (gitignored) — ej. `API_TOKEN=...` (mirá `.env.example`).
 2. En la colección, usá la variable en el header: `Authorization: Bearer {{token}}`.
-3. Pasásela a Newman desde el entorno al correr:
-   ```bash
-   newman run <coleccion> --env-var "token=$API_TOKEN"
-   ```
+3. `scripts/correr_newman.py` se la pasa a Newman: no hace falta cargar el `.env` en la shell (que es lo que hacía fallar `--env-var "token=$API_TOKEN"` en PowerShell, donde la sintaxis es otra).
 
 Así el token nunca queda en un archivo versionado. Para el `base_url` (que no es secreto) sí podés usar el environment.
 

@@ -12,6 +12,10 @@
 
 **Título:** `[Pantalla]` Título descriptivo del error.
 
+**Historia:** `HU-XXX` — la historia a la que pertenece el flujo afectado (o *Sin historia*).
+
+**Estado:** `Abierto` · `En curso` · `Resuelto` · `Cerrado` · `Rechazado` — un bug nuevo nace `Abierto`.
+
 **Descripción:**
 Comentar brevemente de qué se trata el error, que se entienda cuál es la falla.
 
@@ -38,6 +42,8 @@ Cómo debería funcionar la aplicación.
 Captura de pantalla, video o log del error.
 
 **Criticidad / Severidad:** `Crítica` · `Alta` · `Media` · `Baja`
+
+**Prioridad:** `Crítica` · `Alta` · `Media` · `Baja`
 
 **Test Case asociado:** `CP-XXX` (si aplica)
 

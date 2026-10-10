@@ -1,11 +1,59 @@
 {
-  "enabledMcpjsonServers": ["playwright", "playwright-headless", "atlassian"],
+  "enabledMcpjsonServers": [
+    "playwright",
+    "playwright-headless",
+    "atlassian"
+  ],
   "permissions": {
     "allow": [
       "mcp__playwright__*",
       "mcp__playwright-headless__*",
       "Bash(newman:*)",
-      "Bash(npx newman:*)"
+      "Bash(npx newman:*)",
+      "Bash(python scripts/formatear_tablas.py:*)",
+      "Bash(python scripts/generar_casos.py:*)",
+      "Bash(python scripts/generar_plan.py:*)",
+      "Bash(python scripts/generar_reporte.py:*)",
+      "Bash(python scripts/generar_informe_cierre.py:*)",
+      "Bash(python scripts/generar_informe_performance.py:*)",
+      "Bash(python scripts/generar_informe_seguridad.py:*)",
+      "Bash(python scripts/recolectar_resultados.py:*)",
+      "Bash(python scripts/newman_a_resultados.py:*)",
+      "Bash(python scripts/gestion/para_azure_devops.py:*)",
+      "Bash(python scripts/doctor.py:*)",
+      "Bash(python scripts/gestion/gestion.py extraer-resultados:*)",
+      "Bash(python scripts/gestion/gestion.py --dry-run:*)",
+      "Bash(python3 scripts/formatear_tablas.py:*)",
+      "Bash(python3 scripts/generar_casos.py:*)",
+      "Bash(python3 scripts/generar_plan.py:*)",
+      "Bash(python3 scripts/generar_reporte.py:*)",
+      "Bash(python3 scripts/generar_informe_cierre.py:*)",
+      "Bash(python3 scripts/generar_informe_performance.py:*)",
+      "Bash(python3 scripts/generar_informe_seguridad.py:*)",
+      "Bash(python3 scripts/recolectar_resultados.py:*)",
+      "Bash(python3 scripts/newman_a_resultados.py:*)",
+      "Bash(python3 scripts/gestion/para_azure_devops.py:*)",
+      "Bash(python3 scripts/doctor.py:*)",
+      "Bash(python3 scripts/gestion/gestion.py extraer-resultados:*)",
+      "Bash(python3 scripts/gestion/gestion.py --dry-run:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm run report:*)",
+      "Bash(npm run perf)",
+      "Bash(npm run bd -- conexiones:*)",
+      "Bash(npm run bd -- esquema:*)",
+      "Bash(npm run bd -- existe:*)",
+      "Bash(npm run bd -- consultar:*)",
+      "Bash(npx playwright install:*)",
+      "Bash(adb devices:*)",
+      "Bash(docker info:*)",
+      "Bash(node --version)",
+      "Bash(npm --version)",
+      "Bash(java -version)"
+    ],
+    "ask": [
+      "mcp__playwright__browser_run_code_unsafe",
+      "mcp__playwright-headless__browser_run_code_unsafe"
     ]
   }
 }

@@ -2,13 +2,13 @@
   "mcpServers": {
     "playwright": {
       "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "@playwright/mcp@latest", "--output-dir", "output/ejecuciones/evidencia"]
+      "command": "node",
+      "args": ["scripts/mcp/playwright.js"]
     },
     "playwright-headless": {
       "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "@playwright/mcp@latest", "--headless", "--output-dir", "output/ejecuciones/evidencia"]
+      "command": "node",
+      "args": ["scripts/mcp/playwright.js", "--headless"]
     },
     "atlassian": {
       "type": "http",
@@ -34,7 +34,7 @@
       "args": ["scripts/mcp/con-env.js", "qmetry",
                "--requeridas", "QMETRY_API_KEY",
                "--opcionales", "QMETRY_BASE_URL=https://testmanagement.qmetry.com",
-               "--", "npx", "-y", "@smartbear/mcp@latest"],
+               "--", "@smartbear/mcp"],
       "env": { "MCP_CLIENTS": "QMetry" }
     },
     "qtm4j": {
@@ -43,7 +43,7 @@
       "args": ["scripts/mcp/con-env.js", "qtm4j",
                "--requeridas", "QTM4J_API_KEY",
                "--opcionales", "QTM4J_BASE_URL=https://qtmcloud.qmetry.com,QTM4J_AUTOMATION_API_KEY",
-               "--", "npx", "-y", "@smartbear/mcp@latest"],
+               "--", "@smartbear/mcp"],
       "env": { "MCP_CLIENTS": "QTM4J" }
     },
     "aio-tests": {
@@ -61,7 +61,7 @@
       "command": "node",
       "args": ["scripts/mcp/con-env.js", "appium-mcp",
                "--opcionales", "ANDROID_HOME",
-               "--", "npx", "-y", "appium-mcp@latest"]
+               "--", "appium-mcp"]
     }
   }
 }

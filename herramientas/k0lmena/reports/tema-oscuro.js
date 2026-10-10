@@ -9,7 +9,11 @@
 const fs = require('fs');
 const path = require('path');
 // El .env de la raíz (URL base, navegador, dispositivo…) para los datos del encabezado del reporte.
-require('../env');
+try {
+  require('../env');
+} catch {
+  // sin dotenv instalado (por ejemplo, en los tests del repo): los datos del encabezado quedan con "—"
+}
 
 // Paleta validada para la superficie oscura (CVD y contraste, skill dataviz).
 const TOKENS = {
@@ -68,6 +72,19 @@ html.dark .apexcharts-legend-text{color:#B4BCC8 !important}
 </style>
 <script id="k0lmena-dark">document.documentElement.classList.add('dark');try{localStorage.setItem('theme','dark')}catch(e){}</script>`;
 
+/** URL para mostrar en el reporte, sin usuario ni contraseña (https://user:pass@host → https://host). */
+function urlSegura(url) {
+  if (!url) return '—';
+  try {
+    const u = new URL(url);
+    u.username = '';
+    u.password = '';
+    return u.toString().replace(/\/$/, '');
+  } catch {
+    return '(URL inválida)';
+  }
+}
+
 /** Opciones comunes para reporter.generate(): título en español y porcentajes en las donas. */
 function opcionesReporte(tipo) {
   return {
@@ -124,4 +141,4 @@ async function esperarHtml(dir, timeoutMs = 15000) {
   return false;
 }
 
-module.exports = { opcionesReporte, aplicarTema, temaEnHtml, esperarHtml, TOKENS };
+module.exports = { opcionesReporte, aplicarTema, temaEnHtml, esperarHtml, urlSegura, TOKENS };

@@ -1,6 +1,6 @@
 ---
 name: ejecucion-e2e
-description: Cómo ejecutar pruebas end-to-end en el navegador con Playwright MCP de forma robusta — elegir modo headed o headless, ubicar elementos por snapshot de accesibilidad, esperar para evitar flakiness, capturar evidencia y traducir un caso o escenario BDD a acciones de navegador. Úsalo al ejecutar, correr o automatizar pruebas web.
+description: Cómo ejecutar pruebas end-to-end en el navegador con Playwright MCP de forma robusta — elegir modo headed o headless, ubicar elementos por snapshot de accesibilidad, esperar para evitar flakiness, capturar evidencia y traducir un caso o escenario BDD a acciones de navegador. Úsalo al ejecutar en vivo pruebas web con Playwright MCP (ejecutor-e2e y web-mapper).
 ---
 
 # Ejecución E2E con Playwright MCP
@@ -45,8 +45,8 @@ Variables típicas: `APP_URL`, `APP_USER`, `APP_PASSWORD`. El agente las lee del
 ## Evidencia
 
 - Sacá un screenshot **ante cada fallo** y **uno final**; evitá capturas en cada paso (menos screenshots = más rápido).
-- Nombrá cada captura `<id>.png` y dejala en `output/ejecuciones/evidencia/`. Playwright MCP guarda en su `--output-dir` (en este repo ya apunta ahí); por defecto, sin esa opción, usa `.playwright-mcp/`. Si la captura quedó en otro lado, movela a `evidencia/` con la ruta que devuelve la tool.
-- En el reporte, la `evidencia` se referencia **relativa al HTML** (`evidencia/<id>.png`), por eso el reporte y la carpeta `evidencia/` van juntos en `output/ejecuciones/`. (En algunas versiones `--output-dir` puede ignorarse; conviene confirmar que el archivo quedó en `evidencia/`.)
+- Nombrá cada captura `<fecha-hora>-<id>.png` (ej. `20260618-1432-cp-004.png`, con la misma marca de tiempo de la corrida: así no se pisan entre corridas) y dejala en `output/ejecuciones/evidencia/`. Playwright MCP guarda en su `--output-dir` (en este repo ya apunta ahí); por defecto, sin esa opción, usa `.playwright-mcp/`. Si la captura quedó en otro lado, movela a `evidencia/` con la ruta que devuelve la tool.
+- En el reporte, la `evidencia` se referencia **relativa al HTML** (`evidencia/<fecha-hora>-<id>.png`), por eso el reporte y la carpeta `evidencia/` van juntos en `output/ejecuciones/`. (En algunas versiones `--output-dir` puede ignorarse; conviene confirmar que el archivo quedó en `evidencia/`.)
 
 ## Reporte
 
@@ -64,7 +64,7 @@ Al terminar la corrida, el reporte HTML (modo oscuro) se **genera automáticamen
 - El repo trae `.claude/settings.json` que **pre-aprueba los servers** (`enabledMcpjsonServers`) —así Claude Code no pregunta por Playwright **al iniciar el proyecto**— y también sus **tools** (`mcp__playwright__*`), así no pide permiso en cada acción. Si igual aparece un prompt, elegí *Always allow*.
 - **Headless** (`playwright-headless`) corre más rápido que headed (no renderiza la ventana).
 - **Menos screenshots**: capturá solo ante fallo y al final.
-- **Pineá la versión** del server (`@playwright/mcp@<versión>`) en `.mcp.json` para arranques más consistentes; una instalación global evita la latencia de `npx`.
+- La versión del server ya está fijada (`scripts/mcp/lanzar.js`), así los arranques son consistentes; la primera vez `npx` lo descarga y después usa la caché.
 - **Sé específico** en el pedido (URL, datos, qué validar): menos pasos exploratorios = más rápido.
 
 ## Prerrequisitos

@@ -7,8 +7,9 @@ const path = require('path');
 function leerEnv(archivo) {
   const valores = {};
   if (!fs.existsSync(archivo)) return valores;
-  for (const linea of fs.readFileSync(archivo, 'utf8').split(/\r?\n/)) {
-    const m = linea.match(/^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)\s*$/);
+  // Sin BOM (archivos guardados desde Windows); mismas reglas que scripts/_env.py y dotenv.
+  for (const linea of fs.readFileSync(archivo, 'utf8').replace(/^﻿/, '').split(/\r?\n/)) {
+    const m = linea.match(/^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/);
     if (!m) continue;
     let valor = m[2];
     if (/^(['"]).*\1$/.test(valor)) valor = valor.slice(1, -1);

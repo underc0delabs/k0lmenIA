@@ -69,41 +69,70 @@ def leer_xlsx(ruta):
     return casos
 
 
+_INICIO_ESCENARIO = re.compile(r"^\s*(Scenario Outline|Scenario Template|Scenario|Example|Rule):")
+_INICIO_BLOQUE = re.compile(r"^\s*(Scenario Outline|Scenario Template|Scenario|Example|Rule|Background|Feature):")
+
+
+def _fin_de_bloque(lineas, j):
+    """True si en la línea j empieza otro escenario, regla o feature. Un tag (@x) cierra el bloque
+    solo si lo que sigue (después de más tags y comentarios) es un escenario o una regla: los tags
+    de un "Examples:" son parte del Scenario Outline."""
+    l = lineas[j].strip()
+    if _INICIO_BLOQUE.match(l):
+        return True
+    if l.startswith("@"):
+        k = j + 1
+        while k < len(lineas) and (not lineas[k].strip() or lineas[k].strip().startswith(("@", "#"))):
+            k += 1
+        return k < len(lineas) and bool(_INICIO_BLOQUE.match(lineas[k].strip()))
+    return False
+
+
 def leer_feature(ruta):
     """Escenarios de un .feature como casos de tipo 'cucumber' (gherkin completo del escenario).
-    El ID del caso sale del tag @CP-XXX del escenario; si no tiene, se usa el título."""
-    texto = Path(ruta).read_text(encoding="utf-8")
+    El ID del caso sale del tag @CP-XXX del escenario; si no tiene, se usa el título.
+    Soporta Background (de la feature y de cada Rule), Scenario Outline con varios Examples
+    (también con tags), Example/Scenario Template y Rule."""
+    texto = Path(ruta).read_text(encoding="utf-8-sig")
     lineas = texto.splitlines()
-    background, casos, tags_feature = [], [], []
+    background, background_regla, casos, tags_feature, tags_regla = [], [], [], [], []
     i = 0
     tags_pend = []
+    en_regla = False
     while i < len(lineas):
         l = lineas[i].strip()
         if l.startswith("@"):
-            tags_pend += [t.lstrip("@") for t in l.split()]
+            tags_pend += [t.lstrip("@") for t in l.split() if t.startswith("@")]
         elif l.startswith("Feature:"):
             tags_feature, tags_pend = tags_pend, []
+        elif l.startswith("Rule:"):
+            en_regla, tags_regla, tags_pend, background_regla = True, tags_pend, [], []
         elif l.startswith("Background:"):
+            destino = background_regla if en_regla else background
             j = i + 1
-            while j < len(lineas) and not re.match(r"^\s*(@|Scenario|Rule:)", lineas[j]):
-                background.append(lineas[j].rstrip())
+            while j < len(lineas) and not _fin_de_bloque(lineas, j):
+                destino.append(lineas[j].rstrip())
                 j += 1
             i = j
             continue
-        elif re.match(r"^(Scenario|Scenario Outline|Scenario Template|Example):", l):
+        elif _INICIO_ESCENARIO.match(l):
             titulo = l.split(":", 1)[1].strip()
             cuerpo = [l]
             j = i + 1
-            while j < len(lineas) and not re.match(r"^\s*(@|Scenario|Scenario Outline|Rule:)", lineas[j]):
+            while j < len(lineas) and not _fin_de_bloque(lineas, j):
                 cuerpo.append(lineas[j].rstrip())
                 j += 1
+            while cuerpo and not cuerpo[-1].strip():
+                cuerpo.pop()
             tags = tags_pend
             cid = next((t for t in tags if re.match(r"^CP(-API)?-\d+$", t)), titulo)
-            gherkin = "\n".join(([ "Background:"] + [b for b in background if b.strip()] + [""] if background else []) + cuerpo)
+            fondo = [x for x in background + background_regla if x.strip()]
+            gherkin = "\n".join((["Background:"] + fondo + [""] if fondo else []) + cuerpo)
+            todas = tags_feature + tags_regla + tags
             casos.append({
                 "id": cid, "titulo": titulo, "descripcion": "", "precondiciones": "",
-                "prioridad": "Alta" if "Smoke" in tags else "Media",
-                "etiquetas": list(dict.fromkeys(t for t in tags_feature + tags if not re.match(r"^CP(-API)?-\d+$", t))),
+                "prioridad": "Alta" if any(t.lower() == "smoke" for t in todas) else "Media",
+                "etiquetas": list(dict.fromkeys(t for t in todas if not re.match(r"^CP(-API)?-\d+$", t))),
                 "tipo": "cucumber", "gherkin": gherkin.strip(), "pasos": [],
             })
             tags_pend = []

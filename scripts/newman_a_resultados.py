@@ -18,6 +18,10 @@ id y prioridad se pueden codificar (opcional) en el NOMBRE del request en Postma
   - prioridad: Crítica | Alta | Media | Baja, entre paréntesis al final
 Si el nombre no los trae, el id se autonumera (API-001, API-002, …) y la
 prioridad queda vacía.
+
+Falta información: si el request depende de un dato que falta, poné su ID en el nombre
+("CP-API-003 — Crear usuario [FI-01]"): el caso se marca con ese FI en el reporte.
+La duración de cada caso es el tiempo de respuesta del request.
 """
 import sys
 import json
@@ -69,6 +73,8 @@ def convertir(nm, titulo_arg=""):
     casos = []
     for i, ex in enumerate(run.get("executions", []), start=1):
         nombre = (ex.get("item") or {}).get("name") or f"Request {i}"
+        faltan = re.findall(r"FI-\d+", nombre, re.I)
+        nombre = re.sub(r"\s*[\[(@]?FI-\d+[\])]?", "", nombre, flags=re.I).strip()
         idv, titulo, prioridad = parse_nombre(nombre)
         if not idv:
             idv = f"API-{i:03d}"
@@ -85,8 +91,13 @@ def convertir(nm, titulo_arg=""):
             else:
                 estado, motivo = "Aprobado", ""
 
-        casos.append({"id": idv, "titulo": titulo, "prioridad": prioridad,
-                      "estado": estado, "motivo": motivo})
+        tiempo = (ex.get("response") or {}).get("responseTime")
+        caso = {"id": idv, "titulo": titulo, "prioridad": prioridad, "estado": estado, "motivo": motivo}
+        if isinstance(tiempo, (int, float)):
+            caso["duracion_s"] = round(tiempo / 1000, 3)
+        if faltan:
+            caso["falta_info"] = [f.upper() for f in faltan]
+        casos.append(caso)
 
     info = (nm.get("collection") or {}).get("info") or {}
     started = (run.get("timings") or {}).get("started")

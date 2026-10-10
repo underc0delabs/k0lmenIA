@@ -49,7 +49,13 @@ const pos = [];
 for (let i = 0; i < args.length; i++) {
   const a = args[i];
   if (a === '--confirmar') flags.confirmar = true;
-  else if (a === '--vus' || a === '--duracion') flags[a.slice(2)] = args[++i];
+  else if (a === '--vus' || a === '--duracion') {
+    const valor = args[++i];
+    if (!valor || valor.startsWith('--')) salir(`Falta el valor de ${a} (ej. --vus 20 --duracion 2m).`);
+    if (a === '--vus' && !/^[1-9]\d*$/.test(valor)) salir(`--vus tiene que ser un número entero mayor que 0 (recibí "${valor}").`);
+    if (a === '--duracion' && !/^\d+\s*[smh]?$/i.test(valor)) salir(`--duracion tiene que ser segundos o con sufijo s, m o h (ej. 90, 2m, 1h); recibí "${valor}".`);
+    flags[a.slice(2)] = valor;
+  }
   else pos.push(a);
 }
 if (!pos.length) {

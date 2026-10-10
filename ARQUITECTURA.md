@@ -6,7 +6,7 @@ Este repo está pensado para crecer de forma ordenada. Cubre tanto **planificar 
 
 ### Agentes — el *quién* (`.claude/agents/`)
 
-Cada agente es un subagente de Claude Code con su rol, su proceso y sus reglas. Es a quién se le delega una tarea entera. Hoy hay once. La clave de cada uno está en el `description` de su frontmatter: es lo que usa Claude Code para saber cuándo invocarlo.
+Cada agente es un subagente de Claude Code con su rol, su proceso y sus reglas. Es a quién se le delega una tarea entera. Hoy hay diecinueve, agrupados en análisis y diseño, ejecución en vivo, automatización con k0lmena, seguridad y gestión (la tabla completa está en `CLAUDE.md`). Como corren como subagentes, no pueden hacerle preguntas a la persona a mitad del trabajo: si les falta un dato, terminan devolviendo "Necesito que confirmes" y la conversación principal pregunta y los continúa. La clave de cada uno está en el `description` de su frontmatter: es lo que usa Claude Code para saber cuándo invocarlo.
 
 ### Skills — el *cómo* (`.claude/skills/`)
 
@@ -22,13 +22,13 @@ Para tocar sistemas de afuera (Jira, Xray, un navegador…), un agente usa un **
 {
   "mcpServers": {
     "atlassian":  { "type": "http", "url": "https://mcp.atlassian.com/v2/mcp" },
-    "qtm4j":      { "type": "stdio", "command": "node", "args": ["scripts/mcp/con-env.js", "qtm4j", "--requeridas", "QTM4J_API_KEY", "--", "npx", "-y", "@smartbear/mcp@latest"], "env": { "MCP_CLIENTS": "QTM4J" } },
-    "playwright": { "type": "stdio", "command": "npx", "args": ["-y", "@playwright/mcp@latest"] }
+    "qtm4j":      { "type": "stdio", "command": "node", "args": ["scripts/mcp/con-env.js", "qtm4j", "--requeridas", "QTM4J_API_KEY", "--", "@smartbear/mcp"], "env": { "MCP_CLIENTS": "QTM4J" } },
+    "playwright": { "type": "stdio", "command": "node", "args": ["scripts/mcp/playwright.js"] }
   }
 }
 ```
 
-En este repo, `.mcp.json` viene **versionado con todos los conectores** (Playwright, Jira y Confluence, Figma, QMetry, AIO Tests, k0lmenaTMT, Azure DevOps, Appium) y **ninguno lleva secretos**: los que necesitan token arrancan con un script de `scripts/mcp/` que lo lee del `.env`. Vienen habilitados Playwright (headed y headless), así la ejecución E2E funciona out-of-the-box, y Atlassian (Jira y Confluence, con OAuth o API token); cada persona habilita los demás en su `.claude/settings.local.json` según las herramientas de su equipo. El paso a paso de cada conector está en [`CONECTORES.md`](CONECTORES.md).
+En este repo, `.mcp.json` viene **versionado con todos los conectores** (Playwright, Jira y Confluence, Figma, QMetry, AIO Tests, k0lmenaTMT, Azure DevOps, Appium) y **ninguno lleva secretos**: los que necesitan token arrancan con un script de `scripts/mcp/` que lo lee del `.env`. Vienen habilitados Playwright (headed y headless), así la ejecución E2E funciona out-of-the-box, y Atlassian (Jira y Confluence, con OAuth o API token); cada persona habilita los demás en su `.claude/settings.local.json` según las herramientas de su equipo. Los servers que se instalan con `npx` usan **versiones fijas** (en `scripts/mcp/lanzar.js`): una versión nueva no revisada nunca recibe tus tokens sin que alguien decida actualizarla. El paso a paso de cada conector está en [`CONECTORES.md`](CONECTORES.md).
 
 > **Regla de oro de los secretos:** tokens y credenciales van en el `.env` local (gitignored) o en variables de entorno, **nunca** con el valor real en `.mcp.json` ni en otro archivo versionado. Hay una plantilla `.env.example` con los nombres de variable; se copia a `.env` y se completan los valores reales. Si se commitea un secreto, rotalo de inmediato.
 

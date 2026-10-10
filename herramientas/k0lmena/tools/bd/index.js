@@ -10,7 +10,9 @@
 //   DB_PRINCIPAL_MOTOR=postgres            postgres | mysql | mariadb | sqlserver | mongodb
 //   DB_PRINCIPAL_URL=                      opcional: URL completa (reemplaza host/puerto/base/usuario/clave)
 //   DB_PRINCIPAL_HOST=  _PUERTO=  _BASE=  _USUARIO=  _CLAVE=
-//   DB_PRINCIPAL_SSL=no                    si | no
+//   DB_PRINCIPAL_SSL=no                    no | si (cifra y verifica el certificado) | sin-verificar (cifra y acepta
+//                                          certificados autofirmados: solo para ambientes de prueba)
+//   DB_PRINCIPAL_SSL_CA=                   opcional: archivo .pem de la CA propia (verifica sin usar sin-verificar)
 //   DB_PRINCIPAL_ESCRITURA=no              si = permite escribir (siempre con confirmación explícita)
 //   DB_PRINCIPAL_PRODUCCION=no             si = nunca escribe, aunque ESCRITURA=si
 //
@@ -39,6 +41,25 @@ const TIMEOUT_MS = () => numero(process.env.DB_TIMEOUT_MS, 30000);
 const FILAS_MAX = () => numero(process.env.DB_FILAS_MAX, 50);
 
 // ------------------------------------------------------------------ configuración
+/** SSL de la conexión: null (sin cifrar) | 'verificar' | 'sin-verificar'. */
+function modoSsl(valor, prefijo) {
+  const s = (valor || '').trim().toLowerCase();
+  if (!s || ['no', 'false', '0'].includes(s)) return null;
+  if (['sin-verificar', 'sin_verificar', 'insecure'].includes(s)) return 'sin-verificar';
+  if (SI(s)) return 'verificar';
+  throw new ErrorBD(`${prefijo}SSL tiene que ser no, si o sin-verificar.`);
+}
+
+/** Opciones TLS comunes: verifica el certificado salvo SSL=sin-verificar; SSL_CA agrega la CA propia. */
+function opcionesTls(c) {
+  if (!c.ssl) return undefined;
+  if (c.ssl === 'sin-verificar') {
+    console.error(`[bd] Aviso: la conexión "${c.nombre}" usa SSL sin verificar el certificado del servidor (solo para ambientes de prueba).`);
+  }
+  const tls = { rejectUnauthorized: c.ssl === 'verificar' };
+  if (c.sslCa) tls.ca = require('fs').readFileSync(c.sslCa, 'utf8');
+  return tls;
+}
 function nombresConexiones() {
   return (process.env.DB_CONEXIONES || '').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
 }
@@ -56,7 +77,7 @@ function config(nombre) {
     nombre: n, motor, url: v('URL'),
     host: v('HOST') || 'localhost', puerto: numero(v('PUERTO'), PUERTOS[motor]),
     base: v('BASE'), usuario: v('USUARIO'), clave: v('CLAVE'),
-    ssl: SI(v('SSL')), escritura: SI(v('ESCRITURA')), produccion: SI(v('PRODUCCION')),
+    ssl: modoSsl(v('SSL'), p), sslCa: v('SSL_CA'), escritura: SI(v('ESCRITURA')), produccion: SI(v('PRODUCCION')),
   };
   if (!c.url && !c.base) throw new ErrorBD(`Falta ${p}BASE (o ${p}URL) en el .env.`);
   return c;
@@ -89,25 +110,26 @@ async function cliente(c) {
     for (const oid of [1082, 1114, 1184]) types.setTypeParser(oid, (v) => v);
     cli = new Pool(c.url ? { connectionString: c.url, max: 2 } : {
       host: c.host, port: c.puerto, database: c.base, user: c.usuario, password: c.clave, max: 2,
-      ssl: c.ssl ? { rejectUnauthorized: false } : undefined, connectionTimeoutMillis: TIMEOUT_MS(),
+      ssl: opcionesTls(c), connectionTimeoutMillis: TIMEOUT_MS(),
     });
   } else if (c.motor === 'mysql') {
     const mysql = driver('mysql2/promise');
     cli = mysql.createPool(c.url ? { uri: c.url, connectionLimit: 2 } : {
       host: c.host, port: c.puerto, database: c.base, user: c.usuario, password: c.clave, connectionLimit: 2,
-      ssl: c.ssl ? { rejectUnauthorized: false } : undefined, connectTimeout: TIMEOUT_MS(), dateStrings: true,
+      ssl: opcionesTls(c), connectTimeout: TIMEOUT_MS(), dateStrings: true,
     });
   } else if (c.motor === 'sqlserver') {
     const sql = driver('mssql');
     cli = await new sql.ConnectionPool(c.url || {
       server: c.host, port: c.puerto, database: c.base, user: c.usuario, password: c.clave,
-      options: { encrypt: c.ssl, trustServerCertificate: true },
+      options: { encrypt: Boolean(c.ssl), trustServerCertificate: c.ssl === 'sin-verificar' },
       connectionTimeout: TIMEOUT_MS(), requestTimeout: TIMEOUT_MS(), pool: { max: 2 },
     }).connect();
   } else {
     const { MongoClient } = driver('mongodb');
     const url = c.url || `mongodb://${c.usuario ? `${encodeURIComponent(c.usuario)}:${encodeURIComponent(c.clave)}@` : ''}${c.host}:${c.puerto}/${c.base}${c.usuario ? '?authSource=admin' : ''}`;
-    cli = await new MongoClient(url, { serverSelectionTimeoutMS: TIMEOUT_MS(), tls: c.ssl || undefined }).connect();
+    const tls = c.ssl ? { tls: true, tlsAllowInvalidCertificates: c.ssl === 'sin-verificar', ...(c.sslCa ? { tlsCAFile: c.sslCa } : {}) } : {};
+    cli = await new MongoClient(url, { serverSelectionTimeoutMS: TIMEOUT_MS(), ...tls }).connect();
   }
   clientes.set(c.nombre, cli);
   return cli;

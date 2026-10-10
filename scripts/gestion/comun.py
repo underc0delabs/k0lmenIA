@@ -7,6 +7,7 @@
 """
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -46,17 +47,11 @@ def necesitar(pkg, instalar=None):
 
 
 def cargar_env():
-    """Carga el .env de la raíz sin pisar variables ya definidas en el entorno."""
-    archivo = Path(os.environ.get("K0LMENA_ENV_FILE") or RAIZ / ".env")
-    if not archivo.exists():
-        return
-    for linea in archivo.read_text(encoding="utf-8").splitlines():
-        linea = linea.strip()
-        if not linea or linea.startswith("#") or "=" not in linea:
-            continue
-        clave, valor = linea.split("=", 1)
-        valor = valor.strip().strip('"').strip("'")
-        os.environ.setdefault(clave.strip(), valor)
+    """Carga el .env de la raíz sin pisar variables ya definidas en el entorno
+    (mismas reglas que k0lmena: export, comillas, comentarios al final, BOM)."""
+    sys.path.insert(0, str(RAIZ / "scripts"))
+    from _env import cargar_env as _cargar
+    _cargar()
 
 
 def env(nombre, obligatoria=True, defecto=""):
@@ -71,6 +66,20 @@ def normalizar_estado(estado):
     if clave not in ESTADOS:
         raise ErrorGestion(f"Estado desconocido: '{estado}'.")
     return ESTADOS[clave]
+
+
+def _espera_reintento(retry_after, intento):
+    """Segundos a esperar según Retry-After (número o fecha HTTP); si no viene, backoff exponencial."""
+    if retry_after:
+        try:
+            return max(int(float(retry_after)), 1)
+        except ValueError:
+            from email.utils import parsedate_to_datetime
+            try:
+                return max(int((parsedate_to_datetime(retry_after).timestamp() - time.time())), 1)
+            except (TypeError, ValueError):
+                pass
+    return 2 ** intento
 
 
 class Http:
@@ -100,16 +109,29 @@ class Http:
             return {"__dry_run__": True, "id": f"DRY-{self._contador}", "ID": f"DRY-{self._contador}",
                     "key": f"DRY-{self._contador}"}
         requests = necesitar("requests")
+        # Los adjuntos se leen una sola vez: un archivo abierto ya leído en el primer intento
+        # llegaría vacío en el reintento.
+        if files:
+            files = {k: tuple(v[:1]) + ((v[1].read() if hasattr(v[1], "read") else v[1]),) + tuple(v[2:])
+                     if isinstance(v, tuple) else (v.read() if hasattr(v, "read") else v)
+                     for k, v in files.items()}
+        r = None
         for intento in range(5):
             espera = self.intervalo - (time.time() - self._ultimo)
             if espera > 0:
                 time.sleep(espera)
             self._ultimo = time.time()
-            r = requests.request(metodo, url, json=json_body, params=params, files=files,
-                                 data=data, headers=hdrs, timeout=120)
+            try:
+                r = requests.request(metodo, url, json=json_body, params=params, files=files,
+                                     data=data, headers=hdrs, timeout=120)
+            except (requests.ConnectionError, requests.Timeout) as e:
+                if intento == 4:
+                    raise ErrorGestion(f"{self.nombre}: {metodo} {url} no respondió ({type(e).__name__}). "
+                                       "Revisá la conexión o la URL e intentá de nuevo.")
+                time.sleep(min(2 ** intento, 30))
+                continue
             if r.status_code in (429, 502, 503, 504) and intento < 4:
-                espera = int(r.headers.get("Retry-After", 0) or 2 ** intento)
-                time.sleep(min(espera, 30))
+                time.sleep(min(_espera_reintento(r.headers.get("Retry-After"), intento), 30))
                 continue
             break
         if r.status_code not in esperado:
@@ -143,6 +165,8 @@ class Trazabilidad:
     """
 
     def __init__(self, nombre, herramienta):
+        if not re.match(r"^[\w.-]+$", str(nombre)) or str(nombre).startswith("."):
+            raise ErrorGestion(f"Nombre de trazabilidad inválido: {nombre!r} (usá algo como HU-001).")
         DIR_GESTION.mkdir(parents=True, exist_ok=True)
         self.ruta = DIR_GESTION / f"{nombre}-{herramienta}.json"
         if self.ruta.exists():

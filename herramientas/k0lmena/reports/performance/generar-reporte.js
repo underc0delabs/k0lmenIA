@@ -505,7 +505,14 @@ function html(r) {
  */
 function generarReporte(o) {
   const texto = fs.existsSync(o.crudo) ? fs.readFileSync(o.crudo, 'utf8') : '';
-  const crudo = !texto.trim() ? null : o.herramienta === 'jmeter' ? texto : JSON.parse(texto);
+  let crudo = null;
+  if (texto.trim()) {
+    try {
+      crudo = o.herramienta === 'jmeter' ? texto : JSON.parse(texto);
+    } catch {
+      crudo = null; // resultado truncado (la corrida se cortó): se informa como error, no se cae el reporte
+    }
+  }
   const log = fs.existsSync(o.log) ? fs.readFileSync(o.log, 'utf8') : '';
   const base = { herramienta: o.herramienta, script: o.script, perfil: o.perfil, destino: o.destino, fecha: new Date().toISOString() };
   let r;

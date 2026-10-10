@@ -35,6 +35,7 @@ loadReporter('multiple-cucumber-html-reporter')
     },
   }))
   .then(() => esperarHtml(salida))
+  .then((listo: boolean) => { if (!listo) console.error('[k0lmena] Aviso: el reporter no terminó de escribir index.html a tiempo.'); })
   .then(() => console.log(`[k0lmena] Reporte mobile con tema oscuro (${aplicarTema(salida)} páginas).`))
   .catch((e: unknown) => {
     console.error('[k0lmena] No se pudo generar el reporte mobile:', e);

@@ -9,6 +9,14 @@ Convertís una colección de Postman o un Swagger/OpenAPI en pruebas de API de *
 
 Aplicá el skill **`automatizacion-k0lmena`** (sección API: steps genéricos ya disponibles, nombres, tags y reporte de mapeo). Para el diseño de los casos, el skill **`tecnicas-de-diseno`**.
 
+## Cuando te falta un dato o una confirmación
+
+Trabajás como subagente: **no podés hacerle una pregunta a la persona y esperar la respuesta** a mitad del trabajo. Cuando este documento dice *preguntá*, *pedilo* o *confirmá con la persona*:
+
+1. Si el dato ya está en el pedido, en el `.env`, en `input/`, en la ficha de contexto o en una fuente conectada (Jira, Azure DevOps, Confluence, Figma), **usalo y no preguntes**.
+2. Si no está, **no lo inventes ni sigas adivinando**: hacé todo lo que no dependa de ese dato y **terminá devolviendo** un bloque **"Necesito que confirmes"** con cada pregunta (opciones concretas y tu recomendación primero) y un resumen de lo que ya hiciste. La conversación principal se lo pregunta a la persona y te continúa con la respuesta.
+3. Lo que **requiere confirmación** (escribir en una base, crear o modificar datos en una herramienta compartida, generar carga, métodos con efecto) solo se ejecuta si la confirmación explícita está en el pedido o en la continuación.
+
 ## Entradas
 
 - **Fuente**, una de:
@@ -37,7 +45,7 @@ Aplicá el skill **`automatizacion-k0lmena`** (sección API: steps genéricos ya
 
 ## Falta información
 
-**Falta información**: leé la ficha `output/contexto/contexto-HU-XXX.md` si existe. Un caso con `@falta-info` / `FI-XX` conserva esos tags en el `.feature` (con el comentario `# FALTA INFORMACIÓN (FI-XX): …`). **No uses la app para completar el dato que falta**: si la validación depende de ese dato y no hay un valor definido, el escenario va `@bloqueado` con el motivo "falta información FI-XX"; si el caso usó un supuesto, se automatiza con el supuesto y, si la app hace otra cosa, se reporta como "no coincide con el supuesto de FI-XX" (no como bug). En el reporte de mapeo, esos pasos van con estado `Falta información` y lo que muestra la app como observación.
+**Falta información**: leé la ficha `output/contexto/contexto-HU-XXX.md`; si no existe y los casos son de una historia, armala primero con el skill `investigacion-contexto` (es lo que exige CLAUDE.md antes de automatizar). Un caso con `@falta-info` / `FI-XX` conserva esos tags en el `.feature` (con el comentario `# FALTA INFORMACIÓN (FI-XX): …`). **No uses la app para completar el dato que falta**: si la validación depende de ese dato y no hay un valor definido, el escenario va `@bloqueado` con el motivo "falta información FI-XX"; si el caso usó un supuesto, se automatiza con el supuesto y, si la app hace otra cosa, se reporta como "no coincide con el supuesto de FI-XX" (no como bug). En el reporte de mapeo, esos pasos van con estado `Falta información` y lo que muestra la app como observación.
 
 ## Reglas
 

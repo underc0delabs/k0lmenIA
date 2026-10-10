@@ -31,7 +31,7 @@ herramientas/k0lmena/
 ```
 
 - Tags del `Feature`: `@HU-001` y el tipo (`@web`, `@api` o `@mobile`).
-- Tags de cada `Scenario`: el ID del caso de origen (`@CP-001`, `@CP-API-001`) y, si es crítico, `@Smoke`.
+- Tags de cada `Scenario`: el ID del caso de origen (`@CP-001`, `@CP-API-001`) y, si es crítico, `@smoke` (siempre en minúscula: Cucumber distingue mayúsculas y `TAGS=@smoke` no encuentra `@Smoke`).
 - **Falta información**: si el caso depende de un dato que no está definido (ficha `output/contexto/contexto-HU-XXX.md`, skill `investigacion-contexto`), el escenario lleva `@falta-info @FI-01` y el comentario `# FALTA INFORMACIÓN (FI-01): <qué falta>` arriba. Corre normalmente (salvo que también sea `@bloqueado`) y el reporte de k0lmena le agrega una nota visible; al publicar en Xray/QMetry/AIO, el comentario lo indica.
 - Si la fuente no es una HU (ej. un contrato de API), usá un slug: `api/features/pets.feature` y tag `@contrato-pets`.
 

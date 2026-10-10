@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>k0lmenIA · Documentación</title>
-  <meta name="description" content="Agentes de QA para Claude Code: diseño de pruebas, automatización con k0lmena (web, API, mobile y performance) e integración con Xray, QMetry y AIO Tests. Todo en español.">
+  <meta name="description" content="Agentes de QA para Claude Code: diseño de pruebas, automatización con k0lmena (web, API, mobile y performance) e integración con Xray, QMetry, AIO Tests y Azure DevOps. Todo en español.">
   <meta name="color-scheme" content="light dark">
   <meta property="og:title" content="k0lmenIA · Agentes de QA para Claude Code">
-  <meta property="og:description" content="Diseño de pruebas, automatización con k0lmena e integración con Xray, QMetry y AIO Tests.">
+  <meta property="og:description" content="Diseño de pruebas, automatización con k0lmena e integración con Xray, QMetry, AIO Tests y Azure DevOps.">
   <meta property="og:image" content="assets/img/arquitectura.png">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234f46e5'/%3E%3Cstop offset='1' stop-color='%230ea5e9'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='43' font-family='Segoe UI,Arial' font-size='30' font-weight='800' fill='white' text-anchor='middle'%3Ek0%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,7 +54,7 @@
   <a href="#guia">Diseño y ejecución</a>
   <a href="#k0lmena">Automatización con k0lmena</a>
   <a href="#performance">Performance</a>
-  <a href="#gestion">Xray, QMetry y AIO Tests</a>
+  <a href="#gestion">Xray, QMetry, AIO Tests y Azure DevOps</a>
   <a href="#base-de-datos">Verificación en base de datos</a>
   <a href="#seguridad">Seguridad web</a>
   <a href="#conectores">Conectores MCP</a>
@@ -73,7 +73,7 @@
     <div class="k">Documentación del proyecto</div>
     <h1><span>k0lmenIA</span></h1>
     <div class="l">Agentes de QA para Claude Code: diseño de pruebas, automatización con k0lmena e integración con Xray, QMetry, AIO Tests y Azure DevOps — todo en español.</div>
-    <div class="chips"><span>19 agentes</span><span>Web · API · Mobile · Performance</span><span>Playwright · Cucumber · Appium · k6 · Artillery · JMeter</span><span>Xray · QMetry · AIO Tests</span><span>Jira · Confluence · Figma</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Suites sin tokens</span></div>
+    <div class="chips"><span>19 agentes</span><span>Web · API · Mobile · Performance</span><span>Playwright · Cucumber · Appium · k6 · Artillery · JMeter</span><span>Xray · QMetry · AIO Tests · Azure DevOps</span><span>Jira · Confluence · Figma</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Suites sin tokens</span></div>
   </div>
   <div class="p"><span>QARMY · Underc0de</span><span>github.com/underc0delabs/k0lmenIA</span><span>Licencia MIT</span></div>
 </section>
@@ -83,7 +83,7 @@
     <li><span>1</span>Qué es k0lmenIA</li><li><span>2</span>Arquitectura</li><li><span>3</span>Cómo se usa</li><li><span>4</span>Agentes</li>
     <li><span>5</span>Requisitos</li><li><span>6</span>Instalación</li><li><span>7</span>Configuración: el archivo .env</li>
     <li><span>8</span>Investigación de contexto y falta información</li><li><span>9</span>Guía por tarea: diseño y ejecución</li><li><span>10</span>Automatización con k0lmena</li><li><span>11</span>Pruebas de performance</li>
-    <li><span>12</span>Gestión de pruebas: Xray, QMetry y AIO Tests</li><li><span>13</span>Verificación en base de datos</li><li><span>14</span>Seguridad web</li><li><span>15</span>Conectores MCP</li>
+    <li><span>12</span>Gestión de pruebas: Xray, QMetry, AIO Tests y Azure DevOps</li><li><span>13</span>Verificación en base de datos</li><li><span>14</span>Seguridad web</li><li><span>15</span>Conectores MCP</li>
     <li><span>16</span>Convenciones</li><li><span>17</span>Estructura del repositorio</li><li><span>18</span>Problemas frecuentes</li><li><span>19</span>Extender el proyecto</li>
   </ol>
 </section>
@@ -92,7 +92,7 @@
 <section class="hero" id="inicio">
   <div class="pildora">Agentes de QA para Claude Code · <b>suites sin tokens</b></div>
   <h1><span class="grad">k0lmenIA</span></h1>
-  <p class="lema">Diseñá, ejecutá y automatizá pruebas conversando en español. Los agentes analizan historias, escriben casos, automatizan con <b>k0lmena</b> (web, API, mobile y performance) y llevan todo a <b>Xray, QMetry o AIO Tests</b>.</p>
+  <p class="lema">Diseñá, ejecutá y automatizá pruebas conversando en español. Los agentes analizan historias, escriben casos, automatizan con <b>k0lmena</b> (web, API, mobile y performance) y llevan todo a <b>Xray, QMetry, AIO Tests o Azure DevOps</b>.</p>
   <div class="ctas">
     <a class="btn primario" href="#instalacion">Empezar
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6l6 6-6 6"/></svg></a>
@@ -172,7 +172,7 @@
     <tr><td>Skills</td><td>El "cómo": conocimiento que se carga cuando hace falta (técnicas de diseño, ejecución E2E y de API, convenciones de k0lmena).</td><td><code>.claude/skills/</code></td></tr>
     <tr><td>Plantillas y scripts</td><td>Formato de salida (planilla de casos, cobertura, bug) y reportes HTML determinísticos.</td><td><code>plantillas/</code> · <code>scripts/</code></td></tr>
     <tr><td>Integración de gestión</td><td><code>gestion.py</code> con un adaptador por herramienta: Xray Cloud, Xray Server/DC, QTM4J y AIO Tests. Azure DevOps va por su conector MCP.</td><td><code>scripts/gestion/</code></td></tr>
-    <tr><td>Conectores MCP</td><td>Playwright (activo), Jira y Confluence, Figma, Appium, QMetry, AIO Tests, k0lmenaTMT y Azure DevOps.</td><td><code>.mcp.json</code></td></tr>
+    <tr><td>Conectores MCP</td><td>Playwright y Atlassian (Jira y Confluence) activos; Azure DevOps, Figma, Appium, QMetry, AIO Tests y k0lmenaTMT listos para habilitar. Versiones fijas, sin secretos en el archivo.</td><td><code>.mcp.json</code></td></tr>
     <tr><td>Herramientas</td><td>Newman para colecciones de Postman y k0lmena para web, API, mobile y performance.</td><td><code>herramientas/</code></td></tr>
     <tr><td>Entrada y salida</td><td>Insumos del usuario y artefactos generados, ordenados por tipo.</td><td><code>input/</code> · <code>output/</code></td></tr>
   </table></div>
@@ -275,21 +275,24 @@
   <ol class="pasos">
     <li><b>Instalá Claude Code</b>
       <div class="codigo"><pre>curl -fsSL https://claude.ai/install.sh | bash     <span class="c"># macOS / Linux</span>
-npm install -g @anthropic-ai/claude-code           <span class="c"># alternativa (Node.js 18+)</span>
+npm install -g @anthropic-ai/claude-code           <span class="c"># alternativa (con Node.js 22 LTS cubrís todo)</span>
 claude --version</pre></div>
       En Windows, seguí la <a href="https://docs.claude.com/en/docs/claude-code/overview" target="_blank" rel="noopener">guía oficial</a>.</li>
     <li><b>Cloná el repositorio</b>
       <div class="codigo"><pre>git clone https://github.com/underc0delabs/k0lmenIA.git
-cd k0lmenIA
-pip install -r requirements.txt
-cp .env.example .env                               <span class="c"># y completalo</span></pre></div></li>
+cd k0lmenIA                                        <span class="c"># o la carpeta donde lo clonaste</span>
+pip install -r requirements.txt                    <span class="c"># Mac/Linux: pip3</span>
+npm install                                        <span class="c"># k0lmena</span>
+cp .env.example .env                               <span class="c"># y completalo (PowerShell: copy)</span></pre></div>
+      En Windows el comando es <code>python</code>; en Mac y Linux, <code>python3</code> y <code>pip3</code> (si <code>pip3</code> responde <i>externally-managed-environment</i>, usá un entorno virtual: <code>python3 -m venv .venv</code>).</li>
+    <li><b>Revisá que esté todo listo</b>
+      <div class="codigo"><pre>npm run doctor                                     <span class="c"># dice qué falta y cómo resolverlo</span></pre></div></li>
     <li><b>Abrí VS Code y lanzá Claude Code</b>
       <div class="codigo"><pre>code .
 claude                                             <span class="c"># la primera vez pide autenticarte</span></pre></div></li>
     <li><b>Sumá lo opcional</b>
       <div class="codigo"><pre>npx playwright install                             <span class="c"># ejecución E2E en vivo</span>
 npm install -g newman                              <span class="c"># colecciones de Postman</span>
-npm install                                        <span class="c"># k0lmena (desde la raíz)</span>
 cd herramientas/k0lmena
 npx playwright install chromium
 npm run bootstrap:k6                               <span class="c"># performance de APIs con k6</span>
@@ -490,7 +493,7 @@ npm run perf -- &lt;script&gt; load --vus 20 --duracion 2m   <span class="c"># k
 <!-- ======================================================= 11 GESTIÓN -->
 <section class="seccion" id="gestion">
   <div class="kicker">Guías</div>
-  <h2>Xray, QMetry y AIO Tests</h2>
+  <h2>Xray, QMetry, AIO Tests y Azure DevOps</h2>
   <p class="bajada"><b>gestor-pruebas</b> y <b>publicador-resultados</b> trabajan con Xray Cloud, Xray Server/Data Center, QMetry para Jira (QTM4J) y AIO Tests, con los mismos comandos para todas.</p>
   <p>Se configura en el <code>.env</code>: <code>GESTION_HERRAMIENTA</code> (<code>xray-cloud</code>, <code>xray-dc</code>, <code>qtm4j</code> o <code>aio</code>), <code>GESTION_PROYECTO</code> (la key del proyecto de Jira) y las credenciales de tu herramienta, explicadas en <code>.env.example</code>.</p>
   <div class="guia"><h4>gestor-pruebas</h4>
@@ -628,7 +631,7 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
   <div class="tabla"><table>
     <tr><th style="width:22%">Dónde</th><th>Tags</th></tr>
     <tr><td>Feature</td><td>La historia y el tipo: <code>@HU-001 @web</code> · <code>@api</code> · <code>@mobile</code></td></tr>
-    <tr><td>Scenario</td><td>El ID del caso (<code>@CP-001</code>, <code>@CP-API-001</code>) y <code>@Smoke</code> si es crítico</td></tr>
+    <tr><td>Scenario</td><td>El ID del caso (<code>@CP-001</code>, <code>@CP-API-001</code>) y <code>@smoke</code> si es crítico</td></tr>
     <tr><td>Excluir</td><td><code>@bloqueado</code>: un paso no se pudo verificar y el escenario no se ejecuta</td></tr>
   </table></div>
   <h3>Nombres de archivos</h3>
@@ -652,17 +655,22 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
 ├── CLAUDE.md               <span class="c">Contexto y estándares (Claude Code lo lee siempre)</span>
 ├── ARQUITECTURA.md         <span class="c">Cómo crece el repo</span>
 ├── CONECTORES.md           <span class="c">Cómo activar los conectores MCP</span>
+├── CHANGELOG.md            <span class="c">Cambios de cada versión</span>
+├── LICENSE                 <span class="c">Licencia MIT</span>
 ├── .env.example            <span class="c">Plantilla de variables (copiar a .env)</span>
 ├── .mcp.json               <span class="c">Conectores MCP (sin secretos; activos según settings)</span>
 ├── package.json            <span class="c">Atajos para correr k0lmena desde la raíz (npm test…)</span>
 ├── docs/                   <span class="c">Este sitio, el PDF y los diagramas</span>
+├── tests/                  <span class="c">Tests de los scripts (pytest y node --test)</span>
+├── .github/workflows/      <span class="c">CI: los tests en Ubuntu y Windows</span>
 ├── .claude/
 │   ├── agents/             <span class="c">Los 19 agentes</span>
-│   └── skills/             <span class="c">Contexto, diseño, ejecución E2E y API, k0lmena</span>
+│   ├── skills/             <span class="c">Contexto, diseño, guía de performance, ejecución, k0lmena</span>
+│   └── settings.json       <span class="c">Conectores habilitados y permisos</span>
 ├── input/                  <span class="c">historias/ documentacion/ api/ bugs/</span>
 ├── output/                 <span class="c">Lo que generan los agentes</span>
 ├── plantillas/             <span class="c">Bug, planilla de casos, cobertura</span>
-├── scripts/                <span class="c">Casos, reportes HTML, plan, informe de cierre</span>
+├── scripts/                <span class="c">Casos, reportes, informes, Newman, recolector y doctor</span>
 │   ├── gestion/            <span class="c">Xray, QMetry (QTM4J), AIO Tests y casos para Azure DevOps</span>
 │   └── mcp/                <span class="c">Lanzadores de los conectores MCP (leen el .env)</span>
 └── herramientas/
@@ -683,6 +691,8 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
   <div class="kicker">Referencia</div>
   <h2>Problemas frecuentes</h2>
   <details class="faq"><summary>¿Qué pasa si a la historia le falta información?</summary><div>Los agentes primero la buscan en los comentarios, subtareas, épica, issues vinculados, Confluence y Figma. Lo que no encuentran queda como <b>Falta información</b> (<code>FI-01</code>) con la pregunta para el PO, y se marca en los casos, los <code>.feature</code> y todos los reportes. Nunca se completa con lo que hace la app.</div></details>
+  <details class="faq"><summary>No sé qué me falta instalar o configurar</summary><div>Corré <code>npm run doctor</code>: revisa Python, Node, k0lmena, Playwright, Newman, Java, Docker, el <code>.env</code> y las variables de cada conector habilitado, y dice cómo resolver lo que falta.</div></details>
+  <details class="faq"><summary>Un agente devuelve "Necesito que confirmes"</summary><div>Es a propósito: los agentes corren como subagentes y no pueden preguntarte a mitad del trabajo. Respondé las preguntas y Claude continúa al mismo agente con tus respuestas.</div></details>
   <details class="faq"><summary>Un agente nuevo no aparece</summary><div>Reiniciá Claude Code: los agentes se cargan al iniciar la sesión.</div></details>
   <details class="faq"><summary>La suite web falla con un viewport de 0x0 o sin URL</summary><div>Falta el <code>.env</code> de la raíz o sus variables de k0lmena: <code>cp .env.example .env</code> y completalo.</div></details>
   <details class="faq"><summary><code>npm test</code> corre 0 escenarios</summary><div>Todavía no automatizaste nada (las carpetas vienen vacías) o el filtro <code>TAGS</code> no coincide con ningún escenario.</div></details>
@@ -706,12 +716,14 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
     <li><b>Escribí el cuerpo</b>En español: rol, entradas, proceso, salida y reglas.</li>
     <li><b>Definí el formato</b>Si genera un formato propio, sumá su plantilla en <code>plantillas/</code> o su script en <code>scripts/</code>, y su carpeta en <code>output/</code>.</li>
     <li><b>Normalizá las tablas</b>Si genera tablas en un <code>.md</code>, pasalas por <code>scripts/formatear_tablas.py</code>.</li>
+    <li><b>Si necesita una respuesta de la persona</b>Copiá la sección "Cuando te falta un dato o una confirmación" de cualquier agente: los subagentes no pueden preguntar a mitad del trabajo, así que devuelven "Necesito que confirmes".</li>
   </ol>
   <h3>Skills, conectores y herramientas</h3>
   <div class="tarjetas">
     <div class="tarjeta"><h4>Skill</h4><p>Una carpeta en <code>.claude/skills/</code> con su <code>SKILL.md</code>; se carga solo cuando hace falta.</p></div>
     <div class="tarjeta"><h4>Conector MCP</h4><p>Una entrada en <code>.mcp.json</code>, sin secretos; los tokens se leen del <code>.env</code> con un script de <code>scripts/mcp/</code>.</p></div>
     <div class="tarjeta"><h4>Herramienta</h4><p>Una subcarpeta en <code>herramientas/</code> con su README.</p></div>
+    <div class="tarjeta"><h4>Tests del repo</h4><p><code>python -m pytest tests</code> y <code>npm run test:repo</code>; corren en CI (Ubuntu y Windows) en cada cambio. Sumá un test cuando cambies un script.</p></div>
   </div>
   <h3>Regenerar esta documentación</h3>
   <div class="codigo"><pre>node docs/generar.js        <span class="c"># diagramas (PNG) y PDF, con el Playwright de k0lmena</span></pre></div>
