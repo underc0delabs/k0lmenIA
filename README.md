@@ -408,19 +408,18 @@ También se usa sin agente: `npm run bd -- conexiones | esquema | existe | consu
 | `azure-devops`                   | **Azure DevOps**: historias, Wiki y casos en Test Plans     | PAT                                               |
 | `k0lmena-tmt`                    | Cargar y consultar casos en k0lmenaTMT                      | Token personal                                    |
 
-Todos están en `.mcp.json`, sin secretos: las credenciales se leen del `.env`, que trae un bloque comentado por herramienta (Jira, Azure DevOps, Figma, Xray, QMetry, AIO Tests, k0lmenaTMT): cada QA completa solo los de su equipo. Vienen activos Playwright y Atlassian. Para activar otro: completá sus variables en el `.env`, agregalo a `enabledMcpjsonServers` en `.claude/settings.local.json`, reiniciá Claude Code y verificá con `/mcp`. Guía completa en [`CONECTORES.md`](CONECTORES.md).
+Claude Code arranca directo, sin pedir aprobar conectores: vienen activos Playwright y Atlassian (Jira y Confluence). Los demás los activa cada QA según su equipo, con un comando. Ninguno lleva secretos: las credenciales se leen del `.env`, que trae un bloque comentado por herramienta. Guía completa en [`CONECTORES.md`](CONECTORES.md).
 
 ---
 
-**Habilitar un conector** (por ejemplo, Azure DevOps): creá el archivo `.claude/settings.local.json` (no se versiona, así que solo te afecta a vos) con la lista completa de los que querés usar, y reiniciá Claude Code:
+**Activar un conector** (por ejemplo, Azure DevOps):
 
-```json
-{
-  "enabledMcpjsonServers": ["playwright", "playwright-headless", "atlassian", "azure-devops"]
-}
+```bash
+npm run conector                            # lista los conectores y cuáles tenés activos
+npm run conector -- activar azure-devops    # queda solo para vos; reiniciá Claude Code
 ```
 
-`npm run doctor` te dice qué variables le faltan a cada conector habilitado. Detalle por herramienta en [`CONECTORES.md`](CONECTORES.md#qué-configurar-según-tu-equipo).
+`npm run doctor` te dice qué variables le faltan a cada conector activo. Detalle por herramienta en [`CONECTORES.md`](CONECTORES.md#qué-configurar-según-tu-equipo).
 
 ---
 

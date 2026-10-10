@@ -586,7 +586,7 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
 <section class="seccion" id="conectores">
   <div class="kicker">Guías</div>
   <h2>Conectores MCP</h2>
-  <p class="bajada">Conectan a Claude Code con sistemas externos. Todos están en <code>.mcp.json</code>, sin secretos: las credenciales se leen del <code>.env</code>. Vienen activos Playwright y Atlassian (Jira y Confluence); el <code>.env.example</code> trae un bloque comentado por herramienta para completar solo los de tu equipo.</p>
+  <p class="bajada">Conectan a Claude Code con sistemas externos. Claude Code arranca directo: vienen activos Playwright y Atlassian, y cada QA activa el resto con <code>npm run conector</code>. Sin secretos: las credenciales se leen del <code>.env</code>. Vienen activos Playwright y Atlassian (Jira y Confluence); el <code>.env.example</code> trae un bloque comentado por herramienta para completar solo los de tu equipo.</p>
   <div class="tabla"><table>
     <tr><th style="width:22%">Conector</th><th>Para qué</th><th style="width:18%">Autenticación</th></tr>
     <tr><td><code>playwright</code></td><td>Navegador para el ejecutor E2E y el web-mapper (headed y headless).</td><td>Activo</td></tr>
@@ -600,7 +600,7 @@ npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" 
   </table></div>
   <ol class="pasos">
     <li><b>Completá el .env</b>Si usa token, cargalo en el <code>.env</code> de la raíz. Atlassian y Figma se autorizan con tu cuenta desde <code>/mcp</code>.</li>
-    <li><b>Habilitalo</b>Agregá su nombre a <code>enabledMcpjsonServers</code> en <code>.claude/settings.local.json</code>.</li>
+    <li><b>Activalo</b><code>npm run conector -- activar azure-devops</code> (queda solo para vos; <code>npm run conector</code> lista los disponibles).</li>
     <li><b>Verificá</b>Reiniciá Claude Code y revisá la conexión con <code>/mcp</code>.</li>
   </ol>
   <div class="pedido">Generá los casos de PROJ-12 usando la página de Confluence 'Reglas de facturación' y este diseño de Figma.</div>

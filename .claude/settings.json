@@ -49,7 +49,9 @@
       "Bash(docker info:*)",
       "Bash(node --version)",
       "Bash(npm --version)",
-      "Bash(java -version)"
+      "Bash(java -version)",
+      "Bash(npm run conector)",
+      "Bash(npm run doctor)"
     ],
     "ask": [
       "mcp__playwright__browser_run_code_unsafe",

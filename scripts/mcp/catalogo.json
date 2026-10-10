@@ -1,0 +1,110 @@
+{
+  "_info": "Conectores MCP opcionales de k0lmenIA. No están en .mcp.json para que Claude Code arranque sin pedir aprobaciones: cada persona activa los que usa con  npm run conector -- activar <nombre>  (quedan registrados solo para ella). Ver CONECTORES.md.",
+  "conectores": {
+    "azure-devops": {
+      "descripcion": "Azure DevOps: historias de Boards, Wiki y casos en Test Plans",
+      "variables": "ADO_ORGANIZACION, ADO_PAT (o ADO_AUTENTICACION=interactive|azcli)",
+      "servidor": {
+        "type": "stdio",
+        "command": "node",
+        "args": [
+          "scripts/mcp/azure-devops.js"
+        ]
+      }
+    },
+    "figma": {
+      "descripcion": "Figma (remoto): diseños desde un link a un frame o archivo",
+      "variables": "ninguna (OAuth desde /mcp)",
+      "servidor": {
+        "type": "http",
+        "url": "https://mcp.figma.com/mcp"
+      }
+    },
+    "figma-desktop": {
+      "descripcion": "Figma (app de escritorio, servidor local)",
+      "variables": "ninguna (la app de escritorio abierta)",
+      "servidor": {
+        "type": "http",
+        "url": "http://127.0.0.1:3845/mcp"
+      }
+    },
+    "qtm4j": {
+      "descripcion": "QMetry para Jira (QTM4J)",
+      "variables": "QTM4J_API_KEY",
+      "servidor": {
+        "type": "stdio",
+        "command": "node",
+        "args": [
+          "scripts/mcp/con-env.js",
+          "qtm4j",
+          "--requeridas",
+          "QTM4J_API_KEY",
+          "--opcionales",
+          "QTM4J_BASE_URL=https://qtmcloud.qmetry.com,QTM4J_AUTOMATION_API_KEY",
+          "--",
+          "@smartbear/mcp"
+        ],
+        "env": {
+          "MCP_CLIENTS": "QTM4J"
+        }
+      }
+    },
+    "qmetry": {
+      "descripcion": "QMetry Test Management (standalone)",
+      "variables": "QMETRY_API_KEY",
+      "servidor": {
+        "type": "stdio",
+        "command": "node",
+        "args": [
+          "scripts/mcp/con-env.js",
+          "qmetry",
+          "--requeridas",
+          "QMETRY_API_KEY",
+          "--opcionales",
+          "QMETRY_BASE_URL=https://testmanagement.qmetry.com",
+          "--",
+          "@smartbear/mcp"
+        ],
+        "env": {
+          "MCP_CLIENTS": "QMetry"
+        }
+      }
+    },
+    "aio-tests": {
+      "descripcion": "AIO Tests for Jira",
+      "variables": "AIO_MCP_URL, AIO_API_TOKEN",
+      "servidor": {
+        "type": "stdio",
+        "command": "node",
+        "args": [
+          "scripts/mcp/aio-tests.js"
+        ]
+      }
+    },
+    "k0lmena-tmt": {
+      "descripcion": "k0lmenaTMT",
+      "variables": "K0LMENA_TMT_TOKEN",
+      "servidor": {
+        "type": "http",
+        "url": "${K0LMENA_TMT_URL:-http://localhost:4000/api/v1/mcp}",
+        "headersHelper": "node scripts/mcp/k0lmena-tmt-headers.js"
+      }
+    },
+    "appium-mcp": {
+      "descripcion": "Appium (mobile-mapper)",
+      "variables": "ANDROID_HOME (si no está en el entorno)",
+      "servidor": {
+        "type": "stdio",
+        "command": "node",
+        "args": [
+          "scripts/mcp/con-env.js",
+          "appium-mcp",
+          "--opcionales",
+          "ANDROID_HOME",
+          "--",
+          "appium-mcp"
+        ]
+      }
+    }
+  }
+}

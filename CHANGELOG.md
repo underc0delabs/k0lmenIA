@@ -2,6 +2,11 @@
 
 Los cambios más relevantes, del más nuevo al más viejo. El detalle de cada uno está en el historial de git.
 
+## 2026-10-10 — Inicio directo, conectores a pedido
+- Claude Code arranca sin pedir aprobar conectores: `.mcp.json` trae solo los que vienen activos para todos (Playwright y Atlassian).
+- Los opcionales (Azure DevOps, Figma, QMetry, QTM4J, AIO Tests, k0lmenaTMT, Appium) pasan a `scripts/mcp/catalogo.json` y cada persona activa los suyos con `npm run conector -- activar <nombre>` (alcance local de Claude Code: solo para esa persona, sin tocar archivos versionados).
+- `npm run doctor` revisa también los conectores activados así. Tests que garantizan que todo lo de `.mcp.json` venga habilitado.
+
 ## 2026-10-09 (3) — Verificación funcional
 - `correr_newman.py` respeta el `base_url` del environment o de la colección; `API_BASEURL` del `.env` se usa solo si no lo definen (la demo terminaba pegándole a Petstore).
 - `npm run doctor` acepta Xray Server/DC con usuario y contraseña, y Azure DevOps sin PAT (login interactivo o `az login`).

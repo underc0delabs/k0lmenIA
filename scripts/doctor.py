@@ -156,29 +156,45 @@ def main():
         else:
             linea(OK, f"Gestión de pruebas: {herramienta}")
 
-    seccion("Conectores MCP habilitados")
+    seccion("Conectores MCP")
     habilitados = []
     for f in (RAIZ / ".claude" / "settings.json", RAIZ / ".claude" / "settings.local.json"):
         try:
             habilitados += json.loads(f.read_text(encoding="utf-8")).get("enabledMcpjsonServers", [])
         except (OSError, ValueError):
             pass
-    for nombre in dict.fromkeys(habilitados):
+    locales = _conectores_locales()
+    for nombre in dict.fromkeys(habilitados + locales):
         requeridas = VARIABLES_CONECTOR.get(nombre, [])
         if nombre == "azure-devops" and (env.get("ADO_AUTENTICACION") or "pat").lower() != "pat":
             requeridas = ["ADO_ORGANIZACION"]  # interactive / azcli / env: sin PAT
         faltan = faltantes(requeridas, env)
+        origen = " (activado con npm run conector)" if nombre in locales else ""
         if faltan:
-            linea(FALTA, f"{nombre}: faltan {', '.join(faltan)}", "Completalas en el .env (ver CONECTORES.md)")
+            linea(FALTA, f"{nombre}{origen}: faltan {', '.join(faltan)}", "Completalas en el .env (ver CONECTORES.md)")
         elif nombre in ("atlassian", "figma"):
-            linea(OK, f"{nombre} (se autoriza con tu cuenta desde /mcp la primera vez)")
+            linea(OK, f"{nombre}{origen} (se autoriza con tu cuenta desde /mcp la primera vez)")
         else:
-            linea(OK, nombre)
+            linea(OK, nombre + origen)
+    print("        → Para sumar Azure DevOps, Figma, QMetry, AIO Tests, k0lmenaTMT o Appium: npm run conector")
 
     print(f"\nResultado: {resumen['ok']} OK · {resumen['aviso']} avisos · {resumen['falta']} faltantes")
     if resumen["falta"]:
         print("Resolvé lo marcado con X y volvé a correr el doctor.")
     sys.exit(1 if resumen["falta"] else 0)
+
+
+def _conectores_locales():
+    """Conectores activados con `npm run conector` (alcance local de Claude Code); solo nombres."""
+    try:
+        datos = json.loads((Path.home() / ".claude.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return []
+    clave = str(RAIZ).replace("\\", "/").lower()
+    for ruta, proyecto in (datos.get("projects") or {}).items():
+        if ruta.replace("\\", "/").lower() == clave:
+            return list((proyecto.get("mcpServers") or {}).keys())
+    return []
 
 
 def _importable(modulo):

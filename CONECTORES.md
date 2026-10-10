@@ -2,7 +2,7 @@
 
 Cómo conectar k0lmenIA por MCP a **Jira y Confluence** (Atlassian), **Figma**, **QMetry**, **AIO Tests**, **k0lmenaTMT**, **Azure DevOps** y **Appium**. Xray se integra sin MCP (ver abajo).
 
-Todas las conexiones están en el `.mcp.json` del proyecto y **ninguna lleva secretos**: las credenciales se leen del `.env` de la raíz o se autorizan con tu cuenta (OAuth). Vienen habilitados Playwright y **Atlassian (Jira y Confluence)**; cada persona habilita en su `.claude/settings.local.json` los demás que use.
+Claude Code **arranca directo, sin pedir aprobar conectores**: `.mcp.json` trae solo los que vienen habilitados para todos (Playwright y **Atlassian: Jira y Confluence**). Los demás están en un catálogo (`scripts/mcp/catalogo.json`) y cada persona activa los que usa con `npm run conector -- activar <nombre>`. Ninguno lleva secretos: las credenciales se leen del `.env` de la raíz o se autorizan con tu cuenta (OAuth).
 
 ## Resumen
 
@@ -77,32 +77,23 @@ Todos los conectores ya están en `.mcp.json` y todas las variables, en `.env.ex
 +---------------------------+---------------------------------------+------------------------------------------+---------------------------------+
 ```
 
-**Los conectores MCP que no vienen habilitados** se activan sumándolos a `enabledMcpjsonServers` en tu `.claude/settings.local.json` (no se versiona, así que no afecta al resto del equipo):
+**Activar los opcionales** (Azure DevOps, Figma, QMetry, AIO Tests, k0lmenaTMT, Appium):
 
-```json
-{
-  "enabledMcpjsonServers": ["playwright", "playwright-headless", "atlassian", "azure-devops"]
-}
+```bash
+npm run conector                              # lista los conectores y cuáles tenés activos
+npm run conector -- activar azure-devops      # también varios: activar azure-devops figma
+npm run conector -- desactivar azure-devops
 ```
 
-- **Si el archivo no existe** (recién clonaste el repo), crealo con ese contenido.
-- **Si ya existe** (Claude Code lo crea cuando aprobás permisos), sumale la clave `enabledMcpjsonServers` sin borrar lo que tiene.
-- Poné la **lista completa** de los que querés usar, incluidos `playwright`, `playwright-headless` y `atlassian`, así no dependés de cómo se combine con la lista del proyecto.
-
-Después reiniciá Claude Code y verificá con `/mcp`; `npm run doctor` te dice qué variables le faltan a cada conector habilitado. **Las integraciones de `scripts/gestion`** (Xray, QTM4J y AIO) no necesitan habilitarse: funcionan en cuanto el `.env` tiene sus variables.
+`activar` lo registra con `claude mcp add-json --scope local`: queda **solo para vos, en este proyecto**, no toca ningún archivo versionado y no dispara avisos al iniciar. Si le faltan variables en el `.env`, te avisa cuáles. Después reiniciá Claude Code y verificá con `/mcp`; `npm run doctor` revisa las variables de todos los conectores activos. **Las integraciones de `scripts/gestion`** (Xray, QTM4J y AIO) no necesitan activarse: funcionan en cuanto el `.env` tiene sus variables.
 
 ---
 
 ## Pasos para activar un conector
 
 1. **Completá sus variables en el `.env`** de la raíz (están en `.env.example` y en la sección de cada conector). `atlassian` y `figma` no usan variables: se autorizan con tu cuenta.
-2. **Habilitalo** agregando su nombre a `enabledMcpjsonServers` en tu `.claude/settings.local.json` (no se versiona, así que solo te afecta a vos):
-
-```json
-"enabledMcpjsonServers": ["playwright", "playwright-headless", "qtm4j"]
-```
-
-3. **Reiniciá Claude Code** y verificá la conexión con `/mcp`. Si Claude Code pregunta si aprobás los servers del `.mcp.json`, aprobá solo los que vas a usar.
+2. **Activalo** (si no es de los que vienen habilitados): `npm run conector -- activar <nombre>`.
+3. **Reiniciá Claude Code** y verificá la conexión con `/mcp`.
 
 **Cómo llegan los tokens al server sin quedar en `.mcp.json`:** los conectores con credenciales no llaman al server directo, sino a un script de `scripts/mcp/` que lee las variables del entorno o, si no están, del `.env`, y arranca el server pasándoselas solo por variable de entorno:
 
@@ -236,7 +227,7 @@ Conecta los agentes con **k0lmenaTMT** por su server MCP, para cargar y consulta
 Para activarlo:
 
 1. Agregá `K0LMENA_TMT_TOKEN=<tu token>` al `.env` de la raíz.
-2. Agregá `"k0lmena-tmt"` a `enabledMcpjsonServers` en `.claude/settings.local.json`.
+2. Activalo: `npm run conector -- activar k0lmena-tmt`.
 3. Con k0lmenaTMT levantado, reiniciá Claude Code y verificá con `/mcp`.
 
 > No uses `claude mcp add ... --header "Authorization: Bearer <token>"`: deja el token escrito en la configuración de Claude Code.
@@ -274,7 +265,7 @@ El conector `figma` es el server MCP **oficial de Figma**. Les da a los agentes 
 - **No usa token**: se autentica con tu cuenta de Figma por OAuth.
 - Para activarlo, cualquiera de estas dos opciones:
   - **Plugin oficial (recomendado por Figma)**: `claude plugin install figma@claude-plugins-official`, reiniciá Claude Code, entrá a `/plugin` → *Installed* → `figma` y autorizá el acceso. Incluye el server y skills de Figma.
-  - **Solo el server**: agregá `"figma"` a `enabledMcpjsonServers` en `.claude/settings.local.json`, reiniciá y autorizá desde `/mcp`.
+  - **Solo el server**: `npm run conector -- activar figma` (o `figma-desktop` para la app de escritorio), reiniciá y autorizá desde `/mcp`.
 - **Variante de escritorio** (`figma-desktop`): para organizaciones que no permiten el server remoto. Requiere la app de escritorio de Figma con el server MCP habilitado (modo Dev → panel derecho) y se conecta a `http://127.0.0.1:3845/mcp`.
 
 Ejemplos de uso:
@@ -346,7 +337,7 @@ Igual que k0lmenaTMT, **la configuración se lee del `.env`**: la entrada ejecut
 Para activarlo:
 
 1. Agregá al `.env` de la raíz `ADO_ORGANIZACION`, `ADO_PAT` y, si querés, `ADO_PROYECTO` (ver `.env.example`).
-2. Habilitalo agregando `"azure-devops"` a `enabledMcpjsonServers` en tu `.claude/settings.local.json`. Solo queda activa para quien la habilita y tiene las variables en su `.env`.
+2. Activalo: `npm run conector -- activar azure-devops` (queda solo para vos; te avisa si falta alguna variable).
 3. Reiniciá Claude Code y verificá con `/mcp`.
 
 **Sin PAT:** con `ADO_AUTENTICACION=interactive` el server abre el login de Microsoft en el navegador; con `azcli` usa tu sesión de `az login`. Microsoft también ofrece un server remoto (`https://mcp.dev.azure.com/<organizacion>`) que se autentica con Microsoft Entra; no acepta PAT.
@@ -371,7 +362,7 @@ No es una herramienta de gestión de pruebas: es el server MCP **oficial de Appi
 +--------------+---------------+---------------------+
 ```
 
-Se activa igual que los demás conectores, habilitando `appium-mcp`. `ANDROID_HOME` se toma del entorno o, si no está, del `.env` (con `scripts/mcp/con-env.js`). La suite que genera el mapper después corre sin MCP, con `npm run test:mobile`, en dispositivo, emulador o BrowserStack (ver `herramientas/k0lmena/README.md`).
+Se activa con `npm run conector -- activar appium-mcp`. `ANDROID_HOME` se toma del entorno o, si no está, del `.env` (con `scripts/mcp/con-env.js`). La suite que genera el mapper después corre sin MCP, con `npm run test:mobile`, en dispositivo, emulador o BrowserStack (ver `herramientas/k0lmena/README.md`).
 
 ---
 
