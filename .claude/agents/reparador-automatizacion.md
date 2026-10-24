@@ -1,7 +1,7 @@
 ---
 name: reparador-automatizacion
 model: sonnet
-description: Repara la automatización web de k0lmena cuando los tests fallan por un locator o una espera — toma los escenarios fallidos del último npm test (o del análisis del analista-fallos), saca del error el locator que no funcionó, lo encuentra en web/locators, los steps o el .feature, lo prueba contra el DOM que k0lmena guardó al fallar y diagnostica (ya no existe, coincide con varios, existe pero no se ve, falló la espera). Busca los candidatos más parecidos, propone el locator nuevo más robusto verificando que encuentre un solo elemento, lo aplica con respaldo y diff, y vuelve a correr los escenarios para verificarlo. Entrega un informe HTML en modo oscuro con el diagnóstico, el cambio, las capturas y la verificación. Úsalo cuando la persona pida arreglar, reparar o actualizar tests que fallan por locators, selectores o esperas, o "autocurar" la automatización.
+description: Repara la automatización web de k0lmena cuando falla por un locator o una espera — toma los escenarios fallidos, diagnostica contra el DOM guardado, propone el locator más robusto, lo aplica con respaldo y vuelve a correr para verificar. Úsalo para arreglar tests que fallan por locators o esperas, o autocurar la automatización.
 ---
 
 # Agente: Reparador de la automatización

@@ -55,6 +55,40 @@ Cada caso le da a un agente un insumo con **trampas deliberadas** (una ambigüed
 |                                |                            | cerrado, no confunde el bug de login,    |
 |                                |                            | Conclusión del triador con severidad     |
 +--------------------------------+----------------------------+------------------------------------------+
+| `plan-hu-registro`             | `estratega-pruebas`        | Cada FI-XX como riesgo y en un criterio  |
+|                                |                            | de entrada, niveles Alto/Medio/Bajo,     |
+|                                |                            | preguntas al PO; no inventa reglas de    |
+|                                |                            | contraseña                               |
++--------------------------------+----------------------------+------------------------------------------+
+| `revision-casos-login`         | `revisor-casos`            | Propuestas concretas para el resultado   |
+|                                |                            | vago, el paso vago y el caso sin         |
+|                                |                            | resultado; resuelve el duplicado, pide   |
+|                                |                            | negativos y no toca la planilla          |
++--------------------------------+----------------------------+------------------------------------------+
+| `charters-hu-registro`         | `generador-charters`       | Misiones 'explorar … para descubrir',    |
+|                                |                            | sesiones de 30-120 min, foco en edad,    |
+|                                |                            | contraseña y email duplicado; la duda de |
+|                                |                            | la edad como pregunta                    |
++--------------------------------+----------------------------+------------------------------------------+
+| `fallos-compra`                | `analista-fallos`          | Separa bug, locator, ambiente y anti-    |
+|                                |                            | bots; redacta y vincula solo el bug real |
+|                                |                            | (cupón) y no reporta el resto            |
++--------------------------------+----------------------------+------------------------------------------+
+| `cobertura-hu-registro`        | `analista-cobertura`       | CA3 y CA4 sin casos, CA4 condicionado a  |
+|                                |                            | la contradicción 16/18, caso sin         |
+|                                |                            | criterio; la historia no está lista para |
+|                                |                            | cerrar                                   |
++--------------------------------+----------------------------+------------------------------------------+
+| `casos-api-graphql`            | `generador-casos-api`      | GraphQL: errores por `errors` y          |
+|                                |                            | `extensions.code` (no 404/403), límites  |
+|                                |                            | de cantidad 0 y 11, FI al cancelar un    |
+|                                |                            | pedido pagado                            |
++--------------------------------+----------------------------+------------------------------------------+
+| `seleccion-release-cupones`    | `selector-casos-de-prueba` | Arma el cambio con la historia y el      |
+|                                |                            | archivo: los casos de cupones            |
+|                                |                            | imprescindibles y los del registro       |
+|                                |                            | afuera                                   |
++--------------------------------+----------------------------+------------------------------------------+
 ```
 
 ## Cómo se corren
@@ -75,6 +109,17 @@ python scripts/evaluar_agentes.py --correr --caso analista-hu-registro --modelo 
 3. **Verifica** lo que dejó y arma el informe.
 
 **Costo**: cada caso es una conversación completa con un agente (los generadores de casos son los más caros). Correr todos ronda unos pocos dólares con un modelo grande; los topes de cada caso son el máximo, no lo habitual. Para iterar, corré un solo caso o un solo agente.
+
+### Modo económico (sin tokens): la salida de referencia
+
+Cada caso trae en `evals/casos/<id>/referencia/` lo que dejaría un agente **correcto**: `archivos/` (lo que escribe a mano, con las rutas del workspace: un JSON, un Markdown, un análisis) y `pasos.json` (los scripts que correría, por ejemplo `[["scripts/generar_plan.py", "plan.json", "plan.html"]]`). La referencia guarda solo lo que escribe el agente; los HTML y las planillas los arman los scripts reales al verificar.
+
+```bash
+python scripts/evaluar_agentes.py --referencia                 # todos: arma el workspace, aplica la referencia y verifica
+python scripts/evaluar_agentes.py --referencia --caso fallos-compra
+```
+
+Tiene que aprobar con 100. Lo corren los tests (`tests/test_evals.py`, también en CI): si un cambio en un chequeo o en un script del que dependen los agentes (formatos, rutas, informes bilingües) rompe un caso, se ve sin gastar tokens. Un caso nuevo tiene que traer su referencia.
 
 ### Sin gastar tokens del script
 

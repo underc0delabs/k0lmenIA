@@ -1,0 +1,35 @@
+{
+  "agente": "generador-charters",
+  "descripcion": "Charters de exploratorias por sesiones para el registro (HU-901). Se espera misiones con la plantilla 'Explorar <área> con <recursos> para descubrir <información>', sesiones acotadas, foco en lo riesgoso (la edad que se contradice, la contraseña sin reglas, el email duplicado) y las dudas como preguntas, sin inventar reglas.",
+  "pedido": "Usá el agente generador-charters para armar los charters de pruebas exploratorias de la historia input/historias/HU-901-registro.md. No hay conectores activos.",
+  "requiere": [".claude/agents/generador-charters.md", "scripts/generar_charters.py"],
+  "insumos": [
+    {"desde": "insumos/HU-901-registro.md", "hacia": "input/historias/HU-901-registro.md"}
+  ],
+  "presupuesto_usd": 1.5,
+  "umbral": 80,
+  "chequeos": [
+    {"id": "archivos", "tipo": "existe", "descripcion": "Deja charters.json, las hojas (HTML) y el Markdown",
+     "archivos": ["output/charters/HU-901/charters.json", "output/charters/HU-901/charters.html", "output/charters/HU-901/charters.md"], "min": 3, "peso": 2},
+    {"id": "sesiones", "tipo": "existe", "descripcion": "Deja la plantilla de notas de cada sesión",
+     "archivos": ["output/charters/HU-901/sesiones/CH-*.md"], "min": 3},
+    {"id": "cantidad", "tipo": "conteo", "descripcion": "Al menos 3 charters",
+     "archivos": ["output/charters/HU-901/charters.json"], "patron": "\"id\"\\s*:\\s*\"(CH-\\d{2})\"", "min": 3, "distintos": true, "peso": 2},
+    {"id": "mision", "tipo": "contiene", "descripcion": "Las misiones siguen la plantilla explorar … para descubrir …",
+     "archivos": ["output/charters/HU-901/charters.json"], "patrones": ["\"mision\"\\s*:\\s*\"Explor\\w*[^\"]{5,250}para (descubrir|encontrar|detectar)"], "peso": 2},
+    {"id": "timebox", "tipo": "no_contiene", "descripcion": "Cada sesión dura entre 30 y 120 minutos",
+     "archivos": ["output/charters/HU-901/charters.json"], "patrones": ["\"duracion_min\"\\s*:\\s*(?!(30|45|60|90|120)\\b)\\d+"]},
+    {"id": "riesgos", "tipo": "contiene", "descripcion": "Apunta a lo riesgoso de la historia: edad, contraseña y email duplicado",
+     "archivos": ["output/charters/HU-901/charters.json"], "patrones": ["edad", "contrase[ñn]a", "(email|correo)[^\"]{0,80}(duplicad|registrad|existente)"], "peso": 2},
+    {"id": "preguntas", "tipo": "contiene", "descripcion": "La contradicción de la edad queda como pregunta, no como regla",
+     "archivos": ["output/charters/HU-901/charters.json"], "patrones": ["\"preguntas\"\\s*:\\s*\\[[^\\]]*(16|18)[^\\]]*\\?"], "peso": 2},
+    {"id": "no-inventa-password", "tipo": "no_contiene", "descripcion": "No inventa reglas de contraseña",
+     "archivos": ["output/charters/HU-901/charters.json"],
+     "patrones": ["(contrase[ñn]a|password)[^\"]{0,80}(m[íi]nimo|al menos)\\s*\\d+\\s*caracteres"], "peso": 2}
+  ],
+  "rubrica": [
+    "Cada charter tiene una misión distinta: no se solapan.",
+    "Las ideas de prueba son concretas y variadas (datos, interrupciones, orden de pasos).",
+    "La prioridad sigue al riesgo."
+  ]
+}

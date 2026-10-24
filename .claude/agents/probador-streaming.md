@@ -1,7 +1,7 @@
 ---
 name: probador-streaming
 model: sonnet
-description: Prueba streaming y playback de video AUTORIZADO sobre fuentes propias o con permiso — cámaras IP (RTSP/ONVIF), transmisiones en vivo (RTMP/HLS/DASH), WebRTC servido por HTTP y VOD. Verifica con ffprobe/ffmpeg que la fuente levante y revisa sus propiedades (códec, resolución, FPS, bitrate, audio) y la continuidad (errores de decodificación, frames caídos, latencia de conexión); confirma los hallazgos y arma un informe HTML con severidad, evidencia y recomendaciones. Úsalo cuando la persona pida probar una cámara, un stream, una transmisión en vivo, el playback de un video o la reproducción. Solo fuentes de STREAMING_FUENTES_AUTORIZADAS. El panel web de la cámara lo prueban los agentes web (ejecutor-e2e, probador-permisos); muchas conexiones a la vez, el performance-mapper.
+description: Prueba streaming y playback de video autorizado (RTSP/ONVIF, RTMP, HLS, DASH, WebRTC, VOD) con ffprobe/ffmpeg — que la fuente levante, sus propiedades (códec, FPS, bitrate) y la continuidad — con informe HTML. Úsalo para probar una cámara, un stream, una transmisión en vivo o el playback. Solo STREAMING_FUENTES_AUTORIZADAS.
 ---
 
 # Agente: Probador de streaming y playback

@@ -1,7 +1,7 @@
 ---
 name: probador-contratos
 model: sonnet
-description: Hace contract testing (pruebas de contrato) entre servicios AUTORIZADOS — contratos dirigidos por el consumidor (Pact) y por el proveedor, para REST, GraphQL, gRPC y eventos/mensajería. Define o verifica las expectativas del consumidor, corre la verificación del proveedor contra los pacts, usa el Pact Broker y can-i-deploy para saber si es seguro desplegar, chequea compatibilidad hacia atrás/adelante al evolucionar la API y detecta matchers frágiles y pacts desactualizados; entrega un informe HTML con las interacciones, las verificaciones y las recomendaciones. Cubre contract testing consumer-driven y bi-direccional, para microservicios. Úsalo cuando la persona pida pruebas de contrato, Pact, consumer-driven contracts, compatibilidad entre servicios o validar una API contra su OpenAPI. Contra ambientes de QA.
+description: Contract testing entre servicios autorizados (Pact, consumer-driven y bi-direccional) para REST, GraphQL, gRPC y eventos — verifica pacts, Pact Broker, can-i-deploy y compatibilidad al evolucionar la API. Úsalo para pruebas de contrato, Pact o validar una API contra su OpenAPI.
 ---
 
 # Agente: Probador de contratos (contract testing)

@@ -1,6 +1,6 @@
 ---
 name: pruebas-contratos
-description: Cómo hacer contract testing (pruebas de contrato) entre servicios — contratos dirigidos por el consumidor (consumer-driven, Pact) vs. por el proveedor, el flujo consumidor→broker→proveedor, qué cubre y qué no respecto de los tests E2E y de integración, cómo escribir expectativas del consumidor (request/response, matchers por tipo y no por valor), la verificación del proveedor contra los pacts publicados, el Pact Broker y can-i-deploy, versionado y tags por rama/entorno, compatibilidad hacia atrás y hacia adelante al evolucionar la API, provider states, contratos para REST, GraphQL, mensajería/eventos (async) y gRPC, bi-direccional (comparar OpenAPI contra el consumidor), pitfalls (matchers demasiado estrictos, probar lógica de negocio en el contrato, pacts desactualizados), herramientas (Pact, Spring Cloud Contract, Schemathesis/Dredd contra OpenAPI) y preguntas para el equipo. Lo usa el probador-contratos; complementa a los agentes de API y de mensajería.
+description: El cómo del contract testing — consumer-driven (Pact) vs. provider, el flujo consumidor→broker→proveedor, expectativas y matchers, verificación del proveedor, Pact Broker y can-i-deploy, compatibilidad, para REST, GraphQL, mensajería y gRPC. Lo usa el probador-contratos; complementa a los agentes de API y mensajería.
 ---
 
 # Contract testing (pruebas de contrato)

@@ -1,7 +1,7 @@
 ---
 name: pixel-perfect
 model: sonnet
-description: Hace regresión visual "pixel perfect" de un sitio web (por defecto el APP_URL del .env) — toma una referencia aceptada de cada página en cada resolución y en cada corrida compara contra ella píxel a píxel y elemento por elemento — qué se corrió y cuántos píxeles, qué bloque se desplazó y por qué (qué apareció o creció arriba), qué cambió de tamaño, de texto o de estilo (color, fondo, letra), qué falta y qué es nuevo. La referencia también puede ser un diseño exportado de Figma. Entrega un informe HTML en modo oscuro con el comparador deslizable referencia/actual, el mapa de diferencias, el antes y después de cada hallazgo y recomendaciones. Úsalo cuando la persona pida regresión visual, comparar pantallas, detectar si algo se corrió o se rompió visualmente, pixel perfect, comparar contra el diseño o revisar cambios visuales después de un deploy.
+description: "Regresión visual: compara cada página contra una referencia aceptada (o un diseño de Figma) píxel a píxel y elemento por elemento, con comparador deslizable e informe HTML. Úsalo para regresión visual, pixel perfect, comparar contra el diseño o ver si algo se corrió tras un deploy."
 ---
 
 # Agente: Pixel perfect (regresión visual)

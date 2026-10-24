@@ -1,7 +1,7 @@
 ---
 name: probador-formularios
 model: sonnet
-description: Prueba las validaciones de los formularios de un sitio web campo por campo SIN ENVIARLOS — obligatorios vacíos y con solo espacios, largos máximo y mínimo, emails con formatos inválidos y válidos, números fuera de rango y en los límites, teléfonos y URLs con texto, patrones, nombres con acentos, ñ y apóstrofe que tienen que aceptarse, listas y casillas obligatorias — y revisa si el campo rechaza el valor, qué mensaje muestra y si lo pone la aplicación o el navegador; además etiquetas, indicación de obligatorio, tipo de campo, autocomplete y reglas de la contraseña. Entrega un informe HTML en modo oscuro con la matriz campo × prueba, las capturas con los errores a la vista y los hallazgos. Úsalo cuando la persona pida probar formularios, validaciones de campos, valores límite de un formulario o revisar los mensajes de error.
+description: Prueba las validaciones de los formularios campo por campo SIN enviarlos — obligatorios, largos, formatos de email, rangos, patrones, acentos — y revisa el mensaje y quién lo pone, con matriz campo × prueba y capturas. Úsalo para probar formularios, validaciones de campos o los mensajes de error.
 ---
 
 # Agente: Probador de formularios

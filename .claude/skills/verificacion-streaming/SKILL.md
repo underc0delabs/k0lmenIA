@@ -1,6 +1,6 @@
 ---
 name: verificacion-streaming
-description: El "cómo" de probar streaming y playback de video con ffprobe/ffmpeg — protocolos (RTSP/ONVIF, RTMP, HLS, DASH, WebRTC, VOD y archivo), qué propiedades mirar (códec, resolución, FPS, bitrate, audio, keyframes), cómo leer la continuidad (frames caídos, errores de decodificación, latencia) y qué umbrales usar. Lo usa el agente probador-streaming.
+description: El cómo de probar streaming y playback con ffprobe/ffmpeg — protocolos (RTSP/ONVIF, RTMP, HLS, DASH, WebRTC, VOD), qué propiedades mirar (códec, resolución, FPS, bitrate, keyframes), cómo leer la continuidad y qué umbrales usar. Lo usa el agente probador-streaming.
 ---
 
 # Verificación de streaming y playback

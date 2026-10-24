@@ -1,0 +1,52 @@
+# PDF de la documentación (español e inglés). No se versionan (pesan ~9 MB cada uno y agrandaban el repo en cada
+# cambio): este workflow los arma con docs/generar.js al subir cambios de docs/ a main y los publica en el release
+# "docs", con una URL fija:
+#   https://github.com/underc0delabs/k0lmenIA/releases/download/docs/k0lmenIA-documentacion.pdf
+#   https://github.com/underc0delabs/k0lmenIA/releases/download/docs/k0lmenIA-documentation.pdf
+# Para generarlos en tu PC: node docs/generar.js (quedan en docs/, ignorados por git).
+name: Documentación en PDF
+
+on:
+  push:
+    branches: [main]
+    paths: ["docs/**", ".github/workflows/documentacion.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: documentacion
+  cancel-in-progress: true
+
+jobs:
+  pdf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Playwright (el de k0lmena) y pypdf
+        run: |
+          npm ci --prefix herramientas/k0lmena
+          cd herramientas/k0lmena && npx playwright install --with-deps chromium
+          python -m pip install pypdf
+
+      - name: Generar los PDF
+        run: node docs/generar.js
+
+      - name: Publicar en el release "docs"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view docs >/dev/null 2>&1 || gh release create docs --title "Documentación (PDF)" \
+            --notes "PDF de la documentación de k0lmenIA en español e inglés. Se actualiza solo con cada cambio de docs/ en main."
+          gh release upload docs docs/k0lmenIA-documentacion.pdf docs/k0lmenIA-documentation.pdf --clobber

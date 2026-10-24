@@ -1,6 +1,6 @@
 ---
 name: guia-pruebas
-description: Asistente interactivo que guía a la persona para elegir qué probar y con qué agente o skill de k0lmenIA, preguntando paso a paso y recomendando (o ejecutando) según las respuestas. Lo usa la conversación principal (no un subagente, porque los subagentes no pueden preguntar) cuando la persona no sabe por dónde empezar, pide una recomendación de tipos de prueba, o quiere que la vayan guiando. Incluye el mapa de plataforma (web, API REST/GraphQL/gRPC/SOAP, mobile, desktop, e-commerce, SAP, Salesforce, Dynamics, IA/LLM, blockchain, IVR, juegos, POS, mensajería) por tipo de prueba (funcional, exploratoria, smoke, regresión, performance, seguridad SAST/SCA/DAST, accesibilidad, visual, cross-browser, UX, i18n, contenido/typos, contratos, datos, observabilidad, búsqueda, documentos, mutación, resiliencia) hacia el agente o skill que corresponde, el flujo de preguntas sugerido y cómo arrancar siempre desde el contexto del proyecto. La conversación principal lo usa para armar un plan corto y ejecutar lo acordado.
+description: Asistente de la conversación principal que guía a la persona para elegir qué probar y con qué agente o skill, preguntando paso a paso (no es un subagente, porque no pueden preguntar). Incluye el mapa de plataforma × tipo de prueba. Úsalo cuando la persona no sabe por dónde empezar o pide una recomendación.
 ---
 
 # Guía de pruebas (asistente para elegir agente/skill)

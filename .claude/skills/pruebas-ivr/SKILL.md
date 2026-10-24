@@ -1,6 +1,6 @@
 ---
 name: pruebas-ivr
-description: Cómo probar sistemas de voz, IVR y bots conversacionales telefónicos — el árbol de menús del IVR (DTMF/tonos y reconocimiento de voz ASR), prompts y TTS (claridad, idioma, pronunciación, barge-in/interrupción), el flujo de llamada (bienvenida, menús, reintentos ante no-input/no-match, timeouts, salida al operador, horarios de atención), enrutamiento y colas (ACD, prioridad, música en espera, desborde, devolución de llamada/callback), transferencias (ciega/consultiva) y datos que viajan con la llamada (CTI/screen-pop), integración con backend (consultas por teléfono, autenticación por PIN/voz), telefonía (SIP/VoIP, calidad de audio, latencia, jitter, DTMF in-band vs. RFC2833, cortes), grabación y cumplimiento (consentimiento, PCI en pagos por voz, no grabar datos sensibles), accesibilidad (TTY, velocidad), voicebots con NLU/LLM (intents, entidades, fallback, confirmaciones), métricas (contención, abandono, tiempo en IVR), y cómo automatizar (herramientas de testing de voz como Cyara/Hammer, o scripts SIP); bugs típicos y preguntas para el PO. Lo usa el probador-ivr.
+description: El cómo de probar voz, IVR y voicebots telefónicos — árbol de menús (DTMF y ASR), prompts/TTS, flujo de llamada, enrutamiento y colas, transferencias y CTI, telefonía (SIP/VoIP), grabación y cumplimiento, voicebots con NLU y métricas. Lo usa el probador-ivr.
 ---
 
 # Pruebas de voz / IVR

@@ -1,6 +1,6 @@
 ---
 name: control-onvif
-description: El "cómo" de probar el control ONVIF de una cámara IP con la librería onvif-zeep — servicios (device management, media, PTZ, eventos), qué consultar (información del dispositivo, capacidades, perfiles, URIs de stream y snapshot), cómo probar PTZ de forma segura (mover y frenar) y cómo leer las capacidades de eventos/detección de movimiento. Lo usa el agente probador-onvif.
+description: El cómo de probar el control ONVIF con onvif-zeep — servicios (device, media, PTZ, eventos), qué consultar (info, perfiles, URIs de stream y snapshot), cómo probar PTZ de forma segura y leer las capacidades de eventos. Lo usa el agente probador-onvif.
 ---
 
 # Control ONVIF

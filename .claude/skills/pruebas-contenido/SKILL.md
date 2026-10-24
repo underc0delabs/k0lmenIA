@@ -1,6 +1,6 @@
 ---
 name: pruebas-contenido
-description: Cómo revisar la calidad del contenido y los textos de un producto en su idioma principal (distinto de las traducciones, que cubre analista-traductor) — errores objetivos y typos — ortografía y gramática (con LanguageTool si está), palabras duplicadas ("el el"), placeholders y variables de plantilla sin reemplazar ({{nombre}}, ${var}, %s), Lorem ipsum y texto de relleno olvidado, claves de i18n a la vista (home.title.welcome), marcadores TODO/FIXME, espacios antes de puntuación y espacios múltiples; y consistencia de microcopy — términos usados de forma inconsistente (iniciar sesión vs. loguearse), mayúsculas y puntuación, botones y labels claros, mensajes de error entendibles y accionables, tono uniforme, formato de fechas/números/moneda, y textos cortados o vacíos; cómo automatizar (extraer el texto visible de la web con Playwright y pasarlo por la herramienta contenido; glosario de términos del proyecto), bugs típicos y preguntas para el PO. Lo usa el revisor-contenido.
+description: El cómo de revisar contenido y textos en el idioma principal — typos, ortografía (LanguageTool), placeholders sin reemplazar, Lorem ipsum, claves de i18n a la vista, microcopy y consistencia — extrayendo el texto con Playwright. Lo usa el revisor-contenido; las traducciones son de analista-traductor.
 ---
 
 # Revisión de contenido y typos

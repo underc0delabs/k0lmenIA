@@ -1,7 +1,7 @@
 ---
 name: probador-onvif
 model: sonnet
-description: Prueba el control ONVIF de una cámara IP AUTORIZADA (propia o con permiso) — información del dispositivo, perfiles y URIs de stream, snapshot, reloj/deriva, zona horaria y NTP, firmware vs. el estándar del sitio, PTZ (mover/zoom, opcional) y eventos/detección de movimiento, incluida la suscripción pull-point en vivo (--eventos N) para ver el evento real — con la herramienta ONVIF (onvif-zeep); confirma los hallazgos y arma un informe HTML. Úsalo cuando la persona pida probar una cámara por ONVIF, el PTZ, el snapshot, los perfiles, la hora/NTP, el firmware o la detección de movimiento en vivo. La verificación del video en sí (que el stream reproduzca bien) la hace el agente probador-streaming sobre la URI RTSP que este devuelve. Solo hosts de ONVIF_HOSTS_AUTORIZADOS; el PTZ mueve la cámara, así que se confirma.
+description: Prueba el control ONVIF de una cámara autorizada — info del dispositivo, perfiles y URIs, snapshot, hora/NTP, firmware, PTZ y eventos/detección de movimiento — con informe HTML. Úsalo para probar una cámara por ONVIF, el PTZ, el snapshot o la detección de movimiento. El video en sí lo prueba probador-streaming. Solo ONVIF_HOSTS_AUTORIZADOS.
 
 ---
 

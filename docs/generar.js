@@ -3,7 +3,8 @@
 //   docs/assets/img/relaciones.png    ← docs/diagramas/relaciones.html
 //   docs/assets/img/uso.png           ← docs/diagramas/uso.html
 //   docs/assets/img/puesta-en-marcha.png ← docs/diagramas/puesta-en-marcha.html
-//   docs/k0lmenIA-documentacion.pdf   ← docs/index.html (estilos de impresión)
+//   docs/k0lmenIA-documentacion.pdf   ← docs/index.html (estilos de impresión; no se versiona: lo publica
+//                                       el workflow documentacion.yml en el release "docs")
 // y lo mismo en inglés:
 //   docs/assets/img/en/*.png          ← docs/diagramas/en/*.html
 //   docs/k0lmenIA-documentation.pdf   ← docs/en/index.html

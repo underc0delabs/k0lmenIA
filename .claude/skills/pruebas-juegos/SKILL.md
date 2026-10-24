@@ -1,6 +1,6 @@
 ---
 name: pruebas-juegos
-description: Cómo probar videojuegos — tipos y motores (Unity, Unreal, Godot, web/HTML5, mobile, consola, PC), lo funcional (mecánicas y reglas, progresión y guardado, misiones, estados del juego, físicas y colisiones, cámara, controles con teclado/mouse/gamepad/táctil), compatibilidad (resoluciones y aspect ratios, FPS/refresh, plataformas y dispositivos, controladores), rendimiento (FPS estable, tiempos de carga, memoria/leaks, stuttering, uso de GPU/CPU, batería en mobile), guardado y persistencia (save/load, corrupción, saves en la nube, migración entre versiones), multijugador y red (sincronización, latencia/lag, desconexión y reconexión, matchmaking, autoridad del servidor y anti-cheat, rollback), economía y monetización (compras in-app, moneda del juego, loot boxes, balance, ads), audio y localización, UI/UX y accesibilidad (remapeo de teclas, subtítulos, daltonismo), pruebas de estabilidad/soak y crash, build verification/smoke por plataforma, y técnicas propias (exploratorias, boundary del mundo, secuencias rotas, speedrun/soft-lock); cómo automatizar (frameworks del motor, bots, Playwright para HTML5, Appium para mobile) y preguntas para el estudio. Lo usa el probador-juegos.
+description: El cómo de probar videojuegos — motores (Unity, Unreal, Godot, HTML5), funcional, compatibilidad, rendimiento (FPS, memoria), guardado, multijugador y red, monetización, audio y a11y, estabilidad y exploratorias de juego. Lo usa el probador-juegos.
 ---
 
 # Pruebas de videojuegos

@@ -1,7 +1,7 @@
 ---
 name: probador-blockchain
 model: opus
-description: Prueba aplicaciones blockchain / Web3 y smart contracts AUTORIZADOS en testnets o nodos locales (nunca mainnet con fondos reales) — funcional del contrato (funciones view y de estado, eventos, require/revert y custom errors), tokens y estándares (ERC-20/721/1155, allowance, decimales), gas (estimación, out-of-gas, DoS), seguridad de smart contracts (reentrancy, control de acceso, overflow, front-running/MEV, oráculos, delegatecall, randomness, proxies/upgradeabilidad), firmas y permisos (EIP-712, permit, replay), la integración dApp↔contrato (wallet, reverts, confirmaciones, reorg, chain id), con Hardhat/Foundry (unit, fuzzing, invariantes) y análisis estático (Slither); entrega un informe HTML con hallazgos, pruebas e invariantes. Cubre funcional, seguridad de contratos e integración Web3. Úsalo cuando la persona pida probar un smart contract, una dApp, tokens, Web3 o seguridad on-chain. Nunca mainnet con fondos reales; la auditoría formal queda para un auditor.
+description: Prueba apps blockchain/Web3 y smart contracts autorizados en testnets o nodos locales — funcional, tokens (ERC-20/721/1155), gas, seguridad (reentrancy, control de acceso, MEV), firmas e integración dApp — con Hardhat/Foundry y Slither. Úsalo para un smart contract, dApp, tokens o seguridad on-chain. Nunca mainnet con fondos reales.
 ---
 
 # Agente: Probador de blockchain / Web3

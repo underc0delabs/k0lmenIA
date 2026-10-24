@@ -251,6 +251,9 @@ def main():
     if (carpeta / "analisis.json").exists():
         args += ["--analisis", str(carpeta / "analisis.json")]
     res = subprocess.run(args, capture_output=True, text=True, encoding="utf-8")
+    if res.returncode != 0:  # p. ej. un analisis.json mal formado: el agente tiene que enterarse, no seguir de largo
+        print(res.stderr.strip() or res.stdout.strip(), file=sys.stderr)
+        sys.exit(f"No se pudo armar el informe de la revisión (revisá {carpeta / 'analisis.json'}).")
     print(res.stdout.strip() or res.stderr.strip())
 
 

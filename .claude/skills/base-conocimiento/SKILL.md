@@ -1,6 +1,6 @@
 ---
 name: base-conocimiento
-description: Flujo que usa la conversación principal para armar y mantener la base de conocimiento de un proyecto completo en input/documentacion/ y usarla para escribir y automatizar casos — investigar todo el proyecto (épicas, historias, subtareas, tareas, tickets vinculados, comentarios, wiki, repo), explorar la plataforma de punta a punta con la sesión iniciada, documentar cómo se usa, escribir los casos con ese contexto y automatizarlos partiendo de los locators ya relevados; y la rutina para proyectos ágiles cuando los requerimientos cambian en el medio (qué cambió en las historias, el código y la aplicación, qué documentos rehacer y qué casos revisar). Úsalo cuando la persona pida investigar o documentar todo el proyecto, armar la base de conocimiento, preparar el contexto para escribir casos de todo, o mantener la documentación al día porque cambiaron los requerimientos.
+description: Flujo de la conversación principal para armar y mantener la base de conocimiento de un proyecto completo (input/documentacion/) y usarla para escribir y automatizar casos — investigar todo, explorar la plataforma, documentar y la rutina cuando cambian los requerimientos. Úsalo para investigar o documentar todo el proyecto o mantenerlo al día.
 ---
 
 # Base de conocimiento del proyecto (conversación principal)

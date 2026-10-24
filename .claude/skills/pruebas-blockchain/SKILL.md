@@ -1,6 +1,6 @@
 ---
 name: pruebas-blockchain
-description: Cómo probar aplicaciones blockchain / Web3 y smart contracts — redes y entornos (mainnet vs. testnets Sepolia/Holesky, nodos locales Hardhat/Anvil/Ganache, forking de mainnet), smart contracts en Solidity/EVM (y nociones de otras cadenas), lo funcional (funciones view/pure vs. que cambian estado, eventos/logs, valores de retorno, require/revert y custom errors), tokens y estándares (ERC-20, ERC-721, ERC-1155, allowance/approve, decimales), el gas (estimación, out-of-gas, límites), la seguridad de smart contracts (reentrancy, overflow/underflow, control de acceso y onlyOwner, front-running/MEV, oráculos manipulables, delegatecall, randomness, DoS, inicialización de proxies), upgradeabilidad (proxies UUPS/Transparent, storage layout), firmas y permisos (EIP-712, permit, replay), la integración dApp↔contrato (wallet/MetaMask, manejo de reverts y confirmaciones, reorg, nonce, chain id), pruebas con Hardhat/Foundry (unit, fuzzing, invariantes), análisis estático (Slither, Mythril) y cobertura, gas reporting, y testnets con faucets; bugs típicos y preguntas para el equipo. Lo usa el probador-blockchain.
+description: El cómo de probar blockchain/Web3 y smart contracts — testnets y nodos locales, funcional del contrato, tokens (ERC-20/721/1155), gas, seguridad (reentrancy, control de acceso, MEV, oráculos, proxies), firmas, integración dApp y Hardhat/Foundry/Slither. Lo usa el probador-blockchain.
 ---
 
 # Pruebas de blockchain / Web3 y smart contracts

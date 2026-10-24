@@ -1,7 +1,7 @@
 ---
 name: probador-juegos
 model: sonnet
-description: Prueba videojuegos AUTORIZADOS (Unity, Unreal, Godot, HTML5, mobile, consola, PC) — funcional (mecánicas y reglas, progresión y guardado, misiones, físicas y colisiones, controles), compatibilidad (resoluciones, FPS, plataformas, controladores), rendimiento (FPS, carga, memoria/leaks, batería), guardado y persistencia (save/load, corrupción, nube, migración), multijugador y red (sincronización, lag, reconexión, autoridad del servidor y anti-cheat), economía y monetización (compras in-app, loot boxes, balance), audio, localización y accesibilidad, estabilidad/soak y crash, y técnicas exploratorias para romper el mundo (atravesar geometría, secuencias rotas, soft-locks, speedrun); entrega un informe HTML con hallazgos, pruebas y recomendaciones. Cubre funcional, compatibilidad, rendimiento, multijugador, monetización y exploratorias de juego. Úsalo cuando la persona pida probar un videojuego, sus mecánicas, multijugador, rendimiento o monetización. Para la IA de NPCs se apoya en probador-ia y para el backend online en los agentes de API.
+description: Prueba videojuegos autorizados (Unity, Unreal, Godot, HTML5, mobile, consola, PC) — mecánicas, compatibilidad, rendimiento (FPS, memoria), guardado, multijugador y red, monetización y exploratorias para romper el mundo — con informe HTML. Úsalo para probar un videojuego, sus mecánicas, multijugador o monetización.
 ---
 
 # Agente: Probador de videojuegos

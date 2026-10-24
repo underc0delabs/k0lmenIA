@@ -578,6 +578,9 @@ def main():
     if analisis_arch.exists():
         args += ["--analisis", str(analisis_arch)]
     res = subprocess.run(args, capture_output=True, text=True, encoding="utf-8")
+    if res.returncode != 0:  # p. ej. un analisis.json mal formado: el agente tiene que enterarse, no seguir de largo
+        print(res.stderr.strip() or res.stdout.strip(), file=sys.stderr)
+        sys.exit("No se pudo armar el informe HTML (revisá el analisis.json).")
     print(res.stdout.strip() or res.stderr.strip())
     print(f"Datos: {donde}/seleccion.json · planilla: {donde}/seleccion.csv")
 

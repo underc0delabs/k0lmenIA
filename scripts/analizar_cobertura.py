@@ -330,6 +330,9 @@ def main():
     if analisis.exists():
         args += ["--analisis", str(analisis)]
     r = subprocess.run(args, capture_output=True, text=True)
+    if r.returncode != 0:  # p. ej. un analisis.json mal formado: el agente tiene que enterarse, no seguir de largo
+        print(r.stderr.strip() or r.stdout.strip(), file=sys.stderr)
+        sys.exit("No se pudo armar el informe HTML (revisá el analisis.json).")
     print(r.stdout.strip() or r.stderr.strip())
 
 

@@ -1,7 +1,7 @@
 ---
 name: probador-mensajeria
 model: sonnet
-description: Prueba sistemas de mensajería y eventos (asíncronos / event-driven) AUTORIZADOS — Kafka, RabbitMQ/AMQP, SQS/SNS, Pub/Sub, MQTT, WebSockets y SSE. Publica, consume e inspecciona mensajes con la herramienta de mensajería y verifica lo que distingue a lo async — entrega (at-least-once, exactly-once), orden por clave/partición, idempotencia y deduplicación, reintentos y backoff, dead-letter queues y mensajes envenenados, esquemas y compatibilidad (Avro/Protobuf/JSON Schema, Schema Registry), consumer lag y contrapresión, el patrón outbox (evento + persistencia atómicos), correlación y seguridad (TLS, ACLs). Deriva la carga/consumer lag al performance-mapper y entrega un informe HTML con hallazgos, pruebas y recomendaciones. Cubre pruebas funcionales de eventos, de resiliencia (reintentos/DLQ), de idempotencia y orden, de esquema y de seguridad de mensajería. Úsalo cuando la persona pida probar una cola, un topic, un broker, eventos, webhooks async, un WebSocket o SSE, o la entrega/idempotencia/orden de mensajes. Contra un broker de QA, nunca producción.
+description: Prueba mensajería y eventos asíncronos autorizados (Kafka, RabbitMQ, SQS/SNS, Pub/Sub, MQTT, WebSocket, SSE) — entrega, orden, idempotencia, reintentos, DLQ, esquemas y consumer lag — con informe HTML. Úsalo para probar una cola, un topic, un broker, eventos async, un WebSocket o la entrega/orden de mensajes. Broker de QA.
 ---
 
 # Agente: Probador de mensajería y eventos

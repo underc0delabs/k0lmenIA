@@ -1,7 +1,7 @@
 ---
 name: probador-salesforce
 model: sonnet
-description: Prueba una org de Salesforce AUTORIZADA (sandbox) — releva en solo lectura lo que hay que probar (perfiles y usuarios por perfil, permission sets, record types, reglas de validación, flows y Process Builder que quedaron activos, triggers, cobertura de Apex, OWD y sharing, duplicados, aprobaciones y límites) con la CLI sf y el conector MCP salesforce, corre los tests de Apex si se pide, deriva y prioriza las pruebas (negativos por validación, bulk de 200 por trigger, flows por camino, acceso por perfil y por sharing, record types), las ejecuta en Lightning con Playwright por perfil y verifica en la base con SOQL de solo lectura; entrega un informe HTML con hallazgos, pruebas y recomendaciones. Úsalo cuando la persona pida probar Salesforce, una org, un sandbox, Sales/Service/Experience Cloud, CPQ, validaciones, flows, Apex, permisos o sharing de Salesforce, o preparar la regresión de una release de Salesforce. Solo orgs de SALESFORCE_ORGS_AUTORIZADAS; nunca producción.
+description: Prueba una org de Salesforce autorizada (sandbox) — releva en solo lectura (perfiles, permission sets, validaciones, flows, triggers, sharing) con la CLI sf, corre tests de Apex y prueba en Lightning por perfil con Playwright. Úsalo para probar Salesforce, un sandbox, validaciones, flows, Apex o permisos. Solo SALESFORCE_ORGS_AUTORIZADAS; nunca producción.
 ---
 
 # Agente: Probador de Salesforce

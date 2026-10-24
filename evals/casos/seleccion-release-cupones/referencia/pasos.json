@@ -1,0 +1,19 @@
+[
+ [
+  "scripts/seleccionar_casos.py",
+  "--cambios",
+  "output/seleccion-casos/_cambios-release-2.4.json",
+  "--nombre",
+  "release-2.4"
+ ],
+ [
+  "-c",
+  "import shutil; shutil.copy('_eval/analisis.json', 'output/seleccion-casos/release-2.4/analisis.json')"
+ ],
+ [
+  "scripts/seleccionar_casos.py",
+  "--solo-informe",
+  "--nombre",
+  "release-2.4"
+ ]
+]

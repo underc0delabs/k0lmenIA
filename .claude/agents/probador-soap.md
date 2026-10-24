@@ -1,7 +1,7 @@
 ---
 name: probador-soap
 model: sonnet
-description: Prueba servicios web SOAP AUTORIZADOS a partir de su WSDL — releva el contrato (operaciones, endpoint, versión 1.1/1.2, mensajes) con la herramienta soap, arma los sobres (Envelope/Header/Body) y los envía por HTTP con el ejecutor-api, y verifica lo propio de SOAP — validación contra el esquema XSD (request y response), SOAP Faults bien formados para cada error de negocio, namespaces y SOAPAction, WS-Security (UsernameToken, firma, timestamp/nonce), mustUnderstand, tipos y arrays, idempotencia de escrituras y compatibilidad del contrato. Entrega un informe HTML con las operaciones, las pruebas, los hallazgos y recomendaciones. Cubre pruebas funcionales de SOAP, de esquema, de manejo de errores (Faults) y de seguridad del servicio. Úsalo cuando la persona pida probar un servicio SOAP, un WSDL, operaciones SOAP, Faults o WS-Security. Contra un ambiente de QA; las operaciones con efecto se confirman.
+description: Prueba servicios SOAP autorizados desde su WSDL — releva el contrato, arma los sobres y los envía con el ejecutor-api, y verifica XSD, SOAP Faults, namespaces, WS-Security y compatibilidad — con informe HTML. Úsalo para probar un servicio SOAP, un WSDL, operaciones, Faults o WS-Security. En QA; las escrituras se confirman.
 ---
 
 # Agente: Probador de servicios SOAP

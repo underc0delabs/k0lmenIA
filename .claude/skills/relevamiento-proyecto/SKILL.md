@@ -1,6 +1,6 @@
 ---
 name: relevamiento-proyecto
-description: Cómo relevar un proyecto ENTERO por MCP (no una historia) para entender de qué se trata — barrer Jira y Confluence, Azure DevOps (Boards, Wiki y Repos), GitHub, GitLab, Linear, ClickUp, monday.com, Asana, Trello, Notion, YouTrack, Shortcut y Figma con consultas acotadas (JQL, WIQL, búsquedas), muestrear backlogs grandes sin leerlos completos, extraer módulos, actores, flujos, integraciones, ambientes, decisiones, estado del backlog y equipo, y detectar ambigüedades, contradicciones, vacíos y documentación desactualizada para convertirlos en preguntas priorizadas para el equipo. Lo usa el investigador-proyecto; sirve también a cualquiera que tenga que ponerse al día con un proyecto completo.
+description: El cómo de relevar un proyecto ENTERO por MCP (no una historia) — barrer Jira, Confluence, Azure DevOps, GitHub, GitLab y las demás herramientas con consultas acotadas, muestrear backlogs grandes, extraer módulos, flujos y decisiones, y detectar ambigüedades y preguntas para el equipo. Lo usa el investigador-proyecto.
 ---
 
 # Relevamiento de proyecto
@@ -243,3 +243,27 @@ Si un conector no está activo, una página es privada o la búsqueda devuelve e
 - **Solo lectura**: no comentás, no cambiás estados, no creás nada en ninguna herramienta.
 - **Citas cortas**: extraé la regla o la frase, no pegues páginas enteras.
 - **Fechas absolutas** (`2026-10-19`), nunca "la semana pasada".
+
+## Referencia del `investigador-proyecto`
+
+El recorrido, qué extraer, los mapas, las ambigüedades (`AMB-XX`), las preguntas (`P-XX`) y los riesgos están en las secciones de arriba. Esto es lo propio del informe.
+
+**Próximos pasos** para el QA que llega, con pedidos reales de este proyecto: `guia-onboarding`, `documentador-proyecto` si falta la base (en **modo barrido** con el mismo alcance si la profundidad fue `total`), `analista-historias` para las historias más ambiguas, `estratega-pruebas` para la próxima release, `consultor-proyecto` para dudas puntuales.
+
+### JSON e informe
+
+`output/investigacion/<proyecto>/investigacion.json` (`<proyecto>`: la key o el nombre en minúsculas, sin acentos y con guiones), con el esquema del encabezado de `scripts/generar_informe_investigacion.py` y un **resumen** breve y claro. Con `python scripts/generar_informe_investigacion.py output/investigacion/<proyecto>/investigacion.json` quedan en esa carpeta:
+
+- `informe-investigacion.html` (la web completa, con los mapas, buscador y navegación; en español e inglés), `informe-investigacion.md`, `resumen.md` (una carilla) y `presentacion-investigacion.html` (←/→ para pasar diapos; imprime a PDF, una por hoja);
+- el relevamiento anterior archivado en `historial/`;
+- lo relevado como documentación del proyecto en `input/documentacion/proyecto/investigacion/` (`resumen.md`, `modulos-y-flujos.md`, `backlog.md`, `decisiones-y-glosario.md`, `dudas-y-riesgos.md`, con estado `investigacion` o `sin-confirmar`) y el `INDICE.md` regenerado, para que los agentes que analizan historias y escriben casos lo usen como contexto. Por eso cada dato lleva su **fuente** y nada de datos personales más allá del nombre visible y el rol.
+
+### Antes de entregar
+
+- Cada módulo, regla, decisión, integración y ambiente tiene **fuente**; lo que no la tiene salió del informe o pasó a pregunta.
+- Toda contradicción tiene **sus dos fuentes** y una pregunta asociada.
+- La **cobertura** está declarada: total de ítems, leídos en detalle y criterio de la muestra.
+- Las fuentes **No accesibles** están listadas con qué haría falta.
+- No hay **secretos ni datos personales** (emails, teléfonos, tokens, datos de clientes) en el JSON ni en el informe.
+- No se escribió, comentó ni cambió nada en ninguna herramienta.
+- El JSON es válido y el informe se generó sin error.

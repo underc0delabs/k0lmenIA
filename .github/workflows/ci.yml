@@ -32,8 +32,11 @@ jobs:
       - name: Dependencias de Python
         run: python -m pip install -r requirements-dev.txt
 
-      - name: Tests de Python (pytest)
+      - name: Tests de Python (pytest, con el control de traducciones de los informes)
         run: python -m pytest tests -q
+        env:
+          # Falla si un informe en inglés deja interfaz en español (ver tests/conftest.py)
+          K0LMENIA_I18N_ESTRICTO: "1"
 
       - name: Tests de Node
         run: npm run test:repo
@@ -41,3 +44,34 @@ jobs:
       - name: JSON de configuración válidos
         run: |
           node -e "for (const f of ['.mcp.json', '.claude/settings.json', 'package.json', 'herramientas/k0lmena/package.json']) JSON.parse(require('fs').readFileSync(f, 'utf8'))"
+
+  navegador:
+    # Las pruebas con un navegador real (header anti-bots solo a la app, detección de desafíos, idiomas de los
+    # informes): necesitan k0lmena instalado con Chromium. En el job de arriba se saltean.
+    name: Pruebas con navegador real
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: k0lmena y Chromium
+        run: |
+          npm ci --prefix herramientas/k0lmena
+          cd herramientas/k0lmena && npx playwright install --with-deps chromium
+
+      - name: Dependencias de Python
+        run: python -m pip install -r requirements-dev.txt
+
+      - name: Tests de Node (incluye los de navegador real)
+        run: npm run test:repo
+
+      - name: Tipos de k0lmena
+        run: cd herramientas/k0lmena && npx tsc --noEmit -p tsconfig.json

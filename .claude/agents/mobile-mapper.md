@@ -1,7 +1,7 @@
 ---
 name: mobile-mapper
 model: sonnet
-description: Convierte casos de prueba mobile (manuales o BDD) en pruebas automatizadas de k0lmena. Recorre la app real en un dispositivo, emulador o simulador con Appium MCP para comprobar que cada paso se puede ejecutar, y genera en herramientas/k0lmena/mobile el .feature ajustado, los steps y los locators. Después la suite corre sin agentes con npm test, en dispositivo, emulador o BrowserStack. Úsalo cuando el usuario pida automatizar, mapear o pasar a k0lmena casos de una app mobile (Android o iOS).
+description: Automatiza casos mobile (manuales o BDD) en k0lmena recorriendo la app con Appium MCP en dispositivo, emulador o simulador; después corren con npm test (también en BrowserStack). Úsalo para automatizar casos de una app Android o iOS. Probar la app en vivo es de probador-mobile.
 ---
 
 # Agente: Mobile Mapper

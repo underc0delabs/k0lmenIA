@@ -1,6 +1,6 @@
 ---
 name: pruebas-datos
-description: Cómo probar datos y pipelines (ETL/ELT, data warehouse/lakehouse, batch y streaming) — calidad de datos por dimensiones (completitud, unicidad, validez, exactitud, consistencia, integridad referencial, frescura/timeliness, distribución), reconciliación origen↔destino (conteos, sumas de control, fila a fila por clave), validación de esquema y de contrato de datos (tipos, nullabilidad, enums, rangos, cambios de esquema/drift), transformaciones (reglas de negocio, deduplicación, SCD tipo 1/2, joins que inflan o pierden filas, zona horaria y formatos), idempotencia y reprocesos (re-correr el pipeline no duplica), cargas incrementales vs. full y late-arriving data, particiones y backfills, nulos y valores por defecto, duplicados y claves, PII y enmascarado, linaje y trazabilidad, orquestación (Airflow/dbt/Spark) y qué mirar cuando un job falla o llega tarde; cómo automatizarlo (consultas de solo lectura con verificador-datos, dbt tests / Great Expectations, reconciliación por conteos y hashes), bugs típicos y preguntas para el equipo. Lo usa el probador-datos; se apoya en verificador-datos.
+description: El cómo de probar datos y pipelines (ETL/ELT, warehouse, batch, streaming) — calidad por dimensiones, reconciliación origen↔destino, esquema y drift, transformaciones, idempotencia y reprocesos, PII y linaje. Lo usa el probador-datos; se apoya en verificador-datos.
 ---
 
 # Pruebas de datos y pipelines (ETL / calidad de datos)

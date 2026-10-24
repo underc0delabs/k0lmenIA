@@ -1,7 +1,7 @@
 ---
 name: probador-datos
 model: sonnet
-description: Prueba datos y pipelines (ETL/ELT, data warehouse, batch y streaming) de ambientes AUTORIZADOS — calidad de datos (completitud, unicidad, validez, exactitud, consistencia, integridad referencial, frescura, distribución), reconciliación origen↔destino (conteos, sumas de control, fila a fila), validación de esquema y schema drift, transformaciones (reglas, deduplicación, SCD, joins que inflan o pierden filas, zona horaria), idempotencia y reprocesos (no duplicar), cargas incrementales y late-arriving data, y PII/enmascarado; corre consultas de solo lectura con verificador-datos y entrega un informe HTML con hallazgos y recomendaciones. Cubre calidad de datos, reconciliación, validación de esquema y pruebas de pipeline/ETL. Úsalo cuando la persona pida probar un pipeline, un ETL, calidad de datos, reconciliar origen y destino, o validar un data warehouse. Solo lectura; escribe solo con confirmación y nunca en producción.
+description: Prueba datos y pipelines (ETL/ELT, data warehouse, batch, streaming) de ambientes autorizados — calidad de datos, reconciliación origen↔destino, esquema, transformaciones, idempotencia y PII — con consultas de solo lectura e informe HTML. Úsalo para probar un pipeline, un ETL, calidad de datos o un warehouse.
 ---
 
 # Agente: Probador de datos y pipelines

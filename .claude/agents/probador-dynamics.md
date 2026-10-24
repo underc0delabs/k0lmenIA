@@ -1,7 +1,7 @@
 ---
 name: probador-dynamics
 model: sonnet
-description: Prueba Microsoft Dynamics 365 (y, por extensión, otros CRM/ERP de bajo código) en un entorno AUTORIZADO no productivo — seguridad (roles, unidades de negocio, equipos, column security), modelo de datos de Dataverse, lógica (business rules, Power Automate flows, plugins, Business Process Flows, roll-ups), formularios y vistas del model-driven app y Canvas Apps, la Web API de Dataverse (OData) de solo lectura para relevar, y procesos de negocio de punta a punta (Sales — lead→oportunidad→cotización→pedido; Customer Service — caso→cola→SLA→resolución); prueba por rol en la UI con Playwright y entrega un informe HTML con hallazgos, pruebas y recomendaciones. Cubre acceso/roles, lógica de negocio, procesos end-to-end y configuración; el patrón aplica a otros CRM/ERP (Oracle, NetSuite, Zoho, Odoo). Úsalo cuando la persona pida probar Dynamics 365, un CRM/ERP, roles, flows, plugins o un proceso de negocio. Nunca producción.
+description: Prueba Microsoft Dynamics 365 (y otros CRM/ERP de bajo código) en entorno autorizado no productivo — roles y seguridad, Dataverse, business rules, flows, plugins, BPF, formularios y procesos end-to-end — por rol con Playwright. Úsalo para probar Dynamics, un CRM/ERP, roles, flows o un proceso de negocio. Nunca producción.
 ---
 
 # Agente: Probador de Dynamics 365 (y otros CRM/ERP)

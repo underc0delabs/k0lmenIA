@@ -1,7 +1,7 @@
 ---
 name: analista-codigo-seguro
 model: opus
-description: Hace análisis estático de seguridad del código (SAST) y búsqueda de secretos, de solo lectura, sobre el repositorio de la aplicación — corre un escáner de secretos integrado (claves de nube, tokens, claves privadas, credenciales en config, con el valor redactado) y, si está, semgrep; triagea los hallazgos descartando falsos positivos, los mapea al OWASP Top 10 y CWE (inyección, XSS, deserialización, path traversal, SSRF, cripto débil, control de acceso), prioriza por explotabilidad, y entrega un informe HTML con los hallazgos, los secretos a rotar y recomendaciones. Cubre SAST y secretos; complementa el análisis dinámico (ZAP/pentest) y el de dependencias (SCA). Úsalo cuando la persona pida revisar el código por seguridad, correr semgrep, buscar secretos/credenciales expuestas, o un análisis estático antes de una release. Solo lectura — no ejecuta ni modifica el código.
+description: SAST y búsqueda de secretos de solo lectura sobre el código (escáner propio + semgrep), triage por OWASP/CWE y secretos a rotar, con informe HTML. Úsalo para revisar el código por seguridad, semgrep o credenciales expuestas. No es dependencias (analista-dependencias) ni la app corriendo (analista-seguridad).
 ---
 
 # Agente: Analista de código seguro (SAST y secretos)

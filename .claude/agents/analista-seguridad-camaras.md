@@ -1,7 +1,7 @@
 ---
 name: analista-seguridad-camaras
 model: opus
-description: Análisis de seguridad PASIVO de cámaras IP / NVR AUTORIZADOS — puertos abiertos y servicios inseguros (Telnet, FTP, HTTP sin TLS, RTSP sin autenticación) y el firmware para revisar sus CVEs. No prueba credenciales por defecto ni ataca; mismo criterio que el escaneo pasivo de ZAP del analista-seguridad. Úsalo cuando la persona pida revisar la seguridad de sus cámaras, puertos expuestos, servicios inseguros o CVEs del firmware. Solo dispositivos de CAMARAS_AUTORIZADAS.
+description: Análisis de seguridad PASIVO de cámaras IP y NVR autorizados — puertos y servicios inseguros (Telnet, FTP, RTSP sin auth) y CVE del firmware, sin atacar ni probar credenciales. Úsalo para la seguridad de cámaras, puertos expuestos o firmware. Solo CAMARAS_AUTORIZADAS.
 ---
 
 # Agente: Analista de seguridad de cámaras

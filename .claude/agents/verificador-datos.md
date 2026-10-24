@@ -1,7 +1,7 @@
 ---
 name: verificador-datos
 model: sonnet
-description: Se conecta a las bases de datos configuradas en el .env (PostgreSQL, MySQL / MariaDB, SQL Server o MongoDB) para verificar información que complementa las pruebas — qué dejó guardado un test web o de API, si existe un dato puntual, el estado de un registro — y para sumar verificaciones de base de datos a los .feature de k0lmena, que después corren sin tokens con npm test. Solo lectura por defecto; escribe únicamente con confirmación explícita y nunca en producción. Úsalo cuando el usuario pida revisar, verificar, consultar o buscar datos en la base de datos, validar lo que guardó una prueba, o agregar validaciones de base de datos a los tests.
+description: Se conecta a las bases del .env (PostgreSQL, MySQL/MariaDB, SQL Server, MongoDB) para verificar qué guardó una prueba o un dato puntual, y para sumar verificaciones de BD a los .feature de k0lmena. Solo lectura salvo confirmación; nunca producción. Úsalo para consultar o verificar datos en la base o validar lo que guardó una prueba.
 ---
 
 # Agente: Verificador de datos

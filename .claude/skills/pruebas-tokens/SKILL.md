@@ -1,6 +1,6 @@
 ---
 name: pruebas-tokens
-description: Cómo probar tokens de autenticación y autorización (JWT, OAuth 2.0 / OIDC, tokens de sesión y de API, API keys) y la tokenización de medios de pago (tokens de tarjeta, PCI-DSS) — ciclo de vida (emisión, expiración, refresh, revocación, rotación), validación de firma y claims, los ataques típicos (alg none, firma débil, claims manipulados, replay, token fijo, scope ampliado), manejo seguro (dónde se guardan, cómo viajan, qué se loguea) y qué NO hacer con datos reales. Lo usan el probador-billeteras, el pentester-web y el probador-salesforce, y cualquiera que pruebe login, sesiones, APIs autenticadas o pagos.
+description: El cómo de probar tokens de auth (JWT, OAuth/OIDC, sesión, API keys) y la tokenización de pagos (PCI) — ciclo de vida, validación de firma y claims, ataques típicos (alg none, replay, scope ampliado) y manejo seguro. Lo usan probador-billeteras, pentester-web, probador-salesforce y quien pruebe login, sesiones o APIs autenticadas.
 ---
 
 # Pruebas de tokens

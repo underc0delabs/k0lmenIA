@@ -1,0 +1,5 @@
+1) El nombre de usuario puede tener entre 4 y 20 caracteres (letras, números y guion bajo). Fuente: input/documentacion/proyecto/reglas-de-negocio.md (validaciones.ts).
+
+2) Se puede usar un solo cupón por compra (MAX_CUPONES_POR_COMPRA = 1). Fuente: reglas-de-negocio.md (cupones.ts).
+
+3) No está documentado qué pasa si un usuario bloqueado intenta pagar: no figura en la documentación del proyecto. Queda como pregunta para el PO.

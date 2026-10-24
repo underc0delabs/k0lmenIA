@@ -2,6 +2,16 @@
 
 Los cambios más relevantes, del más nuevo al más viejo. El detalle de cada uno está en el historial de git.
 
+## 2026-10-24 (6) — Menos tokens por sesión, repo más liviano, más evals y CI más completo
+- **Descripciones de agentes y skills ~65 % más cortas** (de ~110.600 a ~39.000 caracteres): Claude Code las carga en cada conversación, así que son unos 18.000 tokens menos por sesión para cada QA. Conservan qué hace cada uno, sus disparadores y la diferencia con el más parecido. `test_integridad.py` impide que vuelvan a crecer (400 caracteres cada una, 45.000 en total).
+- **Los 10 agentes más grandes, 46 % más chicos**: el material de consulta pasó a skills que se cargan a pedido (4 nuevos: `documentacion-proyecto`, `pruebas-exploratorias`, `pruebas-resiliencia` y `redaccion-casos-manuales`; 52 en total). En el agente quedan el flujo, las reglas y qué skill cargar.
+- **PDF de la documentación fuera del repo**: pesaban ~9 MB cada uno y se habían commiteado 35 veces (el repo pesa 241 MB, y por eso los push eran lentos y daban 403). Ahora los genera el workflow `documentacion.yml` y los publica en el release `docs`, con una URL fija. La historia vieja sigue pesando hasta que se reescriba (no se hizo).
+- **Evals: de 10 a 17 casos** (`estratega-pruebas`, `revisor-casos`, `generador-charters`, `analista-fallos`, `analista-cobertura`, casos de API GraphQL, `selector-casos-de-prueba`). Cada caso tiene una salida de referencia que el CI verifica sin gastar tokens (`--referencia`), así un cambio que rompa los chequeos o los scripts se detecta solo.
+- **Errores que no se veían**: `revisar_casos.py`, `analizar_fallos.py`, `analizar_cobertura.py`, `analizar_logs.py` y `seleccionar_casos.py` ahora fallan con un mensaje claro si no pueden armar el informe (antes seguían como si nada con un `analisis.json` mal formado).
+- **CI**: un job nuevo instala k0lmena con Chromium y corre las pruebas con navegador real, y el modo estricto de traducciones (`K0LMENIA_I18N_ESTRICTO`) falla si un informe en inglés deja interfaz en español.
+- **`package.json` más simple**: las 34 líneas `node -e spawnSync(...)` copiadas pasan a un lanzador único, `node scripts/py.js <script.py>`.
+- `analista-observabilidad` pasa a Haiku: es mecánico (healthchecks y métricas contra lo esperado).
+
 ## 2026-10-24 (5) — Una carpeta por idioma, todos los agentes en el portal y documentación en inglés a pedido
 - **Estructura por idioma**: cada informe queda en `es/<informe>.html` y `en/<informe>.html`, con la evidencia compartida en la unidad. Al lado queda un acceso `<informe>.html` que abre el idioma que elegiste con la banderita (español por defecto). La banderita recuerda la elección, así que el portal (`output/index.html` → `output/es/` u `output/en/`) y los accesos abren siempre ese idioma. El historial guarda los dos idiomas de cada corrida.
 - **Todos los agentes en el portal** (auditoría de los 79): ahora tienen HTML e índice la gestión de pruebas (trazabilidad y resultados publicados), los casos de API de Scalar, la documentación del proyecto (`input/documentacion/` → `output/documentacion/`, sin tocar `input/`), el relevamiento del proyecto (antes caía en "Otros") y los evals de los agentes (`evals/resultados/`).

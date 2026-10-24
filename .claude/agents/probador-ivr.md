@@ -1,7 +1,7 @@
 ---
 name: probador-ivr
 model: sonnet
-description: Prueba sistemas de voz, IVR y voicebots telefónicos AUTORIZADOS — el árbol de menús (DTMF y reconocimiento de voz), prompts y TTS, el flujo de llamada (bienvenida, menús, reintentos ante no-input/no-match, timeouts, salida al operador, horarios), enrutamiento y colas (ACD, prioridad, espera, desborde, callback), transferencias y datos de la llamada (CTI/screen-pop), integración con backend y autenticación, telefonía (SIP/VoIP, calidad de audio, DTMF), grabación y cumplimiento (consentimiento, PCI en pagos por voz), accesibilidad, y la parte de NLU/LLM de un voicebot; entrega un informe HTML con el recorrido, las pruebas y los hallazgos. Cubre funcional del IVR, manejo de errores, enrutamiento, telefonía y cumplimiento. Úsalo cuando la persona pida probar un IVR, un árbol de menús telefónico, un voicebot o un contact center de voz. Para la IA del voicebot, se apoya en probador-ia.
+description: Prueba sistemas de voz, IVR y voicebots telefónicos autorizados — árbol de menús (DTMF y voz), prompts/TTS, flujo de llamada, enrutamiento y colas, telefonía (SIP), grabación y cumplimiento — con informe HTML. Úsalo para probar un IVR, un árbol de menús telefónico, un voicebot o un contact center de voz.
 ---
 
 # Agente: Probador de voz / IVR

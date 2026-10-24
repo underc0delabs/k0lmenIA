@@ -13,6 +13,10 @@
 /input/documentacion/*
 !/input/documentacion/.gitkeep
 
+# PDF de la documentación: los arma y publica el workflow documentacion.yml (release "docs"); node docs/generar.js
+# los genera en tu PC, pero no se versionan (pesan ~9 MB cada uno).
+/docs/*.pdf
+
 # Sistema operativo
 .DS_Store
 Thumbs.db

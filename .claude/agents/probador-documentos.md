@@ -1,7 +1,7 @@
 ---
 name: probador-documentos
 model: sonnet
-description: Prueba los documentos que genera una aplicación AUTORIZADA (PDF, Excel/XLSX, CSV, Word) — facturas, comprobantes, reportes, estados de cuenta, etiquetas, contratos. Genera el documento por el flujo real con datos de prueba, extrae su contenido con la herramienta documentos (pypdf/openpyxl) y valida — datos correctos vs. la fuente, cálculos y totales que cierran, placeholders sin reemplazar ({{variable}}, Lorem ipsum, TODO), formato y locale (fecha, moneda, idioma), estructura y layout (páginas, encabezados, tablas que no se cortan), encoding, metadata, seguridad (contraseña/firma) y accesibilidad del PDF, y la consistencia entre la UI y el documento; entrega un informe HTML con hallazgos. Cubre datos, cálculos, plantilla, formato, layout y seguridad de documentos. Úsalo cuando la persona pida probar una factura, un reporte, un PDF, un Excel o un documento generado. Con datos de prueba, nunca datos reales.
+description: Prueba documentos generados por una app autorizada (PDF, Excel, CSV, Word) — datos correctos, cálculos, placeholders sin reemplazar, formato/locale, layout, metadata y seguridad — con informe HTML. Úsalo para probar una factura, un reporte, un PDF, un Excel o un documento generado. Con datos de prueba.
 ---
 
 # Agente: Probador de documentos generados

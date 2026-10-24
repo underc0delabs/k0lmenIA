@@ -1,6 +1,6 @@
 ---
 name: pruebas-busqueda
-description: Cómo probar búsqueda y relevancia (Elasticsearch/OpenSearch, Algolia, Solr, Typesense, Meilisearch o full-text de base de datos) — relevancia y ranking (el resultado correcto en las primeras posiciones, boosting por campo/negocio), tolerancia a typos y fuzzy, sinónimos y stemming/lematización por idioma, stop words y acentos/diacríticos, "cero resultados" y sugerencias (did-you-mean), autocompletar/typeahead, facetas y filtros (y su combinación con la query), paginación y orden, freshness e indexación (un alta aparece, una baja desaparece), coincidencia por SKU/código exacto, consultas vacías o muy largas, inyección en la query, seguridad (no devolver documentos sin permiso del usuario), rendimiento/latencia de la búsqueda, y la medición con un golden set de consulta→resultado esperado y métricas (precision@k, recall, nDCG, MRR); cómo automatizar (golden set contra el endpoint de búsqueda con ejecutor-api o la UI con Playwright), bugs típicos y preguntas para el PO. Lo usa el probador-busqueda.
+description: El cómo de probar búsqueda y relevancia (Elasticsearch, Algolia, Solr, Typesense, Meilisearch, full-text) — ranking, typos, sinónimos, facetas, cero resultados, indexación, seguridad y medición con golden set (precision@k, nDCG, MRR). Lo usa el probador-busqueda.
 ---
 
 # Pruebas de búsqueda y relevancia

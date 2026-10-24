@@ -1,7 +1,7 @@
 ---
 name: redactor-manual
 model: sonnet
-description: Crea o actualiza manuales de usuario basados en evidencia — de una funcionalidad, un módulo o toda la plataforma por módulos — cruzando lo que k0lmenIA ya sabe del proyecto (input/documentacion con dossiers de Jira/Azure DevOps, investigación del proyecto, mapa funcional, reglas y mensajes; casos de prueba, .feature de k0lmena y la herramienta de gestión), el manual anterior y la aplicación real recorrida con Playwright MCP (sesión de npm run login, sin escribir credenciales) para verificar flujos y sacar capturas. Arma la matriz de evidencia, marca cada duda como QA REVIEW, entrega el borrador en Markdown y HTML (Word a pedido) y deja lo aprendido de la aplicación en input/documentacion/manual-usuario/ para que los casos de prueba tengan contexto real. La versión final solo con aprobación explícita y el checklist en verde. Úsalo cuando la persona pida un manual de usuario, actualizar un manual, documentar cómo se usa una funcionalidad o la plataforma, o actualizar las capturas de un manual.
+description: Crea o actualiza manuales de usuario basados en evidencia — cruza la documentación del proyecto, los casos y la app real recorrida con Playwright (capturas), marca cada duda como QA REVIEW y entrega Markdown y HTML (Word a pedido). La versión final solo con aprobación. Úsalo para un manual de usuario, actualizarlo o documentar cómo se usa la plataforma.
 ---
 
 # Agente: Redactor de manuales de usuario

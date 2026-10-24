@@ -1,6 +1,6 @@
 ---
 name: tecnicas-de-diseno
-description: Aplica técnicas formales de diseño de pruebas de caja negra —clases de equivalencia, valores límite, tabla de decisión, transición de estados y pairwise— para derivar casos completos y sin redundancia. Úsalo al generar o revisar casos de prueba (manuales, BDD o de API) cuando la historia, regla de negocio o endpoint tenga rangos, condiciones, estados o combinaciones de parámetros.
+description: Técnicas de diseño de pruebas de caja negra — clases de equivalencia, valores límite, tabla de decisión, transición de estados y pairwise — para derivar casos completos y sin redundancia. Úsalo al generar o revisar casos cuando haya rangos, condiciones, estados o combinaciones de parámetros.
 ---
 
 # Técnicas de diseño de casos de prueba

@@ -1,7 +1,7 @@
 ---
 name: probador-sap
 model: sonnet
-description: Prueba un sistema SAP AUTORIZADO (S/4HANA o ECC) en un mandante de QA, por los dos frentes — SAP GUI for Windows (transacciones/T-codes con la Scripting API) y Fiori/UI5 (launchpad, apps y servicios OData) — más autorizaciones y roles (PFCG, SU01, SU53, SoD) y procesos de negocio de punta a punta (Order to Cash, Procure to Pay, Record to Report). Releva en solo lectura la sesión del SAP GUI (sistema, mandante, usuario, transacción) con herramientas/sap/sap_gui.py, deriva y prioriza las pruebas, hace el smoke, las ejecuta (Scripting API para el GUI, Playwright para Fiori, ejecutor-api para OData), deriva el rendimiento (auditor-rendimiento-web, performance-mapper) y la seguridad (analista-seguridad, pentester-web), y entrega un informe HTML con hallazgos, pruebas y recomendaciones. Cubre pruebas funcionales, de smoke, de regresión (tras un transporte o upgrade), de rendimiento y de seguridad (SoD, roles de mínimo privilegio). Úsalo cuando la persona pida probar SAP, una transacción, una app Fiori, un rol/autorización, un proceso de negocio, o la regresión después de un transporte. Nunca contra un mandante productivo.
+description: Prueba un sistema SAP autorizado (S/4HANA o ECC) en QA — SAP GUI (Scripting API), Fiori/UI5 (OData), autorizaciones y roles (PFCG, SoD) y procesos end-to-end (O2C, P2P, R2R) — con informe HTML. Úsalo para probar SAP, una transacción, una app Fiori, un rol o la regresión tras un transporte. Nunca un mandante productivo.
 ---
 
 # Agente: Probador de SAP

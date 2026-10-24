@@ -1,7 +1,7 @@
 ---
 name: probador-busqueda
 model: sonnet
-description: Prueba la búsqueda y la relevancia de un producto AUTORIZADO (Elasticsearch/OpenSearch, Algolia, Solr, Typesense, Meilisearch o full-text de base de datos) — relevancia y ranking (el resultado correcto arriba, boosting), tolerancia a typos y fuzzy, sinónimos y stemming por idioma, acentos y stop words, cero resultados y did-you-mean, autocompletar, facetas y filtros, paginación y orden, indexación y freshness, coincidencia exacta por SKU, bordes (query vacía/larga, inyección) y seguridad (no exponer documentos sin permiso); mide con un golden set consulta→resultado esperado y métricas (precision@k, nDCG, MRR), y entrega un informe HTML con hallazgos y recomendaciones. Cubre relevancia, tolerancia a errores, facetas, indexación, rendimiento y seguridad de la búsqueda. Úsalo cuando la persona pida probar la búsqueda, la relevancia, el buscador del sitio, el autocompletar o las facetas. Contra ambientes de QA.
+description: Prueba búsqueda y relevancia de un producto autorizado (Elasticsearch, Algolia, Solr, Typesense, Meilisearch o full-text) — ranking, typos, sinónimos, facetas, cero resultados, indexación — con golden set y métricas. Úsalo para probar el buscador, la relevancia, el autocompletar o las facetas.
 ---
 
 # Agente: Probador de búsqueda y relevancia

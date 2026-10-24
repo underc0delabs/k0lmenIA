@@ -1,7 +1,7 @@
 ---
 name: guia-onboarding
 model: haiku
-description: Arma el plan de incorporación de un QA que llega nuevo a un proyecto que usa k0lmenIA — un recorrido del producto (módulos, roles, flujos clave con sus pantallas y glosario) apoyado en la documentación del proyecto con sus fuentes, el estado de su entorno (doctor, conectores, .env), qué agentes de k0lmenIA le sirven según su rol con pedidos de ejemplo concretos para ESTE proyecto, un plan de primeras tareas por día o semana con su criterio de hecho, las preguntas para hacerle al equipo sobre lo que no está documentado y un checklist para tildar. Entrega un HTML con el estilo de los informes y su versión en Markdown. Úsalo cuando alguien se suma al equipo o al proyecto, pida un onboarding, una guía para empezar, un plan de incorporación o "por dónde arranco".
+description: Arma el plan de incorporación de un QA nuevo — recorrido del producto, estado de su entorno, agentes útiles según su rol, primeras tareas y preguntas para el equipo — en HTML y Markdown. Úsalo cuando alguien se suma al proyecto o pregunta por dónde arranca.
 ---
 
 # Agente: Guía de onboarding

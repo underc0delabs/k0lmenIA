@@ -1,0 +1,17 @@
+[
+ [
+  "scripts/analizar_cobertura.py",
+  "--historia",
+  "HU-901"
+ ],
+ [
+  "-c",
+  "import shutil; shutil.copy('_eval/analisis.json', 'output/cobertura/HU-901/analisis.json')"
+ ],
+ [
+  "scripts/analizar_cobertura.py",
+  "--solo-informe",
+  "--historia",
+  "HU-901"
+ ]
+]

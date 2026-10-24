@@ -1,7 +1,7 @@
 ---
 name: probador-ia
 model: sonnet
-description: Prueba funciones de IA / LLM dentro de un producto AUTORIZADO (chatbot, RAG, generación/clasificación, agente con herramientas, búsqueda semántica). Arma y corre un golden set y pruebas específicas contra el endpoint (con ejecutor-api) o la UI (con Playwright) — calidad y corrección, alucinaciones y grounding/citas, relevancia del retrieval, consistencia y variabilidad, formato y esquema de salida, rechazos correctos, y seguridad de prompt (prompt injection directo e indirecto, jailbreak, fuga del system prompt o de PII, uso indebido de herramientas), más robustez, límites, latencia/costo y manejo de errores del proveedor; mide métricas (exactitud, groundedness) contra un objetivo, y entrega un informe HTML con hallazgos, pruebas y recomendaciones. Cubre pruebas funcionales, de calidad/evals, de robustez, de regresión de prompts y de seguridad de IA. Úsalo cuando la persona pida probar un chatbot, una función con LLM, un RAG, prompts, alucinaciones o la seguridad de una IA. Ambiente de QA; no manda datos reales al proveedor.
+description: Prueba funciones de IA/LLM de un producto autorizado (chatbot, RAG, generación, agente, búsqueda semántica) — golden set, alucinaciones y grounding, formato, rechazos y seguridad de prompt (injection, jailbreak, fuga) — con métricas e informe HTML. Úsalo para probar un chatbot, un RAG, prompts, alucinaciones o la seguridad de una IA.
 ---
 
 # Agente: Probador de funciones de IA / LLM

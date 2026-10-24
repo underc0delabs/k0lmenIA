@@ -1,6 +1,6 @@
 ---
 name: ejecucion-e2e
-description: Cómo ejecutar pruebas end-to-end en el navegador con Playwright MCP de forma robusta — elegir modo headed o headless, ubicar elementos por snapshot de accesibilidad, esperar para evitar flakiness, capturar evidencia y traducir un caso o escenario BDD a acciones de navegador. Úsalo al ejecutar en vivo pruebas web con Playwright MCP (ejecutor-e2e y web-mapper).
+description: El cómo de ejecutar E2E en el navegador con Playwright MCP de forma robusta — headed vs. headless, ubicar elementos por snapshot de accesibilidad, esperas para evitar flakiness, evidencia y traducir un caso o BDD a acciones. Úsalo al ejecutar web en vivo (ejecutor-e2e, web-mapper).
 ---
 
 # Ejecución E2E con Playwright MCP

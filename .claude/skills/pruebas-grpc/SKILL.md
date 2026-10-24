@@ -1,6 +1,6 @@
 ---
 name: pruebas-grpc
-description: Cómo probar APIs gRPC y servicios de tiempo real en la familia de API — Protocol Buffers (.proto, mensajes, campos y sus números, tipos escalares, enums, oneof, repeated, map, well-known types), los cuatro modos de RPC (unary, server-streaming, client-streaming, bidirectional), status codes de gRPC (OK, INVALID_ARGUMENT, NOT_FOUND, UNAUTHENTICATED, PERMISSION_DENIED, DEADLINE_EXCEEDED, RESOURCE_EXHAUSTED…) y su mapeo de errores, metadata/headers y trailers, deadlines y cancelación, TLS/mTLS y autenticación por token, reflection vs. tener el .proto, gRPC-Web, interceptores, compatibilidad de esquema de Protobuf (no reusar números de campo, campos reservados, agregar es compatible), mensajes grandes y límites, compresión, keepalive, y cómo se relaciona con los tests de contrato; además WebSocket como API de tiempo real (ver pruebas-async para el detalle de reconexión/orden). Cómo automatizar (grpcurl, Postman/grpc, Buf, generar casos desde el .proto), bugs típicos y preguntas para el equipo. La usan el ejecutor-api, el api-mapper y el generador-casos-api.
+description: El cómo de probar APIs gRPC — Protocol Buffers (.proto), los cuatro modos de RPC, status codes, metadata, deadlines, TLS/mTLS, reflection, gRPC-Web, compatibilidad de esquema y grpcurl/Buf; más WebSocket como API de tiempo real. La usan ejecutor-api, api-mapper y generador-casos-api.
 ---
 
 # Pruebas de gRPC (y APIs de tiempo real)

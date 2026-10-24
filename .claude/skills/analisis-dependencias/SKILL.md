@@ -1,6 +1,6 @@
 ---
 name: analisis-dependencias
-description: Cómo analizar la seguridad de las dependencias de un proyecto (SCA, Software Composition Analysis) — ecosistemas y sus manifiestos/lockfiles (npm/yarn/pnpm, pip/poetry, Maven/Gradle, Go, Ruby, PHP), vulnerabilidades conocidas (CVE, GHSA) y cómo leer el CVSS y la severidad, dependencias directas vs. transitivas, caminos de actualización (fix disponible, major con breaking changes), reachability (si el código vulnerable se usa de verdad) para priorizar y descartar ruido, licencias y riesgo de copyleft (GPL/AGPL), SBOM (CycloneDX/SPDX), ataques de cadena de suministro (dependency confusion, typosquatting, paquetes comprometidos), diferencia entre desactualizado y vulnerable, falsos positivos y riesgo aceptado (documentado, con fecha de revisión), herramientas (npm audit, pip-audit, osv-scanner, Dependabot/Renovate) y cómo priorizar los arreglos y preguntas para el responsable. Lo usa el analista-dependencias; complementa a analista-seguridad y pentester-web (que hacen el análisis dinámico).
+description: "El cómo del análisis de dependencias (SCA): manifiestos y lockfiles por ecosistema, CVE/GHSA y CVSS, directas vs. transitivas, reachability, licencias copyleft, SBOM, cadena de suministro y priorización. Lo usa analista-dependencias; complementa a analista-seguridad y pentester-web."
 ---
 
 # Análisis de dependencias (SCA)

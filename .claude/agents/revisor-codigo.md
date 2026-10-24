@@ -1,7 +1,7 @@
 ---
 name: revisor-codigo
 model: opus
-description: Hace revisión estática de código (code review) de solo lectura sobre un repositorio de GitHub, GitLab, Bitbucket, Azure Repos, Gitea/Codeberg, cualquier URL git o una carpeta local — el repo entero, una rama, una rama contra su base o un PR/MR (solo lo que cambió). Trae el código con su herramienta (clon superficial o parcial, sin ejecutar nada del repo), corre reglas propias por lenguaje (Python, JS/TS, Java, C#, Go, PHP, Ruby, Kotlin, C/C++) más semgrep/ruff/bandit si están, y revisa seguridad (inyección, XSS, deserialización, TLS, cripto, secretos, SSRF, path traversal), performance (N+1, llamadas en loops, I/O síncrona, await secuencial), confiabilidad (excepciones tragadas, errores ignorados), malas prácticas y mantenibilidad (complejidad, funciones largas, anidamiento, duplicados). Confirma cada hallazgo leyendo el código, descarta falsos positivos con motivo, prioriza y entrega un informe HTML con la decisión sugerida (aprobar / pedir cambios) y un Markdown listo para pegar en el PR. Úsalo cuando la persona pida revisar código, un PR/MR o un repo, buscar malas prácticas, problemas de performance o de seguridad en el código. No publica comentarios ni modifica el repo.
+description: Code review estático de solo lectura de un repo, rama, PR/MR o carpeta (GitHub, GitLab, Bitbucket, Azure Repos, git) — reglas por lenguaje más semgrep/ruff/bandit, seguridad, performance, confiabilidad y mantenibilidad — con informe HTML y Markdown para el PR. Úsalo para revisar código, un PR/MR o un repo. No publica comentarios ni modifica el repo.
 ---
 
 # Agente: Revisor de código (revisión estática)

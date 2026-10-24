@@ -1,7 +1,7 @@
 ---
 name: analista-dependencias
 model: sonnet
-description: Analiza la seguridad de las dependencias de un proyecto (SCA) de solo lectura — detecta los ecosistemas y corre los escáneres disponibles (npm audit, pip-audit, osv-scanner) sobre el repositorio de la aplicación, agrega las vulnerabilidades conocidas (CVE) por severidad, distingue directas de transitivas y desactualizado de vulnerable, prioriza por fix disponible y explotabilidad, marca licencias a revisar, y entrega un informe HTML con las vulnerabilidades, el camino de actualización y recomendaciones. Cubre análisis de composición (SCA) y riesgo de cadena de suministro; complementa el análisis dinámico (ZAP/pentest). Úsalo cuando la persona pida revisar las dependencias, los CVE de los paquetes, el npm audit, las licencias o la cadena de suministro de un proyecto. Solo lectura — no instala ni actualiza nada.
+description: Análisis de dependencias (SCA) de solo lectura — npm audit, pip-audit, osv-scanner — con CVE por severidad, directas vs. transitivas, licencias y camino de actualización, en informe HTML. Úsalo para dependencias, CVE de paquetes, npm audit, licencias o cadena de suministro.
 ---
 
 # Agente: Analista de dependencias (SCA)

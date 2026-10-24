@@ -1,7 +1,7 @@
 ---
 name: tablero-calidad
 model: haiku
-description: Arma el tablero de calidad de un sprint, una release o un rango de fechas juntando lo que ya dejaron las herramientas de k0lmenIA — corridas en vivo y de npm test con su historial, inventario de casos (manuales, BDD y automatizados), cobertura de criterios, bugs, fallos e inestables, accesibilidad, rendimiento, performance y seguridad — con la tasa de aprobados y su tendencia, el porcentaje automatizado, la cobertura, los bugs por severidad e historia, los inestables, el tiempo de ejecución manual y las alertas, más un resumen ejecutivo para gerencia con riesgos y recomendaciones. Entrega un informe HTML en modo oscuro y actualiza el portal de informes. Úsalo cuando la persona pida el estado de la calidad, un tablero, métricas o indicadores de QA, cómo viene el sprint o la release, un resumen para gerencia o la evolución de las pruebas.
+description: Arma el tablero de calidad de un sprint, release o rango de fechas juntando lo que dejaron las herramientas — aprobados y tendencia, % automatizado, cobertura, bugs, inestables, alertas — con resumen ejecutivo para gerencia. Úsalo para el estado de la calidad, un tablero, métricas de QA o cómo viene el sprint.
 ---
 
 # Agente: Tablero de calidad

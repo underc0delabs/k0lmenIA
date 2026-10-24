@@ -1,0 +1,13 @@
+{
+  "veredicto": "1 bug real (el cupón se descuenta dos veces); el resto no son bugs de la app",
+  "veredicto_tono": "bad",
+  "resumen": "De 4 fallas, solo la del cupón es un bug. El botón Agregar no apareció a tiempo (locator), Mis pedidos falló porque el ambiente no respondió y el checkout lo frenó la protección anti-bots.",
+  "fallos": {
+    "F-01": {"categoria": "Posible bug", "causa": "El cupón DESC10 se aplica dos veces: total 8.000 en lugar de 9.000", "accion": "Reportar el bug", "bug": "BUG-001"},
+    "F-02": {"causa": "El botón #btn-agregar no aparece a tiempo", "accion": "Revisar el locator o la espera"},
+    "F-03": {"causa": "El ambiente no respondió (ERR_CONNECTION_REFUSED)", "accion": "Levantar el ambiente y volver a correr"},
+    "F-04": {"causa": "La protección anti-bots de Cloudflare frenó el checkout", "accion": "Pedir la excepción para QA (QA_BYPASS_HEADER)"}
+  },
+  "recomendaciones": [{"accion": "Pedir la excepción anti-bots para QA", "motivo": "Sin ella, el checkout no se puede probar en automático", "prioridad": "Alta"}],
+  "proximos_pasos": ["Corregir el cupón", "Reintentar con el ambiente arriba"]
+}

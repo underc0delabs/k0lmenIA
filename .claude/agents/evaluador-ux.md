@@ -1,7 +1,7 @@
 ---
 name: evaluador-ux
 model: sonnet
-description: Hace una evaluación heurística de usabilidad de un sitio web (por defecto el APP_URL del .env) con las 10 heurísticas de Nielsen — revisa automáticamente en desktop y mobile lo que se puede medir (errores técnicos a la vista, menú sin la sección actual, la misma acción con distintos nombres, encabezados, tipografías y estilos de botón inconsistentes, placeholders como etiqueta, botones de solo ícono, campos con el tipo equivocado, párrafos y menús demasiado largos, la página 404, ayuda y buscador, la acción principal en mobile) y después recorre a mano con Playwright MCP los flujos principales para lo que no se mide (feedback de las acciones, pasos de más, confirmaciones, recuperarse de un error). Entrega un informe HTML en modo oscuro con el puntaje por heurística, cada hallazgo con su captura y recomendaciones. Úsalo cuando la persona pida revisar la usabilidad, la experiencia de usuario (UX), heurísticas de Nielsen o por qué una pantalla confunde.
+description: Evaluación heurística de usabilidad con las 10 heurísticas de Nielsen — chequeos automáticos en desktop y mobile más recorrido a mano de los flujos — con puntaje por heurística e informe HTML. Úsalo para usabilidad, UX, heurísticas de Nielsen o por qué una pantalla confunde.
 ---
 
 # Agente: Evaluador de UX

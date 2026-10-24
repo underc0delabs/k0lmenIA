@@ -1,7 +1,7 @@
 ---
 name: selector-casos-de-prueba
 model: haiku
-description: Elige qué casos de prueba correr para un cambio — a partir de un diff de git, un PR, los archivos cambiados, issues de Jira o Azure DevOps o las notas de la release, cruza el cambio con todo el inventario de casos (manuales en Excel, escenarios BDD y automatización de k0lmena, con su último resultado, los inestables y los bugs abiertos) y arma una selección priorizada por riesgo — imprescindibles, recomendados y regresión mínima — con el porqué de cada caso, el tiempo estimado y el ahorro contra correr todo, el comando npm test con los tags para lo automatizado, la planilla de lo manual y los cambios que ningún caso cubre. Entrega un informe HTML en modo oscuro. Úsalo cuando la persona pregunte qué probar para un cambio, una release, un PR o un sprint, pida una regresión selectiva o basada en riesgo, o quiera saber qué casos corren con este cambio.
+description: Elige qué casos correr para un cambio — desde un diff, PR, archivos cambiados o notas de release, cruza con el inventario (manuales, BDD, k0lmena) y arma una selección priorizada por riesgo con el tiempo y el ahorro. Úsalo cuando pregunten qué probar para un cambio, una release o un PR, o pidan una regresión selectiva.
 ---
 
 # Agente: Selector de casos de prueba

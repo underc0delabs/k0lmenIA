@@ -1,6 +1,6 @@
 ---
 name: pruebas-vtex
-description: Cómo probar una tienda VTEX — cuentas, entornos y workspaces (master vs. workspaces de QA, bindings), storefront (Store Framework/VTEX IO, FastStore, legacy CMS Portal), apps de VTEX IO y versiones, el Catalog System (productos, SKUs, categorías, specifications, trade policies/canales de venta), Pricing (price tables, precios fijos), Logistics (inventario por depósito, docks, políticas de envío/SLAs, carriers), Promotions & Taxes, Payments (condiciones de pago, gateways, antifraude, cuotas), el Checkout y el orderForm (carrito, marketing data, totalizadores), OMS/pedidos y estados, Subscriptions, Master Data (CRM y entidades), el modelo marketplace/seller (1P y 3P), B2B, multi-moneda y multi-idioma por binding, el smoke test, la regresión tras publicar una app o cambiar el tema, el rendimiento (VTEX IO/SSR, CDN, latencia del orderForm y del search), la seguridad (AppKey/AppToken con mínimo privilegio, manipulación del orderForm, IDOR en OMS/Master Data, antifraude, exposición de workspaces), las APIs públicas y de administración de solo lectura, cómo automatizarlo con Playwright, bugs típicos y preguntas para el PO. Lo usan el probador-vtex y los mappers cuando automatizan una tienda VTEX.
+description: El cómo de probar VTEX — cuentas y workspaces (master vs. QA), storefront (Store Framework/IO), Catalog, Pricing, Logistics, Payments, Checkout y orderForm, OMS, marketplace, multi-moneda e idioma, rendimiento y seguridad, con las APIs de lectura. Lo usan probador-vtex y los mappers.
 ---
 
 # Pruebas en VTEX
@@ -135,3 +135,19 @@ Además de las del skill `pruebas-ecommerce`, cuando no está escrito son `FI-XX
 - ¿Hay marketplace con sellers 3P? ¿Y suscripciones o B2B?
 - ¿Sobre qué workspace se prueba (nunca master)?
 - ¿Qué apps de VTEX IO están en el alcance y cuáles son de terceros?
+
+## Referencia del `probador-vtex`
+
+**Relevamiento** (solo lectura): `npm run vtex -- --tienda https://www.mi-tienda.com --cuenta micuenta [--historia HU-001] [--sc 1] [--producto <url>] --confirmar` deja `output/vtex/<HU o host>/vtex.json` e `informe-vtex.html` (la corrida anterior pasa a `historial/`). Con `VTEX_APP_KEY` y `VTEX_APP_TOKEN` (app de solo lectura) suma las APIs de administración; sin ellos, vidriera y catálogo público. La cuenta sale de `--cuenta`/`VTEX_ACCOUNT` o de la URL `*.myvtex.com`/`*.vtexcommercestable.com.br`; el canal de ventas puntual, de `--sc`.
+
+**Prioridades**: primero lo que impide comprar (sin canal de venta activo, sin SLA de envío, sin precio/stock en el canal, condición de pago en modo real), después lo que cambia el total (promociones y su acumulación, impuestos, envío, moneda por canal), SKUs y stock, el checkout/orderForm (invitado y cuenta), OMS y marketplace, el rendimiento (VTEX IO, orderForm, search) y la seguridad.
+
+**Smoke primero** (sobre el workspace de QA): portada, categoría, ficha y búsqueda sin error de render ni consola rota; agregar un SKU al carrito y llegar al checkout (orderForm con el ítem y el total); canal activo, SLA de envío y condición de pago en sandbox. Si falla, es bloqueante y se corta ahí.
+
+**La cuenta tiene que cerrar**: total del orderForm = checkout = pasarela = pedido (OMS) = correo.
+
+**Seguridad a derivar** con lo del relevamiento: orderForm manipulable, IDOR en OMS, AppKey con permisos de más, promos que se acumulan mal.
+
+**Complementos** según el alcance: `npm run formularios` (checkout), `npm run correos` (transaccionales), `npm run permisos` (Mi cuenta y pedidos ajenos), `npm run accesibilidad` y `npm run pixel-perfect` (tema o app nueva contra master).
+
+**En el bug**: cuenta, workspace, canal de venta, app de VTEX IO (si aplica), dispositivo y número del pedido de prueba. **Antes de entregar**, además de lo común: no se tocó master de forma destructiva.

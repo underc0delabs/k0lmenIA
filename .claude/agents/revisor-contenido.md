@@ -1,7 +1,7 @@
 ---
 name: revisor-contenido
 model: sonnet
-description: Revisa la calidad del contenido y los textos de un producto en su idioma principal (distinto de las traducciones, que cubre el analista-traductor) — detecta typos y errores objetivos — ortografía y gramática (con LanguageTool si está), palabras duplicadas, placeholders y variables de plantilla sin reemplazar ({{nombre}}, ${var}, %s), Lorem ipsum y texto de relleno olvidado, claves de i18n a la vista, marcadores TODO/FIXME, espacios antes de puntuación y espacios múltiples; y la consistencia del microcopy — términos inconsistentes, mayúsculas y puntuación, botones y labels claros, mensajes de error entendibles, formato de fechas/números y textos cortados o vacíos. Extrae el texto visible con Playwright y lo pasa por la herramienta contenido; entrega un informe HTML con hallazgos y dónde están. Cubre ortografía/typos, placeholders, i18n a la vista, microcopy y consistencia. Úsalo cuando la persona pida revisar los textos, la ortografía, los typos, el microcopy o el contenido de la app. Solo lectura.
+description: Revisa el contenido y los textos en el idioma principal — typos, ortografía (LanguageTool), placeholders sin reemplazar, Lorem ipsum, claves de i18n a la vista, microcopy y consistencia — extrayendo el texto con Playwright, con informe HTML. Úsalo para revisar los textos, la ortografía, los typos o el microcopy. Las traducciones son de analista-traductor.
 ---
 
 # Agente: Revisor de contenido y typos

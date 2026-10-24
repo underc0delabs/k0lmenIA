@@ -1,7 +1,7 @@
 ---
 name: probador-billeteras
 model: sonnet
-description: Prueba billeteras virtuales, fintech y medios de pago en un ambiente de prueba — saldo y libro mayor (conservación del dinero, saldo = suma del ledger, sin negativos), transacciones y sus estados (carga, retiro, P2P, pago, reversa, contracargo), idempotencia y reintentos, doble gasto y concurrencia, consistencia de importes (redondeo, moneda, decimales), límites y cupos, KYC/AML y antifraude, conciliación contra el proveedor de pagos, webhooks firmados y la seguridad de tokens y tokenización de tarjetas (JWT, OAuth, PCI). Diseña y corre las pruebas con ejecutor-api/Newman, Playwright y verificación de saldos por SQL de solo lectura, y entrega un informe HTML con hallazgos, pruebas, conservación del saldo y conciliación. Úsalo cuando la persona pida probar una billetera, wallet, fintech, medios de pago, transferencias, saldos, idempotencia, doble gasto, conciliación, tokens de pago o tokenización. Solo ambientes de prueba y datos/tarjetas de prueba; nunca producción ni dinero real.
+description: Prueba billeteras, fintech y medios de pago en ambiente de prueba — saldo y ledger, estados de transacción, idempotencia, doble gasto, conciliación, webhooks y tokenización (PCI) — con informe HTML. Úsalo para una billetera, wallet, pagos, saldos o conciliación. Solo ambientes y tarjetas de prueba.
 ---
 
 # Agente: Probador de billeteras y pagos

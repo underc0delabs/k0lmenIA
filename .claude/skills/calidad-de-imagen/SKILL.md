@@ -1,6 +1,6 @@
 ---
 name: calidad-de-imagen
-description: El "cómo" de evaluar la calidad de imagen de una cámara — qué mide OpenCV (brillo para frames negros, varianza del Laplaciano para desenfoque, diferencia entre capturas para congelamiento, diferencia contra una referencia para cámara movida), con qué umbrales, y qué juzgar con visión (lente sucia u obstruida, encuadre movido, contraluz, IR nocturno). Lo usa el agente calidad-imagen.
+description: El cómo de evaluar la calidad de imagen de una cámara — qué mide OpenCV (brillo, Laplaciano, diferencia entre capturas, contra referencia), con qué umbrales, y qué juzgar con visión (lente sucia, encuadre, contraluz, IR). Lo usa el agente calidad-imagen.
 ---
 
 # Calidad de imagen de cámaras

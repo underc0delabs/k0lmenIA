@@ -1,0 +1,21 @@
+{
+  "veredicto": "Los casos necesitan ajustes antes de ejecutarse",
+  "resumen": "Hay un caso duplicado, dos con un resultado o un paso que no se puede verificar, uno sin resultado esperado y ningún caso negativo.",
+  "propuestas": {
+    "HU-950:CP-002": {"titulo": "Login con Recordarme mantiene la sesión al reabrir el navegador",
+                      "pasos": "1. Abrir el login\n2. Marcar Recordarme\n3. Tocar Ingresar\n4. Cerrar y volver a abrir el navegador",
+                      "resultado": "Se abre Mi cuenta sin pedir las credenciales", "nota": "El resultado anterior no se podía verificar."},
+    "HU-950:CP-003": {"titulo": "Cerrar sesión desde Mi cuenta",
+                      "pasos": "1. Ir a Mi cuenta\n2. Tocar Cerrar sesión", "resultado": "Se vuelve al login y Mi cuenta ya no abre sin credenciales",
+                      "nota": "El paso vago pasa a una acción concreta."},
+    "HU-950:CP-005": {"titulo": "Ver el historial de pedidos",
+                      "pasos": "1. Ir a Mi cuenta\n2. Abrir Mis pedidos", "resultado": "Se listan los pedidos del usuario con fecha, número y total",
+                      "nota": "No tenía resultado esperado."}
+  },
+  "descartados": [],
+  "recomendaciones": [
+    {"prioridad": "Alta", "accion": "Eliminar CP-004", "motivo": "Es un duplicado de CP-001."},
+    {"prioridad": "Alta", "accion": "Sumar casos negativos y de borde", "motivo": "No hay ninguno: contraseña incorrecta, email inexistente, campos vacíos y bloqueo por intentos."}
+  ],
+  "proximos_pasos": ["Aplicar las propuestas en la planilla", "Volver a correr la revisión"]
+}

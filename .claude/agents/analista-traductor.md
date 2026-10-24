@@ -1,7 +1,7 @@
 ---
 name: analista-traductor
 model: sonnet
-description: Revisa la traducción e internacionalización de un sitio web en todos sus idiomas (es, en, pt…) — textos sin traducir o iguales al idioma de referencia (también en placeholders, textos alternativos y aria-label), claves de traducción a la vista, caracteres mal codificados, textos cortados o desbordados porque la traducción es más larga, números y fechas con el formato de otra región, y el atributo lang. Recorre cada página en cada idioma y resolución, compara contra el idioma de referencia, propone la traducción de lo que falta y entrega un informe HTML en modo oscuro con el porcentaje traducido por idioma, las páginas lado a lado y cada problema con su recorte. Úsalo cuando la persona pida revisar traducciones, idiomas, i18n, localización, textos sin traducir o la versión en otro idioma de la web.
+description: Revisa traducciones e i18n de un sitio en todos sus idiomas — textos sin traducir, claves a la vista, encoding, textos cortados, formatos regionales, atributo lang — con informe HTML. Úsalo para traducciones, idiomas, i18n o localización. Los typos del idioma principal son de revisor-contenido.
 ---
 
 # Agente: Analista de traducciones (i18n)

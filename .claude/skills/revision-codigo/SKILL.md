@@ -1,6 +1,6 @@
 ---
 name: revision-codigo
-description: Cómo hacer una revisión estática de código (code review) — traer el código de GitHub, GitLab, Bitbucket, Azure Repos, Gitea o cualquier git sin ejecutarlo; revisar un repo entero, una rama contra su base o un PR/MR (solo lo que cambió); qué mirar por categoría (seguridad, performance, confiabilidad, malas prácticas, mantenibilidad) y por lenguaje (Python, JavaScript/TypeScript, Java/Kotlin, C#, Go, PHP, Ruby, SQL); métricas (complejidad ciclomática, largo de funciones, anidamiento, duplicación) y sus umbrales; cómo asignar severidad y decidir aprobar o pedir cambios; triage de las sospechas de las reglas y de semgrep/ruff/bandit (falsos positivos típicos); lo que ninguna regla encuentra y hay que leer en el diff; cómo escribir comentarios de revisión útiles; y qué no hacer con código no confiable. Lo usa el revisor-codigo; complementa a codigo-seguro (SAST profundo y secretos), analisis-dependencias (SCA) y pruebas-mutacion (calidad de los tests).
+description: El cómo del code review estático — traer el código sin ejecutarlo (repo, rama o PR/MR), qué mirar por categoría (seguridad, performance, confiabilidad, mantenibilidad) y por lenguaje, métricas y umbrales, severidad, triage de semgrep/ruff/bandit y cómo escribir comentarios útiles. Lo usa el revisor-codigo.
 ---
 
 # Revisión estática de código

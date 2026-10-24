@@ -1,0 +1,34 @@
+{
+  "agente": "generador-casos-api",
+  "descripcion": "Casos de API desde un schema GraphQL de pedidos. Trampas: en GraphQL los errores vuelven en el arreglo 'errors' (con HTTP 200) y se verifican por extensions.code (UNAUTHENTICATED, FORBIDDEN, BAD_USER_INPUT), no por 401/404; cantidad tiene límites 1-10 (0 y 11 inválidos); y el schema no dice qué pasa al cancelar un pedido PAGADO (Falta información, no inventarlo).",
+  "pedido": "Usá el agente generador-casos-api para generar los casos de API del schema GraphQL input/api/pedidos.graphql.",
+  "requiere": [".claude/agents/generador-casos-api.md"],
+  "insumos": [
+    {"desde": "insumos/graphql-pedidos/pedidos.graphql", "hacia": "input/api/pedidos.graphql"}
+  ],
+  "presupuesto_usd": 1.5,
+  "umbral": 80,
+  "chequeos": [
+    {"id": "archivo", "tipo": "existe", "descripcion": "Deja los casos en output/casos-api/",
+     "archivos": ["output/casos-api/casos-api-*.md"], "peso": 2},
+    {"id": "ids", "tipo": "conteo", "descripcion": "Al menos 8 casos CP-API-XXX",
+     "archivos": ["output/casos-api/casos-api-*.md"], "patron": "CP-API-\\d{3}", "min": 8, "distintos": true, "peso": 2},
+    {"id": "operaciones", "tipo": "contiene", "descripcion": "Cubre las cuatro operaciones del schema",
+     "archivos": ["output/casos-api/casos-api-*.md"], "patrones": ["\\bpedido\\b", "misPedidos", "crearPedido", "cancelarPedido"], "peso": 2},
+    {"id": "errores-graphql", "tipo": "contiene", "descripcion": "Verifica los errores por el arreglo errors y extensions.code",
+     "archivos": ["output/casos-api/casos-api-*.md"], "patrones": ["\\berrors\\b", "UNAUTHENTICATED", "FORBIDDEN", "BAD_USER_INPUT"], "peso": 3},
+    {"id": "no-404", "tipo": "no_contiene", "descripcion": "No espera códigos REST que el schema no define (404 o 403)",
+     "archivos": ["output/casos-api/casos-api-*.md"], "patrones": ["\\b(404|403)\\b"], "peso": 2},
+    {"id": "limites", "tipo": "contiene", "descripcion": "Aplica valores límite a cantidad (0 y 11 inválidos)",
+     "archivos": ["output/casos-api/casos-api-*.md"], "patrones": ["cantidad\\D{0,20}\\b0\\b|\\b0\\b\\D{0,20}cantidad", "cantidad\\D{0,20}\\b11\\b|\\b11\\b\\D{0,20}cantidad"], "peso": 2},
+    {"id": "falta-info", "tipo": "contiene", "descripcion": "Cancelar un pedido PAGADO queda como Falta información",
+     "archivos": ["output/casos-api/casos-api-*.md"], "patrones": ["(PAGADO[\\s\\S]{0,300}FI-\\d{2}|FI-\\d{2}[\\s\\S]{0,300}PAGADO)"], "peso": 2},
+    {"id": "tablas", "tipo": "tablas_normalizadas", "descripcion": "Pasa las tablas por formatear_tablas.py",
+     "archivos": ["output/casos-api/casos-api-*.md"]}
+  ],
+  "rubrica": [
+    "Cada caso tiene la operación (query/mutation) y las variables listas para correr.",
+    "Las verificaciones miran data y errors, no solo el código HTTP.",
+    "No inventa el comportamiento de lo que el schema no define."
+  ]
+}

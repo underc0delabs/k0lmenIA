@@ -13,6 +13,7 @@ Uso (desde la raíz del repo):
     python scripts/evaluar_agentes.py --correr   [--caso ID | --agente NOMBRE] [--modelo M] [--presupuesto-usd 2] [--juez]
     python scripts/evaluar_agentes.py --verificar --trabajo DIR
     python scripts/evaluar_agentes.py --solo-verificar CARPETA --caso ID
+    python scripts/evaluar_agentes.py --referencia [--caso ID]        (sin tokens: la salida de referencia de cada caso)
 
 --preparar   arma un workspace aislado por caso (una copia mínima del repo: CLAUDE.md, REFERENCIA.md, .claude/, plantillas/,
              scripts/, con input/ y output/ vacíos + los insumos del caso), fuera del repo (por defecto en la
@@ -23,6 +24,10 @@ Uso (desde la raíz del repo):
 --solo-verificar  verifica salidas que ya existen en CARPETA (por ejemplo, la raíz del repo después de
              pedirle el caso a mano al agente). Para lo que el agente responde en el chat, guardá la respuesta
              en CARPETA/_eval/respuesta.txt.
+--referencia modo económico, SIN TOKENS (lo corre el CI): por cada caso que tiene evals/casos/<id>/referencia/,
+             arma el workspace, le pone lo que escribiría a mano un agente correcto (referencia/archivos/) y corre los
+             scripts que ese agente correría (referencia/pasos.json); después verifica. Tiene que aprobar: si falla, se
+             rompió un chequeo o un script del que el agente depende.
 --juez       (opcional) además de los chequeos, le pide a Claude que puntúe la rúbrica del caso. Es solo
              informativo: no cambia el puntaje.
 
@@ -34,6 +39,7 @@ import argparse
 import datetime as dt
 import glob
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -113,6 +119,35 @@ def preparar(caso, destino):
     (ws / EVAL_DIR).mkdir()
     (ws / EVAL_DIR / "pedido.txt").write_text(caso["pedido"], encoding="utf-8")
     return ws
+
+
+def aplicar_referencia(caso, ws):
+    """Pone en el workspace la salida de referencia de un agente correcto (sin tokens) y devuelve si el caso la tiene.
+
+    evals/casos/<id>/referencia/archivos/   lo que el agente escribe a mano (JSON, Markdown…), con las rutas del workspace
+    evals/casos/<id>/referencia/pasos.json  los scripts que correría: [["scripts/x.py", "arg", …], …] (python, desde el workspace)
+    """
+    ref = Path(caso["_dir"]) / "referencia"
+    if not ref.is_dir():
+        return False
+    if (ref / "archivos").is_dir():
+        shutil.copytree(ref / "archivos", ws, dirs_exist_ok=True)
+    pasos = json.loads((ref / "pasos.json").read_text(encoding="utf-8")) if (ref / "pasos.json").exists() else []
+    env = {**os.environ, "K0LMENIA_PORTAL": "0", "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
+    for paso in pasos:
+        r = subprocess.run([sys.executable, *paso], cwd=ws, capture_output=True, text=True, encoding="utf-8",
+                           errors="replace", env=env, timeout=600)
+        if r.returncode != 0:
+            raise RuntimeError(f"{caso['id']}: el paso {' '.join(paso)} falló ({r.returncode}): {(r.stderr or r.stdout)[-1500:]}")
+    return True
+
+
+def verificar_referencia(caso, destino):
+    """Workspace + salida de referencia + chequeos. Devuelve el resultado de verificar_caso (o None si no hay referencia)."""
+    ws = preparar(caso, destino)
+    if not aplicar_referencia(caso, ws):
+        return None
+    return verificar_caso(caso, ws)
 
 
 def comando_claude(caso, modelo=None, max_turnos=None, ejecutable="claude", presupuesto_usd=None):
@@ -550,6 +585,7 @@ def main(argv=None):
     accion.add_argument("--correr", action="store_true")
     accion.add_argument("--verificar", action="store_true")
     accion.add_argument("--solo-verificar", metavar="CARPETA")
+    accion.add_argument("--referencia", action="store_true", help="sin tokens: verifica la salida de referencia de cada caso")
     ap.add_argument("--caso")
     ap.add_argument("--agente")
     ap.add_argument("--trabajo", help="carpeta de los workspaces (por defecto, en la carpeta temporal del sistema)")
@@ -578,6 +614,19 @@ def main(argv=None):
         return 0 if all(c["estado"] == "Aprobado" for c in datos["casos"]) else 1
 
     trabajo = Path(a.trabajo) if a.trabajo else Path(tempfile.gettempdir()) / "k0lmenia-evals" / sello
+    if a.referencia:
+        malos = 0
+        for c in casos:
+            res = verificar_referencia(c, trabajo / c["id"])
+            if res is None:
+                print(f"  sin referencia  {c['id']}")
+                continue
+            malos += res["estado"] != "Aprobado"
+            print(f"  {res['estado']:9} {res['puntaje']:>3}  {c['id']}")
+            for ch in res["chequeos"]:
+                if not ch["ok"]:
+                    print(f"      ✕ {ch['id']}: {ch['detalle']}")
+        return 1 if malos else 0
     if a.verificar:
         if not a.trabajo:
             raise SystemExit("--verificar necesita --trabajo con la carpeta de la corrida")

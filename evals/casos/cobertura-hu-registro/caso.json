@@ -1,0 +1,35 @@
+{
+  "agente": "analista-cobertura",
+  "descripcion": "Cobertura del registro (HU-901) con una planilla que cubre CA1, CA2 y CA5, deja sin casos CA3 y CA4 y tiene un caso sin criterio (CP-005). Trampa: CA4 es la contradicción 16/18, así que antes de escribir casos hay que resolverla. La historia no está lista para cerrar.",
+  "pedido": "Usá el agente analista-cobertura para responder qué nos falta probar de la historia HU-901 (input/historias/HU-901-registro.md y los casos de output/casos-de-prueba/). No hay conectores activos.",
+  "requiere": [".claude/agents/analista-cobertura.md", "scripts/analizar_cobertura.py"],
+  "insumos": [
+    {"desde": "insumos/HU-901-registro.md", "hacia": "input/historias/HU-901-registro.md"},
+    {"desde": "insumos/cobertura-registro/casos-HU-901.xlsx", "hacia": "output/casos-de-prueba/manuales/casos-HU-901.xlsx"}
+  ],
+  "presupuesto_usd": 1.5,
+  "umbral": 80,
+  "chequeos": [
+    {"id": "archivos", "tipo": "existe", "descripcion": "Corre analizar_cobertura.py y deja cobertura.json, analisis.json y el informe",
+     "archivos": ["output/cobertura/HU-901/cobertura.json", "output/cobertura/HU-901/analisis.json", "output/cobertura/HU-901/informe-cobertura.html"], "min": 3, "peso": 2},
+    {"id": "bilingue", "tipo": "existe", "descripcion": "El informe sale también en inglés",
+     "archivos": ["output/cobertura/HU-901/en/informe-cobertura.html"]},
+    {"id": "huecos", "tipo": "contiene", "descripcion": "Señala los criterios sin casos (CA3 y CA4)",
+     "archivos": ["output/cobertura/HU-901/analisis.json"], "patrones": ["CA3", "CA4"], "peso": 2},
+    {"id": "ca4-contradiccion", "tipo": "contiene", "descripcion": "Para CA4 pide resolver la contradicción 16/18 antes de escribir casos",
+     "archivos": ["output/cobertura/HU-901/analisis.json"],
+     "patrones": ["CA4[\\s\\S]{0,500}(contradic|16[\\s\\S]{0,60}18|18[\\s\\S]{0,60}16|FI-\\d{2}|confirm)"], "peso": 3},
+    {"id": "sin-criterio", "tipo": "contiene", "descripcion": "Trata el caso sin criterio (CP-005)",
+     "archivos": ["output/cobertura/HU-901/analisis.json"], "patrones": ["CP-005|C-07"]},
+    {"id": "no-lista", "tipo": "contiene", "descripcion": "El veredicto dice que la historia no está lista para cerrar",
+     "archivos": ["output/cobertura/HU-901/analisis.json"],
+     "patrones": ["\"veredicto\"\\s*:\\s*\"[^\"]*(no est[áa] lista|no (se )?puede cerrar|faltan?|huecos|sin (casos|cubrir)|incomplet)"], "peso": 2},
+    {"id": "no-dice-lista", "tipo": "no_contiene", "descripcion": "No la da por lista para cerrar",
+     "archivos": ["output/cobertura/HU-901/analisis.json"], "patrones": ["\"veredicto\"\\s*:\\s*\"(?![^\"]*\\bno est[áa] lista)[^\"]*\\blista para cerrar"]}
+  ],
+  "rubrica": [
+    "Los huecos están priorizados por riesgo, no en el orden en que aparecen.",
+    "Las recomendaciones dicen con qué agente y en qué orden.",
+    "No da por cubierto un criterio que solo se menciona."
+  ]
+}

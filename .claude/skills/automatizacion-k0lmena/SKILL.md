@@ -1,6 +1,6 @@
 ---
 name: automatizacion-k0lmena
-description: Convenciones para generar pruebas automatizadas en k0lmena (herramientas/k0lmena) — dónde va cada .feature, steps y locators de web, api y mobile, cómo nombrarlos y taggearlos, cómo reutilizar steps sin duplicar, qué helpers usar y cómo validar con npm; los steps de verificación en base de datos; y los scripts de performance (k6, Artillery y JMeter). Úsalo al mapear casos de prueba a automatización (web-mapper, api-mapper, mobile-mapper, performance-mapper, verificador-datos).
+description: Convenciones para automatizar en k0lmena — dónde van los .feature, steps y locators de web, api y mobile, cómo nombrarlos y taggearlos, reutilizar steps, los steps de base de datos y los scripts de performance (k6, Artillery, JMeter). Úsalo al mapear casos (web-mapper, api-mapper, mobile-mapper, performance-mapper, verificador-datos).
 ---
 
 # Automatización con k0lmena
@@ -387,3 +387,41 @@ Estados: `Mapeado` (igual al caso), `Ajustado` (el caso decía otra cosa y se co
 - No leas los utils, hooks ni `comunes.steps.ts` completos: las firmas están acá.
 - No vuelvas a navegar ni a llamar un endpoint que ya verificaste.
 - Respuesta final corta: archivos generados, resultado de la validación, bloqueados y el comando `npm`.
+
+## Referencia del `api-mapper`
+
+### Leer la fuente (con Bash, nunca la spec entera en la conversación)
+
+- **Swagger/OpenAPI**: `python scripts/resumir_openapi.py <url o archivo> --salida output/mapeos/openapi-<slug>.md` (da el `API_BASEURL` —server **con** su basePath—, el step de autenticación de cada `securityScheme`, parámetros, body —JSON, formulario o multipart— con un ejemplo y los status documentados).
+- **Postman**: Python o `jq` (en Postman, la base es la variable `{{baseUrl}}`).
+- **Bruno o Insomnia**: convertir primero a Postman con `python scripts/convertir_coleccion.py <origen> --salida output/mapeos/_coleccion-<slug>/` y anotar en el reporte de mapeo las advertencias de la conversión.
+- **GraphQL**: `python scripts/resumir_graphql.py <url del endpoint o archivo .graphql> [--token] [--salida output/mapeos/schema-<slug>.md]` (introspección por POST, solo lectura; si el servidor limita la profundidad, reintenta más corta; lista queries, mutations y subscriptions con sus argumentos —`!` = obligatorio—, inputs, enums y objetos). Si la introspección está deshabilitada, se pide el SDL: no se adivinan operaciones.
+
+Si el `API_BASEURL` del `.env` difiere del que da la spec, avisá antes de seguir: es la causa más común de que todo dé 404.
+
+### Escenarios por endpoint
+
+Camino feliz, validación de campos obligatorios, tipos inválidos, recurso inexistente (404), sin autenticación (401/403) cuando aplique, y valores límite si el schema define rangos. En **GraphQL**, por operación: la consulta válida (sin `errors` y con los campos de `data`), argumento obligatorio faltante o de tipo inválido, valor de enum inexistente, campo que no existe en el tipo (error de validación), recurso inexistente (`null` o error, según el schema), sin autorización y, si aplica, paginación. Solo los que la fuente respalde: si la spec no documenta qué devuelve un error, se verifica o queda como pregunta.
+
+### Verificar contra la API real (un request por escenario, misma URL, autenticación y body que el `.feature`)
+
+- **GET, HEAD y OPTIONS**, y las **queries** de GraphQL: directo. Si el escenario primero crea el recurso, ese POST tiene efecto: sin autorización, el escenario va `@bloqueado` ("sin verificar: método con efecto").
+- **POST, PUT, PATCH, DELETE** y las **mutations**: preguntar antes. Sin autorización, se generan sin verificar y van `@bloqueado` con ese motivo; el reporte lista cómo habilitarlos (verificarlos con autorización y sacar el tag). `@bloqueado` nunca corre en `npm test`.
+- Se verifica **cada `Then`** (status, campos, tipos y valores), no solo el status.
+- Si la API contradice la spec, **no** se ajusta el `Then`: queda lo que dice la spec, con `@difiere-de-la-spec` y el comentario `# La API responde XXX; la spec dice YYY`, y se reporta como posible bug o spec desactualizada.
+
+### El `.feature` (`herramientas/k0lmena/api/features/<HU-XXX o contrato>-<slug>.feature`)
+
+- Solo con los textos de `api/steps/comunes.steps.ts` (sección API de este skill, incluidos los de GraphQL). En GraphQL, los valores dinámicos van en las **variables** (aceptan `{nombre}`), no dentro de la query. Un step que no existe va en `api/steps/<HU-XXX o contrato>.steps.ts`, con aviso.
+- Tags: `@api` y la historia o contrato en el Feature; `@CP-API-XXX` por escenario.
+- **Cada escenario crea lo que lee**: las variables se reinician en cada escenario, así que un GET/PUT/DELETE de un recurso lo crea antes en el mismo escenario (o en el `Background`) y encadena el id con `guardo el campo ... como ...`. Nunca un id fijo ni uno de otro escenario.
+- Datos que no se pueden repetir (emails, nombres de usuario): `{aleatorio}`, `{uuid}` o `{timestamp}`.
+- Nunca tokens ni credenciales en el `.feature`.
+
+### Validar una vez
+
+Desde `herramientas/k0lmena/`: `TAGS=@<tag> npm run test:api` (PowerShell: `$env:TAGS="@<tag>"; npm run test:api`; si falta `node_modules`, antes `npm install`). Hasta 2 reintentos de corrección. Al terminar, **cada fallo tiene explicación**: `@difiere-de-la-spec`, `@bloqueado` o un bug confirmado. Un paso sin definir, una `{variable}` sin valor, un 404 por la URL o un 401 por la autenticación son errores del `.feature`: se corrigen, no se entregan.
+
+### Falta información
+
+Con la ficha `output/contexto/contexto-HU-XXX.md` (si no existe y los casos son de una historia, se arma primero con `investigacion-contexto`). Un caso con `@falta-info` / `FI-XX` conserva esos tags en el `.feature` (con `# FALTA INFORMACIÓN (FI-XX): …`). **La app no completa el dato que falta**: si la validación depende de él y no hay valor definido, el escenario va `@bloqueado` ("falta información FI-XX"); si el caso usó un supuesto, se automatiza con el supuesto y, si la app hace otra cosa, se reporta como "no coincide con el supuesto de FI-XX" (no como bug). En el reporte de mapeo, esos pasos van con estado `Falta información` y lo que muestra la app como observación.

@@ -1,0 +1,4 @@
+[["herramientas/codigo/obtener.py", "--origen", "repo-demo"],
+ ["herramientas/codigo/revision.py", "--ruta", "repo-demo", "--salida", "output/revision-codigo/repo-demo/revision.json"],
+ ["scripts/generar_informe_revision_codigo.py", "output/revision-codigo/repo-demo/analisis.json",
+  "output/revision-codigo/repo-demo/informe-revision-codigo.html", "--markdown", "output/revision-codigo/repo-demo/comentarios-pr.md"]]

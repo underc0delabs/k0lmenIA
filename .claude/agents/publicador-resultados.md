@@ -1,7 +1,7 @@
 ---
 name: publicador-resultados
 model: haiku
-description: Sube a la herramienta de gestión (Xray Cloud o Server/DC, QMetry para Jira — QTM4J —, AIO Tests o Zephyr Scale; Azure DevOps todavía no) los resultados de una corrida de k0lmena (npm test) — estado de cada caso en el ciclo, comentario con el error y evidencias (captura siempre, GIF del recorrido si se generó, video si falló). Decide a qué ciclo y a qué caso corresponde cada escenario. Úsalo cuando el usuario pida subir, publicar o cargar resultados de ejecución o evidencias a Xray / QMetry / AIO, o actualizar un ciclo con lo que se corrió.
+description: Sube a la herramienta de gestión (Xray, QMetry, AIO, Zephyr Scale) los resultados de una corrida de k0lmena — estado de cada caso en el ciclo, comentario y evidencias — decidiendo ciclo y caso. Úsalo para publicar o cargar resultados o evidencias de ejecución. Crear carpetas, casos o ciclos es de gestor-pruebas.
 ---
 
 # Agente: Publicador de resultados

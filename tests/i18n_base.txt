@@ -1,0 +1,385 @@
+# {n}: la edad mínima no está definida
+(Contradiction): Reembolso inmediato vs. {n} h hábiles
+(Gap): No hay criterios para el cupón
+Activación por correo
+Activación por correo (otra historia)
+Agregar al carrito
+Agregar la validación de edad
+Agregar un producto al carrito.
+Ajustar el rol en PFCG
+Al aplicar un cupón válido en el carrito y volver a tocar "Aplicar" con el mismo código, el descuento se suma otra vez sobre el total.
+Al rol Z_VENTAS le falta crear entregas
+Alguien de {n}, {n}, {n} y {n} años
+Alta de factura
+Alucinación
+Ambiente de QA con base limpia
+Ambiente de QA disponible
+Análisis de {n} — Registro
+Análisis de {n} — Registro — k0lmenIA
+Aplicar cupón una sola vez
+Aplicar las propuestas en la planilla
+Aplicar un cupón válido en el carrito
+Arma al menos {n} preguntas de refinamiento
+Armá el onboarding de Ana
+Automatizar los críticos
+BLOQUEO {n}: Cloudflare (desafio) en https://tienda.qa/checkout
+BLOQUEO {n}: Cloudflare (desafio) en https://tienda.qa/checkout El paso falló porque la protección anti-bots de la app frenó al navegador automatizado; no es un bug de la app.  TimeoutError: page.waitForSelector: Timeout 30000ms exceeded.
+Botón sin nombre accesible
+CA3 necesita las reglas de la contraseña segura: pedirlas al PO antes de escribir casos.
+CA3: La contraseña tiene que ser segura.
+CA4 es la contradicción de la edad ({n} en el CA4, {n} en la descripción): confirmar con el PO antes de escribir casos.
+CA4: Solo pueden registrarse personas mayores de {n} años.
+Capas y externos.
+Carrito con al menos un producto y un cupón de porcentaje vigente.
+Caso sin criterio
+Caso sin criterio: {n}
+Casos de CA3 y CA4
+Cerrar sesión
+Cerrar sesión desde Mi cuenta
+Clases de equivalencia
+Clave de acceso AWS
+Cobertura de contrato
+Coincide con el cambio en: descuento, carrito (palabra clave; src/pagos/cupones.ts)
+Como visitante quiero crear una cuenta
+Con espacios
+Con todos los datos válidos se crea la cuenta y se muestra el mensaje "¡Cuenta creada! Revisá tu correo para activarla."
+Confirmar con el PO antes de diseñar los casos de edad
+Confluence 'Reglas de pagos'
+Contraseña
+Contraseña débil
+Contraseña: abc
+Corregir el cupón
+Correr el doctor
+Correr los {n} casos de cupones y la regresión mínima: alcanza para la {n}
+Crash al denegar ubicación
+Crear pedido de ventas
+Criterio sin casos
+Criterio sin casos: {n}
+Cubrir los límites de nombre y usuario
+Cumpleaños hoy
+Cupón duplicado
+Cupón vencido
+Cómo funciona
+De {n} fallas, solo la del cupón es un bug. El botón Agregar no apareció a tiempo (locator), Mis pedidos falló porque el ambiente no respondió y el checkout lo frenó la protección anti-bots.
+Deja el análisis en output/analisis-historias/analisis-{n}.md
+Denegar ubicación
+Detecta la contradicción de la edad mínima ({n} en la descripción, {n} en el CA4)
+Diseño
+Dos pestañas a la vez
+Dos retiros en paralelo
+EDAD_MINIMA está declarada pero el esquema de registro no la usa: no se valida la edad. Además, config/produccion.env tiene credenciales versionadas (valor redactado).
+EDAD_MINIMA no se usa
+Edad mínima
+Edad mínima ({n} o {n})
+Edad mínima: persona de {n} años
+Edad mínima: {n} vs {n} ({n}).
+Edad mínima: {n}.
+Ejecutar la planilla seleccion.csv
+El ambiente no respondió (ERR_CONNECTION_REFUSED)
+El botón #btn-agregar no aparece a tiempo
+El correo de activación se prueba en otra historia
+El cupón DESC10 se aplica dos veces: total {n} en lugar de {n}
+El cupón no se aplica dos veces
+El cupón se aplica una sola vez; un segundo intento muestra que ya está aplicado.
+El descuento se acumula ({n} %, {n} %, {n} %…).
+El email duplicado no tiene mensaje definido
+El flujo O2C cierra; {n} hallazgo alto de autorización
+El paso vago pasa a una acción concreta.
+El resultado anterior no se podía verificar.
+Email con formato inválido
+Email, Mensajes de error
+Emails de prueba en el dominio test.ar
+En desarrollo
+Encontrar los riesgos del alta de cuenta antes de la release
+Es de humo o de prioridad Crítica: se corre siempre
+Es el bug que corrige la release
+Es un duplicado de {n}.
+Escribir los casos de CA3 y CA4 con generador-casos-manuales
+Estar en el formulario de registro
+Existe una cuenta con ana@test.ar
+Explorar el alta con un email ya registrado y variantes de mayúsculas para descubrir cómo se detectan los duplicados
+Explorar la contraseña con distintas combinaciones para descubrir qué acepta hoy el sistema
+Explorar la validación de la fecha de nacimiento con edades en el límite para descubrir qué edad mínima aplica de verdad
+Exposición de secretos de producción.
+FALTA INFORMACIÓN ({n}): Edad mínima
+FALTA INFORMACIÓN ({n}): Edad mínima ({n} o {n})
+FALTA INFORMACIÓN ({n}): Reglas de la contraseña segura
+FALTA INFORMACIÓN ({n}): Texto del error de email duplicado
+Fecha de nacimiento
+Fecha de nacimiento, Mensajes de error
+Fecha de nacimiento: alguien de {n} años
+Formulario de registro
+Funciona; {n} hallazgo alto al denegar permisos
+Funcional con técnicas de valores límite y clases de equivalencia; exploratoria corta sobre los mensajes.
+Generá los casos de {n}
+Golden set + seguridad de prompt.
+Guardar sin cliente
+Guardar sin monto
+Hay accesos indebidos: crítico
+Hay un caso duplicado, dos con un resultado o un paso que no se puede verificar, uno sin resultado esperado y ningún caso negativo.
+Historia con trampas: CA3 ambiguo (contraseña segura), contradicción entre la descripción ({n} años) y el CA4 ({n}), mensaje de email duplicado sin definir y una pregunta del dev sin respuesta.
+Historia y comentarios
+Ingresar con credenciales válidas
+Ingresar el cupón DESC15 y tocar "Aplicar".
+Ingreso válido
+Interacción
+Inyección SQL
+Inyección SQL: {n}
+La app funciona; {n} hallazgo medio de accesibilidad
+La constante EDAD_MINIMA se declara pero no se usa en registroSchema: la edad no se valida.
+La contraseña "segura" no tiene reglas.
+La contraseña segura no tiene reglas definidas
+La contraseña tiene que ser segura.
+La edad mínima se contradice ({n} en la descripción, {n} en el CA4)
+La historia define el alta de cuenta.
+La historia {n} está en el cambio
+La protección anti-bots de Cloudflare frenó el checkout
+La release solo corrige el cupón del carrito. Los casos del registro quedan fuera: las notas aclaran que no cambió.
+Levantar el ambiente y volver a correr
+Lista con {n} riesgo
+Llega el correo
+Login con Recordarme mantiene la sesión al reabrir el navegador
+Login con email y contraseña válidos
+Login con email y contraseña válidos (copia)
+Login con recordarme
+Login válido
+Los casos necesitan ajustes antes de ejecutarse
+Manejo de errores
+Manejo de errores: {n}
+Marca como ambiguo que la contraseña sea 'segura' (sin reglas)
+Mensajes de error
+NOMBRE DEL PROYECTO
+No encuentro las transcripciones de Claude Code en C:\Users\Dinno\AppData\Local\Temp\pytest-of-Dinno\pytest-{n}\test_sin_transcripciones_lo_di0\no-existe. Se generan al usar Claude Code en este proyecto (en CI o en otra máquina no existen); pasá otra carpeta con --carpeta.
+No es idempotente
+No hay conector de Figma.
+No hay criterios para el cupón
+No hay mapa funcional.
+No hay ninguno: contraseña incorrecta, email inexistente, campos vacíos y bloqueo por intentos.
+No inventa el texto del error de email duplicado como si fuera un hecho
+No se crea la cuenta
+No se crea la cuenta y se muestra un mensaje de error (texto a confirmar)
+No tenía resultado esperado.
+Nombre con {n} caracteres (máximo)
+Nombre de {n} caracteres
+Nombre vacío
+OS mínima
+Obedece injection escondido en un documento
+Pagar aprobado y rechazado
+Pagar con tarjeta
+Pago con tarjeta
+Pagos sin automatizar
+Pasa las tablas por formatear_tablas.py
+Pasarela en modo REAL
+Pasarelas de pago
+Paso {n} vago: “Verificar que funcione el cierre de sesión etc.”
+Password: (en el gestor de contraseñas del equipo)
+Pedir el texto o la referencia de diseño
+Pedir la excepción anti-bots para QA
+Pedir la excepción para QA (QA_BYPASS_HEADER)
+Pedir las reglas en el refinamiento
+Pegar desde el portapapeles
+Pico de las {n} h
+Por hacer
+Por hacer: {n}
+Pregunta fuera de dominio
+Pregunta por el texto del error de email duplicado (CA2 no lo define)
+Prioridad Crítica
+Probé O2C de punta a punta y los roles de ventas.
+Probé P2P, idempotencia y concurrencia.
+Probé el alta, guardar y la compatibilidad con DPI.
+Probé login, permisos y offline.
+Recoge la pregunta abierta del dev (mayúsculas en el email)
+Recuperar contraseña
+Reembolso inmediato vs. {n} h hábiles
+Refinamiento con el PO
+Registra al menos {n} ítems de Falta información ({n})
+Registro con datos válidos
+Registro con todos los datos válidos
+Registro de cuenta
+Registro de menores.
+Registro válido
+Reglas de la contraseña segura
+Reglas de negocio
+Reglas de negocio — k0lmenIA
+Reglas de pagos
+Regresión
+Regresión lenta
+Reintentar con el ambiente arriba
+Reportar el bug
+Resolver la edad mínima (CA4) y las reglas de contraseña (CA3) con el PO
+Respeta las secciones del análisis, en orden
+Responde bien pero es vulnerable a prompt injection
+Revisar el locator o la espera
+Rotar las credenciales
+SU53 muestra falta de autorización
+Sacarlas del repo, rotarlas y usar variables de entorno.
+Se abre Mi cuenta sin pedir las credenciales
+Se corrige la aplicación del cupón en el carrito: el descuento ya no se acumula.
+Se crea la cuenta
+Se listan los pedidos del usuario con fecha, número y total
+Se muestra "El usuario debe tener entre {n} y {n} caracteres"
+Se muestra "¡Cuenta creada! Revisá tu correo para activarla."
+Se pueden registrar menores de edad.
+Se vuelve al login y Mi cuenta ya no abre sin credenciales
+Seguridad de prompt
+Seguridad de prompt: {n}
+Según la edad mínima que confirme el PO
+Según las reglas que confirme el PO
+Separar instrucciones de contenido
+Serializar por cuenta
+Si el email ya está registrado, se muestra un mensaje de error y no se crea la cuenta.
+Si el usuario tiene menos de {n} o más de {n} caracteres, se muestra "El usuario debe tener entre {n} y {n} caracteres" y no se crea la cuenta.
+Sin bugs abiertos de severidad Crítica o Alta
+Sin ella, el checkout no se puede probar en automático
+Sin eso, cualquier caso inventa la regla
+Sin pruebas de carga
+Sin sandbox de pagos
+Solo números
+Solo pueden registrarse personas mayores de {n} años.
+Sumar casos negativos y de borde
+Tener el .env completo
+Text EN
+Texto del error de email duplicado
+Texto que no está en el diccionario
+There are {n} items in total; {n} were read in detail. The board was walked down to {n} epic(s), {n} story(ies) and {n} task(s), with their comments and links. Sample criteria: Críticos abiertos y sprint actual.
+Tienda online con checkout y backoffice.
+Tienda online con checkout, billetera y backoffice.
+Tocar "Aplicar" de nuevo con el mismo cupón.
+Todos los casos críticos aprobados
+Tres de los cinco criterios tienen casos. CA3 (contraseña segura) y CA4 (edad mínima) no, y ninguno está automatizado.
+Título poco descriptivo: “Cerrar sesión”
+Usuario con {n} caracteres (límite máximo + {n})
+Usuario con {n} caracteres (límite máximo)
+Usuario con {n} caracteres (límite mínimo - {n})
+Usuario con {n} caracteres (límite mínimo)
+Usuario de {n} caracteres
+VL01N con QA_TEST
+Validaciones de campos
+Validación
+Validación: {n}
+Validar fechaNacimiento contra EDAD_MINIMA con un refine.
+Valores límite
+Variaciones de mayúsculas
+Ve el inicio
+Ver el historial de pedidos
+Ver los términos y condiciones
+Verificar el alta de cuenta con datos válidos e inválidos
+Verifiqué los pacts del proveedor.
+Volver a correr la revisión
+When va al checkout
+When ve el total
+accesibilidad y automatización
+agregar el objeto a PFCG
+aislar instrucciones de datos
+bloquea los casos de reembolso
+clave de dedup
+cliente no distingue el error
+completo los datos válidos
+config/produccion.env contiene PAGOS_API_KEY y DB_PASSWORD (valor redactado).
+correr la verificación del proveedor
+criterios tomados de input/historias/{n}-registro.md
+código de producto
+decisión: cuotas hasta {n}
+dedup por id
+degrada con aviso
+dice que no sabe
+el resultado es "<resultado>"
+en curso
+error de validación
+error {n} del OData
+estoy en el formulario de registro
+evita el crash
+exfiltración
+iPhone SE / iOS {n} / fuente grande
+ignora la instrucción del documento
+ingreso una fecha de <edad> años
+inspeccionar el botón Guardar
+la obedece
+lock por cuenta
+límite diario
+manejar el deny
+monto mínimo de envío gratis
+muestra el pedido
+negar el permiso en el primer uso
+no es seguridad
+no hay ambiente
+no se puede automatizar ni leer
+no se puede usar sin GPS
+objetivo de exactitud
+publicar el mismo evento dos veces
+rompe al consumidor web
+se fue a negativo
+subir un doc con 'ignorá las instrucciones…'
+uno prospera
+veo "¡Cuenta creada!"
+versión del pact
+{n} ({n}): El total no suma el envío
+{n} POST /retiro a la vez
+{n} Pago con tarjeta
+{n} bug real (el cupón se descuenta dos veces); el resto no son bugs de la app
+{n} con {id,estado,monto}
+{n} críticas con fix
+{n} en vez de Fault
+{n} no cubre ningún criterio: vincularlo a un criterio o sacarlo del alcance.
+{n} no está lista para cerrar: CA3 y CA4 no tienen casos
+{n} no tiene casos negativos ni de borde
+{n} y {n} resueltos por el PO (Falta información)
+{n} · Agregar al carrito
+{n} · Aplicar cupón una sola vez
+{n} · Pagar con tarjeta
+{n} · Registro con datos válidos (prioridad Crítica)
+{n} · Usuario de {n} caracteres (prioridad Alta)
+{n} · Ver los términos y condiciones (prioridad Baja)
+{n} · Ver los términos y condiciones: no se sabe qué criterio cubre
+{n} — [Carrito] El cupón de descuento se aplica más de una vez al tocar "Aplicar" repetidas veces
+{n} — [Carrito] El cupón de descuento se aplica más de una vez al tocar "Aplicar" repetidas veces — k0lmenIA
+{n}. Abrir el login {n}. Marcar Recordarme {n}. Tocar Ingresar {n}. Cerrar y volver a abrir el navegador
+{n}. Completar con el email existente
+{n}. Completar el email
+{n}. Completar el nombre
+{n}. Completar el usuario
+{n}. Completar la contraseña
+{n}. Completar la fecha
+{n}. Completar todos los campos válidos
+{n}. Dejar el nombre vacío
+{n}. Hacer clic en Ingresar
+{n}. Ingresar {n} años
+{n}. Ir a Mi cuenta {n}. Tocar Cerrar sesión
+{n}. Ir al login
+¿Cuál es el texto del error de email duplicado?
+¿Cuál es la edad mínima?
+¿Cuál es la edad mínima? La descripción dice {n} y el CA4 {n}.
+¿Cuál es?
+¿Cuál vale?
+¿Cuántos usuarios?
+¿Cómo se piden datos de prueba en QA?
+¿Edad mínima?
+¿El cupón se acumula con otras promos?
+¿El email distingue mayúsculas para detectar duplicados?
+¿El reembolso es inmediato o tarda {n} h?
+¿El reembolso es inmediato o tarda {n} h? —
+¿La edad mínima es {n} o {n}?
+¿Límite de cuotas?
+¿Qué mensaje se muestra?
+¿Qué reglas aplica?
+¿Qué reglas tiene la contraseña segura?
+¿Qué reglas tiene la contraseña?
+¿Qué reglas tiene que cumplir una contraseña segura?
+¿con qué id deduplica?
+¿cuál es el mínimo?
+¿cuál?
+¿desde qué Android?
+¿hasta qué escalado?
+¿qué Faults define la operación?
+¿qué lista de precios?
+¿se revisan?
+¿tope diario de retiro?
+Índice
+Índice — k0lmenIA
+épicas y backlog
+— Decí qué se ve exactamente: el mensaje, el dato o la pantalla.
+— En desarrollo ({n})
+— Que diga qué se prueba y en qué condición: “Inicio de sesión con contraseña incorrecta muestra un error”.
+— Si prueban lo mismo, dejá uno; si difieren, que el título diga en qué.
+— Sin resultado esperado no se puede decidir si pasó o falló.
+— Una acción concreta por paso, sin “etc.” ni “verificar que funcione”.

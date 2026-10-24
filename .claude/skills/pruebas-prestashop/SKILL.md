@@ -1,6 +1,6 @@
 ---
 name: pruebas-prestashop
-description: Cómo probar una tienda PrestaShop (1.6, 1.7 y 8.x) — ambientes y smoke test con Docker, back-office (BO) y front-office (FO), temas y plantillas Smarty (.tpl, tema padre/hijo, sobrescritura por el tema), módulos y overrides (hooks, conflictos, módulos nativos y de terceros, carpeta override/), caché y rendimiento (Smarty cache y force compile, combinar-comprimir-cachear CSS/JS, PS_CACHE, perfilado y modo desarrollador _PS_MODE_DEV_, conteo de consultas SQL), URLs amigables y .htaccess, el checkout (invitado, 5 pasos vs. una página, transportistas y zonas, términos obligatorios), pasarelas en modo de prueba, productos con combinaciones y stock (quantity, denegar/permitir pedidos sin stock), precios específicos y reglas de carrito (vales), impuestos y redondeo, multitienda (multishop) y multi-idioma/multi-moneda, SEO y redirecciones 301, correos transaccionales, la Webservice API de solo lectura, cómo automatizarlo con Playwright, bugs típicos y preguntas para el PO. Lo usan el probador-prestashop y los mappers cuando automatizan una tienda PrestaShop.
+description: El cómo de probar PrestaShop (1.6, 1.7, 8.x) — smoke con Docker, back y front office, temas Smarty y overrides, caché y modo desarrollador, checkout, combinaciones y stock, reglas de carrito, multitienda y la Webservice API de lectura. Lo usan probador-prestashop y los mappers.
 ---
 
 # Pruebas en PrestaShop
@@ -153,3 +153,17 @@ Lo genérico (los cinco tipos de prueba) está en `pruebas-ecommerce`; el **smok
 
 - **Regresión**: PrestaShop rompe por la **combinación de módulos, tema y overrides**. Después de **instalar o actualizar un módulo o el tema**, o de una actualización de versión (en staging, con respaldo de base y archivos), correr el flujo de compra completo —catálogo → ficha con combinaciones → carrito → checkout (una página o 5 pasos) → pago → estado del pedido → correo— mirando la consola y `var/logs/`; borrar `cache/class_index.php` y purgar la caché; sumar `pixel-perfect` y `cross-browser` si cambió el tema. En multitienda, repetir por cada tienda.
 - **Seguridad**: la **clave de la Webservice** con mínimo privilegio y no expuesta; la **carpeta del back-office** (`/admin-XXXX`) renombrada y no indexada; **IDOR** en el PDF de factura o el detalle de pedido (`?id_order=`, `controller=pdf-invoice`) que no deje ver pedidos ajenos; el **modo desarrollador apagado** en producción (si no, filtra errores y stack traces — el relevamiento lo detecta); `app/config`, `.env`, `var/logs/` y backups no accesibles por URL; SQL de módulos de terceros; tokens del front activos (`PS_TOKEN_ENABLE`); HTTPS en todo el sitio. La seguridad activa, con `analista-seguridad` / `pentester-web`.
+
+## 19. Referencia del `probador-prestashop`
+
+**Relevamiento** (solo lectura): `npm run prestashop -- --tienda https://staging.mitienda.com [--historia HU-001] [--producto <url>] [--local C:/www/mitienda] --confirmar` deja `output/prestashop/<HU o host>/prestashop.json` e `informe-prestashop.html` (la corrida anterior pasa a `historial/`). Con `PRESTASHOP_WEBSERVICE_KEY` (clave de solo lectura) suma la Webservice; con `--local` / `PRESTASHOP_RUTA_LOCAL`, la versión y si el modo desarrollador quedó encendido.
+
+**Prioridades**: primero lo que impide comprar (sin transportista activo, modo catálogo, modo mantenimiento, sin HTTPS), después lo que cambia el total (redondeo, impuestos, envío, moneda, vales), stock y combinaciones, el checkout (invitado y cuenta), el rendimiento (Smarty, CCC, caché, modo dev) y, si aplica, multitienda y multi-idioma.
+
+**Smoke test local** (si el alcance es levantar/instalar): que el FO (`/`) y el BO (`/admin-XXXX`) abran, se pueda iniciar sesión, no haya errores de PHP a la vista ni fatales en `var/logs/` (8.x) o `log/`, y que el catálogo de demo no esté en una tienda real.
+
+**Seguridad a derivar** con lo del relevamiento: modo dev encendido, clave de Webservice expuesta, IDOR en facturas/pedidos, carpeta del BO, sin HTTPS.
+
+**Complementos** según el alcance: `npm run formularios` (dirección y checkout), `npm run correos` (transaccionales), `npm run accesibilidad` y `npm run pixel-perfect` (tema o módulo nuevo).
+
+**En el bug**: versión, tema, módulo, tienda (si es multistore), dispositivo y número del pedido de prueba.

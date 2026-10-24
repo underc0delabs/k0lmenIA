@@ -1,0 +1,15 @@
+[
+ [
+  "scripts/analizar_fallos.py",
+  "--suites",
+  "web"
+ ],
+ [
+  "-c",
+  "import shutil; shutil.copy('_eval/analisis.json', 'output/fallos/suite/analisis.json')"
+ ],
+ [
+  "scripts/analizar_fallos.py",
+  "--solo-informe"
+ ]
+]

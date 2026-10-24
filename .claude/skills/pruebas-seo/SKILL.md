@@ -1,6 +1,6 @@
 ---
 name: pruebas-seo
-description: Cómo probar el SEO y el GEO (optimización para motores generativos / buscadores con IA) de un sitio — SEO técnico (indexabilidad, robots.txt, sitemap.xml, canónicas, meta robots/noindex, códigos de estado y redirecciones 301/302, URLs, paginación, hreflang e internacionalización, datos estructurados Schema.org/JSON-LD, Open Graph y Twitter Cards, rendimiento y Core Web Vitals, mobile-first, renderizado JS/SSR vs. CSR), SEO on-page (title, meta description, encabezados H1-Hn, alt de imágenes, enlaces internos, contenido y palabras clave, canibalización, contenido duplicado), y GEO (cómo aparecer en AI Overviews de Google, ChatGPT, Perplexity y Copilot — contenido citable y estructurado, autoridad y E-E-A-T, respuestas directas, datos estructurados, llms.txt, acceso de los crawlers de IA —GPTBot, ClaudeBot, PerplexityBot— en robots.txt, frescura y fuentes); cómo medir y automatizar (traer la página y chequear meta/robots/sitemap/structured data; Lighthouse para CWV con auditor-rendimiento-web), bugs típicos y preguntas para el PO. Lo usa el analista-seo.
+description: El cómo de probar SEO y GEO — técnico (indexabilidad, robots, sitemap, canónicas, redirecciones, hreflang, JSON-LD, Core Web Vitals, render), on-page, y GEO (aparecer en AI Overviews, ChatGPT, Perplexity; contenido citable, E-E-A-T, acceso de crawlers de IA, llms.txt). Lo usa el analista-seo.
 ---
 
 # Pruebas de SEO y GEO

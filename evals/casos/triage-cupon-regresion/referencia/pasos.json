@@ -1,0 +1,3 @@
+[["scripts/buscar_duplicados.py", "--bug", "input/bugs/observacion-cupon.md", "--nombre", "cupon"],
+ ["-c", "import pathlib; d = pathlib.Path('output/triage/cupon/triage.md'); d.write_text(d.read_text(encoding='utf-8') + pathlib.Path('_eval/conclusion.md').read_text(encoding='utf-8'), encoding='utf-8')"],
+ ["scripts/formatear_tablas.py", "output/triage/cupon/triage.md"]]

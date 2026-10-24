@@ -1,0 +1,32 @@
+{
+  "agente": "analista-fallos",
+  "descripcion": "npm test de la compra con cuatro fallas de causa distinta: un locator que no aparece, un bug real (el cupón se descuenta dos veces), el ambiente caído y un bloqueo anti-bots de Cloudflare. Solo el cupón es un bug: hay que redactarlo y vincularlo, y no reportar como bug ni el locator, ni el ambiente, ni el anti-bots.",
+  "pedido": "Usá el agente analista-fallos para analizar las fallas de la última corrida web de npm test (herramientas/k0lmena/reports/web/cucumber-report.json). No hay conectores activos: no cargues nada en Jira.",
+  "requiere": [".claude/agents/analista-fallos.md", "scripts/analizar_fallos.py"],
+  "insumos": [
+    {"desde": "insumos/cucumber-fallos/cucumber-report.json", "hacia": "herramientas/k0lmena/reports/web/cucumber-report.json"}
+  ],
+  "presupuesto_usd": 2,
+  "umbral": 80,
+  "chequeos": [
+    {"id": "archivos", "tipo": "existe", "descripcion": "Corre analizar_fallos.py y deja fallos.json, analisis.json y el informe",
+     "archivos": ["output/fallos/*/fallos.json", "output/fallos/*/analisis.json", "output/fallos/*/informe-fallos.html"], "min": 3, "peso": 2},
+    {"id": "bilingue", "tipo": "existe", "descripcion": "El informe sale también en inglés",
+     "archivos": ["output/fallos/*/en/informe-fallos.html"]},
+    {"id": "clasificacion", "tipo": "contiene", "descripcion": "Las cuatro causas quedan separadas",
+     "archivos": ["output/fallos/*/fallos.json"], "patrones": ["Posible bug", "Locator o espera", "Ambiente", "Bloqueo anti-bots"]},
+    {"id": "bug-real", "tipo": "contiene", "descripcion": "Redacta el bug del cupón con los montos observados",
+     "archivos": ["output/reportes-bug/BUG-*.md"], "patrones": ["cup[óo]n", "9\\.?000", "8\\.?000"], "peso": 2},
+    {"id": "solo-bugs-reales", "tipo": "no_contiene", "descripcion": "No reporta como bug el anti-bots, el ambiente ni el locator",
+     "archivos": ["output/reportes-bug/*.md"], "patrones": ["Cloudflare|anti-?bots|desaf[íi]o", "ERR_CONNECTION", "#btn-agregar"], "peso": 3},
+    {"id": "vinculo", "tipo": "contiene", "descripcion": "El análisis vincula la falla del cupón con su bug",
+     "archivos": ["output/fallos/*/analisis.json"], "patrones": ["\"F-01\"[\\s\\S]{0,400}\"bug\"\\s*:\\s*\"BUG-\\d{3}\""], "peso": 2},
+    {"id": "antibots-no-es-bug", "tipo": "no_contiene", "descripcion": "No recategoriza el bloqueo anti-bots como bug",
+     "archivos": ["output/fallos/*/analisis.json"], "patrones": ["\"F-04\"\\s*:\\s*\\{[^}]*\"categoria\"\\s*:\\s*\"Posible bug\""], "peso": 2}
+  ],
+  "rubrica": [
+    "El resumen se entiende sin conocer la automatización.",
+    "Para cada falla que no es bug, la acción es concreta (actualizar el locator, levantar el ambiente, pedir la excepción anti-bots).",
+    "El bug no inventa datos que no están en la corrida."
+  ]
+}

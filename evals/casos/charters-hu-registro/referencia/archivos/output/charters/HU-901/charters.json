@@ -1,0 +1,20 @@
+{
+  "historia": "HU-901", "titulo": "Registro de cuenta", "objetivo": "Encontrar los riesgos del alta de cuenta antes de la release",
+  "charters": [
+    {"id": "CH-01", "mision": "Explorar la validación de la fecha de nacimiento con edades en el límite para descubrir qué edad mínima aplica de verdad",
+     "areas": ["Fecha de nacimiento", "Mensajes de error"], "riesgos": ["La edad mínima se contradice (18 en la descripción, 16 en el CA4)"],
+     "heuristicas": ["Valores límite", "Fechas"], "datos": ["Alguien de 15, 16, 17 y 18 años"], "ideas": ["Cumpleaños hoy", "Fecha futura"],
+     "duracion_min": 60, "prioridad": "Alta", "fuera_de_alcance": ["Activación por correo"],
+     "preguntas": ["¿La edad mínima es 16 o 18?"]},
+    {"id": "CH-02", "mision": "Explorar la contraseña con distintas combinaciones para descubrir qué acepta hoy el sistema",
+     "areas": ["Contraseña"], "riesgos": ["La contraseña segura no tiene reglas definidas"],
+     "heuristicas": ["Clases de equivalencia"], "datos": ["Muy corta", "Solo números", "Con espacios"], "ideas": ["Pegar desde el portapapeles"],
+     "duracion_min": 45, "prioridad": "Alta", "fuera_de_alcance": [],
+     "preguntas": ["¿Qué reglas tiene que cumplir una contraseña segura?"]},
+    {"id": "CH-03", "mision": "Explorar el alta con un email ya registrado y variantes de mayúsculas para descubrir cómo se detectan los duplicados",
+     "areas": ["Email", "Mensajes de error"], "riesgos": ["El email duplicado no tiene mensaje definido"],
+     "heuristicas": ["Variaciones de mayúsculas", "Interrupciones"], "datos": ["ana@test.ar", "Ana@Test.ar"], "ideas": ["Dos pestañas a la vez"],
+     "duracion_min": 45, "prioridad": "Media", "fuera_de_alcance": [],
+     "preguntas": ["¿El email distingue mayúsculas para detectar duplicados?"]}
+  ]
+}

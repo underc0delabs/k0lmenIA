@@ -1,6 +1,6 @@
 ---
 name: pruebas-billeteras
-description: Cómo probar billeteras virtuales y medios de pago (wallets, fintech, e-money) — saldo y libro mayor (ledger de doble entrada), transacciones (carga, retiro, P2P, pago, reversa, contracargo), idempotencia y reintentos, doble gasto y concurrencia, consistencia de importes (redondeo, moneda, decimales), límites y cupos, estados de una transacción, conciliación contra el proveedor de pagos, KYC/AML y antifraude, webhooks firmados, 3-D Secure/SCA y los bugs típicos de dinero. Usa el skill pruebas-tokens para la seguridad de tokens y pagos. Lo usan el probador-billeteras y los generadores de casos cuando la app maneja dinero.
+description: El cómo de probar billeteras y medios de pago — ledger de doble entrada, estados de transacción, idempotencia, doble gasto, conciliación, KYC/AML, webhooks firmados y 3-D Secure/SCA. Usa el skill pruebas-tokens para la seguridad de tokens. Lo usan probador-billeteras y los generadores de casos cuando hay dinero.
 ---
 
 # Pruebas de billeteras virtuales y pagos

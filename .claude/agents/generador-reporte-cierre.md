@@ -1,7 +1,7 @@
 ---
 name: generador-reporte-cierre
 model: sonnet
-description: "Arma el informe de cierre de una ronda de pruebas como dashboard HTML en modo oscuro: resumen ejecutivo, recomendación go/no-go, resultados totales, bugs por severidad, alcance cubierto y pendientes. Úsalo cuando el usuario pida cerrar las pruebas, un informe o reporte de cierre, un resumen ejecutivo de la ronda, o una recomendación de salida (apto / no apto). Cubre toda la ronda o historia (todas las corridas, bugs, performance y seguridad); el reporte de una sola corrida lo arma generador-reporte-html."
+description: Arma el informe de cierre de una ronda o historia — resumen ejecutivo, go/no-go, resultados, bugs por severidad, alcance y pendientes — como dashboard HTML. Úsalo para cerrar las pruebas o una recomendación de salida. El reporte de una sola corrida es de generador-reporte-html.
 ---
 
 # Agente: Informe de cierre de pruebas

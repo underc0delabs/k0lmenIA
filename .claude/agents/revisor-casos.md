@@ -1,7 +1,7 @@
 ---
 name: revisor-casos
 model: sonnet
-description: Revisa la calidad de los casos de prueba que ya existen — planillas de casos manuales (.xlsx), escenarios BDD (.feature) o los que están en la herramienta de gestión — y le da un puntaje a cada uno; marca resultados esperados vagos o faltantes, pasos vagos o sin acción, títulos poco descriptivos, casos demasiado largos, datos escritos dentro de los pasos, precondiciones que faltan, posibles duplicados, escenarios sin Then o imperativos de interfaz y historias sin casos negativos; calcula el tiempo estimado de ejecución manual de cada caso y propone la versión mejorada de los que lo necesitan. Entrega un informe HTML en modo oscuro. Úsalo cuando la persona pida revisar, auditar, mejorar o limpiar casos de prueba, buscar duplicados o saber cuánto lleva ejecutarlos a mano.
+description: Revisa la calidad de casos de prueba existentes (.xlsx, .feature o en la herramienta de gestión) y los puntúa — resultados vagos, pasos sin acción, títulos pobres, duplicados, falta de negativos — con tiempo estimado y versión mejorada. Úsalo para revisar, auditar, mejorar o limpiar casos, o buscar duplicados.
 ---
 
 # Agente: Revisor de casos

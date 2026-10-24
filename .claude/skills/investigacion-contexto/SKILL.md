@@ -1,6 +1,6 @@
 ---
 name: investigacion-contexto
-description: Cómo investigar a fondo una historia o funcionalidad antes de analizarla, planificarla, escribir casos o automatizarla — la documentación del proyecto que arma el documentador-proyecto en input/documentacion/ (índice, dossier de la historia, reglas del código, mensajes, mapa funcional), la historia de Jira, Azure DevOps (Azure Boards) u otra herramienta de gestión (Linear, ClickUp, monday.com, Asana, Trello, Notion, YouTrack, Shortcut, GitHub o GitLab Issues) con sus comentarios, subtareas, épica e issues vinculados, las páginas de Confluence relacionadas, los diseños de Figma, contratos de API y documentación local — y cómo registrar lo que falta como "Falta información" (FI-XX) en una ficha de contexto reutilizable. Úsalo en analista-historias, estratega-pruebas, los generadores de casos y los mappers cuando trabajen sobre una historia.
+description: El cómo de investigar una historia antes de analizarla, planificarla, escribir casos o automatizarla — la documentación del proyecto, la historia de Jira/Azure DevOps u otra herramienta con comentarios, épica y vínculos, Confluence, Figma y contratos — y registrar lo que falta (FI-XX) en una ficha reutilizable. Úsalo en analista-historias, estratega-pruebas, los generadores y los mappers.
 ---
 
 # Investigación de contexto

@@ -1,6 +1,6 @@
 ---
 name: redaccion-manual
-description: Cómo crear o actualizar manuales de usuario basados en evidencia, para cualquier tipo de proyecto — de una funcionalidad o de toda la plataforma por módulos — cruzando lo que k0lmenIA ya sabe del proyecto (input/documentacion con dossiers de historias, investigación, mapa funcional, reglas y mensajes; casos de prueba, .feature de k0lmena y la herramienta de gestión configurada), el manual anterior y la aplicación real recorrida con Playwright MCP para verificar flujos y sacar capturas. Matriz de evidencia por fuente (CONFIRMED/REVIEW/BLOCKED), gaps antes de abrir la app, acciones prohibidas en la aplicación, datos de prueba solo con autorización, puntos QA REVIEW (REVIEW-NNN) en el borrador y en qa-review.md, aprobación explícita y checklist antes de la versión final, Markdown + HTML y Word con el diseño de k0lmena, y el conocimiento que queda en input/documentacion/manual-usuario/ para que los demás agentes escriban casos con contexto real. Lo usa el redactor-manual.
+description: El cómo de crear o actualizar manuales de usuario basados en evidencia — cruzar la documentación del proyecto, los casos y la app recorrida con Playwright, matriz de evidencia (CONFIRMED/REVIEW/BLOCKED), puntos QA REVIEW, aprobación y checklist, salida en Markdown, HTML y Word. Lo usa el redactor-manual.
 ---
 
 # Manual de usuario basado en evidencia

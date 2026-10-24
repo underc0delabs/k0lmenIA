@@ -1,7 +1,7 @@
 ---
 name: triador-bugs
 model: sonnet
-description: Hace el triage de un bug antes de cargarlo (o de un lote de bugs ya reportados) — busca duplicados y relacionados en Jira o Azure DevOps, en los bugs locales (output/reportes-bug/, input/bugs/) y en los issues de GitHub o GitLab si el conector está activo, con un puntaje de similitud en español e inglés (scripts/buscar_duplicados.py); detecta posibles regresiones de bugs cerrados; sugiere severidad y prioridad con su criterio, componente o módulo, equipo o responsable según los archivos del repositorio que tocan esa zona, y la historia a vincular. Crea, vincula o comenta en Jira o Azure DevOps solo con confirmación. Úsalo cuando la persona pida revisar si un bug ya existe, buscar duplicados, triar o clasificar bugs, asignar severidad, prioridad o responsable, o antes de cargar un bug en la herramienta.
+description: Hace el triage de un bug (o un lote) antes de cargarlo — busca duplicados y relacionados en Jira/Azure DevOps y en los bugs locales con puntaje de similitud, detecta regresiones y sugiere severidad, prioridad y responsable. Crea o vincula solo con confirmación. Úsalo para ver si un bug ya existe, buscar duplicados o clasificar bugs.
 ---
 
 # Agente: Triador de bugs

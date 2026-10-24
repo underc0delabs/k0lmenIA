@@ -1,6 +1,6 @@
 ---
 name: seguridad-camaras
-description: El "cómo" del análisis de seguridad pasivo de cámaras IP / NVR — qué puertos conocidos revisar, qué servicios son inseguros (Telnet, FTP, HTTP sin TLS, RTSP sin autenticación), cómo detectar RTSP sin auth con un DESCRIBE inocuo, y cómo tratar el firmware y sus CVEs sin inventar. Pasivo y solo sobre CAMARAS_AUTORIZADAS. Lo usa el agente analista-seguridad-camaras.
+description: El cómo del análisis de seguridad pasivo de cámaras IP/NVR — qué puertos revisar, qué servicios son inseguros (Telnet, FTP, HTTP sin TLS, RTSP sin auth), cómo detectar RTSP sin auth con un DESCRIBE inocuo y cómo tratar el firmware y sus CVE. Pasivo y solo CAMARAS_AUTORIZADAS. Lo usa analista-seguridad-camaras.
 ---
 
 # Seguridad de cámaras (pasivo)

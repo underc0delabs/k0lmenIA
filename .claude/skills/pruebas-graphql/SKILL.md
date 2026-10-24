@@ -1,6 +1,6 @@
 ---
 name: pruebas-graphql
-description: Cómo probar APIs GraphQL — el esquema y la introspección (tipos, queries, mutations, subscriptions, deprecaciones), queries y mutations con variables, fragments, alias y directivas (@include/@skip), el manejo de errores propio de GraphQL (siempre HTTP 200 con `errors` + `data` parcial, no códigos HTTP), nulabilidad y errores parciales que anulan un campo o toda la rama, paginación (cursor/Relay connections vs. offset), subscriptions por WebSocket, N+1 y el impacto en el backend, límites de profundidad y de complejidad/costo y rate limiting, autorización por campo y por tipo (un campo que no deberías ver), introspección deshabilitada en producción, persisted queries y APQ, batching de operaciones, caché e invalidación, y la diferencia con REST para encarar las pruebas; cómo automatizarlo (POST a /graphql con el ejecutor-api/Newman, resumir el schema con resumir_graphql.py, steps de k0lmena), bugs típicos y preguntas para el PO. La usan el ejecutor-api, el api-mapper y el generador-casos-api, además del probador de cualquier producto con GraphQL.
+description: El cómo de probar APIs GraphQL — esquema e introspección, queries/mutations con variables, errores propios (HTTP 200 con errors + data parcial), nulabilidad, paginación, subscriptions, N+1, límites de profundidad/costo y autorización por campo. La usan ejecutor-api, api-mapper, generador-casos-api y cualquier probador con GraphQL.
 ---
 
 # Pruebas de APIs GraphQL

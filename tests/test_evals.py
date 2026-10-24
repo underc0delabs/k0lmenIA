@@ -363,3 +363,27 @@ def test_solo_verificar_por_linea_de_comandos(tmp_path, capsys):
 def test_cada_caso_falla_sin_salidas(caso, tmp_path):
     # Un workspace vacío nunca puede aprobar: los chequeos no se cumplen "por defecto".
     assert ev.verificar_caso(CASOS[caso], tmp_path)["estado"] == "Fallido"
+
+
+# ------------------------------------------------------------------ modo económico: la salida de referencia de cada caso
+# Cada caso trae en evals/casos/<id>/referencia/ lo que dejaría un agente correcto (archivos/) y los scripts que
+# correría (pasos.json). Se arma el workspace aislado, se aplica y se verifica: tiene que aprobar con 100. Así un
+# cambio en un chequeo o en un script del que dependen los agentes se detecta en CI sin gastar tokens.
+def test_todos_los_casos_tienen_referencia():
+    sin = [c for c, d in CASOS.items() if not (Path(d["_dir"]) / "referencia").is_dir()]
+    assert not sin, f"casos sin salida de referencia (evals/casos/<id>/referencia/): {sin}"
+
+
+@pytest.mark.parametrize("caso_id", sorted(CASOS))
+def test_la_referencia_aprueba(caso_id, tmp_path):
+    res = ev.verificar_referencia(CASOS[caso_id], tmp_path / caso_id)
+    assert res is not None
+    fallidos = {x["id"]: x["detalle"] for x in res["chequeos"] if not x["ok"]}
+    assert res["puntaje"] == 100, f"{caso_id}: la referencia no pasa {fallidos}"
+
+
+def test_la_referencia_no_es_trivial(tmp_path):
+    # Sin la referencia (el agente no hizo nada), el mismo caso falla: los chequeos miden algo.
+    caso = CASOS["fallos-compra"]
+    ws = ev.preparar(caso, tmp_path / "vacio")
+    assert ev.verificar_caso(caso, ws)["estado"] == "Fallido"

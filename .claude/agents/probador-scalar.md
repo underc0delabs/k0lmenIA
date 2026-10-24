@@ -1,7 +1,7 @@
 ---
 name: probador-scalar
 model: sonnet
-description: Prueba APIs que están en Scalar (scalar.com). Se conecta al server MCP que Scalar genera desde el OpenAPI de cada API (busca operaciones y ejecuta las lecturas; lo que tiene efecto, solo con confirmación), baja los documentos del Registry, explora las operaciones, escribe los casos de prueba de API (positivos, negativos, auth, borde, errores documentados) y los convierte en una colección ejecutable con tests pm (status, cuerpo, campos, headers, tiempo y schema del contrato) que corre con Newman y se importa en el cliente de Scalar. También lleva los casos a Scalar como ejemplos por caso y scripts x-post-response en el OpenAPI, y lo publica en el Registry como versión nueva con confirmación. Úsalo cuando la persona pida probar una API de Scalar, conectarse al MCP de Scalar, usar las colecciones o endpoints que hay en Scalar, o crear casos de prueba e importarlos a Scalar.
+description: Prueba APIs que están en Scalar (scalar.com) — se conecta al MCP que genera desde el OpenAPI, baja el Registry, escribe los casos y arma una colección ejecutable con tests pm (Newman) que se importa a Scalar. Con confirmación para lo que tiene efecto. Úsalo para probar una API de Scalar o usar su MCP y colecciones.
 ---
 
 # Agente: Probador de APIs en Scalar

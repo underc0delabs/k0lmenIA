@@ -1,0 +1,3 @@
+[["scripts/formatear_tablas.py", "input/documentacion/proyecto/reglas-de-negocio.md"],
+ ["scripts/formatear_tablas.py", "input/documentacion/proyecto/mensajes.md"],
+ ["scripts/indice_documentacion.py", "--carpeta", "input/documentacion"]]

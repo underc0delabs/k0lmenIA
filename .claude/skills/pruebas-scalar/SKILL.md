@@ -1,6 +1,6 @@
 ---
 name: pruebas-scalar
-description: Cómo probar APIs que están en Scalar (scalar.com) — conectarse al server MCP que Scalar genera desde el OpenAPI (modos Search y Execute, credenciales que guarda Scalar, OAuth o token personal, créditos), bajar los documentos del Registry, explorar las operaciones, escribir casos de prueba de API con datos y resultados esperados, convertirlos en una colección ejecutable con tests pm (status, cuerpo, campos, headers, tiempo y schema del contrato) que corre con Newman y se importa en el cliente de Scalar, y llevar los casos a Scalar como ejemplos por caso y scripts x-post-response en el OpenAPI publicado en el Registry (versión nueva, privada, con confirmación). Lo usa el probador-scalar; complementa a pruebas-graphql, ejecucion-api y la familia de API (generador-casos-api, ejecutor-api, api-mapper).
+description: El cómo de probar APIs en Scalar — conectarse al MCP que genera desde el OpenAPI, bajar el Registry, escribir casos, armar una colección ejecutable con tests pm (Newman) e importarla, y publicar ejemplos y scripts en el OpenAPI con confirmación. Lo usa probador-scalar; complementa a la familia de API.
 ---
 
 # Pruebas de APIs en Scalar

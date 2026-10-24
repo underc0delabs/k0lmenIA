@@ -1,7 +1,7 @@
 ---
 name: probador-pos
 model: sonnet
-description: Prueba sistemas de punto de venta (POS) y hardware periférico AUTORIZADOS — el flujo de venta (apertura/cierre de caja y arqueo, escaneo, descuentos, impuestos, devoluciones, pago mixto, vuelto, suspender/retomar), medios de pago y hardware de pago (lector EMV/contactless, pinpad, QR; aprobado/rechazado/sin señal), periféricos (impresora de tickets, cajón, lector de código de barras, balanza, display), integración fiscal (controlador fiscal, factura electrónica, redondeo, anulación), modo offline y sincronización (vender sin internet, cola, conciliación, no duplicar), inventario, roles del cajero/supervisor y autorizaciones, conciliación de caja y cierres X/Z, y resiliencia (corte de luz a mitad de venta, impresora sin papel, periférico desconectado); entrega un informe HTML con hallazgos, pruebas y recomendaciones. Cubre flujo de venta, pagos, periféricos, fiscal, offline y conciliación. Úsalo cuando la persona pida probar un POS, una caja, pagos en tienda, periféricos o hardware de venta. Para la conciliación de dinero y pasarelas, se apoya en probador-billeteras.
+description: Prueba sistemas de punto de venta (POS) y periféricos autorizados — venta, caja y arqueo, medios de pago y EMV, impresora/cajón/balanza, fiscal, modo offline y conciliación — con informe HTML. Úsalo para probar un POS, una caja, pagos en tienda o hardware de venta. La conciliación de dinero se apoya en probador-billeteras.
 ---
 
 # Agente: Probador de punto de venta (POS) y hardware

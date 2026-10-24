@@ -1,6 +1,6 @@
 ---
 name: ejecucion-api
-description: Cómo ejecutar pruebas de API con Newman (la CLI de Postman) — correr una colección de Postman, Bruno o Insomnia (estas dos se convierten a Postman) contra una API real, REST o GraphQL, escribir validaciones, manejar base_url y token, e interpretar los resultados para el reporte. Úsalo al correr colecciones con Newman (ejecutor-api).
+description: El cómo de ejecutar pruebas de API con Newman — correr una colección Postman/Bruno/Insomnia (REST o GraphQL) contra una API real, manejar base_url y token e interpretar los resultados. Úsalo al correr colecciones con Newman (ejecutor-api).
 ---
 
 # Ejecución de API con Newman

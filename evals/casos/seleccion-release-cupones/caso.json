@@ -1,0 +1,34 @@
+{
+  "agente": "selector-casos-de-prueba",
+  "descripcion": "Selección de casos para la release 2.4, que solo corrige el cupón del carrito (src/pagos/cupones.ts). Trampa: pasar las notas tal cual (--texto-archivo) deja el caso del cupón acumulado como 'Recomendado'; el agente tiene que armar el cambio (_cambios-*.json) con la historia afectada (HU-870) y el archivo, sin sumar 'registro' ni 'login', que las notas nombran solo para decir que no cambiaron. Los de cupones tienen que ser imprescindibles y los del registro (HU-901), no.",
+  "pedido": "Usá el agente selector-casos-de-prueba para elegir qué casos correr para la release 2.4 (las notas están en input/release/notas-release-2.4.md). Nombre de la selección: release-2.4. No hay conectores activos.",
+  "requiere": [".claude/agents/selector-casos-de-prueba.md", "scripts/seleccionar_casos.py"],
+  "insumos": [
+    {"desde": "insumos/seleccion-cupones/notas-release-2.4.md", "hacia": "input/release/notas-release-2.4.md"},
+    {"desde": "insumos/seleccion-cupones/casos-HU-870.xlsx", "hacia": "output/casos-de-prueba/manuales/casos-HU-870.xlsx"},
+    {"desde": "insumos/cobertura-registro/casos-HU-901.xlsx", "hacia": "output/casos-de-prueba/manuales/casos-HU-901.xlsx"}
+  ],
+  "presupuesto_usd": 1.5,
+  "umbral": 80,
+  "chequeos": [
+    {"id": "archivos", "tipo": "existe", "descripcion": "Corre seleccionar_casos.py y deja la selección, la planilla y el informe",
+     "archivos": ["output/seleccion-casos/release-2.4/seleccion.json", "output/seleccion-casos/release-2.4/seleccion.csv", "output/seleccion-casos/release-2.4/informe-seleccion.html"], "min": 3, "peso": 2},
+    {"id": "bilingue", "tipo": "existe", "descripcion": "El informe sale también en inglés",
+     "archivos": ["output/seleccion-casos/release-2.4/en/informe-seleccion.html"]},
+    {"id": "cambio", "tipo": "contiene", "descripcion": "El cambio que arma el agente apunta al archivo de cupones",
+     "archivos": ["output/seleccion-casos/_cambios-*.json", "output/seleccion-casos/release-2.4/seleccion.json"], "patrones": ["cupones\\.ts"]},
+    {"id": "cupon-imprescindible", "tipo": "contiene", "descripcion": "El caso del cupón acumulado (HU-870:CP-002) es imprescindible",
+     "archivos": ["output/seleccion-casos/release-2.4/seleccion.json"],
+     "patrones": ["\"clave\"\\s*:\\s*\"HU-870:CP-002\"[^{}]*?\"grupo\"\\s*:\\s*\"Imprescindible\""], "peso": 3},
+    {"id": "registro-fuera", "tipo": "no_contiene", "descripcion": "Ningún caso del registro (HU-901) queda como imprescindible",
+     "archivos": ["output/seleccion-casos/release-2.4/seleccion.json"],
+     "patrones": ["\"clave\"\\s*:\\s*\"HU-901:CP-\\d+\"[^{}]*?\"grupo\"\\s*:\\s*\"Imprescindible\""], "peso": 3},
+    {"id": "analisis", "tipo": "existe", "descripcion": "Deja su análisis (veredicto y riesgo)",
+     "archivos": ["output/seleccion-casos/release-2.4/analisis.json"]}
+  ],
+  "rubrica": [
+    "El veredicto dice cuánto se corre y por qué alcanza.",
+    "Los ajustes manuales de grupo tienen un motivo concreto.",
+    "Lo manual queda listo para ejecutar (seleccion.csv)."
+  ]
+}

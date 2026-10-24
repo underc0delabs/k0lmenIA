@@ -1,6 +1,6 @@
 ---
 name: pruebas-sap
-description: Cómo probar sistemas SAP — SAP GUI for Windows (transacciones/T-codes, SAP GUI Scripting API por COM, mensajes de la barra de estado, modos/sesiones) y Fiori/UI5 (launchpad, tiles, apps, servicios OData, catálogos y grupos); mandantes y ambientes (QA/sandbox vs. productivo, transportes, support packages y upgrades, conversión a S/4HANA), S/4HANA vs. ECC; autorizaciones y roles (PFCG, SU01, SU53, SUIM, objetos de autorización, segregación de funciones/SoD); procesos de negocio de punta a punta (Order to Cash, Procure to Pay, Record to Report, inventario); datos maestros y de prueba (materiales, clientes, proveedores, cuentas, variantes de transacción); procesos de fondo y interfaces (jobs SM37, IDocs WE02, colas qRFC SM58, BAPIs); el smoke test, la regresión tras un transporte o un upgrade, el rendimiento (ST03, ST05, SAT, tiempos de respuesta y de Fiori) y la seguridad (SoD, roles de mínimo privilegio, scripting, RFC, PII); cómo automatizarlo con la Scripting API y con Playwright, bugs típicos y preguntas para el PO. Lo usan el probador-sap y los mappers cuando automatizan SAP.
+description: El cómo de probar SAP — SAP GUI (Scripting API) y Fiori/UI5 (OData), mandantes y transportes, S/4HANA vs. ECC, autorizaciones y roles (PFCG, SoD), procesos end-to-end (O2C, P2P, R2R), jobs e IDocs, rendimiento y seguridad. Lo usan probador-sap y los mappers.
 ---
 
 # Pruebas en SAP

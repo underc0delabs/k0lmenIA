@@ -1,6 +1,6 @@
 ---
 name: codigo-seguro
-description: Cómo hacer análisis estático de seguridad del código (SAST) y búsqueda de secretos — las clases de bug que se ven en el código fuente (inyección SQL/NoSQL/comandos, XSS, deserialización insegura, path traversal, SSRF, XXE, criptografía débil o hardcodeada, autenticación y control de acceso, redirecciones abiertas, uso inseguro de aleatoriedad, condiciones de carrera), el mapeo con OWASP Top 10 y CWE, cómo correr y leer semgrep (reglas, config auto, severidad), el triage de falsos positivos y la priorización por explotabilidad y reachability, la detección de secretos y credenciales en el código (claves de nube, tokens, claves privadas, contraseñas en config) y qué hacer con ellos (rotar, sacar del histórico de git, usar un vault), la diferencia entre SAST (código) y DAST (app corriendo) y lo que cada uno no ve, herramientas (semgrep, gitleaks/trufflehog, CodeQL) y preguntas para el responsable. Lo usa el analista-codigo-seguro; complementa a analista-seguridad y pentester-web (análisis dinámico) y a analisis-dependencias (SCA).
+description: El cómo del SAST y la búsqueda de secretos — clases de bug en el código (inyección, XSS, deserialización, path traversal, SSRF, cripto débil, control de acceso), OWASP/CWE, semgrep, triage por explotabilidad, detección de secretos y la diferencia SAST vs. DAST. Lo usa analista-codigo-seguro; complementa a analista-seguridad, pentester-web y analisis-dependencias.
 ---
 
 # Análisis estático de seguridad del código (SAST) y secretos

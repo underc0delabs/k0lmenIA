@@ -1,6 +1,6 @@
 ---
 name: pruebas-soap
-description: Cómo probar servicios web SOAP — el WSDL (operaciones, mensajes, bindings, endpoint, port types), el sobre SOAP (Envelope, Header, Body), SOAPAction, SOAP 1.1 vs. 1.2, los tipos del XML Schema (XSD) embebido (tipos, nillable, minOccurs/maxOccurs, enumeraciones, arrays), los SOAP Faults (faultcode/faultstring/detail en 1.1; Code/Reason en 1.2) y cómo se mapean los errores de negocio, la validación contra el esquema (request y response), los namespaces y prefijos, WS-Security (UsernameToken, firma, timestamps, nonce), el atributo mustUnderstand de los headers, MTOM/attachments, WS-* (WS-Addressing, WS-ReliableMessaging), versionado del contrato y compatibilidad, idempotencia de operaciones, autenticación y seguridad de transporte; cómo automatizarlo (relevar el WSDL con la herramienta soap, armar el sobre y enviarlo por HTTP con el ejecutor-api/Newman, o SoapUI), bugs típicos y preguntas para el PO. Lo usa el probador-soap; complementa a los agentes de API REST/GraphQL.
+description: El cómo de probar servicios SOAP — el WSDL, el sobre (Envelope/Header/Body), SOAPAction, 1.1 vs. 1.2, el XSD, SOAP Faults, namespaces, WS-Security, mustUnderstand y compatibilidad del contrato — armando el sobre y enviándolo con el ejecutor-api. Lo usa el probador-soap; complementa a los agentes de API.
 ---
 
 # Pruebas de servicios SOAP

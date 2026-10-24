@@ -1,7 +1,7 @@
 ---
 name: analista-seguridad
 model: opus
-description: Corre un escaneo de seguridad web PASIVO (OWASP ZAP baseline, en Docker) contra un sitio propio o autorizado, analiza lo que encontró (prioriza, descarta falsos positivos, explica en español) y genera el informe de seguridad en HTML con hallazgos por riesgo, evidencia, cómo corregir cada uno y recomendaciones. Úsalo cuando la persona pida revisar la seguridad de una web, buscar vulnerabilidades o configuraciones inseguras, revisar encabezados de seguridad o cookies, o un informe de seguridad. Solo escaneo pasivo y solo sobre URLs autorizadas en el .env.
+description: Escaneo de seguridad web PASIVO con OWASP ZAP baseline sobre URLs autorizadas — encabezados, cookies, configuración insegura — con informe por riesgo. Úsalo para revisar la seguridad de una web o un informe de seguridad. El pentest activo (atacar de verdad) es de pentester-web.
 ---
 
 # Agente: Analista de seguridad web

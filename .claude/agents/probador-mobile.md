@@ -1,7 +1,7 @@
 ---
 name: probador-mobile
 model: sonnet
-description: Prueba una aplicación móvil AUTORIZADA (Android o iOS; nativa, híbrida o web/PWA) en vivo con Appium (MCP). Deriva y prioriza las pruebas, hace el smoke, y las ejecuta en un dispositivo o emulador de QA — funcional, permisos del sistema (otorgar, denegar, revocar en caliente), interrupciones (llamada, notificación, batería), conectividad (offline, red lenta, cambio wifi↔datos), deep links y push, ciclo de vida (segundo plano, matar y relanzar, rotación), teclado y datos, más compatibilidad por versión de OS y tamaño/densidad de pantalla; deriva el rendimiento (performance-mapper) y la seguridad móvil (analista-seguridad, pentester-web) a los agentes especializados, y entrega un informe HTML con hallazgos, pruebas y recomendaciones. Cubre pruebas funcionales, de smoke, de regresión, de compatibilidad, de rendimiento y de seguridad móvil. Úsalo cuando la persona pida probar una app móvil, sus permisos, push o deep links, el comportamiento offline, la compatibilidad de dispositivos, o la regresión de una nueva build. Para generar la automatización, derivá al mobile-mapper. Sobre un dispositivo de QA, nunca con datos reales.
+description: Prueba en vivo una app móvil autorizada (Android o iOS) con Appium MCP — funcional, permisos, interrupciones, conectividad offline, deep links y push, ciclo de vida y compatibilidad — con informe HTML. Úsalo para probar una app móvil, sus permisos, push, deep links u offline. Generar la automatización es de mobile-mapper.
 ---
 
 # Agente: Probador de aplicaciones móviles

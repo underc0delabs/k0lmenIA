@@ -1,6 +1,6 @@
 ---
 name: pruebas-salesforce
-description: Cómo probar una org de Salesforce (Sales Cloud, Service Cloud, Experience Cloud, CPQ, apps a medida) — ambientes y sandboxes, acceso (perfiles, permission sets, roles, OWD, sharing rules, FLS), automatización (reglas de validación, flows, triggers de Apex, orden de ejecución, límites de gobierno, carga masiva de 200), datos (record types, picklists, duplicados, multimoneda, zona horaria), interfaz Lightning (LWC, shadow DOM, IDs dinámicos, spinners y toasts) con Playwright, APIs e integraciones, tests de Apex y cobertura, releases estacionales, y los bugs típicos de Salesforce. Lo usan el probador-salesforce y los mappers cuando automatizan una app de Salesforce.
+description: El cómo de probar Salesforce (Sales, Service, Experience, CPQ) — sandboxes, acceso (perfiles, permission sets, OWD, sharing, FLS), automatización (validaciones, flows, Apex, límites de gobierno, bulk 200), datos, UI Lightning con Playwright, tests de Apex y releases. Lo usan probador-salesforce y los mappers.
 ---
 
 # Pruebas en Salesforce

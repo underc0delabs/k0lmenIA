@@ -29,10 +29,15 @@ NPM = _scripts_npm()
 def test_scripts_package_json_existen():
     cmds = json.loads((RAIZ / "package.json").read_text(encoding="utf-8")).get("scripts", {})
     faltan = []
+    refs = 0
     for nombre, cmd in cmds.items():
-        for ref in re.findall(r"'((?:herramientas|scripts)/[^']+\.py)'", cmd):
+        assert "spawnSync" not in cmd, f"{nombre}: los scripts de Python van con node scripts/py.js <script.py>"
+        for ref in re.findall(r"(?:^|\s|')((?:herramientas|scripts)/\S+?\.py)\b", cmd):
+            refs += 1
             if not (RAIZ / ref).exists():
                 faltan.append(f"{nombre} -> {ref}")
+    assert refs >= 30, "no se encontraron los scripts de Python de package.json (¿cambió el formato?)"
+    assert (RAIZ / "scripts" / "py.js").exists()
     assert not faltan, f"scripts de package.json que apuntan a archivos inexistentes: {faltan}"
 
 
@@ -89,3 +94,19 @@ def test_claude_md_corto_y_con_todos_los_agentes():
     assert not faltan, f"agentes que faltan en el índice de CLAUDE.md: {faltan}"
     faltan = [a.stem for a in AGENTES if f"`{a.stem}`" not in referencia]
     assert not faltan, f"agentes que faltan en la tabla de REFERENCIA.md: {faltan}"
+
+
+def test_descripciones_cortas():
+    """El description de cada agente y skill se carga en CADA sesión: que no vuelvan a crecer de más."""
+    import re
+    archivos = AGENTES + sorted((RAIZ / ".claude" / "skills").glob("*/SKILL.md"))
+    total, largos = 0, []
+    for p in archivos:
+        m = re.search(r"^description:\s*(.+)$", p.read_text(encoding="utf-8"), re.M)
+        assert m, f"{p} no tiene description"
+        desc = m.group(1).strip().strip('"')
+        total += len(desc)
+        if len(desc) > 400:
+            largos.append((p.name if p.name != "SKILL.md" else p.parent.name, len(desc)))
+    assert not largos, f"descripciones de más de 400 caracteres: {largos}"
+    assert total < 45_000, f"las descripciones suman {total} caracteres (tope 45.000): acortá las más largas"

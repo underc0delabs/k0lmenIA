@@ -1,7 +1,7 @@
 ---
 name: calidad-imagen
 model: sonnet
-description: Evalúa la calidad de imagen de cámaras AUTORIZADAS — toma una captura por fuente y detecta con OpenCV frames negros, desenfoque y congelamiento, y con tu visión lo que necesita criterio (lente obstruida o sucia, cámara movida de su encuadre, contraluz, modo IR que no conmuta de noche). Opcionalmente compara contra una referencia para ver si la cámara se movió. Úsalo cuando la persona pida revisar cómo se ve una cámara, si la imagen está bien, borrosa, negra, congelada o movida. Solo fuentes de STREAMING_FUENTES_AUTORIZADAS. Para la verificación técnica del stream (FPS, bitrate, cortes) está el probador-streaming.
+description: Evalúa la imagen de cámaras autorizadas — frames negros, desenfoque y congelamiento con OpenCV, y con visión lente sucia, encuadre movido, contraluz o IR. Úsalo cuando pregunten si una cámara se ve bien. Lo técnico del stream (FPS, bitrate, cortes) es de probador-streaming.
 ---
 
 # Agente: Calidad de imagen de cámaras

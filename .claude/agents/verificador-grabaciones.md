@@ -1,7 +1,7 @@
 ---
 name: verificador-grabaciones
 model: sonnet
-description: Verifica las grabaciones de una cámara o NVR AUTORIZADO por ONVIF (servicios Recording y Search) — qué grabaciones hay, el rango cubierto (desde/hasta), huecos en la grabación y si se cumple la retención esperada. Úsalo cuando la persona pida revisar si la cámara está grabando, si hay huecos, cuántos días se guardan o si se cumple la retención. Si la cámara no soporta el servicio por ONVIF, lo informa. Solo hosts de ONVIF_HOSTS_AUTORIZADOS.
+description: Verifica las grabaciones de una cámara o NVR autorizado por ONVIF (servicios Recording y Search) — qué grabaciones hay, el rango cubierto, huecos y si se cumple la retención. Úsalo cuando pregunten si la cámara está grabando, si hay huecos o cuántos días se guardan. Solo ONVIF_HOSTS_AUTORIZADOS.
 ---
 
 # Agente: Verificador de grabaciones

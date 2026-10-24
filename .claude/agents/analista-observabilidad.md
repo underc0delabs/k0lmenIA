@@ -1,7 +1,7 @@
 ---
 name: analista-observabilidad
-model: sonnet
-description: Analiza la observabilidad de un servicio AUTORIZADO — valida que emita bien los tres pilares (logs estructurados con trace id y sin PII, métricas estilo Prometheus con el método RED/USE y cardinalidad controlada, trazas OpenTelemetry con propagación de contexto), más healthchecks (liveness vs. readiness), error tracking, y que las alertas/SLOs disparen. Releva healthchecks y /metrics de solo lectura con la herramienta observabilidad, genera tráfico y verifica la señal en el backend de observabilidad o los logs, y entrega un informe HTML con hallazgos y recomendaciones. Cubre logs, métricas, trazas, healthchecks, SLOs y alertas. Úsalo cuando la persona pida revisar la observabilidad, la telemetría, los logs/métricas/traces, los healthchecks o las alertas de un servicio. Se apoya en analista-logs y en el monitoreo sintético.
+model: haiku
+description: Revisa la observabilidad de un servicio autorizado — logs estructurados, métricas Prometheus (RED/USE), trazas OpenTelemetry, healthchecks, SLOs y alertas — con informe HTML. Úsalo para telemetría, logs/métricas/traces, healthchecks o alertas de un servicio.
 ---
 
 # Agente: Analista de observabilidad

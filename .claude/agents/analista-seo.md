@@ -1,7 +1,7 @@
 ---
 name: analista-seo
 model: sonnet
-description: Analiza el SEO y el GEO (optimización para buscadores y para motores con IA) de un sitio o una página AUTORIZADA — releva con la herramienta seo el SEO técnico (indexabilidad, robots.txt, sitemap, canónicas, meta robots/noindex, redirecciones, hreflang), el on-page (title, meta description, H1, datos estructurados JSON-LD, Open Graph) y el GEO (acceso de los crawlers de IA como GPTBot/ClaudeBot/PerplexityBot, contenido citable, E-E-A-T, llms.txt); deriva los Core Web Vitals al auditor-rendimiento-web y las traducciones/hreflang al analista-traductor, y entrega un informe HTML con hallazgos priorizados y recomendaciones. Cubre SEO técnico, on-page, datos estructurados y GEO para IA. Úsalo cuando la persona pida un análisis SEO, revisar la indexabilidad, datos estructurados, aparecer en AI Overviews/ChatGPT/Perplexity, o GEO. Solo lectura.
+description: Analiza SEO y GEO de un sitio autorizado — indexabilidad, robots, sitemap, canónicas, hreflang, on-page, JSON-LD, acceso de crawlers de IA y contenido citable — con informe HTML. Úsalo para SEO, datos estructurados o aparecer en AI Overviews/ChatGPT/Perplexity. Solo lectura.
 ---
 
 # Agente: Analista de SEO y GEO

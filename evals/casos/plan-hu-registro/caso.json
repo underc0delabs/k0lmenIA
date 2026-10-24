@@ -1,0 +1,35 @@
+{
+  "agente": "estratega-pruebas",
+  "descripcion": "Plan de pruebas del registro (HU-901). Trampas: la edad mínima se contradice (18/16), la contraseña 'segura' no tiene reglas y el texto del email duplicado no está definido. Cada FI-XX tiene que ir como riesgo y condicionar un criterio de entrada; los niveles de riesgo, solo Alto/Medio/Bajo; y no inventar reglas de contraseña.",
+  "pedido": "Usá el agente estratega-pruebas para armar el plan de pruebas de la historia input/historias/HU-901-registro.md. No hay conectores activos: los comentarios de Jira están copiados en la historia.",
+  "requiere": [".claude/agents/estratega-pruebas.md", "scripts/generar_plan.py"],
+  "insumos": [
+    {"desde": "insumos/HU-901-registro.md", "hacia": "input/historias/HU-901-registro.md"}
+  ],
+  "presupuesto_usd": 2,
+  "umbral": 80,
+  "chequeos": [
+    {"id": "archivos", "tipo": "existe", "descripcion": "Deja el JSON y el HTML del plan en output/planes-de-prueba/",
+     "archivos": ["output/planes-de-prueba/plan-HU-901*.json", "output/planes-de-prueba/plan-HU-901*.html"], "min": 2, "peso": 2},
+    {"id": "bilingue", "tipo": "existe", "descripcion": "El plan sale también en inglés",
+     "archivos": ["output/planes-de-prueba/en/plan-HU-901*.html"]},
+    {"id": "fi-como-riesgo", "tipo": "conteo", "descripcion": "Al menos 2 FI-XX distintos aparecen en el plan (como riesgos)",
+     "archivos": ["output/planes-de-prueba/plan-HU-901*.json"], "patron": "FI-\\d{2}", "min": 2, "distintos": true, "peso": 2},
+    {"id": "edad", "tipo": "contiene", "descripcion": "Un riesgo trata la contradicción de la edad mínima",
+     "archivos": ["output/planes-de-prueba/plan-HU-901*.json"], "patrones": ["\"riesgos\"[\\s\\S]*(16|18)[\\s\\S]{0,200}(16|18)|\"riesgos\"[\\s\\S]*edad"], "peso": 2},
+    {"id": "criterio-entrada-fi", "tipo": "contiene", "descripcion": "Los FI-XX abiertos condicionan un criterio de entrada",
+     "archivos": ["output/planes-de-prueba/plan-HU-901*.json"], "patrones": ["\"criterios_entrada\"\\s*:\\s*\\[[^\\]]*(FI-\\d{2}|Falta informaci)"], "peso": 2},
+    {"id": "niveles", "tipo": "no_contiene", "descripcion": "Los niveles de riesgo son exactamente Alto, Medio o Bajo",
+     "archivos": ["output/planes-de-prueba/plan-HU-901*.json"], "patrones": ["\"nivel\"\\s*:\\s*\"(?!(Alto|Medio|Bajo)\")"]},
+    {"id": "preguntas", "tipo": "contiene", "descripcion": "Arma preguntas para el PO",
+     "archivos": ["output/planes-de-prueba/plan-HU-901*.json"], "patrones": ["\"preguntas_po\"\\s*:\\s*\\[[^\\]]*\\?[^\\]]*\\?"]},
+    {"id": "no-inventa-password", "tipo": "no_contiene", "descripcion": "No inventa reglas de contraseña",
+     "archivos": ["output/planes-de-prueba/plan-HU-901*.json"],
+     "patrones": ["(contrase[ñn]a|password)[^\"]{0,80}(m[íi]nimo|al menos)\\s*\\d+\\s*caracteres", "(contrase[ñn]a|password)[^\"]{0,80}may[úu]scula"], "peso": 2}
+  ],
+  "rubrica": [
+    "Los riesgos son concretos de esta historia, no genéricos.",
+    "La mitigación de cada riesgo es una acción, no una intención.",
+    "El alcance separa lo que se prueba de lo que no."
+  ]
+}

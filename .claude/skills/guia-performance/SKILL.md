@@ -1,6 +1,6 @@
 ---
 name: guia-performance
-description: Guía paso a paso para planificar una prueba de performance junto con la persona — objetivo y tipo de prueba (smoke, load, stress, soak, spike), herramienta (k6, Artillery + Playwright o JMeter, con una recomendación justificada), ambiente y alcance, usuarios concurrentes, rampa, duración y tiempo de pensamiento (con cálculos sugeridos), umbrales y plan de ejecución — y deja el plan confirmado para el performance-mapper. Úsalo en la conversación principal cuando la persona pida una prueba de performance, carga, estrés, soak o spike, antes de invocar al performance-mapper, y al cierre para armar el informe final.
+description: Guía de la conversación principal para planificar una prueba de performance con la persona — tipo de prueba, herramienta (k6, Artillery, JMeter), usuarios, rampa, duración y umbrales — y dejar el plan para el performance-mapper. Úsalo antes de una prueba de carga, estrés, soak o spike, y al cierre para el informe.
 ---
 
 # Guía de performance

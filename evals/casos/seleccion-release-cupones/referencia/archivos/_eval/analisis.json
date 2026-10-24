@@ -1,0 +1,9 @@
+{
+  "veredicto": "Correr los 3 casos de cupones y la regresión mínima: alcanza para la 2.4",
+  "veredicto_tono": "ok",
+  "riesgo": "Bajo: el cambio toca solo src/pagos/cupones.ts",
+  "resumen": "La release solo corrige el cupón del carrito. Los casos del registro quedan fuera: las notas aclaran que no cambió.",
+  "ajustes": {},
+  "recomendaciones": [{"accion": "Correr primero HU-870:CP-002", "motivo": "Es el bug que corrige la release", "prioridad": "Alta"}],
+  "proximos_pasos": ["Ejecutar la planilla seleccion.csv"]
+}

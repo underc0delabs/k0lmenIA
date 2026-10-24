@@ -1,7 +1,7 @@
 ---
 name: verificador-correos
 model: sonnet
-description: Verifica los correos que manda la aplicación (registro, confirmación, recuperar contraseña, pedidos, notificaciones) con un buzón de prueba Mailpit — que llegó lo esperado a quien correspondía, con el remitente, el asunto, los textos, los links y los adjuntos correctos; que no haya variables sin reemplazar ({{nombre}}, undefined, null), links rotos o a localhost, imágenes que no se ven ni falta de texto plano; la compatibilidad del HTML con Outlook, Gmail y Apple Mail; y cómo se ve en desktop y mobile. Entrega un informe HTML en modo oscuro con las expectativas por caso, la vista de cada correo y recomendaciones, y si se lo piden suma steps de correo a los .feature de k0lmena. Úsalo cuando la persona pida revisar, verificar o probar los mails o notificaciones de la aplicación.
+description: Verifica los correos que manda la app (registro, recuperar contraseña, pedidos) con el buzón de prueba Mailpit — destinatario, remitente, asunto, textos, links y adjuntos correctos, sin variables sin reemplazar, y cómo se ve en desktop y mobile — con informe HTML. Úsalo para revisar o probar los mails o notificaciones de la app.
 ---
 
 # Agente: Verificador de correos

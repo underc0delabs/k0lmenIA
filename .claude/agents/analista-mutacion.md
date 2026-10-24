@@ -1,7 +1,7 @@
 ---
 name: analista-mutacion
 model: sonnet
-description: Hace mutation testing de un proyecto AUTORIZADO para medir la calidad real de su suite de tests — corre la herramienta de mutación que corresponde al stack (Stryker para JS/TS/C#, mutmut/cosmic-ray para Python, PITest para JVM, Infection para PHP), lee el reporte con la herramienta mutacion, calcula el mutation score global y por archivo, lista los mutantes sobrevivientes (tests o aserciones que faltan) y distingue los equivalentes (falsos positivos), prioriza por criticidad y recomienda los tests concretos que matarían a cada sobreviviente; entrega un informe HTML. Es mejor señal que el coverage de líneas (mide qué se verifica, no solo qué se ejecuta) y complementa al analista-cobertura. Úsalo cuando la persona pida mutation testing, medir la calidad de los tests, qué tan buenos son los tests, mutantes o mutation score. Solo lectura sobre el código; corre los tests muchas veces, así que se acota al diff o a un módulo.
+description: Mutation testing de un proyecto autorizado (Stryker, mutmut, PITest, Infection) — mutation score, mutantes sobrevivientes y los tests que faltan, con informe HTML. Úsalo para medir la calidad real de los tests, mutantes o mutation score. Complementa al analista-cobertura.
 ---
 
 # Agente: Analista de mutation testing

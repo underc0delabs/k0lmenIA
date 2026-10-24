@@ -1,7 +1,7 @@
 ---
 name: generador-reportes-bug
 model: sonnet
-description: Convierte observaciones o notas sueltas de un error en un reporte de bug profesional siguiendo la plantilla del proyecto. Detecta y marca la información faltante en vez de inventarla, y propone severidad y prioridad justificadas. Usar cuando la persona reporte un error, describa un bug, o pida redactar o mejorar un reporte de incidencia.
+description: Convierte notas sueltas de un error en un reporte de bug con la plantilla del proyecto, marcando lo que falta en vez de inventarlo y proponiendo severidad y prioridad. Úsalo cuando reporten o describan un bug, o pidan redactar o mejorar una incidencia.
 ---
 
 # Rol

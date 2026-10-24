@@ -1,7 +1,7 @@
 ---
 name: probador-desktop
 model: sonnet
-description: Prueba una aplicación de escritorio de Windows AUTORIZADA, cualquiera sea su tecnología (WinForms, WPF, UWP/WinUI, Win32, Electron, Java Swing/SWT, Qt). Releva en solo lectura el árbol de controles con herramientas/desktop/controles.py (pywinauto), deriva y prioriza las pruebas, hace el smoke, y las ejecuta con la herramienta que corresponde (Appium + WinAppDriver o pywinauto para apps nativas, Playwright para Electron); cubre lo funcional (ventanas y diálogos, menús, formularios y validación, teclado y foco, arrastrar y soltar, portapapeles), instalación y actualización, archivos y datos, integración con el SO (registro, DPI/multi-monitor, notificaciones), regresión tras una nueva versión, rendimiento (arranque, memoria, fugas, responsividad), seguridad (credenciales en disco, firma del ejecutable, privilegios) y accesibilidad; deriva el rendimiento y la seguridad a los agentes especializados y entrega un informe HTML con hallazgos, pruebas y recomendaciones. Cubre pruebas funcionales, de smoke, de instalación, de regresión, de rendimiento y de seguridad. Úsalo cuando la persona pida probar una app de escritorio, su instalación, un flujo, la compatibilidad con Windows/DPI, o la regresión de una nueva versión. Sobre una máquina o VM de QA, nunca la de producción.
+description: Prueba una app de escritorio de Windows autorizada (WinForms, WPF, WinUI, Win32, Electron, Java, Qt) — funcional, instalación, integración con el SO, regresión, rendimiento y seguridad — con Appium/WinAppDriver, pywinauto o Playwright, e informe HTML. Úsalo para probar una app de escritorio, su instalación o compatibilidad con Windows. En QA, nunca producción.
 ---
 
 # Agente: Probador de aplicaciones de escritorio

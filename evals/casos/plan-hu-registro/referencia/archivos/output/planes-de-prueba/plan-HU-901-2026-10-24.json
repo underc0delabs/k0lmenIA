@@ -1,0 +1,20 @@
+{
+  "titulo": "Plan de pruebas — Registro de cuenta",
+  "historia": "HU-901",
+  "fecha": "2026-10-24",
+  "version": "1.0",
+  "objetivos": ["Verificar el alta de cuenta con datos válidos e inválidos", "Cubrir los límites de nombre y usuario"],
+  "alcance": {"incluye": ["Formulario de registro", "Validaciones de campos", "Mensajes"], "excluye": ["Activación por correo (otra historia)"]},
+  "enfoque": "Funcional con técnicas de valores límite y clases de equivalencia; exploratoria corta sobre los mensajes.",
+  "tipos_prueba": ["Funcional", "Regresión", "Exploratoria"],
+  "riesgos": [
+    {"descripcion": "Falta información: FI-01 — la edad mínima es 18 en la descripción y 16 en el CA4", "nivel": "Alto", "mitigacion": "Confirmar con el PO antes de diseñar los casos de edad"},
+    {"descripcion": "Falta información: FI-02 — la contraseña segura (CA3) no tiene reglas", "nivel": "Alto", "mitigacion": "Pedir las reglas en el refinamiento"},
+    {"descripcion": "Falta información: FI-03 — el texto del error de email duplicado (CA2) no está definido", "nivel": "Medio", "mitigacion": "Pedir el texto o la referencia de diseño"}
+  ],
+  "datos_entorno": ["Ambiente de QA con base limpia", "Emails de prueba en el dominio test.ar"],
+  "criterios_entrada": ["FI-01 y FI-02 resueltos por el PO (Falta información)", "Ambiente de QA disponible"],
+  "criterios_salida": ["Todos los casos críticos aprobados", "Sin bugs abiertos de severidad Crítica o Alta"],
+  "supuestos": ["El correo de activación se prueba en otra historia"],
+  "preguntas_po": ["¿La edad mínima es 16 o 18?", "¿Qué reglas tiene la contraseña segura?", "¿Cuál es el texto del error de email duplicado?"]
+}

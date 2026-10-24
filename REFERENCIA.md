@@ -509,6 +509,7 @@ Lo que antes estaba en `CLAUDE.md` y no hace falta en cada conversación: la tab
 
 ## Scripts y herramientas
 
+- `scripts/py.js` → lanzador de los `npm run` de Python (`node scripts/py.js <script.py> [args]`): elige `python` o `python3` y devuelve el código de salida del script.
 - `scripts/generar_casos.py` → arma la planilla `.xlsx` y el `.md` de casos de prueba. Acepta `--limpiar` para borrar su JSON de entrada al terminar (cross-platform, sin depender de `rm`).
 - `scripts/formatear_tablas.py` → alinea las tablas de cualquier `.md` (lo usan todos los agentes que generan informes).
 - `scripts/correr_newman.py` → corre una colección de Postman, Bruno o Insomnia con el token y la URL del `.env` (`--datos` para iterar con un CSV/JSON) y genera su reporte (`ejecutor-api`); un request sin `pm.test` queda Bloqueado ("Sin validaciones").

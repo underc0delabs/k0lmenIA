@@ -1,0 +1,16 @@
+{
+  "veredicto": "HU-901 no está lista para cerrar: CA3 y CA4 no tienen casos",
+  "veredicto_tono": "bad",
+  "resumen": "Tres de los cinco criterios tienen casos. CA3 (contraseña segura) y CA4 (edad mínima) no, y ninguno está automatizado.",
+  "notas": {
+    "C-01": "CA3 necesita las reglas de la contraseña segura: pedirlas al PO antes de escribir casos.",
+    "C-02": "CA4 es la contradicción de la edad (16 en el CA4, 18 en la descripción): confirmar con el PO antes de escribir casos.",
+    "C-07": "CP-005 no cubre ningún criterio: vincularlo a un criterio o sacarlo del alcance."
+  },
+  "descartados": [],
+  "recomendaciones": [
+    {"accion": "Resolver la edad mínima (CA4) y las reglas de contraseña (CA3) con el PO", "motivo": "Sin eso, cualquier caso inventa la regla", "prioridad": "Alta"},
+    {"accion": "Escribir los casos de CA3 y CA4 con generador-casos-manuales", "motivo": "Hoy no tienen casos", "prioridad": "Alta"}
+  ],
+  "proximos_pasos": ["Refinamiento con el PO", "Casos de CA3 y CA4", "Automatizar los críticos"]
+}

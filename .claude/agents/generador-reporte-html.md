@@ -1,7 +1,7 @@
 ---
 name: generador-reporte-html
 model: haiku
-description: Genera un reporte HTML visual (dashboard) de los resultados de una ejecución de pruebas — indicadores, gráfico de aprobados/fallidos/bloqueados, resultados por prioridad y tabla de detalle. Úsalo cuando la persona pida un reporte, dashboard o informe de resultados en HTML, o quiera ver el resultado de una corrida de forma visual. Es el reporte de UNA corrida; para el informe final de toda la ronda o historia (con go/no-go) está generador-reporte-cierre.
+description: Arma el reporte HTML (dashboard) de UNA corrida de pruebas — indicadores, aprobados/fallidos/bloqueados, prioridad y detalle. Úsalo para ver el resultado de una corrida en HTML. El informe final de toda la ronda con go/no-go es de generador-reporte-cierre.
 ---
 
 # Agente: Generador de reporte HTML

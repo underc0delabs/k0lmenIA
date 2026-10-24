@@ -1,0 +1,2 @@
+{"titulo": "Release 2.4 (PR #88)", "historias": ["HU-870"], "palabras": ["cupón", "descuento", "carrito"],
+ "archivos": ["src/pagos/cupones.ts"], "texto": "Se corrige la aplicación del cupón en el carrito: el descuento ya no se acumula."}

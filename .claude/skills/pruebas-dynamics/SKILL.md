@@ -1,6 +1,6 @@
 ---
 name: pruebas-dynamics
-description: Cómo probar Microsoft Dynamics 365 y, por extensión, otros CRM/ERP de bajo código — entornos y sandboxes (Dataverse, sandbox vs. producción, soluciones administradas/no administradas y su despliegue), seguridad (roles de seguridad, unidades de negocio, equipos, acceso por campo/column security, jerarquía), modelo de datos (tablas/entidades, columnas, relaciones, opciones/choices), lógica (business rules, reglas de validación, flujos de Power Automate, plugins y workflows, Business Process Flows, cálculos y roll-ups), formularios y vistas del model-driven app y las Canvas/Power Apps, la Web API de Dataverse (OData v4, solo lectura para relevar), FetchXML, duplicados, auditoría, procesos de negocio de punta a punta (Sales — lead→oportunidad→cotización→pedido; Customer Service — caso→cola→SLA→resolución; Field Service), integraciones y portales, cómo probar por rol en la UI con Playwright, y la idea general aplicable a otros CRM/ERP (Salesforce ya tiene su skill, SAP el suyo; Oracle, NetSuite, Zoho, Odoo siguen el mismo patrón — entornos no productivos, roles, lógica de negocio, procesos end-to-end y API de lectura). Lo usa el probador-dynamics.
+description: El cómo de probar Dynamics 365 y otros CRM/ERP de bajo código — entornos y soluciones, seguridad (roles, unidades de negocio, column security), lógica (business rules, flows, plugins, BPF, roll-ups), formularios, la Web API de Dataverse y procesos end-to-end. Lo usa el probador-dynamics.
 ---
 
 # Pruebas de Microsoft Dynamics 365 (y otros CRM/ERP)

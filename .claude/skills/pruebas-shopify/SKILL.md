@@ -1,6 +1,6 @@
 ---
 name: pruebas-shopify
-description: Cómo probar una tienda Shopify — tiendas de desarrollo vs. reales, tienda con contraseña, temas (Online Store 2.0, secciones y bloques, vista previa de un tema sin publicar, Theme Check), errores de Liquid y traducciones faltantes, apps y app embeds, checkout de Shopify (extensibilidad, invitado y cuentas de cliente), Bogus Gateway y modo de prueba de Shopify Payments, Markets (moneda, idioma, impuestos y precios por mercado), perfiles de envío y ubicaciones, descuentos automáticos y por código, botones de pago acelerado (Shop Pay, Apple Pay, Google Pay), el retiro de checkout.liquid, pedidos de prueba y posventa (reembolso con reposición de stock, edición, cancelación), tarjetas de regalo, suscripciones, Shopify Flow, B2B y POS, restos de apps desinstaladas, metacampos, búsqueda y filtros, redirecciones, aranceles y redondeo por mercado, webhooks con HMAC, la Admin API GraphQL de solo lectura, los endpoints públicos (/products.json, /cart.js), eventos de cliente y píxeles, cómo automatizarlo con Playwright (contraseña, vista previa, captcha), bugs típicos y preguntas para el PO. Lo usan el probador-shopify y los mappers cuando automatizan una tienda Shopify.
+description: El cómo de probar Shopify — tiendas de desarrollo y con contraseña, temas (OS 2.0, Theme Check), Liquid y traducciones, checkout y Bogus Gateway, Markets, envíos, descuentos, webhooks con HMAC y la Admin API de lectura. Lo usan probador-shopify y los mappers.
 ---
 
 # Pruebas en Shopify

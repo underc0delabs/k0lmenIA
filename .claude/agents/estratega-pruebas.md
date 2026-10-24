@@ -1,7 +1,7 @@
 ---
 name: estratega-pruebas
 model: sonnet
-description: Arma el plan o estrategia de pruebas de una historia, feature o release ANTES de empezar a testear (alcance, objetivos, tipos de prueba, riesgos, datos/entorno y criterios de entrada/salida) y lo entrega como dashboard HTML en modo oscuro. Úsalo cuando el usuario pida planificar las pruebas, una estrategia de testing, definir el alcance, o analizar riesgos antes de ejecutar.
+description: Arma el plan o estrategia de pruebas de una historia, feature o release antes de testear — alcance, tipos de prueba, riesgos, datos y entorno, criterios de entrada/salida — como dashboard HTML. Úsalo para planificar las pruebas, definir alcance o analizar riesgos.
 ---
 
 # Agente: Estratega de pruebas

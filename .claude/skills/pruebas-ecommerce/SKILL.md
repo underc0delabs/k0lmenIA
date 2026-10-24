@@ -1,6 +1,6 @@
 ---
 name: pruebas-ecommerce
-description: Cómo probar una tienda online sin importar la plataforma — catálogo y búsqueda, fichas y variantes, precios e importes (redondeo, moneda, precio tachado), stock y sobreventa, carrito, checkout (invitado y con cuenta), impuestos, envíos y zonas, cupones y descuentos, pagos con la pasarela en modo de prueba, estados del pedido, reembolsos y devoluciones, correos transaccionales, multi-moneda e idioma, mobile, SEO de la ficha y legales; lo que suele quedar afuera (página de gracias y doble pedido, carrito persistente, concurrencia por la última unidad, tarjetas de regalo, productos digitales, suscripciones, B2B, cuotas, monedas sin decimales, facturación, analítica y píxeles, feeds, consentimiento de cookies); técnicas de diseño por área, datos de prueba, smoke test, regresión post-deploy y antes de una campaña, rendimiento (qué medir en una tienda) y seguridad de la tienda (manipulación de precio y cantidad, IDOR en pedidos y facturas, abuso de cupones y vales, firma de webhooks, pasarela en modo real, panel o debug expuestos, PII), cómo reportar un bug de tienda, preguntas para el PO, qué agentes de k0lmenIA cubren cada parte y los bugs típicos. Lo usan el probador-shopify, el probador-wordpress, el probador-prestashop y el probador-vtex, y los generadores de casos cuando la historia es de una tienda.
+description: El cómo de probar una tienda online de cualquier plataforma — catálogo, variantes, precios y redondeo, stock, carrito, checkout, impuestos, envíos, cupones, pagos de prueba, pedidos, reembolsos, correos, mobile y seguridad de la tienda. Lo usan probador-shopify, -wordpress, -prestashop, -vtex y los generadores cuando la historia es de una tienda.
 ---
 
 # Pruebas de e-commerce
@@ -326,3 +326,27 @@ Cuando la historia no lo dice, son `FI-XX`:
 - Oferta programada que empieza o termina a otra hora (zona horaria del servidor).
 - Carrito que se pierde o se duplica al iniciar sesión.
 - Checkout que se rompe después de actualizar el tema o un plugin/app.
+
+## 14. Referencia común de los probadores de tienda (`probador-prestashop`, `probador-vtex`, …)
+
+**Interpretar el relevamiento** (`<plataforma>.json` del script): leé solo `hallazgos`, `sugerencias`, `vidriera.chequeos` y las `tablas` que toca el alcance. Revisá `errores`: una consulta que falló por permiso de la clave o la app deja esa parte sin relevar, y se dice. Sin credenciales de administración solo hay vidriera (y catálogo público).
+
+**Ejecución en el navegador**: Playwright MCP con el skill `ejecucion-e2e`, en **mobile y desktop**, siguiendo las pautas de Playwright del skill de la plataforma. Una captura por hallazgo en `output/<plataforma>/<HU o host>/capturas/`. En cada compra de prueba, **la cuenta tiene que cerrar** (sección 4) en todas las vistas: carrito, checkout, pasarela, pedido en el back-office y correo.
+
+**Rendimiento y seguridad**, si entran en el alcance: el rendimiento al `auditor-rendimiento-web` (portada, categoría con muchos productos y ficha) y la carga al `performance-mapper`, planificada con `guia-performance`; la seguridad al `analista-seguridad` / `pentester-web`, con lo que dejó el relevamiento.
+
+**`analisis.json`** (en `output/<plataforma>/<HU o host>/`, esquema del encabezado de `scripts/generar_informe_ecommerce.py`): `veredicto`, `veredicto_tono`, `resumen`, `pruebas` (cada una con `id` `CP-XXX` de la historia si existe, área, caso, dispositivo, resultado de la escala del proyecto, detalle y evidencia), `hallazgos` propios, `descartados` (del relevamiento, con motivo), `recomendaciones`, `proximos_pasos` y `falta_informacion`. Se regenera con:
+
+```bash
+python scripts/generar_informe_ecommerce.py output/<plataforma>/<HU o host>/<plataforma>.json output/<plataforma>/<HU o host>/informe-<plataforma>.html --analisis output/<plataforma>/<HU o host>/analisis.json
+```
+
+**Bugs**: cada falla confirmada se redacta con el `generador-reportes-bug`, con los datos de la plataforma (versión o cuenta, tema, módulo o app, tienda o canal), el dispositivo y el número del pedido de prueba.
+
+**Respuesta**: el ambiente (staging, copia local, workspace de QA o producción), los hallazgos críticos y altos, las pruebas corridas con su resultado, los pedidos y clientes `QA-` creados (para limpiarlos), lo que no se pudo relevar y la ruta del informe; si conviene automatizar la regresión, el `web-mapper`.
+
+**Antes de entregar**:
+- La tienda estaba en `ECOMMERCE_URLS_AUTORIZADAS` y no se cambió nada de su configuración.
+- Los pedidos de prueba fueron con la pasarela en modo de prueba (sandbox o medios que no cobran), confirmados, y están listados para limpiarlos.
+- Lo esperado salió de la historia o del negocio; lo que no estaba definido quedó como `FI-XX`.
+- `analisis.json` es JSON válido, con las severidades y resultados de la escala del proyecto, y el informe se regeneró sin error.

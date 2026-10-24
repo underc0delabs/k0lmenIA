@@ -1,0 +1,18 @@
+{
+  "titulo": "Revisión de código — repo-demo",
+  "origen": {"repo": "repo-demo", "proveedor": "local"},
+  "escaneres": ["reglas k0lmenIA", "secretos (integrado)"],
+  "decision": "Pedir cambios",
+  "veredicto": "La edad mínima no se valida y hay credenciales versionadas",
+  "veredicto_tono": "bad",
+  "resumen": "EDAD_MINIMA está declarada pero el esquema de registro no la usa: no se valida la edad. Además, config/produccion.env tiene credenciales versionadas (valor redactado).",
+  "hallazgos": [
+    {"id": "RC-01", "severidad": "Alta", "categoria": "Confiabilidad", "archivo": "src/registro/validaciones.ts", "linea": 20,
+     "titulo": "EDAD_MINIMA no se usa", "texto": "La constante EDAD_MINIMA se declara pero no se usa en registroSchema: la edad no se valida.",
+     "impacto": "Se pueden registrar menores de edad.", "recomendacion": "Validar fechaNacimiento contra EDAD_MINIMA con un refine."},
+    {"id": "RC-02", "severidad": "Crítica", "categoria": "Seguridad", "archivo": "config/produccion.env", "linea": 3,
+     "titulo": "Credenciales versionadas", "texto": "config/produccion.env contiene PAGOS_API_KEY y DB_PASSWORD (valor redactado).",
+     "impacto": "Exposición de secretos de producción.", "recomendacion": "Sacarlas del repo, rotarlas y usar variables de entorno.", "cwe": "CWE-798"}
+  ],
+  "proximos_pasos": ["Agregar la validación de edad", "Rotar las credenciales"]
+}

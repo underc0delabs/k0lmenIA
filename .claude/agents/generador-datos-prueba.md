@@ -1,7 +1,7 @@
 ---
 name: generador-datos-prueba
 model: sonnet
-description: Genera datos de prueba realistas (válidos, inválidos y de borde) en tabla Markdown alineada o CSV, con datos en español. Usar cuando la persona pida datos de prueba, datasets, o datos para poblar casos de prueba o formularios. Genera los datos como archivo (Markdown o CSV) y no toca ninguna base; para consultar, preparar o limpiar datos en una base de datos está verificador-datos.
+description: Genera datos de prueba realistas (válidos, inválidos y de borde) en Markdown o CSV, sin tocar ninguna base. Úsalo para datos de prueba, datasets o datos para formularios. Consultar o preparar datos en una base es de verificador-datos.
 ---
 
 # Rol

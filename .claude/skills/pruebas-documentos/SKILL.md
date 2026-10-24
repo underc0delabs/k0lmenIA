@@ -1,6 +1,6 @@
 ---
 name: pruebas-documentos
-description: Cómo probar documentos generados por la aplicación (PDF, Excel/XLSX, CSV, Word) — facturas, comprobantes, reportes, estados de cuenta, etiquetas, contratos; qué validar — que los datos sean los correctos (contra la fuente/lo esperado), que los cálculos y totales cierren, que no queden placeholders ni variables de plantilla sin reemplazar (ni Lorem ipsum ni TODO), formato y locale (fecha, moneda, separadores, idioma), estructura y layout (páginas, encabezados/pies, saltos, tablas que no se cortan), caracteres y encoding (acentos, Unicode, emojis), metadata (título, autor, fecha), seguridad (PDF con contraseña o firma digital, sin datos sensibles de más), accesibilidad del PDF (tagged PDF, orden de lectura), tamaño del archivo, multipágina y multi-hoja, y la consistencia entre lo que se ve en la UI y lo que sale en el documento; cómo automatizar (extraer texto/datos del PDF con pypdf y del Excel con openpyxl con la herramienta documentos, y comparar con lo esperado), bugs típicos y preguntas para el PO. Lo usa el probador-documentos.
+description: El cómo de probar documentos generados (PDF, Excel, CSV, Word) — datos correctos, cálculos, placeholders sin reemplazar, formato/locale, layout, encoding, metadata, seguridad y consistencia con la UI — extrayendo con pypdf/openpyxl. Lo usa el probador-documentos.
 ---
 
 # Pruebas de documentos generados

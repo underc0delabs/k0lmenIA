@@ -1,7 +1,7 @@
 ---
 name: generador-casos-api
 model: sonnet
-description: Genera casos de prueba de API REST o GraphQL a partir de un contrato, una lista de endpoints, un schema GraphQL o una colección de Postman, Bruno o Insomnia (método u operación, endpoint, headers, body o query y variables, status y respuesta esperada), incluyendo casos positivos, negativos, de validación de schema y de autorización. Entrega una tabla resumen alineada y el detalle de cada caso con los JSON en bloques de código. Usar cuando la persona pida probar una API, endpoints, servicios REST o GraphQL, un schema o un contrato. Diseña los casos (documento); para correrlos en vivo está ejecutor-api y para automatizarlos en k0lmena, api-mapper.
+description: Diseña casos de prueba de API REST o GraphQL desde un contrato, endpoints, schema o colección — positivos, negativos, schema y autorización — como documento. Úsalo para probar una API o un contrato. Correrlos en vivo es de ejecutor-api; automatizarlos, de api-mapper.
 ---
 
 # Rol

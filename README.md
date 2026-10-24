@@ -56,7 +56,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 
 <br>
 
-[**📖 Documentación web**](https://underc0delabs.github.io/k0lmenIA/) · [**📄 Documentación en PDF**](docs/k0lmenIA-documentacion.pdf) · [**🇬🇧 English**](https://underc0delabs.github.io/k0lmenIA/en/) ([PDF](docs/k0lmenIA-documentation.pdf)) · [**🚀 Empezar**](#-instalación) · [**🌐 qarmy.ar**](https://qarmy.ar) · [**▶️ YouTube**](https://www.youtube.com/@QARMY-UC?sub_confirmation=1) · [**💬 WhatsApp**](https://whatsapp.com/channel/0029VaSzkgD1CYoTmiX8Uv26)
+[**📖 Documentación web**](https://underc0delabs.github.io/k0lmenIA/) · [**📄 Documentación en PDF**](https://github.com/underc0delabs/k0lmenIA/releases/download/docs/k0lmenIA-documentacion.pdf) · [**🇬🇧 English**](https://underc0delabs.github.io/k0lmenIA/en/) ([PDF](docs/k0lmenIA-documentation.pdf)) · [**🚀 Empezar**](#-instalación) · [**🌐 qarmy.ar**](https://qarmy.ar) · [**▶️ YouTube**](https://www.youtube.com/@QARMY-UC?sub_confirmation=1) · [**💬 WhatsApp**](https://whatsapp.com/channel/0029VaSzkgD1CYoTmiX8Uv26)
 
 </div>
 
