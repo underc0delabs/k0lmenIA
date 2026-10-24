@@ -13,7 +13,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const RAIZ = path.resolve(__dirname, '..', '..', '..', '..');
+// La sesión (.auth/) es del proyecto: ver ../rutas.js.
+const { PROYECTO: RAIZ } = require('../rutas');
 const CARPETA = path.join(RAIZ, '.auth');
 const NOMBRE_VALIDO = /^[\w-]+$/;
 

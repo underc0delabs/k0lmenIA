@@ -25,7 +25,8 @@ const path = require('path');
 const navegadorComun = require('../navegador/navegador');
 const { archivar } = require('../historial/historial.js');
 
-const RAIZ = path.resolve(__dirname, '..', '..', '..', '..');
+// Datos (output/, input/, .auth/) en el proyecto y scripts de Python en el código de k0lmenIA: ver ../rutas.js.
+const { PROYECTO: RAIZ, CODIGO } = require('../rutas');
 const desde = (p) => path.resolve(process.env.INIT_CWD || process.cwd(), p); // npm run cambia el cwd a herramientas/k0lmena
 const GENERADOS = ['correos.json', 'analisis.json', 'informe-correos.html', 'capturas', 'eml'];
 const SEV_ORDEN = { 'Crítica': 0, 'Alta': 1, 'Media': 2, 'Baja': 3 };
@@ -247,7 +248,7 @@ async function capturas(browser, html, base) {
 
 function generarInforme(carpeta) {
   const py = process.platform === 'win32' ? 'python' : 'python3';
-  const r = require('child_process').spawnSync(py, [path.join(RAIZ, 'scripts', 'generar_informe_correos.py'),
+  const r = require('child_process').spawnSync(py, [path.join(CODIGO, 'scripts', 'generar_informe_correos.py'),
     path.join(carpeta, 'correos.json'), path.join(carpeta, 'informe-correos.html')], { encoding: 'utf8' });
   if (r.status !== 0) {
     const motivo = (r.stderr || r.error || '').toString().trim().split(/\r?\n/).pop();

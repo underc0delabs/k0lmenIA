@@ -33,7 +33,8 @@ const { archivar } = require('../historial/historial.js');
 const { normalizar, slug, sello, NO_RECORRER, ARCHIVO, recorrerScroll, cargar } = require('../explorador/explorar.js');
 const visual = require('../visual/comparar.js');
 
-const RAIZ = path.resolve(__dirname, '..', '..', '..', '..');
+// Datos (output/, input/, .auth/) en el proyecto y scripts de Python en el código de k0lmenIA: ver ../rutas.js.
+const { PROYECTO: RAIZ, CODIGO } = require('../rutas');
 const desde = (p) => path.resolve(process.env.INIT_CWD || process.cwd(), p); // npm run cambia el cwd a herramientas/k0lmena
 const GENERADOS = ['actual', 'diferencias', 'recortes', 'pixel-perfect.json', 'analisis.json', 'informe-pixel-perfect.html'];
 const SEV_ORDEN = { 'Crítica': 0, 'Alta': 1, 'Media': 2, 'Baja': 3 };
@@ -212,7 +213,7 @@ function hallazgosDe(p, a) {
 
 function generarInforme(carpeta) {
   const py = process.platform === 'win32' ? 'python' : 'python3';
-  const r = require('child_process').spawnSync(py, [path.join(RAIZ, 'scripts', 'generar_informe_pixel_perfect.py'),
+  const r = require('child_process').spawnSync(py, [path.join(CODIGO, 'scripts', 'generar_informe_pixel_perfect.py'),
     path.join(carpeta, 'pixel-perfect.json'), path.join(carpeta, 'informe-pixel-perfect.html')], { encoding: 'utf8' });
   if (r.status !== 0) {
     const motivo = (r.stderr || r.error || '').toString().trim().split(/\r?\n/).pop();

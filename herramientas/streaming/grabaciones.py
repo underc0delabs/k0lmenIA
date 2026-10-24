@@ -30,6 +30,7 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parents[2]
 
 
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 def salir(msg, codigo=2):
     print(msg, file=sys.stderr)
     sys.exit(codigo)
@@ -164,7 +165,7 @@ def main():
         if input("¿Confirmás? [s/N] ").strip().lower() not in ("s", "si", "sí", "y", "yes"):
             salir("Cancelado.", 1)
 
-    carpeta = RAIZ / "output" / "streaming" / f"grabaciones-{args.historia or args.host}"
+    carpeta = PROYECTO / "output" / "streaming" / f"grabaciones-{args.historia or args.host}"
     carpeta.mkdir(parents=True, exist_ok=True)
     try:
         sys.path.insert(0, str(RAIZ / "scripts"))

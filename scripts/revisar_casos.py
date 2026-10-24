@@ -24,6 +24,7 @@ Además calcula el tiempo estimado de ejecución manual de cada caso (scripts/es
 Deja output/revision-casos/<HU o nombre>/ con revision.json e informe-revision.html; la revisión anterior
 pasa a historial/ (se guardan las últimas 5).
 """
+import os
 import argparse
 import datetime
 import glob
@@ -34,6 +35,7 @@ import sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 sys.path.insert(0, str(RAIZ / "scripts"))
 sys.path.insert(0, str(RAIZ / "scripts" / "gestion"))
 import _historial  # noqa: E402
@@ -154,7 +156,7 @@ def origenes(a):
     if a.origen:
         return [Path(x.strip()) for x in a.origen.split(",") if x.strip()]
     hu = a.historia
-    base = RAIZ / "output" / "casos-de-prueba"
+    base = PROYECTO / "output" / "casos-de-prueba"
     if hu:
         return [Path(x) for x in sorted(glob.glob(str(base / "manuales" / f"casos-{hu}.xlsx")) + glob.glob(str(base / "bdd" / f"{hu}*.feature")))]
     return [Path(x) for x in sorted(glob.glob(str(base / "manuales" / "casos-HU-*.xlsx")) + glob.glob(str(base / "bdd" / "*.feature")))]
@@ -175,7 +177,7 @@ def revisar(archivos):
             hu = next((t for t in tags if re.fullmatch(r"HU-\d+", t)), m.group(1).upper() if m else "SIN-HU")
             c["historia"] = hu
             try:
-                c["archivo"] = f.resolve().relative_to(RAIZ).as_posix()
+                c["archivo"] = f.resolve().relative_to(PROYECTO).as_posix()
             except ValueError:
                 c["archivo"] = str(f)
             casos.append(c)
@@ -230,7 +232,7 @@ def main():
     a = ap.parse_args()
     a.historia = a.historia.upper() if a.historia else None
     nombre = a.nombre or a.historia or "todos"
-    carpeta = Path(a.salida) if a.salida else RAIZ / "output" / "revision-casos" / nombre
+    carpeta = Path(a.salida) if a.salida else PROYECTO / "output" / "revision-casos" / nombre
     datos_arch = carpeta / "revision.json"
     if not a.solo_informe:
         archivos = origenes(a)

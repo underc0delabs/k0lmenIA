@@ -74,6 +74,7 @@ Esquema del JSON (todo opcional salvo "proyecto"):
   "faltantes": ["No hay conector de Figma: los diseños no se revisaron."]
 }
 """
+import os
 import argparse
 import json
 import re
@@ -84,6 +85,7 @@ from datetime import datetime
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 sys.path.insert(0, str(RAIZ / "scripts"))
 
 ESTADO_FUENTE = {"leida": ("Leída", "ok"), "parcial": ("Parcial", "aviso"), "no_accesible": ("No accesible", "falta")}
@@ -949,7 +951,7 @@ def main(argv=None):
     ap.add_argument("investigacion_json")
     ap.add_argument("--salida", help="carpeta de salida (por defecto, la del JSON)")
     ap.add_argument("--sin-historial", action="store_true", help="no guarda la copia en historial/ ni compara")
-    ap.add_argument("--input", default=str(RAIZ / "input" / "documentacion"),
+    ap.add_argument("--input", default=str(PROYECTO / "input" / "documentacion"),
                     help="carpeta de la documentación del proyecto donde se deja lo relevado (por defecto input/documentacion)")
     ap.add_argument("--sin-input", action="store_true", help="no deja lo relevado en input/documentacion/")
     a = ap.parse_args(argv)

@@ -24,6 +24,7 @@ Qué hace:
 Salida en output/ejecuciones/: reporte-<HU o API>-<fecha-hora>.html y _resultados-<HU o API>-<fecha-hora>.json.
 El token nunca se escribe en archivos ni en el reporte.
 """
+import os
 import argparse
 import datetime
 import json
@@ -34,11 +35,12 @@ import sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 sys.path.insert(0, str(RAIZ / "scripts"))
 from _env import leer_env  # noqa: E402
 import convertir_coleccion  # noqa: E402
 
-SALIDA = RAIZ / "output" / "ejecuciones"
+SALIDA = PROYECTO / "output" / "ejecuciones"
 
 
 def newman():
@@ -147,8 +149,8 @@ def _correr(a, coleccion, env, crudo, resultados, reporte):
     casos = datos.get("casos", [])
     cuenta = {e: sum(1 for c in casos if c.get("estado") == e) for e in ("Aprobado", "Fallido", "Bloqueado")}
     print(f"\nResultado: {len(casos)} requests · {cuenta['Aprobado']} aprobados · {cuenta['Fallido']} fallidos · {cuenta['Bloqueado']} bloqueados")
-    print(f"Reporte:    {reporte.relative_to(RAIZ).as_posix()}")
-    print(f"Resultados: {resultados.relative_to(RAIZ).as_posix()}")
+    print(f"Reporte:    {reporte.relative_to(PROYECTO).as_posix()}")
+    print(f"Resultados: {resultados.relative_to(PROYECTO).as_posix()}")
 
 
 if __name__ == "__main__":

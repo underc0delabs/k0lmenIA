@@ -1,0 +1,197 @@
+#!/usr/bin/env node
+// k0lmenia: los comandos de k0lmenIA cuando se usa como plugin de Claude Code.
+//
+// Con el plugin habilitado, Claude Code pone esta carpeta (bin/) en el PATH. Los agentes y skills del plugin
+// usan `k0lmenia <comando>` donde en el repo clonado dicen `npm run <comando>` o `python scripts/<x>.py`:
+//
+//   k0lmenia init [--sin-npm]          prepara el proyecto: input/, output/, .env, .gitignore y k0lmena
+//   k0lmenia <comando> [args]          cualquier `npm run <comando>` del repo (doctor, portal, sast, explorar…)
+//   k0lmenia test[:web|:api…] [args]   las suites de k0lmena del proyecto (npm test)
+//   k0lmenia py <script.py> [args]     un script de Python del plugin (scripts/… o herramientas/…)
+//   k0lmenia preparar                  dependencias de Python (lo corre solo el hook de inicio de sesión)
+//   k0lmenia ayuda                     esta ayuda
+//
+// El código vive en la caché del plugin (CODIGO) y los datos en el proyecto donde trabajás (PROYECTO: la
+// carpeta actual): output/, input/, .env, .auth/ y la copia de k0lmena con tus pruebas automatizadas. Por eso
+// las actualizaciones del plugin nunca tocan tu trabajo.
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const { spawnSync } = require('child_process');
+
+const CODIGO = path.resolve(__dirname, '..');
+const PROYECTO = path.resolve(process.env.K0LMENIA_PROYECTO || process.cwd());
+const PYTHON = process.platform === 'win32' ? 'python' : 'python3';
+const NPM = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+const K0LMENA_PROYECTO = path.join(PROYECTO, 'herramientas', 'k0lmena');
+const ENV = { ...process.env, K0LMENIA_PROYECTO: PROYECTO, K0LMENIA_CODIGO: CODIGO };
+
+function correr(cmd, args, opciones = {}) {
+  const r = spawnSync(cmd, args, { stdio: 'inherit', cwd: PROYECTO, env: ENV, shell: cmd === NPM && process.platform === 'win32', ...opciones });
+  if (r.error) {
+    console.error(`k0lmenia: no pude ejecutar ${cmd} (${r.error.message}). Revisá la instalación con: k0lmenia doctor`);
+    return 1;
+  }
+  return r.status === null ? 1 : r.status;
+}
+
+function scriptsNpm() {
+  return JSON.parse(fs.readFileSync(path.join(CODIGO, 'package.json'), 'utf8')).scripts || {};
+}
+
+function sinSeparador(args) {
+  return args[0] === '--' ? args.slice(1) : args;
+}
+
+function k0lmenaInstalada() {
+  if (fs.existsSync(path.join(K0LMENA_PROYECTO, 'package.json'))) return true;
+  console.error('k0lmenia: este proyecto todavía no tiene k0lmena (la automatización). Corré primero: k0lmenia init');
+  return false;
+}
+
+/** Un comando de package.json del repo, resuelto para el plugin. */
+function comandoNpm(nombre, args) {
+  const cmd = scriptsNpm()[nombre];
+  if (!cmd) {
+    console.error(`k0lmenia: no conozco el comando "${nombre}". Mirá la lista con: k0lmenia ayuda`);
+    return 2;
+  }
+  let m = cmd.match(/^node scripts\/py\.js (\S+)$/);
+  if (m) return correr(PYTHON, [path.join(CODIGO, m[1]), ...args]);
+  m = cmd.match(/^npm --prefix herramientas\/k0lmena run (\S+)(?: --)?$/);
+  if (m) {
+    if (!k0lmenaInstalada()) return 1;
+    return correr(NPM, ['--prefix', K0LMENA_PROYECTO, 'run', m[1], '--', ...args]);
+  }
+  m = cmd.match(/^node (scripts\/\S+\.js)$/);
+  if (m) return correr(process.execPath, [path.join(CODIGO, m[1]), ...args]);
+  console.error(`k0lmenia: "${nombre}" es un comando del repo de desarrollo de k0lmenIA, no del plugin.`);
+  return 2;
+}
+
+// ---------------------------------------------------------------- init
+const IGNORAR_K0LMENA = new Set(['node_modules', 'reports', '.cache']);
+
+function copiarK0lmena(origen, destino) {
+  fs.mkdirSync(destino, { recursive: true });
+  for (const e of fs.readdirSync(origen, { withFileTypes: true })) {
+    if (IGNORAR_K0LMENA.has(e.name)) continue;
+    const de = path.join(origen, e.name);
+    const a = path.join(destino, e.name);
+    if (e.isDirectory()) copiarK0lmena(de, a);
+    else if (!fs.existsSync(a)) fs.copyFileSync(de, a);
+  }
+}
+
+function carpetasVacias(origen, destino) {
+  // input/ y output/ con la misma estructura que el repo (solo las carpetas y sus .gitkeep).
+  for (const e of fs.readdirSync(origen, { withFileTypes: true })) {
+    if (!e.isDirectory()) continue;
+    const a = path.join(destino, e.name);
+    fs.mkdirSync(a, { recursive: true });
+    const keep = path.join(a, '.gitkeep');
+    if (!fs.existsSync(keep) && fs.readdirSync(a).length === 0) fs.writeFileSync(keep, '');
+    carpetasVacias(path.join(origen, e.name), a);
+  }
+}
+
+const GITIGNORE = [
+  '# k0lmenIA (plugin): lo que generan los agentes, secretos y sesiones no se versionan',
+  '/output/**', '!/output/', '!/output/**/', '!/output/**/.gitkeep',
+  '/input/logs/*', '/input/documentacion/*',
+  '.env', '.auth/',
+  'herramientas/k0lmena/node_modules/', 'herramientas/k0lmena/reports/',
+];
+
+function init(args) {
+  console.log(`Preparando el proyecto en ${PROYECTO}`);
+  for (const carpeta of ['input', 'output']) {
+    const origen = path.join(CODIGO, carpeta);
+    fs.mkdirSync(path.join(PROYECTO, carpeta), { recursive: true });
+    if (fs.existsSync(origen)) carpetasVacias(origen, path.join(PROYECTO, carpeta));
+  }
+  const env = path.join(PROYECTO, '.env');
+  if (!fs.existsSync(env)) {
+    fs.copyFileSync(path.join(CODIGO, '.env.example'), env);
+    console.log('  .env creado desde la plantilla: completalo (o corré: k0lmenia configurar)');
+  } else {
+    console.log('  .env: ya existe, no se toca');
+  }
+  const gi = path.join(PROYECTO, '.gitignore');
+  const actual = fs.existsSync(gi) ? fs.readFileSync(gi, 'utf8') : '';
+  const faltan = GITIGNORE.filter((l) => l.startsWith('#') || !actual.split(/\r?\n/).includes(l));
+  if (faltan.length > 1) fs.appendFileSync(gi, `${actual && !actual.endsWith('\n') ? '\n' : ''}\n${faltan.join('\n')}\n`);
+  const yaEstaba = fs.existsSync(path.join(K0LMENA_PROYECTO, 'package.json'));
+  copiarK0lmena(path.join(CODIGO, 'herramientas', 'k0lmena'), K0LMENA_PROYECTO);
+  console.log(yaEstaba
+    ? '  k0lmena: ya estaba; se sumaron solo los archivos que faltaban (tus pruebas no se tocan)'
+    : '  k0lmena copiada en herramientas/k0lmena: tus pruebas automatizadas viven ahí, en tu proyecto');
+  if (!args.includes('--sin-npm')) {
+    console.log('  Instalando las dependencias de k0lmena (npm install)…');
+    const r = correr(NPM, ['--prefix', K0LMENA_PROYECTO, 'install']);
+    if (r !== 0) return r;
+  }
+  console.log('Listo. Próximos pasos: completá el .env (k0lmenia configurar) y revisá todo con: k0lmenia doctor');
+  return 0;
+}
+
+// ---------------------------------------------------------------- preparar (hook de inicio de sesión)
+// Lo que imprime el hook de inicio de sesión entra al contexto de la conversación: con --contexto se imprime el
+// recordatorio de k0lmenIA (hooks/contexto.md), que cumple el papel del CLAUDE.md (un plugin no lo carga).
+function preparar(args = []) {
+  const r = prepararPython();
+  const contexto = path.join(CODIGO, 'hooks', 'contexto.md');
+  if (args.includes('--contexto') && fs.existsSync(contexto)) process.stdout.write(fs.readFileSync(contexto, 'utf8'));
+  return r;
+}
+
+function prepararPython() {
+  // Las dependencias de Python no se instalan solas en un plugin: se instalan una vez por versión del plugin.
+  const datos = process.env.CLAUDE_PLUGIN_DATA;
+  const marca = datos && path.join(datos, 'python-listo');
+  const version = fs.statSync(path.join(CODIGO, 'requirements.txt')).mtimeMs.toString();
+  if (marca && fs.existsSync(marca) && fs.readFileSync(marca, 'utf8') === version) return 0;
+  const chequeo = spawnSync(PYTHON, ['-c', 'import openpyxl, tabulate, requests, yaml'], { stdio: 'ignore' });
+  if (chequeo.status !== 0) {
+    const r = spawnSync(PYTHON, ['-m', 'pip', 'install', '--user', '--quiet', 'openpyxl>=3.1', 'tabulate>=0.9', 'requests>=2.31', 'pyyaml>=6'],
+      { stdio: 'ignore' });
+    if (r.status !== 0) {
+      console.log('k0lmenIA: no pude instalar las dependencias de Python (openpyxl, tabulate, requests, pyyaml). Corré: k0lmenia doctor');
+      return 0; // nunca frena el inicio de la sesión
+    }
+  }
+  if (marca) {
+    fs.mkdirSync(datos, { recursive: true });
+    fs.writeFileSync(marca, version);
+  }
+  return 0;
+}
+
+function ayuda() {
+  const lista = Object.keys(scriptsNpm()).filter((n) => !['postinstall', 'test:repo'].includes(n)).sort();
+  console.log(`k0lmenia — k0lmenIA como plugin de Claude Code
+Código: ${CODIGO}
+Proyecto (tus datos): ${PROYECTO}
+
+  k0lmenia init [--sin-npm]     prepara el proyecto (input/, output/, .env, .gitignore y k0lmena)
+  k0lmenia py <script> [args]   un script de Python del plugin
+  k0lmenia <comando> [args]     uno de estos:
+    ${lista.join(', ')}`);
+  return 0;
+}
+
+function main(argv) {
+  const [cmd, ...resto] = argv;
+  const args = sinSeparador(resto);
+  if (!cmd || ['ayuda', 'help', '-h', '--help'].includes(cmd)) return ayuda();
+  if (cmd === 'init') return init(args);
+  if (cmd === 'preparar') return preparar(args);
+  if (cmd === 'py') {
+    if (!args[0]) return ayuda();
+    return correr(PYTHON, [path.resolve(CODIGO, args[0]), ...args.slice(1)]);
+  }
+  return comandoNpm(cmd, args);
+}
+
+if (require.main === module) process.exit(main(process.argv.slice(2)));
+module.exports = { main, comandoNpm, CODIGO, PROYECTO };

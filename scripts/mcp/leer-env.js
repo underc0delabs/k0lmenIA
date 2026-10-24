@@ -19,7 +19,9 @@ function leerEnv(archivo) {
   return valores;
 }
 
-const archivoEnv = process.env.K0LMENA_ENV_FILE || path.resolve(__dirname, '..', '..', '.env');
+// El .env es del proyecto (con k0lmenIA como plugin, el del proyecto del QA): ver herramientas/k0lmena/tools/rutas.js.
+const { PROYECTO } = require('../../herramientas/k0lmena/tools/rutas');
+const archivoEnv = process.env.K0LMENA_ENV_FILE || path.join(PROYECTO, '.env');
 const delArchivo = leerEnv(archivoEnv);
 
 // Valor de una variable: primero el entorno, después el .env. Vacío = no definida.

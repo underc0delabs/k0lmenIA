@@ -43,6 +43,7 @@ from urllib.parse import urlparse
 
 RAIZ = Path(__file__).resolve().parents[2]
 
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 # Umbrales por defecto (se pueden pisar con STREAMING_* en el .env).
 FPS_MINIMO = 10.0           # por debajo, el video se ve a saltos
 LATENCIA_AVISO_S = 3.0      # conectar debería ser rápido
@@ -416,7 +417,7 @@ def main():
     resultados = [probar_fuente(f, args, env) for f in fuentes]
 
     host = urlparse(fuentes[0]).hostname or "streaming"
-    carpeta = RAIZ / "output" / "streaming" / (args.historia or host)
+    carpeta = PROYECTO / "output" / "streaming" / (args.historia or host)
     carpeta.mkdir(parents=True, exist_ok=True)
 
     try:

@@ -25,7 +25,8 @@ const { descubrir } = require('../pixel-perfect/pixel-perfect.js');
 const visual = require('../visual/comparar.js');
 const { archivar } = require('../historial/historial.js');
 
-const RAIZ = path.resolve(__dirname, '..', '..', '..', '..');
+// Datos (output/, input/, .auth/) en el proyecto y scripts de Python en el código de k0lmenIA: ver ../rutas.js.
+const { PROYECTO: RAIZ, CODIGO } = require('../rutas');
 const desde = (p) => path.resolve(process.env.INIT_CWD || process.cwd(), p);
 const GENERADOS = ['formularios.json', 'analisis.json', 'informe-formularios.html', 'capturas'];
 const SEV_ORDEN = { 'Crítica': 0, 'Alta': 1, 'Media': 2, 'Baja': 3 };
@@ -214,7 +215,7 @@ function hallazgosDe(f, c) {
 
 function generarInforme(carpeta) {
   const py = process.platform === 'win32' ? 'python' : 'python3';
-  const r = require('child_process').spawnSync(py, [path.join(RAIZ, 'scripts', 'generar_informe_formularios.py'), path.join(carpeta, 'formularios.json'),
+  const r = require('child_process').spawnSync(py, [path.join(CODIGO, 'scripts', 'generar_informe_formularios.py'), path.join(carpeta, 'formularios.json'),
     path.join(carpeta, 'informe-formularios.html')], { encoding: 'utf8' });
   if (r.status !== 0) {
     const motivo = (r.stderr || r.error || '').toString().trim().split(/\r?\n/).pop();

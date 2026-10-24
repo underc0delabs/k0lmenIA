@@ -27,6 +27,7 @@ import sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[2]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 PLANTILLAS = Path(__file__).resolve().parent / "plantillas"
 sys.path.insert(0, str(RAIZ / "scripts"))
 
@@ -40,14 +41,14 @@ PLATAFORMAS = {
     "azure": ("azure.yml", "azure-pipelines.yml", "Secure file 'k0lmenia.env'"),
 }
 SUITES = {"web": "web", "api": "api", "all": "web api"}
-REPORTES = RAIZ / "herramientas" / "k0lmena" / "reports"
+REPORTES = PROYECTO / "herramientas" / "k0lmena" / "reports"
 
 
 def generar(plataforma, suite="web", destino=None, forzar=False):
     """Escribe la plantilla con las suites elegidas. Devuelve la ruta; si ya existe y no hay --forzar,
     lanza FileExistsError."""
     origen, relativo, _ = PLATAFORMAS[plataforma]
-    ruta = Path(destino or RAIZ) / relativo
+    ruta = Path(destino or PROYECTO) / relativo
     if ruta.exists() and not forzar:
         raise FileExistsError(f"{ruta} ya existe: revisalo y usá --forzar para reemplazarlo.")
     texto = (PLANTILLAS / origen).read_text(encoding="utf-8").replace("__SUITES__", SUITES[suite])
@@ -70,7 +71,7 @@ def publicar(suites, ciclo=None, traza=None, dry_run=False, ejecutar=subprocess.
         if not reporte.exists() or reporte.stat().st_size <= 4:
             print(f"[ci] {suite}: no hay reporte ({reporte}), se saltea.")
             continue
-        resultados = RAIZ / "output" / "gestion" / f"resultados-ci-{suite}.json"
+        resultados = PROYECTO / "output" / "gestion" / f"resultados-ci-{suite}.json"
         pasos = [
             gestion + ["extraer-resultados", "--reporte", str(reporte), "--salida", str(resultados)],
             gestion + (["--dry-run"] if dry_run else []) + ["publicar-resultados", "--ciclo", ciclo,
@@ -78,7 +79,7 @@ def publicar(suites, ciclo=None, traza=None, dry_run=False, ejecutar=subprocess.
             + (["--traza", traza] if traza else []),
         ]
         for cmd in pasos:
-            if ejecutar(cmd, cwd=str(RAIZ)) != 0:
+            if ejecutar(cmd, cwd=str(PROYECTO)) != 0:
                 print(f"[ci] {suite}: falló {' '.join(cmd[2:4])}.", file=sys.stderr)
                 estado = 1
                 break

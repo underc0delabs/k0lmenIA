@@ -103,7 +103,7 @@ def test_recolectar_resultados(tmp_path, monkeypatch):
     os.utime(k0 / "web" / "cucumber-report.json", (futuro, futuro))
     (raiz / "output" / "reportes-bug" / "BUG-001.md").write_text(
         "**ID:** `BUG-001`\n**Título:** x\n**Historia:** HU-001\n**Estado:** Abierto\n**Criticidad / Severidad:** Alta (y)\n", encoding="utf-8")
-    monkeypatch.setattr(recolectar_resultados, "RAIZ", raiz)
+    monkeypatch.setattr(recolectar_resultados, "PROYECTO", raiz)
     monkeypatch.setattr(recolectar_resultados, "K0", k0)
     datos = recolectar_resultados.recolectar("HU-001")
     assert datos["resultados"] == {"aprobado": 2, "fallido": 0, "bloqueado": 0}
@@ -131,7 +131,7 @@ def test_recolectar_distingue_historias_y_usa_el_historial(tmp_path, monkeypatch
     # Última corrida filtrada (TAGS=@CP-002): solo trae CP-002 de HU-001, que ahora pasa.
     (k0 / "web" / "cucumber-report.json").write_text(json.dumps([
         {"name": "F", "tags": [{"name": "@HU-001"}], "elements": [esc("dos", "CP-002", "passed")]}]), encoding="utf-8")
-    monkeypatch.setattr(recolectar_resultados, "RAIZ", tmp_path)
+    monkeypatch.setattr(recolectar_resultados, "PROYECTO", tmp_path)
     monkeypatch.setattr(recolectar_resultados, "K0", k0)
     ronda = recolectar_resultados.recolectar()
     assert ronda["resultados"] == {"aprobado": 2, "fallido": 1, "bloqueado": 0}

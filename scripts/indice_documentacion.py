@@ -28,6 +28,7 @@ Documentación incremental: si existe input/documentacion/.estado.json (scripts/
 los documentos que quedaron desactualizados por un cambio del código se muestran como "Desactualizado"
 con el commit desde el que cambió, y cambios.md (lo que cambió y qué casos revisar) va primero.
 """
+import os
 import json
 import argparse
 import datetime as dt
@@ -37,6 +38,7 @@ import sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 INDICE = "INDICE.md"
 IGNORAR = {INDICE, ".gitkeep"}
 ORDEN_TIPOS = ["cambios", "proyecto", "investigacion", "repositorio", "api", "web", "manual-usuario", "historia", "links"]
@@ -186,7 +188,7 @@ def main(argv=None):
     for flujo in (sys.stdout, sys.stderr):
         flujo.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(description="Arma input/documentacion/INDICE.md")
-    ap.add_argument("--carpeta", default=str(RAIZ / "input" / "documentacion"))
+    ap.add_argument("--carpeta", default=str(PROYECTO / "input" / "documentacion"))
     ap.add_argument("--dias", type=int, default=30, help="días después de los que un documento se marca para revisar")
     a = ap.parse_args(argv)
     carpeta = Path(a.carpeta)
@@ -198,7 +200,7 @@ def main(argv=None):
                        capture_output=True, text=True)
     if r.returncode != 0:
         print(f"Aviso: no pude alinear las tablas ({r.stderr.strip().splitlines()[-1:] or ''}).")
-    print(f"{len(docs)} documento(s) en el índice: {destino.relative_to(RAIZ) if destino.is_relative_to(RAIZ) else destino}")
+    print(f"{len(docs)} documento(s) en el índice: {destino.relative_to(PROYECTO) if destino.is_relative_to(PROYECTO) else destino}")
     return 0
 
 

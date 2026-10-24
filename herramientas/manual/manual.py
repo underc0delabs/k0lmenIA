@@ -38,8 +38,9 @@ import sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[2]
-SALIDA = RAIZ / "output" / "manuales"
-DOC_INPUT = RAIZ / "input" / "documentacion"
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
+SALIDA = PROYECTO / "output" / "manuales"
+DOC_INPUT = PROYECTO / "input" / "documentacion"
 AQUI = Path(__file__).resolve().parent
 DEPS = AQUI / ".deps"
 CARPETAS = ("capturas", "borradores", "revision", "versiones")
@@ -514,14 +515,14 @@ def a_input(slug, md=None, base=None, destino=None, url=None):
     texto = md.read_text(encoding="utf-8")
     cuerpo = quitar_internos(texto)
     try:
-        rel_capturas = (c / "capturas").resolve().relative_to(RAIZ).as_posix()
+        rel_capturas = (c / "capturas").resolve().relative_to(PROYECTO).as_posix()
     except ValueError:
         rel_capturas = (c / "capturas").resolve().as_posix()
     cuerpo = re.sub(r"!\[([^\]]*)\]\((?:\.\./)?capturas/([^)\s]+)\)", rf"![\1]({rel_capturas}/\2)", cuerpo)
     cuerpo = re.sub(r"^# ", "## ", cuerpo, count=1, flags=re.M) if cuerpo.lstrip().startswith("# ") else cuerpo
     titulo = re.search(r"^#\s+(.+)$", texto, re.M)
     titulo = titulo.group(1).strip() if titulo else slug
-    origen = md.resolve().relative_to(RAIZ).as_posix() if md.resolve().is_relative_to(RAIZ) else md.as_posix()
+    origen = md.resolve().relative_to(PROYECTO).as_posix() if md.resolve().is_relative_to(PROYECTO) else md.as_posix()
     nota = (f"> Cómo se usa la aplicación, según el manual de usuario `{origen}` "
             + ("(versión **aprobada**, verificada en la aplicación)." if confirmado else
                "(**borrador**: lo verificado está en el texto; lo dudoso, en *Sin confirmar*).")

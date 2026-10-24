@@ -34,11 +34,12 @@ import sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 sys.path.insert(0, str(RAIZ / "scripts"))
 from _env import leer_env  # noqa: E402
 
-DOC = RAIZ / "input" / "documentacion"
-SALIDA = RAIZ / "output" / "conocimiento"
+DOC = PROYECTO / "input" / "documentacion"
+SALIDA = PROYECTO / "output" / "conocimiento"
 TAREA = "k0lmenIA - actualizar conocimiento"
 PEDIDO_AGENTE = (
     "Usá el agente documentador-proyecto en modo actualizar, solo para las HISTORIAS (requerimientos): listá las "
@@ -67,8 +68,12 @@ def actualizar_app(env, correr=subprocess.run):
     npm = shutil.which("npm") or shutil.which("npm.cmd")
     if not npm:
         return {"estado": "error", "motivo": "no está npm (Node.js)"}
-    r = correr([npm, "run", "--silent", "mapa-funcional", "--", "--max-paginas", "200", "--profundidad", "4"],
-               cwd=RAIZ, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=3600)
+    args = ["--max-paginas", "200", "--profundidad", "4"]
+    # Como plugin, k0lmena vive en el proyecto: el mapa funcional va por el comando k0lmenia.
+    cmd = (["node", str(RAIZ / "bin" / "k0lmenia"), "mapa-funcional", *args]
+           if es_plugin() else [npm, "run", "--silent", "mapa-funcional", "--", *args])
+    r = correr(cmd, cwd=PROYECTO if es_plugin() else RAIZ, capture_output=True, text=True, encoding="utf-8",
+               errors="replace", timeout=3600)
     if r.returncode != 0:
         return {"estado": "error", "motivo": ((r.stderr or r.stdout) or "").strip().splitlines()[-1:] or ["falló"]}
     return resumen_mapa(DOC / "proyecto" / "mapa-funcional.json")
@@ -126,7 +131,7 @@ def actualizar_historias(presupuesto, correr=subprocess.run):
     if not claude:
         return {"estado": "error", "motivo": "no encuentro el comando claude (Claude Code)"}
     try:
-        r = correr(comando_agente(claude, presupuesto), cwd=RAIZ, capture_output=True, text=True,
+        r = correr(comando_agente(claude, presupuesto), cwd=PROYECTO, capture_output=True, text=True,
                    encoding="utf-8", errors="replace", timeout=5400)
     except subprocess.TimeoutExpired:
         return {"estado": "error", "motivo": "el agente tardó más de 90 minutos"}
@@ -138,7 +143,7 @@ def actualizar_historias(presupuesto, correr=subprocess.run):
         return {"estado": "error", "motivo": str(datos.get("result") or r.stderr)[-300:], "costo_usd": datos.get("total_cost_usd")}
     cambios = DOC / "cambios-historias.md"
     return {"estado": "ok", "resumen": (datos.get("result") or "").strip(), "costo_usd": datos.get("total_cost_usd"),
-            "detalle": str(cambios.relative_to(RAIZ)) if cambios.exists() else None,
+            "detalle": str(cambios.relative_to(PROYECTO)) if cambios.exists() else None,
             "hay": "0 nueva(s), 0 con cambios" not in (cambios.read_text(encoding="utf-8") if cambios.exists() else "")}
 
 
@@ -192,15 +197,54 @@ def avisar(texto_md, nivel, link):
 
 
 # ------------------------------------------------------------------ programación
+def es_plugin():
+    """¿Corre como plugin de Claude Code? (el comando k0lmenia avisa dónde está el código)."""
+    return bool(os.environ.get("K0LMENIA_CODIGO")) and Path(os.environ["K0LMENIA_CODIGO"]).resolve() != PROYECTO
+
+
+# Como plugin, la carpeta del código cambia con cada versión (la vieja se borra a los 14 días): la tarea programada
+# no puede apuntar ahí. Este lanzador queda en el proyecto y busca la versión vigente del plugin en la caché.
+LANZADOR = r"""// Lanzador estable de k0lmenia para tareas programadas (lo crea scripts/actualizar_conocimiento.py).
+const fs = require('fs'), path = require('path'), os = require('os'), { spawnSync } = require('child_process');
+const base = process.env.CLAUDE_CODE_PLUGIN_CACHE_DIR || path.join(os.homedir(), '.claude', 'plugins', 'cache');
+const candidatos = [];
+(function buscar(dir, nivel) {
+  if (nivel > 4 || !fs.existsSync(dir)) return;
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (!e.isDirectory()) continue;
+    const d = path.join(dir, e.name), bin = path.join(d, 'bin', 'k0lmenia');
+    if (fs.existsSync(bin) && fs.existsSync(path.join(d, '.claude-plugin', 'plugin.json')) && !fs.existsSync(path.join(d, '.orphaned_at'))) {
+      candidatos.push({ bin, t: fs.statSync(d).mtimeMs });
+    } else buscar(d, nivel + 1);
+  }
+})(base, 0);
+if (!candidatos.length) { console.error('No encuentro el plugin k0lmenia instalado en ' + base); process.exit(1); }
+const { bin } = candidatos.sort((a, b) => b.t - a.t)[0];
+const r = spawnSync(process.execPath, [bin, ...process.argv.slice(2)], { stdio: 'inherit', cwd: path.resolve(__dirname, '..') });
+process.exit(r.status === null ? 1 : r.status);
+"""
+
+
+def comando_programado(extra):
+    """El comando que corre la tarea programada: npm run en el repo; el lanzador estable si es un plugin."""
+    if es_plugin():
+        lanzador = PROYECTO / ".k0lmenia" / "lanzador.js"
+        lanzador.parent.mkdir(parents=True, exist_ok=True)
+        lanzador.write_text(LANZADOR, encoding="utf-8")
+        return PROYECTO, f'node "{lanzador}" actualizar-conocimiento{extra}'
+    return RAIZ, f"npm run actualizar-conocimiento --{extra}"
+
+
 def linea_programada(frecuencia, hora, con_agente):
     extra = " --con-agente" if con_agente else ""
     h, m = hora.split(":")
+    carpeta, comando = comando_programado(extra)
     if sys.platform == "win32":
         sc = ["/SC", "DAILY"] if frecuencia == "diario" else ["/SC", "WEEKLY", "/D", "MON"]
-        tr = f'cmd /c cd /d "{RAIZ}" && npm run actualizar-conocimiento --{extra}'
+        tr = f'cmd /c cd /d "{carpeta}" && {comando}'
         return ["schtasks", "/Create", "/F", "/TN", TAREA, *sc, "/ST", f"{int(h):02d}:{int(m):02d}", "/TR", tr]
     dias = "*" if frecuencia == "diario" else "1"
-    return f"{int(m)} {int(h)} * * {dias} cd '{RAIZ}' && npm run actualizar-conocimiento --{extra} >> output/conocimiento/cron.log 2>&1"
+    return f"{int(m)} {int(h)} * * {dias} cd '{carpeta}' && {comando} >> output/conocimiento/cron.log 2>&1"
 
 
 def main(argv=None):

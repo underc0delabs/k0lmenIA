@@ -31,6 +31,7 @@ from datetime import datetime
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 sys.path.insert(0, str(RAIZ / "scripts"))
 from _i18n import escribir_bilingue  # noqa: E402
 
@@ -523,12 +524,12 @@ def armar_html(herramientas, destino):
 
 
 def generar(output=None, reportes_k0=None, destino=None):
-    output = Path(output or RAIZ / "output")
-    reportes_k0 = reportes_k0 if reportes_k0 is not None else RAIZ / "herramientas" / "k0lmena" / "reports"
+    output = Path(output or PROYECTO / "output")
+    reportes_k0 = reportes_k0 if reportes_k0 is not None else PROYECTO / "herramientas" / "k0lmena" / "reports"
     destino = Path(destino or output / "index.html")
     destino.parent.mkdir(parents=True, exist_ok=True)
     _regenerar_artefactos(output)
-    evals = RAIZ / "evals" / "resultados" if output == RAIZ / "output" else None
+    evals = RAIZ / "evals" / "resultados" if output == PROYECTO / "output" else None
     herramientas = descubrir(output, reportes_k0, evals)
     escribir_bilingue(destino, lambda: armar_html(herramientas, destino))
     return destino, herramientas
@@ -563,7 +564,7 @@ def programar():
     No hace nada en los tests, con K0LMENIA_PORTAL=0 o si no existe output/."""
     if _PROGRAMADO[0] or os.environ.get("K0LMENIA_PORTAL", "1") == "0" or "pytest" in sys.modules:
         return
-    if not (RAIZ / "output").is_dir():
+    if not (PROYECTO / "output").is_dir():
         return
     _PROGRAMADO[0] = True
     atexit.register(_actualizar_al_salir)

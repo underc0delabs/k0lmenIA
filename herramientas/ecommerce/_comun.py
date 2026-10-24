@@ -32,6 +32,7 @@ import uuid
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[2]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 AGENTE_HTTP = "k0lmenIA-QA/1.0 (relevamiento de solo lectura; +https://k0lmena.com)"
 MAX_CUERPO = 3 * 1024 * 1024
 ORDEN_SEV = {"Crítica": 0, "Alta": 1, "Media": 2, "Baja": 3}
@@ -352,7 +353,7 @@ def tabla(titulo, columnas, filas, sub=""):
 # ------------------------------------------------------------------ guardado
 def carpeta_salida(plataforma, historia, url):
     nombre = historia or urllib.parse.urlsplit(normalizar_url(url)).netloc or plataforma
-    return RAIZ / "output" / plataforma / re.sub(r"[^\w.-]+", "-", nombre)
+    return PROYECTO / "output" / plataforma / re.sub(r"[^\w.-]+", "-", nombre)
 
 
 def guardar(plataforma, datos, carpeta):

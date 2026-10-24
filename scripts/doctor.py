@@ -28,7 +28,8 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 RAIZ = Path(__file__).resolve().parents[1]
-K0 = RAIZ / "herramientas" / "k0lmena"
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
+K0 = PROYECTO / "herramientas" / "k0lmena"
 sys.path.insert(0, str(RAIZ / "scripts"))
 from _env import leer_env, archivo_env  # noqa: E402
 
@@ -410,7 +411,7 @@ def _integraciones(ctx):
     malas = [u for u in urls if not es_url(u)]
     if malas:
         linea(FALTA, f"MONITOREO_URLS tiene {len(malas)} URL(s) inválida(s)", "Separadas por coma, con http:// o https://")
-    elif urls or (RAIZ / "input" / "monitoreo.json").exists():
+    elif urls or (PROYECTO / "input" / "monitoreo.json").exists():
         linea(OK, "Monitoreo sintético configurado")
 
 
@@ -439,13 +440,13 @@ def revisar_repo(ctx):
         linea(AVISO, "git no está instalado", "Instalá git: https://git-scm.com/downloads")
         return
     linea(OK, "git instalado")
-    ignorado = (RAIZ / ".gitignore").read_text(encoding="utf-8") if (RAIZ / ".gitignore").exists() else ""
+    ignorado = (PROYECTO / ".gitignore").read_text(encoding="utf-8") if (PROYECTO / ".gitignore").exists() else ""
     for patron, que in ((".env", "el .env (secretos)"), ("/input/documentacion/", "la documentación del proyecto")):
         if patron in ignorado:
             linea(OK, f".gitignore cubre {que}")
         else:
             linea(FALTA, f".gitignore no cubre {que}", f"Agregá {patron} al .gitignore")
-    if comando("git", "-C", str(RAIZ), "config", "user.email", timeout=5):
+    if comando("git", "-C", str(PROYECTO), "config", "user.email", timeout=5):
         linea(OK, "Identidad de git configurada (para los commits)")
     else:
         linea(AVISO, "git sin user.email (no vas a poder hacer commits)", 'git config user.email "tu@mail" && git config user.name "Tu nombre"')
@@ -453,7 +454,7 @@ def revisar_repo(ctx):
 
 def revisar_extras(ctx):
     seccion("extras", "Portal, monitoreo y evals")
-    if (RAIZ / "output").is_dir():
+    if (PROYECTO / "output").is_dir():
         linea(OK, "output/ existe (el portal output/index.html se regenera solo)")
     else:
         linea(AVISO, "No existe output/", "Se crea solo con el primer informe; o mkdir output")
@@ -478,7 +479,7 @@ SECCIONES = {
 def contexto(rapido=False):
     archivo, env = leer_entorno()
     habilitados = []
-    for f in (RAIZ / ".claude" / "settings.json", RAIZ / ".claude" / "settings.local.json"):
+    for f in (PROYECTO / ".claude" / "settings.json", PROYECTO / ".claude" / "settings.local.json"):
         try:
             habilitados += json.loads(f.read_text(encoding="utf-8")).get("enabledMcpjsonServers", [])
         except (OSError, ValueError):
@@ -532,7 +533,7 @@ def _conectores_locales():
         datos = json.loads((Path.home() / ".claude.json").read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return []
-    clave = str(RAIZ).replace("\\", "/").lower()
+    clave = str(PROYECTO).replace("\\", "/").lower()
     for ruta, proyecto in (datos.get("projects") or {}).items():
         if ruta.replace("\\", "/").lower() == clave:
             return list((proyecto.get("mcpServers") or {}).keys())

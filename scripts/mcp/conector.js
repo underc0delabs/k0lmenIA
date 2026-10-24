@@ -15,7 +15,9 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 const { variable } = require('./leer-env');
 
-const RAIZ = path.resolve(__dirname, '..', '..');
+const RAIZ = path.resolve(__dirname, '..', '..'); // el código de k0lmenIA (.mcp.json, scripts/mcp)
+// Los conectores se registran para el proyecto (alcance local de Claude Code): ver herramientas/k0lmena/tools/rutas.js.
+const { PROYECTO } = require('../../herramientas/k0lmena/tools/rutas');
 const CATALOGO = JSON.parse(fs.readFileSync(path.join(__dirname, 'catalogo.json'), 'utf8')).conectores;
 const POR_DEFECTO = Object.keys(JSON.parse(fs.readFileSync(path.join(RAIZ, '.mcp.json'), 'utf8')).mcpServers);
 
@@ -84,7 +86,7 @@ function comandoActivacion(nombre, entrada, servidor) {
 function activosLocales() {
   try {
     const datos = JSON.parse(fs.readFileSync(path.join(os.homedir(), '.claude.json'), 'utf8'));
-    const clave = RAIZ.split(path.sep).join('/').toLowerCase();
+    const clave = PROYECTO.split(path.sep).join('/').toLowerCase();
     const proyecto = Object.entries(datos.projects || {}).find(([k]) => k.toLowerCase() === clave);
     return Object.keys((proyecto && proyecto[1].mcpServers) || {});
   } catch {
@@ -94,7 +96,7 @@ function activosLocales() {
 
 // interactivo: la salida va a la terminal (por ejemplo, si Claude Code pide el client secret).
 function claude(args, { env, interactivo } = {}) {
-  const base = { encoding: 'utf8', cwd: RAIZ, env: env || process.env, ...(interactivo ? { stdio: 'inherit' } : {}) };
+  const base = { encoding: 'utf8', cwd: PROYECTO, env: env || process.env, ...(interactivo ? { stdio: 'inherit' } : {}) };
   let r = spawnSync('claude', args, base);
   if (r.error && process.platform === 'win32') {
     // Instalado con npm: claude.cmd necesita shell (el JSON va con las comillas escapadas para cmd).

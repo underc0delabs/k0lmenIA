@@ -36,6 +36,7 @@ from urllib.parse import urlparse
 
 RAIZ = Path(__file__).resolve().parents[2]
 
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 BRILLO_NEGRO = 15.0     # por debajo, la imagen está prácticamente negra
 BLUR_MINIMO = 100.0     # varianza del Laplaciano; por debajo, desenfocada
 FREEZE_DIF = 1.0        # diferencia media entre dos capturas; por debajo, congelada
@@ -199,7 +200,7 @@ def main():
             salir("Cancelado.", 1)
 
     host = urlparse(fuentes[0]).hostname or "camaras"
-    carpeta = RAIZ / "output" / "streaming" / f"calidad-{args.historia or host}"
+    carpeta = PROYECTO / "output" / "streaming" / f"calidad-{args.historia or host}"
     carpeta.mkdir(parents=True, exist_ok=True)
     try:
         sys.path.insert(0, str(RAIZ / "scripts"))

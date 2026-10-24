@@ -31,7 +31,8 @@ const navegadorComun = require('../navegador/navegador');
 const { archivar } = require('../historial/historial.js');
 const { spawnSync } = require('child_process');
 
-const RAIZ = path.resolve(__dirname, '..', '..', '..', '..');
+// Datos (output/, input/, .auth/) en el proyecto y scripts de Python en el código de k0lmenIA: ver ../rutas.js.
+const { PROYECTO: RAIZ, CODIGO } = require('../rutas');
 const desde = (p) => path.resolve(process.env.INIT_CWD || process.cwd(), p); // npm run cambia el cwd a herramientas/k0lmena
 const K0 = path.resolve(__dirname, '..', '..');
 const GENERADOS = ['reparaciones.json', 'analisis.json', 'informe-reparacion.html', 'capturas', 'respaldo', 'cambios.diff', 'verificacion'];
@@ -566,7 +567,7 @@ function resumen(datos) {
 
 function generarInforme(carpeta) {
   const py = process.platform === 'win32' ? 'python' : 'python3';
-  const args = [path.join(RAIZ, 'scripts', 'generar_informe_reparacion.py'), path.join(carpeta, 'reparaciones.json'), path.join(carpeta, 'informe-reparacion.html')];
+  const args = [path.join(CODIGO, 'scripts', 'generar_informe_reparacion.py'), path.join(carpeta, 'reparaciones.json'), path.join(carpeta, 'informe-reparacion.html')];
   if (fs.existsSync(path.join(carpeta, 'analisis.json'))) args.push('--analisis', path.join(carpeta, 'analisis.json'));
   const r = spawnSync(py, args, { encoding: 'utf8' });
   if (r.status !== 0) {

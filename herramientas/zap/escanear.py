@@ -33,6 +33,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 RAIZ = Path(__file__).resolve().parents[2]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 IMAGEN_POR_DEFECTO = "ghcr.io/zaproxy/zaproxy:stable"
 
 
@@ -114,7 +115,7 @@ def main():
 
     docker_disponible()
     sello = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    carpeta = RAIZ / "output" / "seguridad" / (args.historia or p.hostname) / sello
+    carpeta = PROYECTO / "output" / "seguridad" / (args.historia or p.hostname) / sello
     carpeta.mkdir(parents=True, exist_ok=True)
 
     imagen = env.get("ZAP_IMAGEN") or IMAGEN_POR_DEFECTO
@@ -122,7 +123,7 @@ def main():
     cmd = ["docker", "run", "--rm", "-v", f"{carpeta}:/zap/wrk:rw", imagen,
            script, "-t", args.url, "-m", str(args.minutos),
            "-J", "zap.json", "-r", "zap-nativo.html", "-I"]
-    print(f"ZAP {'full scan (activo)' if args.activo else 'baseline (pasivo)'} · {args.url} · salida en {carpeta.relative_to(RAIZ).as_posix()}")
+    print(f"ZAP {'full scan (activo)' if args.activo else 'baseline (pasivo)'} · {args.url} · salida en {carpeta.relative_to(PROYECTO).as_posix()}")
     # El escaneo activo tarda bastante más que el pasivo: margen más amplio por fase de ataque.
     margen = 45 if args.activo else 15
     with open(carpeta / "zap.log", "w", encoding="utf-8") as log:
@@ -130,7 +131,7 @@ def main():
             r = subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, env={**os.environ, "MSYS_NO_PATHCONV": "1"},
                                timeout=(args.minutos + margen) * 60)
         except subprocess.TimeoutExpired:
-            salir(f"El escaneo superó el tiempo máximo ({args.minutos + margen} min). Revisá {carpeta.relative_to(RAIZ).as_posix()}/zap.log.", 1)
+            salir(f"El escaneo superó el tiempo máximo ({args.minutos + margen} min). Revisá {carpeta.relative_to(PROYECTO).as_posix()}/zap.log.", 1)
     # zap-baseline: 0 sin alertas, 1 FAIL, 2 WARN, 3 error del escaneo (con -I, WARN no hace fallar).
     resultado = carpeta / "zap.json"
     if not resultado.exists():
@@ -141,11 +142,11 @@ def main():
     g = subprocess.run([sys.executable, str(RAIZ / "scripts" / "generar_informe_seguridad.py"), str(resultado), str(informe),
                         "--url", args.url, "--modo", modo] + (["--historia", args.historia] if args.historia else []),
                        capture_output=True, text=True)
-    print(f"Resultado: {resultado.relative_to(RAIZ).as_posix()}")
+    print(f"Resultado: {resultado.relative_to(PROYECTO).as_posix()}")
     if g.returncode != 0:
         detalle = (g.stderr or g.stdout).strip()[-800:]
         salir(f"ZAP terminó, pero no se pudo generar el informe:\n{detalle}", 1)
-    print(f"Informe:   {informe.relative_to(RAIZ).as_posix()}")
+    print(f"Informe:   {informe.relative_to(PROYECTO).as_posix()}")
 
 
 if __name__ == "__main__":

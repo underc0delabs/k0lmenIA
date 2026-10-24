@@ -2,6 +2,15 @@
 
 Los cambios más relevantes, del más nuevo al más viejo. El detalle de cada uno está en el historial de git.
 
+## 2026-10-24 (7) — k0lmenIA como plugin de Claude Code (fase 1)
+- **Plugin**: `/plugin marketplace add underc0delabs/k0lmenIA#plugin` y `/plugin install k0lmenia@k0lmenia` lo instalan en cualquier proyecto, sin clonar el repo. La rama `plugin` la arma y publica el workflow `plugin.yml` en cada push a `main` (`scripts/construir_plugin.py`).
+  - Agentes y skills usan el comando `k0lmenia` en lugar de `npm run`/`python scripts/…`.
+  - Los estándares de CLAUDE.md van como skill (`k0lmenia:estandares`) y un hook de inicio de sesión los recuerda e instala las dependencias de Python.
+  - Los conectores (Playwright y Atlassian) vienen en el plugin.
+  - Lo validé con `claude plugin validate` y en Claude Code real: el reporte de bug, su HTML bilingüe y el portal quedaron en el proyecto, no en el plugin.
+- **Código separado de los datos**: los scripts escriben `output/`, `input/`, `.env`, `.auth/` y `herramientas/k0lmena` en la carpeta del proyecto (`K0LMENIA_PROYECTO`) y buscan el código en el plugin (`K0LMENIA_CODIGO`). Sin esas variables, el repo funciona exactamente como antes.
+- **`k0lmenia init`** prepara el proyecto: carpetas, `.env`, `.gitignore` y una copia de k0lmena para las pruebas automatizadas, que las actualizaciones no tocan. Las tareas programadas usan un lanzador estable (`.k0lmenia/lanzador.js`) que busca la versión vigente del plugin.
+
 ## 2026-10-24 (6) — Menos tokens por sesión, repo más liviano, más evals y CI más completo
 - **Descripciones de agentes y skills ~65 % más cortas** (de ~110.600 a ~39.000 caracteres): Claude Code las carga en cada conversación, así que son unos 18.000 tokens menos por sesión para cada QA. Conservan qué hace cada uno, sus disparadores y la diferencia con el más parecido. `test_integridad.py` impide que vuelvan a crecer (400 caracteres cada una, 45.000 en total).
 - **Los 10 agentes más grandes, 46 % más chicos**: el material de consulta pasó a skills que se cargan a pedido (4 nuevos: `documentacion-proyecto`, `pruebas-exploratorias`, `pruebas-resiliencia` y `redaccion-casos-manuales`; 52 en total). En el agente quedan el flujo, las reglas y qué skill cargar.

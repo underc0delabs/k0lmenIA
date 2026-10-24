@@ -23,6 +23,7 @@ inglés, el contenido en español y un aviso.
 
 Desde otro script: actualizar_artefactos() regenera lo que cambió y devuelve los HTML escritos.
 """
+import os
 import argparse
 import csv
 import io
@@ -38,8 +39,9 @@ from _estilos_reporte import (page, meta, section, kpi_tiles, banner, table, niv
 from _i18n import escribir_bilingue, idioma_actual, localizar, ruta_en, ruta_es  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parents[1]
-OUTPUT = RAIZ / "output"
-DOCUMENTACION = RAIZ / "input" / "documentacion"
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
+OUTPUT = PROYECTO / "output"
+DOCUMENTACION = PROYECTO / "input" / "documentacion"
 
 # Carpeta de output/ -> (tipo, eyebrow). La clave puede ser "carpeta/subcarpeta".
 CARPETAS = {

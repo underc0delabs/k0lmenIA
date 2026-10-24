@@ -14,7 +14,9 @@ const path = require('path');
 const readline = require('readline');
 
 const RAIZ = path.resolve(__dirname, '..');
-const ENV = process.env.K0LMENA_ENV_FILE || path.join(RAIZ, '.env');
+// El .env va en el proyecto (con k0lmenIA como plugin, el del QA); la plantilla .env.example es del código.
+const { PROYECTO } = require('../herramientas/k0lmena/tools/rutas');
+const ENV = process.env.K0LMENA_ENV_FILE || path.join(PROYECTO, '.env');
 const EJEMPLO = path.join(RAIZ, '.env.example');
 
 // ------------------------------------------------------------------ qué se pregunta

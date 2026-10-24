@@ -28,6 +28,7 @@ herramienta de gestión (si la historia ya usa una), falta información abierta.
 Deja output/cobertura/<HU o todas>/cobertura.json e informe-cobertura.html (la corrida anterior pasa a
 historial/).
 """
+import os
 import argparse
 import datetime
 import glob
@@ -38,6 +39,7 @@ import sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 sys.path.insert(0, str(RAIZ / "scripts"))
 sys.path.insert(0, str(RAIZ / "scripts" / "gestion"))
 import recolectar_resultados as rec  # noqa: E402
@@ -96,9 +98,9 @@ def historias_presentes():
     patrones = ["input/historias/*", "output/contexto/contexto-*.md", "output/casos-de-prueba/manuales/casos-*.xlsx",
                 "output/casos-de-prueba/bdd/*.feature", "output/gestion/*.json"]
     for p in patrones:
-        for a in glob.glob(str(RAIZ / p)):
+        for a in glob.glob(str(PROYECTO / p)):
             vistas.update(m.upper() for m in RE_HU.findall(Path(a).name))
-    for a in glob.glob(str(RAIZ / "herramientas" / "k0lmena" / "*" / "features" / "**" / "*.feature"), recursive=True):
+    for a in glob.glob(str(PROYECTO / "herramientas" / "k0lmena" / "*" / "features" / "**" / "*.feature"), recursive=True):
         vistas.update(m.upper() for m in RE_HU.findall(_leer(a)))
     return sorted(vistas, key=lambda h: int(h.split("-")[1]))
 
@@ -107,7 +109,7 @@ def _features_con_tag(globo, hu):
     """Escenarios (lectores.leer_feature) de los .feature que tienen el tag @HU-XXX."""
     from lectores import leer_feature
     salida = []
-    for a in sorted(glob.glob(str(RAIZ / globo), recursive=True)):
+    for a in sorted(glob.glob(str(PROYECTO / globo), recursive=True)):
         texto = _leer(a)
         if not re.search(rf"@{hu}\b", texto, re.I) and hu.lower() not in Path(a).name.lower():
             continue
@@ -115,7 +117,7 @@ def _features_con_tag(globo, hu):
             for c in leer_feature(a):
                 tags = [t.upper() for t in c["etiquetas"]]
                 if f"{hu}" in tags or hu.lower() in Path(a).name.lower():
-                    c["_archivo"] = Path(a).relative_to(RAIZ).as_posix()
+                    c["_archivo"] = Path(a).relative_to(PROYECTO).as_posix()
                     salida.append(c)
         except Exception:  # un .feature sin escenarios o mal formado no corta el análisis
             continue
@@ -125,23 +127,23 @@ def _features_con_tag(globo, hu):
 def analizar_historia(hu, criterios_extra):
     # ---- criterios
     criterios, origen_ca = {}, []
-    fuentes_ca = sorted(glob.glob(str(RAIZ / "input" / "historias" / f"*{hu}*"))) + [str(RAIZ / "output" / "contexto" / f"contexto-{hu}.md")]
+    fuentes_ca = sorted(glob.glob(str(PROYECTO / "input" / "historias" / f"*{hu}*"))) + [str(PROYECTO / "output" / "contexto" / f"contexto-{hu}.md")]
     for a in fuentes_ca:
         nuevos = criterios_de_texto(_leer(a))
         if nuevos:
-            origen_ca.append(Path(a).relative_to(RAIZ).as_posix())
+            origen_ca.append(Path(a).relative_to(PROYECTO).as_posix())
         for k, v in nuevos.items():
             criterios.setdefault(k, v)
     cob = {}
-    tablas = glob.glob(str(RAIZ / "output" / "casos-de-prueba" / "manuales" / f"casos-{hu}-cobertura.md")) + \
-        glob.glob(str(RAIZ / "output" / "casos-de-prueba" / "bdd" / f"{hu}-cobertura.md"))
+    tablas = glob.glob(str(PROYECTO / "output" / "casos-de-prueba" / "manuales" / f"casos-{hu}-cobertura.md")) + \
+        glob.glob(str(PROYECTO / "output" / "casos-de-prueba" / "bdd" / f"{hu}-cobertura.md"))
     for a in tablas:
         texto = _leer(a)
         for k, v in criterios_de_texto(texto).items():
             criterios.setdefault(k, v)
         for k, cps in cobertura_de_tabla(texto).items():
             cob.setdefault(k, set()).update(cps)
-        origen_ca.append(Path(a).relative_to(RAIZ).as_posix())
+        origen_ca.append(Path(a).relative_to(PROYECTO).as_posix())
     for c in criterios_extra.get(hu, []):
         criterios.setdefault(_ca(RE_CA.search(c["id"]).group(1)), c.get("descripcion", ""))
     if criterios_extra.get(hu):
@@ -154,7 +156,7 @@ def analizar_historia(hu, criterios_extra):
         return casos.setdefault(cid, {"id": cid, "titulo": "", "prioridad": "", "fuentes": [], "criterios": set(),
                                       "automatizado": [], "gestion": {}, "resultado": None, "bugs": [], "falta_info": set()})
 
-    xlsx = RAIZ / "output" / "casos-de-prueba" / "manuales" / f"casos-{hu}.xlsx"
+    xlsx = PROYECTO / "output" / "casos-de-prueba" / "manuales" / f"casos-{hu}.xlsx"
     if xlsx.exists():
         from lectores import leer_xlsx
         try:
@@ -199,7 +201,7 @@ def analizar_historia(hu, criterios_extra):
 
     # ---- gestión
     herramientas_gestion = []
-    for a in sorted(glob.glob(str(RAIZ / "output" / "gestion" / f"{hu}-*.json"))):
+    for a in sorted(glob.glob(str(PROYECTO / "output" / "gestion" / f"{hu}-*.json"))):
         try:
             t = json.loads(_leer(a))
         except ValueError:
@@ -218,7 +220,7 @@ def analizar_historia(hu, criterios_extra):
     # ---- bugs
     bugs = []
     for b in rec.de_bugs(hu):
-        archivo = RAIZ / "output" / "reportes-bug" / f'{b["id"]}.md'
+        archivo = PROYECTO / "output" / "reportes-bug" / f'{b["id"]}.md'
         cps = sorted(set(m.group(0) for m in RE_CP.finditer(_leer(archivo)))) if archivo.exists() else []
         b["casos"] = cps
         bugs.append(b)
@@ -227,7 +229,7 @@ def analizar_historia(hu, criterios_extra):
                 casos[cp]["bugs"].append(b["id"])
 
     # ---- falta información (ficha de contexto)
-    ficha = _leer(RAIZ / "output" / "contexto" / f"contexto-{hu}.md")
+    ficha = _leer(PROYECTO / "output" / "contexto" / f"contexto-{hu}.md")
     fi_abiertas = sorted({m for linea in ficha.splitlines() for m in RE_FI.findall(linea)
                           if re.search(r"abiert|pendiente|open", linea, re.I)})
 
@@ -298,13 +300,13 @@ def main():
     ap.add_argument("--raiz", help=argparse.SUPPRESS)  # otra raíz de proyecto (tests y demos)
     a = ap.parse_args()
     if a.raiz:
-        global RAIZ
-        RAIZ = Path(a.raiz).resolve()
-        rec.RAIZ, rec.K0 = RAIZ, RAIZ / "herramientas" / "k0lmena" / "reports"
+        global PROYECTO
+        PROYECTO = Path(a.raiz).resolve()
+        rec.PROYECTO, rec.K0 = PROYECTO, PROYECTO / "herramientas" / "k0lmena" / "reports"
     hu = a.historia.upper() if a.historia else None
     if hu and not re.fullmatch(r"HU-\d+", hu):
         sys.exit("--historia tiene que ser un ID como HU-001.")
-    carpeta = Path(a.salida) if a.salida else RAIZ / "output" / "cobertura" / (hu or "todas")
+    carpeta = Path(a.salida) if a.salida else PROYECTO / "output" / "cobertura" / (hu or "todas")
     carpeta.mkdir(parents=True, exist_ok=True)
     datos_arch = carpeta / "cobertura.json"
     if not a.solo_informe:

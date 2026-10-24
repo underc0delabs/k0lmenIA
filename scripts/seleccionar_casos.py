@@ -34,6 +34,7 @@ Además marca los cambios que no tocan ningún caso (cambios sin cobertura).
 Deja output/seleccion-casos/<nombre>/ con seleccion.json, seleccion.csv (para ejecutar a mano) e
 informe-seleccion.html. Con el mismo nombre, la corrida anterior pasa a historial/ (últimas 5).
 """
+import os
 import argparse
 import csv
 import datetime
@@ -48,6 +49,7 @@ from collections import Counter
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 sys.path.insert(0, str(RAIZ / "scripts"))
 sys.path.insert(0, str(RAIZ / "scripts" / "gestion"))
 import recolectar_resultados as rec  # noqa: E402
@@ -214,7 +216,7 @@ def leer_cambio(a):
 def keys_a_historias(keys):
     """Keys de Jira/Azure → HU locales, por la trazabilidad de gestión y las fichas de contexto."""
     mapa = {}
-    for archivo in glob.glob(str(RAIZ / "output" / "gestion" / "HU-*.json")):
+    for archivo in glob.glob(str(PROYECTO / "output" / "gestion" / "HU-*.json")):
         try:
             t = json.loads(Path(archivo).read_text(encoding="utf-8"))
         except ValueError:
@@ -223,7 +225,7 @@ def keys_a_historias(keys):
         for k in [t.get("historia_key"), t.get("issue"), t.get("historia")] + [v.get("historia") for v in (t.get("casos") or {}).values() if isinstance(v, dict)]:
             if k:
                 mapa[str(k).upper()] = hu.upper()
-    for archivo in glob.glob(str(RAIZ / "output" / "contexto" / "contexto-HU-*.md")):
+    for archivo in glob.glob(str(PROYECTO / "output" / "contexto" / "contexto-HU-*.md")):
         hu = re.search(r"(HU-\d+)", archivo).group(1).upper()
         for k in RE_KEY.findall(Path(archivo).read_text(encoding="utf-8")[:4000]):
             if not RE_HU.fullmatch(k):
@@ -232,7 +234,7 @@ def keys_a_historias(keys):
 
 
 def mapa_componentes():
-    arch = RAIZ / "input" / "mapa-componentes.json"
+    arch = PROYECTO / "input" / "mapa-componentes.json"
     if not arch.exists():
         return {}
     try:
@@ -258,7 +260,7 @@ def inventario():
                                     "titulo_historia": "", "fuentes": [], "automatizado": [], "pasos": 0, "resultado": None,
                                     "duracion_s": None, "inestable": False, "bugs": [], "minutos_manual": None})
 
-    for x in sorted(glob.glob(str(RAIZ / "output" / "casos-de-prueba" / "manuales" / "casos-HU-*.xlsx"))):
+    for x in sorted(glob.glob(str(PROYECTO / "output" / "casos-de-prueba" / "manuales" / "casos-HU-*.xlsx"))):
         hu = re.search(r"(HU-\d+)", x).group(1).upper()
         try:
             for c in leer_xlsx(x):
@@ -276,7 +278,7 @@ def inventario():
             print(f"[!] No pude leer {Path(x).name}: {ex}", file=sys.stderr)
 
     def de_features(globo, fuente, suite=None):
-        for x in sorted(glob.glob(str(RAIZ / globo), recursive=True)):
+        for x in sorted(glob.glob(str(PROYECTO / globo), recursive=True)):
             try:
                 escenarios = leer_feature(x)
             except Exception:
@@ -301,7 +303,7 @@ def inventario():
                 if not k["minutos_manual"]:
                     k["minutos_manual"] = estimar_caso(c)["minutos"]
                 if suite:
-                    k["automatizado"].append({"suite": suite, "archivo": Path(x).relative_to(RAIZ).as_posix(),
+                    k["automatizado"].append({"suite": suite, "archivo": Path(x).relative_to(PROYECTO).as_posix(),
                                               "bloqueado": any(t.lower() == "bloqueado" for t in c["etiquetas"])})
                 if fuente not in k["fuentes"]:
                     k["fuentes"].append(fuente)
@@ -331,7 +333,7 @@ def inventario():
                 k = casos.get(f"{hu}:{cp}")
                 if k:
                     k["duracion_s"] = round(sum((p.get("result") or {}).get("duration") or 0 for p in esc.get("steps") or []) / 1e9, 1)
-    for arch in glob.glob(str(RAIZ / "output" / "fallos" / "*" / "fallos.json")):
+    for arch in glob.glob(str(PROYECTO / "output" / "fallos" / "*" / "fallos.json")):
         try:
             d = json.loads(Path(arch).read_text(encoding="utf-8"))
         except ValueError:
@@ -534,7 +536,7 @@ def main():
     a = ap.parse_args()
 
     nombre = a.nombre or (re.sub(r"[^\w.-]+", "_", a.git).strip("_") if a.git else f'cambio-{datetime.date.today().isoformat()}')
-    carpeta = Path(a.salida) if a.salida else RAIZ / "output" / "seleccion-casos" / nombre
+    carpeta = Path(a.salida) if a.salida else PROYECTO / "output" / "seleccion-casos" / nombre
     analisis_arch = Path(a.analisis) if a.analisis else carpeta / "analisis.json"
     if a.solo_informe:
         datos = json.loads((carpeta / "seleccion.json").read_text(encoding="utf-8"))
@@ -565,7 +567,7 @@ def main():
     escribir(carpeta, datos)
     r = datos["resumen"]
     donde = carpeta.resolve()
-    donde = donde.relative_to(RAIZ).as_posix() if donde.is_relative_to(RAIZ) else str(donde)
+    donde = donde.relative_to(PROYECTO).as_posix() if donde.is_relative_to(PROYECTO) else str(donde)
     print(f'Casos: {r["casos"]} · seleccionados: {r["seleccionados"]} ({r["automatizados"]} automatizados, {r["manuales"]} manuales) · '
           f'{r["minutos_seleccion"]} de {r["minutos_total"]} min (ahorro {r["ahorro_pct"]} %)')
     for g in GRUPOS:

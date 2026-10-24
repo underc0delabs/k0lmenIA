@@ -26,7 +26,8 @@ const path = require('path');
 const navegadorComun = require('../navegador/navegador');
 const { archivar } = require('../historial/historial.js');
 
-const RAIZ = path.resolve(__dirname, '..', '..', '..', '..');
+// Datos (output/, input/, .auth/) en el proyecto y scripts de Python en el código de k0lmenIA: ver ../rutas.js.
+const { PROYECTO: RAIZ, CODIGO } = require('../rutas');
 
 const RESOLUCIONES_POR_DEFECTO = '360x740,390x844,768x1024,1366x768,1920x1080';
 const NOMBRE_RESOLUCION = (ancho) => (ancho < 600 ? 'Mobile' : ancho < 1024 ? 'Tablet' : 'Desktop');
@@ -248,7 +249,7 @@ function limpiarCarpeta(carpeta) {
 
 function generarInforme(carpeta) {
   const py = process.platform === 'win32' ? 'python' : 'python3';
-  const r = require('child_process').spawnSync(py, [path.join(RAIZ, 'scripts', 'generar_informe_exploratorio.py'),
+  const r = require('child_process').spawnSync(py, [path.join(CODIGO, 'scripts', 'generar_informe_exploratorio.py'),
     path.join(carpeta, 'exploracion.json'), path.join(carpeta, 'informe-exploratorio.html')], { encoding: 'utf8' });
   if (r.status !== 0) {
     const motivo = (r.stderr || r.error || '').toString().trim().split(/\r?\n/).pop();

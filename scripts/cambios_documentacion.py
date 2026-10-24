@@ -31,6 +31,7 @@ que se vuelvan a registrar con "registrar". Imprime el resultado en JSON.
 Las fuentes de un documento son rutas relativas a la raíz del repositorio de la app: una carpeta
 (terminada en "/"), un archivo o un patrón con * y ** (src/**/i18n/*.json).
 """
+import os
 import argparse
 import datetime as dt
 import fnmatch
@@ -41,7 +42,8 @@ import sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
-CARPETA = RAIZ / "input" / "documentacion"
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
+CARPETA = PROYECTO / "input" / "documentacion"
 ESTADO = ".estado.json"
 CAMBIOS = "cambios.md"
 _ID_HU = re.compile(r"\b(HU-\d+)\b")
@@ -166,7 +168,7 @@ def modulos_afectados(estado, docs, historias):
     return sorted(m for m in ms if m)
 
 
-def inventario_casos(raiz=RAIZ):
+def inventario_casos(raiz=PROYECTO):
     """Casos existentes: [{archivo, historias (HU-XXX), texto}] de output/casos-de-prueba y los .feature de k0lmena."""
     archivos = []
     for base, patron in (("output/casos-de-prueba", "**/*.md"), ("output/casos-de-prueba", "**/*.feature"),
@@ -197,7 +199,7 @@ def casos_afectados(estado, historias, modulos, casos):
     return salida
 
 
-def analizar(estado, archivos, repo="", raiz=RAIZ):
+def analizar(estado, archivos, repo="", raiz=PROYECTO):
     docs = documentos_afectados(estado, archivos, repo)
     hs = historias_afectadas(estado, archivos, docs)
     ms = modulos_afectados(estado, docs, hs)
@@ -246,7 +248,7 @@ def _fecha_iso(v):
     return str(v or "").strip().replace(" ", "T")[:19]
 
 
-def comparar_historias(estado, actuales, raiz=RAIZ):
+def comparar_historias(estado, actuales, raiz=PROYECTO):
     """Compara las historias del alcance (con su fecha de cambio actual) con las documentadas.
     actuales: [{key, hu?, titulo?, actualizado, prs?, contenido?}]. Devuelve nuevas, cambiadas (con qué cambió),
     solo_metadatos (cambió la fecha pero no el contenido del requerimiento: no se rehace), sin_cambios y los casos

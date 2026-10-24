@@ -14,7 +14,8 @@ import time
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[2]
-DIR_GESTION = RAIZ / "output" / "gestion"
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
+DIR_GESTION = PROYECTO / "output" / "gestion"
 
 # Estados de k0lmenIA (CLAUDE.md) -> estado normalizado que entiende cada adaptador.
 ESTADOS = {

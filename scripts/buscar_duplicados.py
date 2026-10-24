@@ -24,6 +24,7 @@ Formato de --candidatos (lista JSON; solo "id" y "titulo" son obligatorios):
 
 Salida en output/triage/<nombre>/: triage.json (los datos) y triage.md (tablas alineadas).
 """
+import os
 import argparse
 import json
 import math
@@ -34,6 +35,7 @@ from collections import Counter
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 sys.path.insert(0, str(RAIZ / "scripts"))
 
 from seleccionar_casos import tokens  # noqa: E402  (misma normalización y sinónimos)
@@ -86,14 +88,14 @@ def leer_bug(ruta):
         datos.setdefault("fuente", "local")
         return datos
     bug = leer_bug_md(texto, ruta.stem)
-    bug["archivo"] = ruta.relative_to(RAIZ).as_posix() if ruta.is_relative_to(RAIZ) else str(ruta)
+    bug["archivo"] = ruta.relative_to(PROYECTO).as_posix() if ruta.is_relative_to(PROYECTO) else str(ruta)
     return bug
 
 
 def bugs_locales(excluir=()):
     excluir = {Path(e).resolve() for e in excluir}
     salida = []
-    for carpeta in (RAIZ / "output" / "reportes-bug", RAIZ / "input" / "bugs"):
+    for carpeta in (PROYECTO / "output" / "reportes-bug", PROYECTO / "input" / "bugs"):
         for ruta in sorted(carpeta.glob("*.md")) if carpeta.exists() else []:
             if ruta.resolve() not in excluir and not ruta.name.startswith("_"):
                 salida.append(leer_bug(ruta))
@@ -260,7 +262,7 @@ def main(argv=None):
     datos = {"nombre": nombre, "umbrales": {"duplicado": a.umbral_duplicado, "relacionado": a.umbral_relacionado},
              "candidatos_revisados": len(candidatos) + len(locales) + (len(bugs) - 1 if len(bugs) > 1 else 0),
              "bugs": resultado}
-    carpeta = Path(a.salida) if a.salida else RAIZ / "output" / "triage" / nombre
+    carpeta = Path(a.salida) if a.salida else PROYECTO / "output" / "triage" / nombre
     escribir(datos, carpeta)
     for b in resultado:
         top = b["coincidencias"][0] if b["coincidencias"] else None

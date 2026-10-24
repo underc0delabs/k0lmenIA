@@ -5,9 +5,11 @@
 // Las variables ya definidas en el entorno tienen prioridad sobre el archivo.
 const path = require('path');
 
+// El .env es del proyecto (con k0lmenIA como plugin, el del proyecto del QA): ver tools/rutas.js.
+const { PROYECTO } = require('./tools/rutas');
 const envFile = process.env.K0LMENA_ENV_FILE
   ? path.resolve(process.env.K0LMENA_ENV_FILE)
-  : path.resolve(__dirname, '../../.env');
+  : path.join(PROYECTO, '.env');
 
 // BASEURL definida en la terminal (ej. BASEURL=https://otra npm test) pisa a APP_URL para esa corrida.
 const baseurlDeLaTerminal = process.env.BASEURL;

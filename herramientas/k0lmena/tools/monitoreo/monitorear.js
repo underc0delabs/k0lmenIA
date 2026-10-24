@@ -29,7 +29,8 @@ const tls = require('tls');
 const { spawnSync } = require('child_process');
 const { archivar } = require('../historial/historial.js');
 
-const RAIZ = path.resolve(__dirname, '..', '..', '..', '..');
+// Datos (output/, input/, .auth/) en el proyecto y scripts de Python en el código de k0lmenIA: ver ../rutas.js.
+const { PROYECTO: RAIZ, CODIGO } = require('../rutas');
 const K0 = path.resolve(__dirname, '..', '..');
 const desde = (p) => path.resolve(process.env.INIT_CWD || process.cwd(), p);
 const GENERADOS = ['monitoreo.json', 'informe-monitoreo.html', 'escenarios'];
@@ -182,7 +183,7 @@ function correrEscenarios(tags, carpeta) {
 
 function avisar(aviso, link) {
   const py = process.platform === 'win32' ? 'python' : 'python3';
-  const args = [path.join(RAIZ, 'scripts', 'avisar.py'), '--titulo', aviso.titulo, '--texto', aviso.texto, '--nivel', aviso.nivel,
+  const args = [path.join(CODIGO, 'scripts', 'avisar.py'), '--titulo', aviso.titulo, '--texto', aviso.texto, '--nivel', aviso.nivel,
     '--campos', aviso.campos.map(([k, v]) => `${k}=${String(v).replace(/,/g, ' ')}`).join(',')];
   if (link) args.push('--link', link);
   const r = spawnSync(py, args, { encoding: 'utf8' });
@@ -192,7 +193,7 @@ function avisar(aviso, link) {
 
 function generarInforme(carpeta) {
   const py = process.platform === 'win32' ? 'python' : 'python3';
-  const r = spawnSync(py, [path.join(RAIZ, 'scripts', 'generar_informe_monitoreo.py'), path.join(carpeta, 'monitoreo.json'),
+  const r = spawnSync(py, [path.join(CODIGO, 'scripts', 'generar_informe_monitoreo.py'), path.join(carpeta, 'monitoreo.json'),
     path.join(carpeta, 'informe-monitoreo.html')], { encoding: 'utf8' });
   if (r.status !== 0) console.log(`No pude generar el informe HTML: ${(r.stderr || r.error || '').toString().trim().split('\n').pop()}`);
   return r.status === 0;

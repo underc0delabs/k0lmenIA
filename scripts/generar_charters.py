@@ -37,6 +37,7 @@ Notas de una sesión (sesiones/CH-01.md): encabezado y líneas con prefijo; lo d
     SIN CUBRIR: Mensajes de error
     NOTA: Usé la tarjeta de prueba de Visa
 """
+import os
 import argparse
 import datetime
 import json
@@ -45,6 +46,7 @@ import sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 sys.path.insert(0, str(RAIZ / "scripts"))
 import _historial  # noqa: E402
 from _i18n import escribir_bilingue, localizar, idioma_actual  # noqa: E402
@@ -216,7 +218,7 @@ def main():
     ap.add_argument("--informe", action="store_true", help="arma el informe a partir de las notas de sesiones/")
     ap.add_argument("--salida")
     a = ap.parse_args()
-    carpeta = Path(a.salida) if a.salida else RAIZ / "output" / "charters" / a.nombre
+    carpeta = Path(a.salida) if a.salida else PROYECTO / "output" / "charters" / a.nombre
     arch = carpeta / "charters.json"
     if not arch.exists():
         sys.exit(f"No existe {arch}: el agente tiene que escribir primero los charters.")

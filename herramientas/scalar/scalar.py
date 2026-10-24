@@ -48,6 +48,7 @@ import urllib.request
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[2]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 REGISTRY = "https://registry.scalar.com"
 CLI = "@scalar/cli"
 METODOS = ("get", "post", "put", "patch", "delete", "head", "options")
@@ -360,7 +361,7 @@ def descargar(namespace, slug, version="latest", salida=None, env=None):
         raise RuntimeError(f"el Registry respondió {ex.code} para @{namespace}/{slug}@{version}{pista}") from None
     if not isinstance(doc, dict) or not (doc.get("openapi") or doc.get("swagger") or doc.get("asyncapi")):
         raise RuntimeError("lo que devolvió el Registry no es un documento OpenAPI/AsyncAPI")
-    salida = Path(salida) if salida else RAIZ / "input" / "api" / "scalar" / f"{slug}.json"
+    salida = Path(salida) if salida else PROYECTO / "input" / "api" / "scalar" / f"{slug}.json"
     salida.parent.mkdir(parents=True, exist_ok=True)
     salida.write_text(json.dumps(doc, ensure_ascii=False, indent=2), encoding="utf-8")
     ops, _ = operaciones(doc)

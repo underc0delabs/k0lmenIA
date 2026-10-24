@@ -52,6 +52,7 @@ from _i18n import escribir_bilingue, localizar, idioma_actual  # noqa: E402
 import recolectar_resultados as rec  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parents[1]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 GENERADOS = ["tablero.json", "analisis.json", "informe-tablero.html"]
 SEVERIDADES = rec.SEVERIDADES
 SUITES = ("web", "api", "mobile")
@@ -59,13 +60,13 @@ SUITES = ("web", "api", "mobile")
 
 def usar_raiz(raiz):
     """Apunta el tablero (y los lectores que reutiliza) a otra raíz; lo usan los tests."""
-    global RAIZ
-    RAIZ = Path(raiz)
-    rec.RAIZ = RAIZ
-    rec.K0 = RAIZ / "herramientas" / "k0lmena" / "reports"
+    global PROYECTO
+    PROYECTO = Path(raiz)
+    rec.PROYECTO = PROYECTO
+    rec.K0 = PROYECTO / "herramientas" / "k0lmena" / "reports"
     try:
         import seleccionar_casos as sc
-        sc.RAIZ = RAIZ
+        sc.PROYECTO = PROYECTO
     except Exception:
         pass
 
@@ -123,14 +124,14 @@ def _estado_escenario(esc):
 def corridas(r):
     """Cada corrida (ejecución en vivo o npm test por suite, con su historial) dentro del rango."""
     salida = []
-    for arch in sorted(glob.glob(str(RAIZ / "output" / "ejecuciones" / "_resultados-*.json"))):
+    for arch in sorted(glob.glob(str(PROYECTO / "output" / "ejecuciones" / "_resultados-*.json"))):
         d = _json(arch)
         if not isinstance(d, dict):
             continue
         ts = _ts(d.get("fecha")) or os.path.getmtime(arch)
         cuenta = Counter(rec._estado(c.get("estado")) for c in d.get("casos") or [])
         salida.append({"ts": ts, "fuente": "en vivo", "historia": (d.get("historia") or "").upper(), "cuenta": cuenta})
-    k0 = RAIZ / "herramientas" / "k0lmena" / "reports"
+    k0 = PROYECTO / "herramientas" / "k0lmena" / "reports"
     for suite in SUITES:
         archivos = [k0 / suite / "cucumber-report.json"] + sorted((k0 / suite / "historial").glob("*/cucumber-report.json"))
         for arch in archivos:
@@ -164,7 +165,7 @@ def resultados_periodo(r):
 def inventario():
     try:
         import seleccionar_casos as sc
-        sc.RAIZ = RAIZ
+        sc.PROYECTO = PROYECTO
         return sc.inventario()
     except Exception as ex:  # una planilla rara no corta el tablero
         print(f"[!] No pude armar el inventario de casos ({ex}).", file=sys.stderr)
@@ -172,7 +173,7 @@ def inventario():
 
 
 def _mas_reciente(patron):
-    archivos = sorted(glob.glob(str(RAIZ / patron)), key=os.path.getmtime)
+    archivos = sorted(glob.glob(str(PROYECTO / patron)), key=os.path.getmtime)
     return Path(archivos[-1]) if archivos else None
 
 
@@ -186,13 +187,13 @@ def cobertura():
         m = h.get("metricas") or {}
         if m.get("criterios"):
             por_hu[h.get("historia")] = round(m.get("criterios_cubiertos", 0) / m["criterios"] * 100)
-    return {"archivo": arch.relative_to(RAIZ).as_posix(), "pct": _historial._cob_pct(d),
+    return {"archivo": arch.relative_to(PROYECTO).as_posix(), "pct": _historial._cob_pct(d),
             "huecos": len(_historial._huecos(d)), "por_historia": por_hu}
 
 
 def bugs(r):
     lista = rec.de_bugs(None)
-    archivos = {Path(a).stem: os.path.getmtime(a) for a in glob.glob(str(RAIZ / "output" / "reportes-bug" / "BUG-*.md"))}
+    archivos = {Path(a).stem: os.path.getmtime(a) for a in glob.glob(str(PROYECTO / "output" / "reportes-bug" / "BUG-*.md"))}
     for b in lista:
         b["ts"] = archivos.get(b["id"]) or next((t for k, t in archivos.items() if k.startswith(b["id"])), None)
     abiertos = [b for b in lista if b["estado"].lower() in rec.ABIERTOS]
@@ -213,26 +214,26 @@ def fallos():
     if not isinstance(d, dict):
         return None
     pc = (d.get("resumen") or {}).get("por_categoria") or {}
-    return {"archivo": arch.relative_to(RAIZ).as_posix(), "fallidos": (d.get("resumen") or {}).get("fallidos", 0),
+    return {"archivo": arch.relative_to(PROYECTO).as_posix(), "fallidos": (d.get("resumen") or {}).get("fallidos", 0),
             "inestables": pc.get("Inestable (flaky)", 0), "posibles_bugs": pc.get("Posible bug", 0), "por_categoria": pc}
 
 
 def extras():
     out = {"accesibilidad": [], "rendimiento": [], "performance": rec.de_performance(None), "seguridad": rec.de_seguridad(None)}
-    for arch in sorted(glob.glob(str(RAIZ / "output" / "accesibilidad" / "*" / "auditoria.json"))):
+    for arch in sorted(glob.glob(str(PROYECTO / "output" / "accesibilidad" / "*" / "auditoria.json"))):
         d = _json(arch) or {}
         r = d.get("resumen") or {}
         if r.get("cumplimiento_pct") is not None:
             out["accesibilidad"].append({"sitio": Path(arch).parent.name, "cumplimiento": r.get("cumplimiento_pct"),
                                          "criticos": r.get("criticos", 0)})
-    for arch in sorted(glob.glob(str(RAIZ / "output" / "rendimiento" / "*" / "rendimiento.json"))):
+    for arch in sorted(glob.glob(str(PROYECTO / "output" / "rendimiento" / "*" / "rendimiento.json"))):
         r = (_json(arch) or {}).get("resumen") or {}
         if r.get("rendimiento_mobile") is not None or r.get("rendimiento_desktop") is not None:
             out["rendimiento"].append({"sitio": Path(arch).parent.name, "mobile": r.get("rendimiento_mobile"),
                                        "desktop": r.get("rendimiento_desktop")})
     # Uso de tokens (scripts/metricas_tokens.py): el informe más reciente de cada nombre.
     out["tokens"] = []
-    for arch in sorted(glob.glob(str(RAIZ / "output" / "metricas-tokens" / "*" / "metricas.json"))):
+    for arch in sorted(glob.glob(str(PROYECTO / "output" / "metricas-tokens" / "*" / "metricas.json"))):
         d = _json(arch) or {}
         r = d.get("resumen") or {}
         if r.get("llamadas"):
@@ -503,7 +504,7 @@ def main(argv=None):
         usar_raiz(a.raiz)
     nombre = a.nombre or ("-".join(x for x in (a.desde, a.hasta) if x) or "general")
     nombre = re.sub(r"[^\w.-]+", "-", nombre).strip("-") or "general"
-    carpeta = RAIZ / "output" / "tablero" / nombre
+    carpeta = PROYECTO / "output" / "tablero" / nombre
     carpeta.mkdir(parents=True, exist_ok=True)
     analisis = _json(a.analisis) if a.analisis else None
     if a.analisis and analisis is None:
@@ -527,7 +528,7 @@ def main(argv=None):
           f"{r['inestables']} inestables")
     if datos["sin_datos"]:
         print("Sin datos: " + "; ".join(datos["sin_datos"]))
-    print(f"Informe: {(carpeta / 'informe-tablero.html').relative_to(RAIZ).as_posix()}")
+    print(f"Informe: {(carpeta / 'informe-tablero.html').relative_to(PROYECTO).as_posix()}")
     return 0
 
 

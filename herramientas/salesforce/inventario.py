@@ -38,6 +38,7 @@ import tempfile
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[2]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 COBERTURA_MINIMA = 75  # la que exige Salesforce para desplegar a producción
 OBJETOS_ESTANDAR = ["Account", "Contact", "Lead", "Opportunity", "Case"]
 LIMITES_CLAVE = {"DailyApiRequests", "DataStorageMB", "FileStorageMB", "DailyAsyncApexExecutions",
@@ -336,7 +337,7 @@ def main(argv=None):
                      "api": (info or {}).get("apiVersion"), "url": (info or {}).get("instanceUrl")},
              "inventario": inv, "hallazgos": hallazgos, "sugerencias": sugerencias}
 
-    carpeta = RAIZ / "output" / "salesforce" / re.sub(r"[^\w.-]+", "-", args.historia or alias)
+    carpeta = PROYECTO / "output" / "salesforce" / re.sub(r"[^\w.-]+", "-", args.historia or alias)
     carpeta.mkdir(parents=True, exist_ok=True)
     try:
         sys.path.insert(0, str(RAIZ / "scripts"))

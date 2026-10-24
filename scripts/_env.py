@@ -16,11 +16,12 @@ import re
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 _LINEA = re.compile(r"^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$")
 
 
 def archivo_env():
-    return Path(os.environ.get("K0LMENA_ENV_FILE") or RAIZ / ".env")
+    return Path(os.environ.get("K0LMENA_ENV_FILE") or PROYECTO / ".env")
 
 
 def leer_env(archivo=None):

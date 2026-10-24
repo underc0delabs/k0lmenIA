@@ -60,3 +60,6 @@ venv/
 
 # Resultados de los evals de los agentes (scripts/evaluar_agentes.py): se regeneran
 /evals/resultados/
+
+# Plugin armado por scripts/construir_plugin.py (se publica en la rama plugin)
+/dist/

@@ -19,7 +19,9 @@ const VERSIONES = {
   '@salesforce/mcp': '0.30.15',
 };
 
-const RAIZ = path.resolve(__dirname, '..', '..');
+const RAIZ = path.resolve(__dirname, '..', '..'); // el código de k0lmenIA
+// El server corre en el proyecto (output/, .env y .auth/ del QA; con el repo clonado, la misma carpeta).
+const { PROYECTO } = require('../../herramientas/k0lmena/tools/rutas');
 const SEGURO = /^[\w@./:=${}-]+$/; // lo que puede ir sin comillas en la línea de cmd
 
 function salirConError(conector, mensaje) {
@@ -45,7 +47,7 @@ function lanzarNpx(conector, paquete, args, env = process.env) {
   }
   const invalido = todos.find((a) => !SEGURO.test(a));
   if (invalido) salirConError(conector, `argumento no permitido: "${invalido}"`);
-  const opciones = { stdio: 'inherit', env, cwd: RAIZ };
+  const opciones = { stdio: 'inherit', env, cwd: PROYECTO };
   const hijo = process.platform === 'win32'
     ? spawn(['npx', ...todos].join(' '), { ...opciones, shell: true })
     : spawn('npx', todos, opciones);
@@ -62,4 +64,4 @@ function lanzarNpx(conector, paquete, args, env = process.env) {
   return hijo;
 }
 
-module.exports = { lanzarNpx, salirConError, paqueteFijo, VERSIONES, RAIZ };
+module.exports = { lanzarNpx, salirConError, paqueteFijo, VERSIONES, RAIZ, PROYECTO };

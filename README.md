@@ -97,6 +97,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 - [Agentes](#-agentes)
 - [Requisitos](#-requisitos)
 - [Instalación](#-instalación)
+- [Como plugin de Claude Code](#-como-plugin-de-claude-code)
 - [Configuración: el archivo `.env`](#️-configuración-el-archivo-env)
 - [Cómo se usa](#-cómo-se-usa)
 - [Investigación de contexto y "Falta información"](#-investigación-de-contexto-y-falta-información)
@@ -240,6 +241,24 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 | Performance con JMeter    | **Java 8+** (`npm run bootstrap:jmeter` descarga JMeter)                                                  |
 
 ---
+
+## 🧩 Como plugin de Claude Code
+
+Además de clonar el repo, k0lmenIA se puede instalar como **plugin** en la carpeta de cualquier proyecto. Así no hace falta trabajar dentro de este repo, y las actualizaciones llegan con un comando sin tocar tu trabajo.
+
+```
+/plugin marketplace add underc0delabs/k0lmenIA#plugin
+/plugin install k0lmenia@k0lmenia
+```
+
+Después, en la carpeta de tu proyecto: `k0lmenia init` (crea `input/`, `output/`, el `.env` y una copia de k0lmena para tus pruebas automatizadas) y `k0lmenia doctor`.
+
+- **Comandos**: lo que acá es `npm run <x>` o `python scripts/<x>.py`, en el plugin es `k0lmenia <x>` (`k0lmenia ayuda` los lista). Los agentes se llaman `k0lmenia:<agente>`.
+- **Actualizar**: `/plugin marketplace update k0lmenia`, o activá la actualización automática en `/plugin` → Marketplaces. El plugin vive en la caché de Claude Code; tu proyecto (`input/`, `output/`, `.env`, `herramientas/k0lmena` con tus pruebas) no se toca.
+- **Personalizar un agente**: copialo a `.claude/agents/` de tu proyecto. Esa copia le gana a la del plugin, pero deja de recibir las mejoras de ese agente.
+- **Para todo el equipo**: declarás el marketplace y el plugin en el `.claude/settings.json` del proyecto (instrucciones en la rama [`plugin`](https://github.com/underc0delabs/k0lmenIA/tree/plugin)).
+- **Cómo se arma**: la rama `plugin` la publica sola el workflow `plugin.yml` en cada push a `main`, con `python scripts/construir_plugin.py`. Este repo sigue siendo donde se desarrolla.
+- **Limitación de esta primera versión**: `k0lmenia init` copia k0lmena entera a tu proyecto, así que las mejoras del framework de automatización no llegan solas a esa copia (los agentes, skills y scripts sí se actualizan). Separar el núcleo de k0lmena de tus pruebas es la fase 2.
 
 ## 🚀 Instalación
 

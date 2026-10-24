@@ -29,7 +29,8 @@ const navegadorComun = require('../navegador/navegador');
 const { archivar } = require('../historial/historial.js');
 const { normalizar, slug, sello, NO_RECORRER, ARCHIVO } = require('../explorador/explorar.js');
 
-const RAIZ = path.resolve(__dirname, '..', '..', '..', '..');
+// Datos (output/, input/, .auth/) en el proyecto y scripts de Python en el código de k0lmenIA: ver ../rutas.js.
+const { PROYECTO: RAIZ, CODIGO } = require('../rutas');
 const GENERADOS = ['rendimiento.json', 'analisis.json', 'informe-rendimiento.html', 'capturas', 'lighthouse'];
 // Umbrales de Google (bueno hasta, malo desde). TBT es el sustituto de laboratorio de INP.
 const UMBRALES = {
@@ -210,7 +211,7 @@ const mediana = (xs) => { const s = [...xs].sort((a, b) => a - b); return s[Math
 
 function generarInforme(carpeta) {
   const py = process.platform === 'win32' ? 'python' : 'python3';
-  const r = require('child_process').spawnSync(py, [path.join(RAIZ, 'scripts', 'generar_informe_rendimiento.py'),
+  const r = require('child_process').spawnSync(py, [path.join(CODIGO, 'scripts', 'generar_informe_rendimiento.py'),
     path.join(carpeta, 'rendimiento.json'), path.join(carpeta, 'informe-rendimiento.html')], { encoding: 'utf8' });
   if (r.status !== 0) {
     const motivo = (r.stderr || r.error || '').toString().trim().split(/\r?\n/).pop();

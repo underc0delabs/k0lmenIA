@@ -29,6 +29,7 @@ Esquema del JSON (todo opcional salvo "persona" y "rol"):
   "faltantes": ["No hay documentación del proyecto: pedile al documentador-proyecto que la arme."]
 }
 """
+import os
 import argparse
 import json
 import re
@@ -37,6 +38,7 @@ import sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 sys.path.insert(0, str(RAIZ / "scripts"))
 from _i18n import escribir_bilingue, localizar, idioma_actual  # noqa: E402
 
@@ -184,7 +186,7 @@ def main(argv=None):
     d = json.loads(Path(a.plan_json).read_text(encoding="utf-8"))
     if not d.get("persona") and not d.get("rol"):
         ap.error('el JSON necesita "persona" o "rol"')
-    carpeta = Path(a.salida) if a.salida else RAIZ / "output" / "onboarding" / slug(d.get("persona") or d.get("rol"))
+    carpeta = Path(a.salida) if a.salida else PROYECTO / "output" / "onboarding" / slug(d.get("persona") or d.get("rol"))
     carpeta.mkdir(parents=True, exist_ok=True)
     # ES y EN (el .md queda en español): el inglés del agente va en el bloque "en" del plan.
     escribir_bilingue(carpeta / "plan-onboarding.html", lambda: build_html(localizar(d)))

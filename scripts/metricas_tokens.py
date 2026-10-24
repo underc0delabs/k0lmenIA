@@ -36,6 +36,7 @@ from datetime import date, datetime, timedelta
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 sys.path.insert(0, str(RAIZ / "scripts"))
 
 # ------------------------------------------------------------------ precios
@@ -79,7 +80,7 @@ def costo(uso, modelo):
             + uso["cache_1h"] * p["cache_1h"] + uso["cache_lectura"] * p["cache_lectura"]) / 1_000_000
 
 
-def carpeta_transcripciones(raiz=RAIZ):
+def carpeta_transcripciones(raiz=PROYECTO):
     """~/.claude/projects/<ruta con barras y dos puntos cambiados por guiones>: la del repo o, si Claude Code
     se abrió en una carpeta que lo contiene, la de esa carpeta."""
     base = Path(os.environ.get("CLAUDE_CONFIG_DIR") or Path.home() / ".claude") / "projects"
@@ -352,7 +353,7 @@ def main(argv=None):
     if not re.fullmatch(r"[\w.-]+", a.nombre):
         ap.error("--nombre: solo letras, números, punto, guion y guion bajo")
     fuente = Path(a.carpeta) if a.carpeta else carpeta_transcripciones()
-    carpeta = Path(a.salida) if a.salida else RAIZ / "output" / "metricas-tokens" / a.nombre
+    carpeta = Path(a.salida) if a.salida else PROYECTO / "output" / "metricas-tokens" / a.nombre
     carpeta.mkdir(parents=True, exist_ok=True)
     periodo = f'{a.desde or "inicio"} a {a.hasta or "hoy"}'
     registros = recolectar(fuente, a.desde, a.hasta) if fuente.is_dir() else []

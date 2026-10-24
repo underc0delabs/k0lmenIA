@@ -30,7 +30,8 @@ import sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
-K0 = RAIZ / "herramientas" / "k0lmena" / "reports"
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
+K0 = PROYECTO / "herramientas" / "k0lmena" / "reports"
 SEVERIDADES = ["Crítica", "Alta", "Media", "Baja"]
 ABIERTOS = {"abierto", "en curso", "reabierto", "sin estado"}
 
@@ -46,7 +47,7 @@ def _estado(valor):
 
 def de_ejecuciones(historia):
     salida = []
-    for archivo in sorted(glob.glob(str(RAIZ / "output" / "ejecuciones" / "_resultados-*.json"))):
+    for archivo in sorted(glob.glob(str(PROYECTO / "output" / "ejecuciones" / "_resultados-*.json"))):
         try:
             datos = json.loads(Path(archivo).read_text(encoding="utf-8"))
         except (OSError, ValueError):
@@ -108,7 +109,7 @@ def _campo(texto, nombre):
 
 def de_bugs(historia):
     bugs = []
-    for archivo in sorted(glob.glob(str(RAIZ / "output" / "reportes-bug" / "BUG-*.md"))):
+    for archivo in sorted(glob.glob(str(PROYECTO / "output" / "reportes-bug" / "BUG-*.md"))):
         texto = Path(archivo).read_text(encoding="utf-8")
         hu = _campo(texto, "Historia").upper()
         if historia and historia not in hu:
@@ -123,21 +124,21 @@ def de_bugs(historia):
 
 
 def de_performance(historia):
-    patron = RAIZ / "output" / "performance" / (historia or "*") / "informe-performance-*.json"
+    patron = PROYECTO / "output" / "performance" / (historia or "*") / "informe-performance-*.json"
     informes = []
     for archivo in sorted(glob.glob(str(patron))):
         try:
             datos = json.loads(Path(archivo).read_text(encoding="utf-8"))
         except ValueError:
             continue
-        informes.append({"informe": os.path.relpath(archivo, RAIZ), "veredicto": datos.get("veredicto", "—"),
+        informes.append({"informe": os.path.relpath(archivo, PROYECTO), "veredicto": datos.get("veredicto", "—"),
                          "capacidad": datos.get("capacidad", ""), "corridas": len(datos.get("corridas") or [])})
     return informes
 
 
 def de_seguridad(historia):
     escaneos = []
-    for archivo in sorted(glob.glob(str(RAIZ / "output" / "seguridad" / (historia or "*") / "*" / "zap.json"))):
+    for archivo in sorted(glob.glob(str(PROYECTO / "output" / "seguridad" / (historia or "*") / "*" / "zap.json"))):
         try:
             zap = json.loads(Path(archivo).read_text(encoding="utf-8"))
         except ValueError:
@@ -155,7 +156,7 @@ def de_seguridad(historia):
                 if str(a.get("pluginid")) in falsos:
                     continue
                 cuenta[{3: "Alto", 2: "Medio", 1: "Bajo"}.get(int(a.get("riskcode", 0) or 0), "Informativo")] += 1
-        escaneos.append({"escaneo": os.path.relpath(Path(archivo).parent, RAIZ), "hallazgos": cuenta})
+        escaneos.append({"escaneo": os.path.relpath(Path(archivo).parent, PROYECTO), "hallazgos": cuenta})
     return escaneos
 
 

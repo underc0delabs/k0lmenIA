@@ -14,14 +14,15 @@
 // Uso (en .mcp.json): node scripts/mcp/playwright.js [--headless]
 const fs = require('fs');
 const path = require('path');
-const { lanzarNpx, RAIZ } = require('./lanzar');
+const { lanzarNpx, RAIZ, PROYECTO } = require('./lanzar');
 const { variable } = require('./leer-env');
 const { sesionActiva } = require('../../herramientas/k0lmena/tools/login/sesion');
 const navegadorComun = require('../../herramientas/k0lmena/tools/navegador/navegador');
 
 const args = ['--output-dir', 'output/ejecuciones/evidencia'];
 if (process.argv.includes('--headless')) args.push('--headless');
-if (fs.existsSync(path.join(RAIZ, '.env'))) args.push('--secrets', '.env');
+// El server corre en el proyecto (cwd = PROYECTO): output-dir, .env y .auth/ son rutas del proyecto.
+if (fs.existsSync(path.join(PROYECTO, '.env'))) args.push('--secrets', '.env');
 
 let sesion = null;
 try {
@@ -31,7 +32,7 @@ try {
 }
 if (sesion) {
   // Relativa a la raíz (el server corre ahí) y con /: la línea de npx solo admite rutas simples.
-  args.push('--isolated', '--storage-state', path.relative(RAIZ, sesion).split(path.sep).join('/'));
+  args.push('--isolated', '--storage-state', path.relative(PROYECTO, sesion).split(path.sep).join('/'));
 }
 // Canal y bypass: las mismas variables que usa k0lmena (validadas por tools/navegador).
 const env = { ...process.env };
@@ -43,7 +44,9 @@ try {
   });
   if (config.canal) args.push('--browser', config.canal);
   if (config.bypass) {
-    args.push('--init-page', 'scripts/mcp/navegador-mcp.ts');
+    // Es código de k0lmenIA (no del proyecto) y su ruta puede tener espacios (la caché del plugin): va por la
+    // variable de entorno del server, no por la línea de npx (que solo admite rutas simples).
+    env.PLAYWRIGHT_MCP_INIT_PAGE = path.join(RAIZ, 'scripts', 'mcp', 'navegador-mcp.ts');
     Object.assign(env, { K0LMENIA_BYPASS_HEADER: config.bypass.nombre, K0LMENIA_BYPASS_TOKEN: config.bypass.valor,
       K0LMENIA_BYPASS_HOSTS: config.bypass.hosts.join(',') });
   }

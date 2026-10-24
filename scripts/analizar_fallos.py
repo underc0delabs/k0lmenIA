@@ -22,6 +22,7 @@ Categorías (heurística sobre el error y el estado de los pasos; el agente la c
 Deja en output/fallos/<HU o suite>/: fallos.json, corridas/ (copia de cada cucumber-report.json),
 evidencia/ (capturas, videos y traces de los fallidos) e informe-fallos.html.
 """
+import os
 import argparse
 import base64
 import datetime
@@ -34,9 +35,10 @@ import sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 sys.path.insert(0, str(RAIZ / "scripts"))
 import _historial  # noqa: E402
-K0 = RAIZ / "herramientas" / "k0lmena" / "reports"
+K0 = PROYECTO / "herramientas" / "k0lmena" / "reports"
 SUITES = ["web", "api", "mobile"]
 
 # (categoría, patrón, sugerencia). El orden importa: gana la primera que coincide.
@@ -263,7 +265,7 @@ def main():
     if historia and not re.match(r"^[A-Z]+-\d+$", historia):
         sys.exit("--historia tiene que ser un ID como HU-001.")
     suites = [s.strip() for s in a.suites.split(",") if s.strip() in SUITES]
-    carpeta = Path(a.salida) if a.salida else RAIZ / "output" / "fallos" / (historia or "suite")
+    carpeta = Path(a.salida) if a.salida else PROYECTO / "output" / "fallos" / (historia or "suite")
 
     if not a.agregar_reintento and not a.solo_informe:
         # Corrida nueva: el análisis anterior pasa a historial/<fecha>/ (se guardan los últimos 5).
@@ -274,7 +276,7 @@ def main():
         carpeta.mkdir(parents=True, exist_ok=True)
         cid, copiadas = capturar_corrida(carpeta, suites, "Corrida original", a.reportes)
         donde = carpeta.resolve()
-        donde = donde.relative_to(RAIZ).as_posix() if donde.is_relative_to(RAIZ) else str(donde)
+        donde = donde.relative_to(PROYECTO).as_posix() if donde.is_relative_to(PROYECTO) else str(donde)
         print(f"Corrida original ({', '.join(copiadas)}) guardada en {donde}")
     elif a.agregar_reintento:
         if not (carpeta / "corridas.json").exists():

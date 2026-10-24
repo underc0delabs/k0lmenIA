@@ -28,7 +28,8 @@ const navegadorComun = require('../navegador/navegador');
 const { archivar } = require('../historial/historial.js');
 const { normalizar, slug, sello, NO_RECORRER, ARCHIVO, recorrerScroll, cargar, capturar } = require('../explorador/explorar.js');
 
-const RAIZ = path.resolve(__dirname, '..', '..', '..', '..');
+// Datos (output/, input/, .auth/) en el proyecto y scripts de Python en el código de k0lmenIA: ver ../rutas.js.
+const { PROYECTO: RAIZ, CODIGO } = require('../rutas');
 const GENERADOS = ['auditoria.json', 'analisis.json', 'informe-accesibilidad.html', 'capturas', 'videos'];
 const IMPACTO = { critical: 'Crítica', serious: 'Alta', moderate: 'Media', minor: 'Baja' };
 const SEV_ORDEN = { 'Crítica': 0, 'Alta': 1, 'Media': 2, 'Baja': 3 };
@@ -278,7 +279,7 @@ function cumplimiento(paginas) {
 
 function generarInforme(carpeta) {
   const py = process.platform === 'win32' ? 'python' : 'python3';
-  const r = require('child_process').spawnSync(py, [path.join(RAIZ, 'scripts', 'generar_informe_accesibilidad.py'),
+  const r = require('child_process').spawnSync(py, [path.join(CODIGO, 'scripts', 'generar_informe_accesibilidad.py'),
     path.join(carpeta, 'auditoria.json'), path.join(carpeta, 'informe-accesibilidad.html')], { encoding: 'utf8' });
   if (r.status !== 0) {
     const motivo = (r.stderr || r.error || '').toString().trim().split(/\r?\n/).pop();

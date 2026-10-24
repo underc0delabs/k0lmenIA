@@ -36,7 +36,8 @@ const { descubrir } = require('../pixel-perfect/pixel-perfect.js');
 const { extraerFormularios } = require('../formularios/formularios.js');
 const { sesionActiva } = require('../login/sesion');
 
-const RAIZ = path.resolve(__dirname, '..', '..', '..', '..');
+// Datos (output/, input/, .auth/) en el proyecto y scripts de Python en el código de k0lmenIA: ver ../rutas.js.
+const { PROYECTO: RAIZ, CODIGO } = require('../rutas');
 const desde = (p) => path.resolve(process.env.INIT_CWD || process.cwd(), p);
 const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -268,7 +269,7 @@ function aMarkdown(mapa) {
 
 function formatearTablas(archivo) {
   const py = process.platform === 'win32' ? 'python' : 'python3';
-  const r = require('child_process').spawnSync(py, [path.join(RAIZ, 'scripts', 'formatear_tablas.py'), archivo], { encoding: 'utf8' });
+  const r = require('child_process').spawnSync(py, [path.join(CODIGO, 'scripts', 'formatear_tablas.py'), archivo], { encoding: 'utf8' });
   if (r.status !== 0) console.log(`No pude alinear las tablas (${(r.stderr || r.error || '').toString().trim().split('\n').pop()}). Corré: python scripts/formatear_tablas.py ${path.relative(RAIZ, archivo)}`);
 }
 

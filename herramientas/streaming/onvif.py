@@ -33,6 +33,7 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parents[2]
 
 
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 def salir(msg, codigo=2):
     print(msg, file=sys.stderr)
     sys.exit(codigo)
@@ -403,7 +404,7 @@ def main():
             salir("Cancelado.", 1)
 
     nombre = args.historia or args.host
-    carpeta = RAIZ / "output" / "streaming" / f"onvif-{nombre}"
+    carpeta = PROYECTO / "output" / "streaming" / f"onvif-{nombre}"
     carpeta.mkdir(parents=True, exist_ok=True)
 
     try:

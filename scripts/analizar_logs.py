@@ -23,6 +23,7 @@ Las fechas sin zona horaria se toman como hora local (o la de --zona).
 
 Deja output/logs/<nombre>/ con logs.json e informe-logs.html; el análisis anterior pasa a historial/ (últimos 5).
 """
+import os
 import argparse
 import datetime as dt
 import glob
@@ -35,10 +36,11 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 sys.path.insert(0, str(RAIZ / "scripts"))
 import _historial  # noqa: E402
 
-K0 = RAIZ / "herramientas" / "k0lmena" / "reports"
+K0 = PROYECTO / "herramientas" / "k0lmena" / "reports"
 MESES = {m: i for i, m in enumerate(["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"], 1)}
 MESES.update({"ene": 1, "abr": 4, "ago": 8, "dic": 12})
 R_ISO = re.compile(r"(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2})(?:[.,](\d{1,6}))?\s*(Z|[+-]\d{2}:?\d{2})?")
@@ -252,7 +254,7 @@ def main():
     ap.add_argument("--solo-informe", action="store_true")
     ap.add_argument("--salida")
     a = ap.parse_args()
-    carpeta = Path(a.salida) if a.salida else RAIZ / "output" / "logs" / (a.nombre or "app")
+    carpeta = Path(a.salida) if a.salida else PROYECTO / "output" / "logs" / (a.nombre or "app")
     datos_arch = carpeta / "logs.json"
     if not a.solo_informe:
         if not a.logs:

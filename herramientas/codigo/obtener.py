@@ -42,6 +42,7 @@ import urllib.request
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[2]
+PROYECTO = Path(os.environ.get("K0LMENIA_PROYECTO") or RAIZ).resolve()  # datos del proyecto (scripts/_proyecto.py)
 MARCA = ".k0lmenia-origen.json"
 TIMEOUT_GIT = 900
 
@@ -436,7 +437,7 @@ def obtener(origen, base=None, destino=None, env=None):
     man["autenticado"] = bool(header)
     nombre = slug(info["repo"].split("/")[-1] + (f"-pr-{info['pr']}" if info.get("pr") else
                                                  f"-{info['rama']}" if info.get("rama") else ""))
-    dest = Path(destino) if destino else RAIZ / "output" / "revision-codigo" / nombre / "fuente"
+    dest = Path(destino) if destino else PROYECTO / "output" / "revision-codigo" / nombre / "fuente"
     reusar = preparar_destino(dest, info["clone_url"])
     dest.parent.mkdir(parents=True, exist_ok=True)
 
@@ -551,7 +552,7 @@ def main(argv=None):
         print(f"[codigo] {ocultar(str(ex), env)}", file=sys.stderr)
         return 2
     diff = man.pop("_diff", None)
-    carpeta = Path(man["ruta_local"]).parent if man["proveedor"] != "local" else RAIZ / "output" / "revision-codigo" / slug(Path(man["ruta_local"]).name)
+    carpeta = Path(man["ruta_local"]).parent if man["proveedor"] != "local" else PROYECTO / "output" / "revision-codigo" / slug(Path(man["ruta_local"]).name)
     salida = Path(args.salida) if args.salida else carpeta / "origen.json"
     salida.parent.mkdir(parents=True, exist_ok=True)
     if diff is not None:

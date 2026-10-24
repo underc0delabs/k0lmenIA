@@ -92,8 +92,8 @@ def test_cobertura_cruza_fuentes(tmp_path, monkeypatch):
              "@HU-001\nFeature: R\n  @CP-001\n  Scenario: a\n    Given x\n  @CP-002 @bloqueado\n  Scenario: b\n    Given x\n")
     escribir("herramientas/k0lmena/reports/web/cucumber-report.json", json.dumps([{"name": "R", "uri": "f", "tags": [{"name": "@HU-001"}], "elements": [
         _escenario("a", ["@CP-001"], "failed")]}]))
-    monkeypatch.setattr(analizar_cobertura, "RAIZ", tmp_path)
-    monkeypatch.setattr(recolectar_resultados, "RAIZ", tmp_path)
+    monkeypatch.setattr(analizar_cobertura, "PROYECTO", tmp_path)
+    monkeypatch.setattr(recolectar_resultados, "PROYECTO", tmp_path)
     monkeypatch.setattr(recolectar_resultados, "K0", tmp_path / "herramientas" / "k0lmena" / "reports")
     h = analizar_cobertura.analizar_historia("HU-001", {})
     tipos = {x["tipo"] for x in h["huecos"]}

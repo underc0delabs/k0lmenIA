@@ -80,8 +80,8 @@ def test_inventario_une_bdd_y_automatizacion(tmp_path, monkeypatch):
     gherkin = "@HU-7\nFeature: Pagos\n\n  @CP-001 @smoke\n  Scenario: Pagar\n    Given algo\n    When paga\n    Then ok\n"
     (tmp_path / "output" / "casos-de-prueba" / "bdd" / "HU-7-pagos.feature").write_text(gherkin, encoding="utf-8")
     (tmp_path / "herramientas" / "k0lmena" / "web" / "features" / "HU-7-pagos.feature").write_text(gherkin, encoding="utf-8")
-    monkeypatch.setattr(sc, "RAIZ", tmp_path)
-    monkeypatch.setattr(rec, "RAIZ", tmp_path)
+    monkeypatch.setattr(sc, "PROYECTO", tmp_path)
+    monkeypatch.setattr(rec, "PROYECTO", tmp_path)
     monkeypatch.setattr(rec, "K0", tmp_path / "herramientas" / "k0lmena" / "reports")
     casos = sc.inventario()
     assert len(casos) == 1
