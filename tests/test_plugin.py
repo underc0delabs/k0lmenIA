@@ -107,3 +107,38 @@ def test_tarea_programada_como_plugin_usa_un_lanzador_estable(tmp_path, monkeypa
     monkeypatch.delenv("K0LMENIA_CODIGO")
     texto = ac.linea_programada("lunes", "08:00", False)
     assert "npm run actualizar-conocimiento" in (" ".join(texto) if isinstance(texto, list) else texto)
+
+
+def test_actualizar_k0lmena_sin_perder_cambios(tmp_path):
+    """Una versión nueva del plugin trae mejoras del framework: llegan, pero las pruebas del QA y los archivos del
+    framework que el QA modificó no se pisan (la versión nueva queda al lado como .nuevo)."""
+    plugin = cp.construir(tmp_path / "plugin")
+    proyecto = tmp_path / "proyecto"
+    proyecto.mkdir()
+    assert _k0lmenia(plugin, proyecto, "init", "--sin-npm").returncode == 0
+    k0 = proyecto / "herramientas" / "k0lmena"
+    assert json.loads((k0 / ".k0lmenia.json").read_text(encoding="utf-8"))["version"]
+    # El QA escribe sus pruebas y retoca un archivo del framework.
+    feature = k0 / "web" / "features" / "HU-001-login.feature"
+    feature.write_text("Feature: login del QA", encoding="utf-8")
+    retocado = k0 / "web" / "utils" / "keys.ts"
+    retocado.write_text(retocado.read_text(encoding="utf-8") + "\n// ajuste del QA\n", encoding="utf-8")
+    # Sale una versión nueva del plugin: mejora un archivo que el QA no tocó, el que retocó y suma uno nuevo.
+    pk0 = plugin / "herramientas" / "k0lmena"
+    intacto = "web/utils/validations.ts"
+    (pk0 / intacto).write_text((pk0 / intacto).read_text(encoding="utf-8") + "\n// mejora 2.0\n", encoding="utf-8")
+    (pk0 / "web" / "utils" / "keys.ts").write_text("// keys 2.0\n", encoding="utf-8")
+    (pk0 / "web" / "utils" / "nuevo.ts").write_text("// nuevo en 2.0\n", encoding="utf-8")
+    (pk0 / "web" / "features" / "HU-001-login.feature").write_text("Feature: del plugin", encoding="utf-8")
+    # Al iniciar la sesión, el contexto avisa que hay versión nueva.
+    aviso = _k0lmenia(plugin, proyecto, "preparar", "--contexto").stdout
+    assert "k0lmenia actualizar" in aviso
+    r = _k0lmenia(plugin, proyecto, "actualizar", "--sin-npm")
+    assert r.returncode == 0, r.stderr
+    assert (k0 / intacto).read_text(encoding="utf-8").endswith("// mejora 2.0\n")       # la mejora llegó
+    assert (k0 / "web" / "utils" / "nuevo.ts").exists()                                  # lo nuevo también
+    assert "// ajuste del QA" in retocado.read_text(encoding="utf-8")                    # lo retocado se respeta
+    assert (k0 / "web" / "utils" / "keys.ts.nuevo").read_text(encoding="utf-8") == "// keys 2.0\n"
+    assert feature.read_text(encoding="utf-8") == "Feature: login del QA"                # sus pruebas, intactas
+    assert "keys.ts" in r.stdout and ".nuevo" in r.stdout
+    assert "k0lmenia actualizar" not in _k0lmenia(plugin, proyecto, "preparar", "--contexto").stdout  # ya al día

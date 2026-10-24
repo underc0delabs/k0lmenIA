@@ -5,6 +5,7 @@
 // usan `k0lmenia <comando>` donde en el repo clonado dicen `npm run <comando>` o `python scripts/<x>.py`:
 //
 //   k0lmenia init [--sin-npm]          prepara el proyecto: input/, output/, .env, .gitignore y k0lmena
+//   k0lmenia actualizar [--sin-npm]    trae las mejoras del framework k0lmena sin tocar tus pruebas
 //   k0lmenia <comando> [args]          cualquier `npm run <comando>` del repo (doctor, portal, sast, explorar…)
 //   k0lmenia test[:web|:api…] [args]   las suites de k0lmena del proyecto (npm test)
 //   k0lmenia py <script.py> [args]     un script de Python del plugin (scripts/… o herramientas/…)
@@ -69,18 +70,126 @@ function comandoNpm(nombre, args) {
   return 2;
 }
 
-// ---------------------------------------------------------------- init
-const IGNORAR_K0LMENA = new Set(['node_modules', 'reports', '.cache']);
+// ---------------------------------------------------------------- k0lmena en el proyecto (init y actualizar)
+// k0lmena se copia al proyecto porque ahí viven las pruebas automatizadas del QA. Para que las mejoras del framework
+// lleguen sin perder nada:
+//   - las carpetas de PRUEBAS del QA (features, steps, locators, apps, scripts y planes de performance) nunca se
+//     pisan: solo se suman los archivos del plugin que falten;
+//   - los archivos del FRAMEWORK se actualizan, salvo los que el QA modificó (se detecta con la huella guardada en
+//     .k0lmenia.json al copiarlos): ahí se deja la versión nueva al lado, como <archivo>.nuevo, y se avisa.
+const IGNORAR_K0LMENA = new Set(['node_modules', 'reports', '.cache', '.k0lmenia.json']);
+const PRUEBAS_DEL_QA = ['web/features', 'web/steps', 'web/locators', 'api/features', 'api/steps', 'mobile/features',
+  'mobile/steps', 'mobile/locators', 'mobile/apps', 'performance/k6/scripts', 'performance/artillery', 'performance/jmeter/planes'];
+const MANIFIESTO = '.k0lmenia.json';
+const crypto = require('crypto');
 
-function copiarK0lmena(origen, destino) {
-  fs.mkdirSync(destino, { recursive: true });
-  for (const e of fs.readdirSync(origen, { withFileTypes: true })) {
+function huella(archivo) {
+  // Sin diferencias por finales de línea (git en Windows los cambia al clonar).
+  return crypto.createHash('sha256').update(fs.readFileSync(archivo, 'utf8').replace(/\r\n/g, '\n')).digest('hex').slice(0, 16);
+}
+
+function archivosDe(base, rel = '') {
+  const salida = [];
+  for (const e of fs.readdirSync(path.join(base, rel), { withFileTypes: true })) {
     if (IGNORAR_K0LMENA.has(e.name)) continue;
-    const de = path.join(origen, e.name);
-    const a = path.join(destino, e.name);
-    if (e.isDirectory()) copiarK0lmena(de, a);
-    else if (!fs.existsSync(a)) fs.copyFileSync(de, a);
+    const r = rel ? `${rel}/${e.name}` : e.name;
+    if (e.isDirectory()) salida.push(...archivosDe(base, r));
+    else salida.push(r);
   }
+  return salida;
+}
+
+function esDelQa(rel) {
+  return PRUEBAS_DEL_QA.some((d) => rel === d || rel.startsWith(`${d}/`));
+}
+
+/** Versión del framework k0lmena del plugin: una huella de todos sus archivos (los del QA no cuentan). */
+function versionK0lmena() {
+  const origen = path.join(CODIGO, 'herramientas', 'k0lmena');
+  const h = crypto.createHash('sha256');
+  for (const rel of archivosDe(origen).filter((r) => !esDelQa(r)).sort()) h.update(rel).update(huella(path.join(origen, rel)));
+  return h.digest('hex').slice(0, 12);
+}
+
+function leerManifiesto() {
+  try {
+    return JSON.parse(fs.readFileSync(path.join(K0LMENA_PROYECTO, MANIFIESTO), 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+/** Copia o actualiza k0lmena en el proyecto. Devuelve {nuevos, actualizados, conservados, sinCambios}. */
+function sincronizarK0lmena() {
+  const origen = path.join(CODIGO, 'herramientas', 'k0lmena');
+  const previo = leerManifiesto();
+  const huellas = { ...(previo && previo.archivos) };
+  const r = { nuevos: [], actualizados: [], conservados: [], sinCambios: 0 };
+  for (const rel of archivosDe(origen)) {
+    const de = path.join(origen, rel);
+    const a = path.join(K0LMENA_PROYECTO, rel);
+    fs.mkdirSync(path.dirname(a), { recursive: true });
+    if (!fs.existsSync(a)) {
+      fs.copyFileSync(de, a);
+      r.nuevos.push(rel);
+      if (!esDelQa(rel)) huellas[rel] = huella(de);
+      continue;
+    }
+    if (esDelQa(rel)) continue; // las pruebas del QA no se tocan
+    const nueva = huella(de);
+    const actual = huella(a);
+    if (actual === nueva) {
+      huellas[rel] = nueva;
+      r.sinCambios++;
+      continue;
+    }
+    // ¿El QA lo modificó? Si coincide con lo que copiamos la última vez, no: se actualiza.
+    if (huellas[rel] && huellas[rel] === actual) {
+      fs.copyFileSync(de, a);
+      huellas[rel] = nueva;
+      r.actualizados.push(rel);
+    } else {
+      fs.copyFileSync(de, `${a}.nuevo`);
+      r.conservados.push(rel);
+    }
+  }
+  fs.writeFileSync(path.join(K0LMENA_PROYECTO, MANIFIESTO),
+    JSON.stringify({ version: versionK0lmena(), actualizado: new Date().toISOString(), archivos: huellas }, null, 2));
+  return r;
+}
+
+function informarSincronizacion(r, npm) {
+  if (r.actualizados.length) console.log(`  k0lmena: ${r.actualizados.length} archivo(s) del framework actualizados`);
+  if (r.nuevos.length) console.log(`  k0lmena: ${r.nuevos.length} archivo(s) nuevos`);
+  if (r.conservados.length) {
+    console.log(`  k0lmena: ${r.conservados.length} archivo(s) que modificaste quedaron como estaban; la versión nueva está al lado (.nuevo):`);
+    for (const c of r.conservados.slice(0, 20)) console.log(`    - herramientas/k0lmena/${c}`);
+    console.log('    Compará y pasá los cambios a mano (o borrá tu versión y renombrá el .nuevo).');
+  }
+  if (!r.actualizados.length && !r.nuevos.length && !r.conservados.length) console.log('  k0lmena: ya estaba al día');
+  if (npm && (r.actualizados.includes('package.json') || r.nuevos.includes('package.json') || r.actualizados.includes('package-lock.json'))) {
+    console.log('  Cambiaron las dependencias de k0lmena: instalándolas (npm install)…');
+    return correr(NPM, ['--prefix', K0LMENA_PROYECTO, 'install']);
+  }
+  return 0;
+}
+
+function actualizar(args) {
+  if (!k0lmenaInstalada()) return 1;
+  console.log(`Actualizando k0lmena en ${K0LMENA_PROYECTO} (tus pruebas no se tocan)`);
+  for (const carpeta of ['input', 'output']) {
+    const origen = path.join(CODIGO, carpeta);
+    if (fs.existsSync(origen)) carpetasVacias(origen, path.join(PROYECTO, carpeta));
+  }
+  return informarSincronizacion(sincronizarK0lmena(), !args.includes('--sin-npm'));
+}
+
+/** Aviso para el contexto de la sesión si el proyecto tiene una versión vieja de k0lmena. */
+function avisoVersion() {
+  if (!fs.existsSync(path.join(K0LMENA_PROYECTO, 'package.json'))) return '';
+  const m = leerManifiesto();
+  if (m && m.version === versionK0lmena()) return '';
+  return '\nHay una versión nueva del framework k0lmena en el plugin: sugerile a la persona correr `k0lmenia actualizar` (actualiza herramientas/k0lmena sin tocar sus pruebas; si modificó algún archivo del framework, deja la versión nueva al lado como .nuevo).\n';
 }
 
 function carpetasVacias(origen, destino) {
@@ -122,10 +231,15 @@ function init(args) {
   const faltan = GITIGNORE.filter((l) => l.startsWith('#') || !actual.split(/\r?\n/).includes(l));
   if (faltan.length > 1) fs.appendFileSync(gi, `${actual && !actual.endsWith('\n') ? '\n' : ''}\n${faltan.join('\n')}\n`);
   const yaEstaba = fs.existsSync(path.join(K0LMENA_PROYECTO, 'package.json'));
-  copiarK0lmena(path.join(CODIGO, 'herramientas', 'k0lmena'), K0LMENA_PROYECTO);
-  console.log(yaEstaba
-    ? '  k0lmena: ya estaba; se sumaron solo los archivos que faltaban (tus pruebas no se tocan)'
-    : '  k0lmena copiada en herramientas/k0lmena: tus pruebas automatizadas viven ahí, en tu proyecto');
+  if (yaEstaba) {
+    console.log('  k0lmena: ya estaba; se actualiza el framework (tus pruebas no se tocan)');
+    const r = informarSincronizacion(sincronizarK0lmena(), !args.includes('--sin-npm'));
+    if (r !== 0) return r;
+    console.log('Listo. Revisá todo con: k0lmenia doctor');
+    return 0;
+  }
+  sincronizarK0lmena();
+  console.log('  k0lmena copiada en herramientas/k0lmena: tus pruebas automatizadas viven ahí, en tu proyecto');
   if (!args.includes('--sin-npm')) {
     console.log('  Instalando las dependencias de k0lmena (npm install)…');
     const r = correr(NPM, ['--prefix', K0LMENA_PROYECTO, 'install']);
@@ -141,7 +255,15 @@ function init(args) {
 function preparar(args = []) {
   const r = prepararPython();
   const contexto = path.join(CODIGO, 'hooks', 'contexto.md');
-  if (args.includes('--contexto') && fs.existsSync(contexto)) process.stdout.write(fs.readFileSync(contexto, 'utf8'));
+  if (args.includes('--contexto') && fs.existsSync(contexto)) {
+    let aviso = '';
+    try {
+      aviso = avisoVersion();
+    } catch {
+      /* el aviso nunca frena el inicio de la sesión */
+    }
+    process.stdout.write(fs.readFileSync(contexto, 'utf8') + aviso);
+  }
   return r;
 }
 
@@ -174,6 +296,7 @@ Código: ${CODIGO}
 Proyecto (tus datos): ${PROYECTO}
 
   k0lmenia init [--sin-npm]     prepara el proyecto (input/, output/, .env, .gitignore y k0lmena)
+  k0lmenia actualizar           trae las mejoras del framework k0lmena sin tocar tus pruebas
   k0lmenia py <script> [args]   un script de Python del plugin
   k0lmenia <comando> [args]     uno de estos:
     ${lista.join(', ')}`);
@@ -185,6 +308,7 @@ function main(argv) {
   const args = sinSeparador(resto);
   if (!cmd || ['ayuda', 'help', '-h', '--help'].includes(cmd)) return ayuda();
   if (cmd === 'init') return init(args);
+  if (cmd === 'actualizar') return actualizar(args);
   if (cmd === 'preparar') return preparar(args);
   if (cmd === 'py') {
     if (!args[0]) return ayuda();

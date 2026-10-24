@@ -509,7 +509,7 @@ Lo que antes estaba en `CLAUDE.md` y no hace falta en cada conversación: la tab
 
 ## Scripts y herramientas
 
-- `bin/k0lmenia` → el comando del plugin (Claude Code lo pone en el PATH): `init`, `py <script>`, cualquier `npm run <x>` como `k0lmenia <x>` y `preparar` (el hook de inicio). Los datos van al proyecto (`K0LMENIA_PROYECTO`, la carpeta actual) y el código queda en el plugin (`K0LMENIA_CODIGO`).
+- `bin/k0lmenia` → el comando del plugin (Claude Code lo pone en el PATH): `init`, `actualizar` (el framework k0lmena del proyecto, sin tocar las pruebas del QA; lo que el QA modificó queda con un `.nuevo` al lado), `py <script>`, cualquier `npm run <x>` como `k0lmenia <x>` y `preparar` (el hook de inicio). Los datos van al proyecto (`K0LMENIA_PROYECTO`, la carpeta actual) y el código queda en el plugin (`K0LMENIA_CODIGO`).
 - `scripts/construir_plugin.py` → arma el plugin en `dist/plugin/` (agentes y skills con los comandos `k0lmenia`, `skills/estandares` desde CLAUDE.md, hook de inicio, conectores y marketplace). Lo publica el workflow `plugin.yml` en la rama `plugin`.
 - `scripts/_proyecto.py` y `herramientas/k0lmena/tools/rutas.js` → la regla de carpetas: datos del proyecto (`output/`, `input/`, `.env`, `.auth/`, `herramientas/k0lmena`) en `K0LMENIA_PROYECTO` o, si no está, en el repo; el código, en el repo o en el plugin.
 - `scripts/py.js` → lanzador de los `npm run` de Python (`node scripts/py.js <script.py> [args]`): elige `python` o `python3` y devuelve el código de salida del script.

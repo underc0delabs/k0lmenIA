@@ -55,6 +55,7 @@
   <div class="grupo">Primeros pasos</div>
   <a href="#requisitos">Requisitos</a>
   <a href="#instalacion">Instalación</a>
+  <a href="#plugin">Como plugin de Claude Code</a>
   <a href="#configuracion">Configuración (.env)</a>
   <div class="grupo">Guías</div>
   <a href="#documentacion">Documentación del proyecto</a>
@@ -63,6 +64,8 @@
   <a href="#k0lmena">Automatización con k0lmena</a>
   <a href="#performance">Performance</a>
   <a href="#gestion">Xray, QMetry, AIO Tests, Zephyr y Azure DevOps</a>
+  <a href="#ci">k0lmena en el pipeline (CI)</a>
+  <a href="#anti-bots">Apps con protección anti-bots</a>
   <a href="#base-de-datos">Verificación en base de datos</a>
   <a href="#exploratorias">Pruebas exploratorias</a>
   <a href="#accesibilidad">Accesibilidad</a>
@@ -85,6 +88,7 @@
   <a href="#triage">Triage de bugs y consultas</a>
   <a href="#historial">Historial de corridas</a>
   <a href="#tablero">Tablero y portal</a>
+  <a href="#idiomas">Informes en español e inglés</a>
   <a href="#avisos">Avisos y monitoreo</a>
   <a href="#evals">Evals de los agentes</a>
   <a href="#tokens">Uso de tokens</a>
@@ -107,14 +111,14 @@
     <div class="k">Documentación del proyecto</div>
     <h1><span>k0lmenIA</span></h1>
     <div class="l">Agentes de QA para Claude Code: diseño de pruebas, automatización con k0lmena e integración con Xray, QMetry, AIO Tests, Zephyr y Azure DevOps — todo en español.</div>
-    <div class="chips"><span>79 agentes</span><span>Web · API · Mobile · Performance</span><span>Playwright · Cucumber · Appium · k6 · Artillery · JMeter</span><span>Xray · QMetry · AIO Tests · Zephyr · Azure DevOps</span><span>Jira · Confluence · Figma</span><span>GitHub · GitLab · Bitbucket</span><span>Linear · ClickUp · monday · Asana · Trello · Notion</span><span>Slack · Teams</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Suites sin tokens</span></div>
+    <div class="chips"><span>79 agentes</span><span>Web · API · Mobile · Performance</span><span>Playwright · Cucumber · Appium · k6 · Artillery · JMeter</span><span>Xray · QMetry · AIO Tests · Zephyr · Azure DevOps</span><span>Jira · Confluence · Figma</span><span>GitHub · GitLab · Bitbucket</span><span>Linear · ClickUp · monday · Asana · Trello · Notion</span><span>Slack · Teams</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Suites sin tokens</span><span>Plugin de Claude Code</span><span>Informes ES · EN</span></div>
   </div>
   <div class="p"><span>QARMY · Underc0de</span><span>github.com/underc0delabs/k0lmenIA</span><span>Licencia MIT</span></div>
 </section>
 <section class="solo-impresion indice">
   <h2>Contenido</h2>
   <ol>
-    <li><span>1</span>Qué es k0lmenIA</li><li><span>2</span>Arquitectura</li><li><span>3</span>Cómo se usa</li><li><span>4</span>Agentes</li><li><span>5</span>Requisitos</li><li><span>6</span>Instalación</li><li><span>7</span>Configuración: el archivo .env</li><li><span>8</span>Documentación del proyecto</li><li><span>9</span>Investigación de contexto y falta información</li><li><span>10</span>Guía por tarea: diseño y ejecución</li><li><span>11</span>Automatización con k0lmena</li><li><span>12</span>Pruebas de performance</li><li><span>13</span>Gestión de pruebas: Xray, QMetry, AIO Tests, Zephyr y Azure DevOps</li><li><span>14</span>Verificación en base de datos</li><li><span>15</span>Pruebas exploratorias</li><li><span>16</span>Accesibilidad</li><li><span>17</span>Rendimiento web</li><li><span>18</span>Análisis de fallos</li><li><span>19</span>Logs del servidor</li><li><span>20</span>Cobertura y trazabilidad</li><li><span>21</span>Regresión visual (pixel perfect)</li><li><span>22</span>Cross-browser</li><li><span>23</span>Reparación de la automatización</li><li><span>24</span>Selección de casos para un cambio</li><li><span>25</span>Revisión de casos y tiempo estimado</li><li><span>26</span>Charters y sesiones exploratorias</li><li><span>27</span>Correos</li><li><span>28</span>Traducciones e idiomas</li><li><span>29</span>Usabilidad</li><li><span>30</span>Formularios</li><li><span>31</span>Permisos por rol</li><li><span>32</span>Resiliencia</li><li><span>33</span>Triage de bugs y consultas</li><li><span>34</span>Historial de corridas</li><li><span>35</span>Tablero de calidad y portal de informes</li><li><span>36</span>Avisos y monitoreo sintético</li><li><span>37</span>Evals de los agentes</li><li><span>38</span>Uso de tokens</li><li><span>39</span>Onboarding</li><li><span>40</span>Seguridad web</li><li><span>41</span>Streaming y cámaras</li><li><span>42</span>Conectores MCP</li><li><span>43</span>Convenciones</li><li><span>44</span>Estructura del repositorio</li><li><span>45</span>Problemas frecuentes</li><li><span>46</span>Extender el proyecto</li>
+    <li><span>1</span>Qué es k0lmenIA</li><li><span>2</span>Arquitectura</li><li><span>3</span>Cómo se usa</li><li><span>4</span>Agentes</li><li><span>5</span>Requisitos</li><li><span>6</span>Instalación</li><li><span>7</span>Como plugin de Claude Code</li><li><span>8</span>Configuración: el archivo .env</li><li><span>9</span>Documentación del proyecto</li><li><span>10</span>Investigación de contexto y falta información</li><li><span>11</span>Guía por tarea: diseño y ejecución</li><li><span>12</span>Automatización con k0lmena</li><li><span>13</span>Pruebas de performance</li><li><span>14</span>Gestión de pruebas: Xray, QMetry, AIO Tests, Zephyr y Azure DevOps</li><li><span>15</span>k0lmena en el pipeline (CI)</li><li><span>16</span>Apps con protección anti-bots</li><li><span>17</span>Verificación en base de datos</li><li><span>18</span>Pruebas exploratorias</li><li><span>19</span>Accesibilidad</li><li><span>20</span>Rendimiento web</li><li><span>21</span>Análisis de fallos</li><li><span>22</span>Logs del servidor</li><li><span>23</span>Cobertura y trazabilidad</li><li><span>24</span>Regresión visual (pixel perfect)</li><li><span>25</span>Cross-browser</li><li><span>26</span>Reparación de la automatización</li><li><span>27</span>Selección de casos para un cambio</li><li><span>28</span>Revisión de casos y tiempo estimado</li><li><span>29</span>Charters y sesiones exploratorias</li><li><span>30</span>Correos</li><li><span>31</span>Traducciones e idiomas</li><li><span>32</span>Usabilidad</li><li><span>33</span>Formularios</li><li><span>34</span>Permisos por rol</li><li><span>35</span>Resiliencia</li><li><span>36</span>Triage de bugs y consultas</li><li><span>37</span>Historial de corridas</li><li><span>38</span>Tablero de calidad y portal de informes</li><li><span>39</span>Informes en español e inglés</li><li><span>40</span>Avisos y monitoreo sintético</li><li><span>41</span>Evals de los agentes</li><li><span>42</span>Uso de tokens</li><li><span>43</span>Onboarding</li><li><span>44</span>Seguridad web</li><li><span>45</span>Streaming y cámaras</li><li><span>46</span>Conectores MCP</li><li><span>47</span>Convenciones</li><li><span>48</span>Estructura del repositorio</li><li><span>49</span>Problemas frecuentes</li><li><span>50</span>Extender el proyecto</li>
   </ol>
 </section>
 
@@ -122,7 +126,7 @@
 <section class="hero" id="inicio">
   <div class="pildora">agentes de QA para Claude Code · suites sin tokens</div>
   <h1><span class="grad">k0lmenIA</span></h1>
-  <p class="lema">Diseñá, ejecutá y automatizá pruebas conversando en español. Los agentes analizan historias, escriben casos, automatizan con <b>k0lmena</b> (web, API, mobile y performance) y llevan todo a <b>Xray, QMetry, AIO Tests o Azure DevOps</b>.</p>
+  <p class="lema">Diseñá, ejecutá y automatizá pruebas conversando en español. Los agentes analizan historias, escriben casos, automatizan con <b>k0lmena</b> (web, API, mobile y performance) y llevan todo a <b>Xray, QMetry, AIO Tests, Zephyr o Azure DevOps</b>. Se usa clonando el repo o como <b>plugin de Claude Code</b>, y cada informe sale en <b>español e inglés</b>.</p>
   <div class="ctas">
     <a class="btn primario" href="#instalacion">Empezar
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6l6 6-6 6"/></svg></a>
@@ -156,9 +160,9 @@
     <span class="tec"><i style="background:#47a248"></i>MongoDB</span>
   </div>
   <div class="metricas">
-    <div class="metrica"><div class="n">76</div><div class="t">agentes especializados</div></div>
+    <div class="metrica"><div class="n">79</div><div class="t">agentes especializados</div></div>
     <div class="metrica"><div class="n">4</div><div class="t">tipos de automatización</div></div>
-    <div class="metrica"><div class="n">4</div><div class="t">herramientas de gestión</div></div>
+    <div class="metrica"><div class="n">5</div><div class="t">herramientas de gestión</div></div>
     <div class="metrica"><div class="n">0</div><div class="t">tokens para correr las suites</div></div>
   </div>
 </section>
@@ -186,6 +190,8 @@
     <tr><td>Investigar antes de suponer</td><td>Antes de trabajar una historia se revisan la documentación del proyecto (repositorio, PRs, mapa de la web), sus comentarios, subtareas, épica, issues vinculados, Confluence y Figma. Lo que no aparece queda marcado como <b>Falta información</b> (<code>FI-01</code>).</td></tr>
     <tr><td>Ahorro de tokens</td><td>Lo que se repite se automatiza una vez y después corre sin agentes.</td></tr>
     <tr><td>Seguridad</td><td>Los secretos viven en el <code>.env</code> de la raíz, que nunca se versiona; los agentes nunca piden tokens por el chat.</td></tr>
+    <tr><td>Dos idiomas</td><td>Cada informe sale en español y en inglés, con una banderita para elegir cuál mandar.</td></tr>
+    <tr><td>Donde trabajes</td><td>Clonando este repo o instalándolo como <b>plugin de Claude Code</b> en la carpeta de cualquier proyecto: las actualizaciones llegan sin tocar tu trabajo.</td></tr>
   </table></div>
 </section>
 
@@ -205,13 +211,15 @@
   </figure>
   <div class="tabla"><table>
     <tr><th style="width:22%">Pieza</th><th>Qué es</th><th style="width:26%">Dónde</th></tr>
-    <tr><td>Claude Code</td><td>Orquestador: interpreta el pedido, elige el agente y aplica los estándares del proyecto.</td><td><code>CLAUDE.md</code></td></tr>
+    <tr><td>Claude Code</td><td>Orquestador: interpreta el pedido, elige el agente y aplica los estándares del proyecto (cortos a propósito: el detalle se lee a pedido).</td><td><code>CLAUDE.md</code> · <code>REFERENCIA.md</code> (en el plugin: skill <code>k0lmenia:estandares</code>)</td></tr>
     <tr><td>Agentes</td><td>El "quién": un especialista por tarea.</td><td><code>.claude/agents/</code></td></tr>
     <tr><td>Skills</td><td>El "cómo": conocimiento que se carga cuando hace falta (técnicas de diseño, ejecución E2E y de API, convenciones de k0lmena).</td><td><code>.claude/skills/</code></td></tr>
     <tr><td>Plantillas y scripts</td><td>Formato de salida (planilla de casos, cobertura, bug) y reportes HTML determinísticos.</td><td><code>plantillas/</code> · <code>scripts/</code></td></tr>
     <tr><td>Integración de gestión</td><td><code>gestion.py</code> con un adaptador por herramienta: Xray Cloud, Xray Server/DC, QTM4J, AIO Tests y Zephyr Scale. Azure DevOps va por su conector MCP.</td><td><code>scripts/gestion/</code></td></tr>
     <tr><td>Conectores MCP</td><td>Playwright y Atlassian (Jira y Confluence) activos; Azure DevOps, Figma, GitHub, GitLab, Linear, ClickUp, monday.com, Asana, Trello, Notion, YouTrack, Shortcut, Appium, QMetry, AIO Tests y k0lmenaTMT listos para habilitar. Versiones fijas, sin secretos en el archivo.</td><td><code>.mcp.json</code></td></tr>
-    <tr><td>Herramientas</td><td>Newman para colecciones de Postman y k0lmena para web, API, mobile y performance.</td><td><code>herramientas/</code></td></tr>
+    <tr><td>Herramientas</td><td>Newman para colecciones de Postman y k0lmena para web, API, mobile y performance (con el navegador común para apps con protección anti-bots), más plantillas de CI.</td><td><code>herramientas/</code></td></tr>
+    <tr><td>Informes y portal</td><td>Cada informe en español e inglés (<code>es/</code> y <code>en/</code>) y el portal con categorías e historial.</td><td><code>scripts/_i18n.py</code> · <code>scripts/i18n/</code> · <code>output/index.html</code></td></tr>
+    <tr><td>Plugin</td><td>El mismo k0lmenIA, instalable en cualquier proyecto. El comando <code>k0lmenia</code> reemplaza a <code>npm run</code>; el código queda en el plugin y los datos en el proyecto.</td><td><code>bin/k0lmenia</code> · <code>scripts/construir_plugin.py</code> · rama <code>plugin</code></td></tr>
     <tr><td>Entrada y salida</td><td>Insumos del usuario y artefactos generados, ordenados por tipo.</td><td><code>input/</code> · <code>output/</code></td></tr>
   </table></div>
 </section>
@@ -405,6 +413,10 @@
     <tr><td><code>pruebas-documentos</code></td><td>Probar documentos generados (PDF/Excel/CSV): datos y cálculos, placeholders, formato/locale, layout, metadata, seguridad y a11y del PDF</td><td>probador-documentos</td></tr>
     <tr><td><code>pruebas-contenido</code></td><td>Revisar contenido y typos: ortografía/gramática, placeholders, claves i18n a la vista, palabras duplicadas, microcopy y consistencia</td><td>revisor-contenido</td></tr>
     <tr><td><code>pruebas-mutacion</code></td><td>Mutation testing: mutantes y estados (killed/survived/no-coverage), mutation score, sobrevivientes vs. equivalentes, costo acotado (diff/módulo) y herramientas por lenguaje</td><td>analista-mutacion</td></tr>
+    <tr><td><code>documentacion-proyecto</code></td><td>Referencia del documentador: herramientas por proveedor de repositorio, qué buscar en el código, mapa funcional, estructura de <code>input/documentacion/</code>, dossier y los modos barrido y actualizar</td><td>documentador-proyecto</td></tr>
+    <tr><td><code>pruebas-exploratorias</code></td><td>Qué revisa <code>npm run explorar</code>, checklist manual, <code>analisis.json</code>, severidad y checklist final</td><td>explorador-web</td></tr>
+    <tr><td><code>pruebas-resiliencia</code></td><td>Escenarios de resiliencia, exploración manual, Toxiproxy paso a paso, <code>analisis.json</code> y checklist</td><td>probador-resiliencia</td></tr>
+    <tr><td><code>redaccion-casos-manuales</code></td><td>Columnas de la planilla, esquema del JSON de <code>generar_casos.py</code> (con el bloque <code>en</code>), reglas de campos e informe de cobertura</td><td>generador-casos-manuales</td></tr>
     <tr><td><code>pruebas-accesibilidad</code></td><td>Accesibilidad (a11y) en web (WCAG 2.2, axe-core), mobile (TalkBack/VoiceOver, etiquetas) y desktop (UI Automation, nombres accesibles)</td><td>analista-accesibilidad, probador-mobile, probador-desktop</td></tr>
   </table></div>
 </section>
@@ -430,6 +442,7 @@
   <div class="kicker">Primeros pasos</div>
   <h2>Instalación</h2>
   <p class="bajada">En cinco minutos tenés los agentes andando; k0lmena y el resto se suman cuando los necesites.</p>
+  <div class="aviso info"><span class="ico">i</span><p><b>¿No querés clonar el repo?</b> Instalalo como <a href="#plugin">plugin de Claude Code</a> en la carpeta de tu proyecto: mismos agentes, y las actualizaciones llegan con un comando.</p></div>
   <figure class="figura">
     <a href="assets/img/puesta-en-marcha.png" target="_blank" rel="noopener"><img src="assets/img/puesta-en-marcha.png" alt="Puesta en marcha de k0lmenIA: pasos de instalación, cómo configurar los tokens en el .env y ejemplos de pedidos a los agentes"></a>
     <figcaption>Puesta en marcha: instalación, tokens del <code>.env</code> y pedidos de ejemplo · hacé clic para ver en tamaño completo</figcaption>
@@ -463,11 +476,58 @@ npm run bootstrap:jmeter                           <span class="c"># performance
   </ol>
 </section>
 
+
+<!-- ======================================================= PLUGIN -->
+<section class="seccion" id="plugin">
+  <div class="kicker">Primeros pasos</div>
+  <h2>Como plugin de Claude Code</h2>
+  <p class="bajada">El mismo k0lmenIA, instalado en la carpeta de cualquier proyecto, sin clonar este repo. Las actualizaciones llegan con un comando y nunca tocan tu trabajo.</p>
+  <ol class="pasos">
+    <li><b>Instalalo en Claude Code</b>
+      <div class="codigo"><pre>/plugin marketplace add underc0delabs/k0lmenIA#plugin
+/plugin install k0lmenia@k0lmenia</pre></div></li>
+    <li><b>Prepará el proyecto</b>En la carpeta de tu proyecto (o pedíselo a Claude):
+      <div class="codigo"><pre>k0lmenia init        <span class="c"># input/, output/, .env, .gitignore y tu copia de k0lmena (npm install)</span>
+k0lmenia configurar  <span class="c"># completa el .env con preguntas</span>
+k0lmenia doctor      <span class="c"># revisa que esté todo</span></pre></div></li>
+    <li><b>Trabajá igual que siempre</b>Pedí en lenguaje natural. Los agentes se llaman <code>k0lmenia:&lt;agente&gt;</code> (por ejemplo <code>k0lmenia:generador-casos-manuales</code>), y al iniciar cada sesión un hook recuerda los estándares de k0lmenIA e instala las dependencias de Python.</li>
+  </ol>
+  <h3>El comando <code>k0lmenia</code></h3>
+  <p>Con el plugin habilitado, Claude Code lo deja en el PATH. Lo que en el repo es <code>npm run &lt;x&gt;</code> o <code>python scripts/&lt;x&gt;.py</code>, en el plugin es <code>k0lmenia &lt;x&gt;</code>.</p>
+  <div class="tabla"><table>
+    <tr><th style="width:32%">Comando</th><th>Qué hace</th></tr>
+    <tr><td><code>k0lmenia init [--sin-npm]</code></td><td>Prepara el proyecto. Si ya estaba preparado, solo suma lo que falta: no pisa tu <code>.env</code> ni tus pruebas.</td></tr>
+    <tr><td><code>k0lmenia actualizar</code></td><td>Actualiza el núcleo de k0lmena en tu proyecto (runner, framework y herramientas) sin tocar tus pruebas (<code>features/</code>, <code>steps/</code>, <code>locators/</code>, apps y scripts de performance). Si modificaste un archivo del framework, no se pisa: la versión nueva queda al lado como <code>&lt;archivo&gt;.nuevo</code> para que la compares. Al iniciar la sesión, Claude te avisa si hay una versión nueva. <code>--sin-npm</code> saltea la instalación de dependencias.</td></tr>
+    <tr><td><code>k0lmenia &lt;comando&gt; [args]</code></td><td>Cualquier comando del repo: <code>doctor</code>, <code>portal</code>, <code>explorar</code>, <code>accesibilidad</code>, <code>sast</code>, <code>login</code>, <code>ci</code>…</td></tr>
+    <tr><td><code>k0lmenia test[:web|:api|:mobile]</code></td><td>Las suites de k0lmena de tu proyecto (<code>npm test</code>).</td></tr>
+    <tr><td><code>k0lmenia py &lt;script.py&gt; [args]</code></td><td>Un script de Python del plugin (<code>scripts/…</code> o <code>herramientas/…</code>).</td></tr>
+    <tr><td><code>k0lmenia ayuda</code></td><td>La lista completa.</td></tr>
+  </table></div>
+  <h3>Código y datos, separados</h3>
+  <div class="tarjetas">
+    <div class="tarjeta c-violeta"><div class="ico">◆</div><h4>En el plugin (se actualiza)</h4><p>Agentes, skills, scripts, plantillas y herramientas. Viven en la caché de Claude Code (<code>~/.claude/plugins/</code>).</p></div>
+    <div class="tarjeta c-verde"><div class="ico">▣</div><h4>En tu proyecto (no se toca)</h4><p><code>input/</code>, <code>output/</code>, <code>.env</code>, <code>.auth/</code> y <code>herramientas/k0lmena/</code> con tus pruebas automatizadas.</p></div>
+    <div class="tarjeta c-cian"><div class="ico">↻</div><h4>Actualizar</h4><p><code>/plugin marketplace update k0lmenia</code>, o la actualización automática en <code>/plugin</code> → Marketplaces (para marketplaces propios viene apagada).</p></div>
+  </div>
+  <h3>Cómo llegan las actualizaciones</h3>
+  <p>Este repo es donde se desarrolla. En cada push a <code>main</code>, el workflow <code>plugin.yml</code> arma el plugin (<code>scripts/construir_plugin.py</code>) y lo publica en la rama <code>plugin</code>, liviana y sin el historial del repo. El plugin no fija versión, así que cada publicación es una versión nueva: la recibís con <code>/plugin marketplace update k0lmenia</code> o sola, si activaste la actualización automática. La versión anterior se borra a los 14 días.</p>
+  <h3>Personalizar y trabajar en equipo</h3>
+  <ul>
+    <li><b>Un agente a tu medida</b>: copialo a <code>.claude/agents/</code> de tu proyecto. Esa copia le gana a la del plugin, pero deja de recibir las mejoras de ese agente. Lo que se pueda resolver con el <code>.env</code> o el CLAUDE.md de tu proyecto, mejor resolvelo ahí.</li>
+    <li><b>Para todo el equipo</b>: declarás el marketplace y el plugin en el <code>.claude/settings.json</code> del proyecto. Cada persona lo instala una vez y acepta el diálogo de confianza de la carpeta.</li>
+  </ul>
+  <div class="codigo"><pre>{
+  "extraKnownMarketplaces": {"k0lmenia": {"source": {"source": "github", "repo": "underc0delabs/k0lmenIA", "ref": "plugin"}}},
+  "enabledPlugins": {"k0lmenia@k0lmenia": true}
+}</pre></div>
+  <div class="aviso warn"><span class="ico">!</span><p><b>Limitaciones.</b> El plugin no puede traer la lista de comandos permitidos: la primera vez Claude pide aprobación para <code>k0lmenia …</code> (cada equipo la puede sumar en su <code>.claude/settings.json</code>). Si usás el plugin y el repo clonado en la misma carpeta, vas a ver los agentes dos veces (con y sin prefijo).</p></div>
+</section>
+
 <!-- ======================================================= 7 CONFIGURACIÓN -->
 <section class="seccion" id="configuracion">
   <div class="kicker">Primeros pasos</div>
   <h2>Configuración: el archivo <code>.env</code></h2>
-  <p class="bajada">Hay <b>un solo <code>.env</code>, en la raíz del repo</b>. Lo usan los agentes, k0lmena y los scripts de gestión. Está en <code>.gitignore</code> y la plantilla comentada es <code>.env.example</code>.</p>
+  <p class="bajada">Hay <b>un solo <code>.env</code>, en la raíz del repo</b> (o de tu proyecto, si usás el plugin). Lo usan los agentes, k0lmena y los scripts de gestión. Está en <code>.gitignore</code> y la plantilla comentada es <code>.env.example</code>.</p>
   <div class="tabla"><table>
     <tr><th style="width:18%">Grupo</th><th style="width:47%">Variables</th><th>Para qué</th></tr>
     <tr><td>App bajo prueba</td><td><code>APP_URL</code> <code>APP_USER</code> <code>APP_PASSWORD</code></td><td>Ejecución E2E y logins</td></tr>
@@ -479,7 +539,9 @@ npm run bootstrap:jmeter                           <span class="c"># performance
     <tr><td>Mobile</td><td><code>MOBILE_TARGET</code> <code>MOBILE_PLATFORM</code> <code>MOBILE_DEVICE_NAME</code> <code>MOBILE_APP</code> <code>MOBILE_UDID</code> <code>BROWSERSTACK_*</code></td><td>Dónde corre la suite mobile</td></tr>
     <tr><td>Performance</td><td><code>PERF_VUS</code> <code>PERF_DURACION</code></td><td>Pisar la carga de los scripts k6</td></tr>
     <tr><td>Bases de datos</td><td><code>DB_CONEXIONES</code> + <code>DB_&lt;NOMBRE&gt;_MOTOR</code> <code>_HOST</code> <code>_PUERTO</code> <code>_BASE</code> <code>_USUARIO</code> <code>_CLAVE</code> (o <code>_URL</code>) <code>_ESCRITURA</code> <code>_PRODUCCION</code></td><td>Verificación en base de datos</td></tr>
-    <tr><td>Gestión</td><td><code>GESTION_HERRAMIENTA</code> <code>GESTION_PROYECTO</code> + credenciales de la herramienta</td><td>Xray, QMetry, AIO Tests y Zephyr Scale</td></tr>
+    <tr><td>Gestión</td><td><code>GESTION_HERRAMIENTA</code> <code>GESTION_PROYECTO</code> + credenciales de la herramienta (Zephyr Scale: <code>ZEPHYR_API_TOKEN</code> <code>ZEPHYR_API_URL</code> y las de Jira)</td><td>Xray, QMetry, AIO Tests y Zephyr Scale</td></tr>
+    <tr><td>Navegador y anti-bots</td><td><code>NAVEGADOR_CANAL</code> <code>RITMO_HUMANO</code> <code>QA_BYPASS_HEADER</code> <code>QA_BYPASS_TOKEN</code> <code>QA_BYPASS_HOSTS</code></td><td>Chrome o Edge instalados, pausas y el header de excepción para apps con protección anti-bots</td></tr>
+    <tr><td>Idioma de la documentación</td><td><code>DOCUMENTACION_EN</code> (vacío · <code>si</code> · <code>no</code>)</td><td>Contexto y documentación del proyecto también en inglés: vacío = Claude pregunta</td></tr>
     <tr><td>Azure DevOps (MCP)</td><td><code>ADO_ORGANIZACION</code> <code>ADO_PAT</code> <code>ADO_PROYECTO</code></td><td>Boards, Wiki, Repos y Test Plans</td></tr>
     <tr><td>Permisos por rol</td><td><code>PERMISOS_ROLES</code> <code>PERMISOS_&lt;ROL&gt;_USUARIO</code> <code>_CLAVE</code> <code>_TOKEN</code> <code>PERMISOS_LOGIN_URL</code></td><td>Roles que prueba el probador-permisos</td></tr>
     <tr><td>Avisos</td><td><code>SLACK_WEBHOOK_URL</code> <code>TEAMS_WEBHOOK_URL</code></td><td>Avisos a Slack y Teams (scripts/avisar.py)</td></tr>
@@ -740,11 +802,46 @@ python scripts/gestion/gestion.py crear-ciclo --nombre "Sprint 5" --historia PRO
 python scripts/gestion/gestion.py extraer-resultados --reporte &lt;cucumber-report.json&gt;
 python scripts/gestion/gestion.py publicar-resultados --ciclo PROJ-60 --resultados &lt;resultados.json&gt; --traza HU-001</pre></div>
   <p>Las carpetas van sin barra inicial (en Git Bash, <code>/HU-001</code> se convierte en una ruta de Windows). Referencia completa en <code>scripts/gestion/README.md</code>.</p>
-  <h3>En el pipeline (CI)</h3>
-  <p>Las suites de k0lmena corren solas en el pipeline del equipo, sin agentes ni tokens. <code>npm run ci -- generar --plataforma github|gitlab|jenkins|azure [--suite web|api|all]</code> deja el archivo del pipeline en su lugar (no pisa uno existente salvo <code>--forzar</code>): instala k0lmena y Chromium, corre las suites, guarda los reportes como artefacto y, si hay <code>GESTION_CICLO</code>, publica los resultados en la herramienta de gestión. La plantilla no lleva valores: el <code>.env</code> entero va como secret del pipeline y llega por <code>K0LMENA_ENV_FILE</code>. Detalle en <code>herramientas/ci/README.md</code>.</p>
   <h3>Azure DevOps (Test Plans)</h3>
   <p>Azure DevOps no pasa por <code>gestion.py</code>: se integra por su conector MCP oficial (<code>azure-devops</code>), con <code>ADO_ORGANIZACION</code>, <code>ADO_PAT</code> y <code>ADO_PROYECTO</code> en el <code>.env</code>. Los agentes leen las historias (con comentarios, tareas, padre y vínculos) y la Wiki, y <b>gestor-pruebas</b> crea los <i>Test Cases</i> con sus pasos (los arma <code>scripts/gestion/para_azure_devops.py</code>), los vincula a la historia y los agrega a una suite. Todavía no se publican resultados de ejecución en Azure DevOps.</p>
   <div class="pedido">Subí los casos de casos-HU-001.xlsx a Azure Test Plans, plan 'Sprint 5', suite 'HU-001 Registro', vinculados a la historia 1234.</div>
+</section>
+
+
+<!-- ======================================================= CI -->
+<section class="seccion" id="ci">
+  <div class="kicker">Guías</div>
+  <h2>k0lmena en el pipeline (CI)</h2>
+  <p class="bajada">Las suites de k0lmena corren solas en el pipeline del equipo, sin agentes ni tokens.</p>
+  <div class="codigo"><pre>npm run ci -- listar
+npm run ci -- generar --plataforma github               <span class="c"># → .github/workflows/k0lmena.yml</span>
+npm run ci -- generar --plataforma gitlab --suite all   <span class="c"># → .gitlab-ci.yml (web y api)</span>
+npm run ci -- generar --plataforma jenkins              <span class="c"># → Jenkinsfile</span>
+npm run ci -- generar --plataforma azure --suite api    <span class="c"># → azure-pipelines.yml</span></pre></div>
+  <p>El pipeline instala k0lmena y Chromium, corre las suites, guarda los reportes como artefacto y, si hay <code>GESTION_CICLO</code>, publica los resultados en Xray, QMetry, AIO Tests o Zephyr (<code>npm run ci -- publicar</code>). No pisa un pipeline que ya existe, salvo con <code>--forzar</code>.</p>
+  <div class="tabla"><table>
+    <tr><th style="width:20%">Plataforma</th><th>Dónde va el <code>.env</code> (como secret, nunca en el archivo)</th></tr>
+    <tr><td>GitHub Actions</td><td>Secret <code>K0LMENIA_ENV</code> con el contenido del archivo</td></tr>
+    <tr><td>GitLab CI</td><td>Variable <code>K0LMENA_ENV_FILE</code> de tipo File, protegida</td></tr>
+    <tr><td>Jenkins</td><td>Credencial <i>Secret file</i> con id <code>k0lmenia-env</code></td></tr>
+    <tr><td>Azure Pipelines</td><td>Secure file <code>k0lmenia.env</code> (Pipelines → Library)</td></tr>
+  </table></div>
+  <div class="aviso info"><span class="ico">i</span><p>Si una suite falla, el pipeline igual guarda los reportes y publica los resultados, y al final termina en error. Detalle en <code>herramientas/ci/README.md</code>.</p></div>
+</section>
+
+<!-- ======================================================= ANTI-BOTS -->
+<section class="seccion" id="anti-bots">
+  <div class="kicker">Guías</div>
+  <h2>Apps con protección anti-bots</h2>
+  <p class="bajada">Cloudflare, Akamai, DataDome, Imperva, AWS WAF o un captcha pueden frenar al navegador automatizado. k0lmenIA no intenta esquivarlo: lo detecta, lo informa y usa la excepción oficial que da el equipo de la app.</p>
+  <div class="tarjetas">
+    <div class="tarjeta c-naranja"><div class="ico">⊘</div><h4>Sin falsos fallos</h4><p>Si la app responde con un desafío o un acceso denegado, el escenario queda <b>Bloqueado: anti-bots</b> (también al publicarlo en la herramienta de gestión) y el análisis de fallos lo separa de los bugs. Las herramientas avisan al terminar y los agentes frenan y lo reportan.</p></div>
+    <div class="tarjeta c-cian"><div class="ico">⇄</div><h4>Header de excepción</h4><p>Con <code>QA_BYPASS_HEADER</code> y <code>QA_BYPASS_TOKEN</code>, <code>npm test</code>, las herramientas y el navegador de los agentes mandan el header acordado <b>solo a los hosts de la app</b> (<code>QA_BYPASS_HOSTS</code>), nunca a terceros.</p></div>
+    <div class="tarjeta c-verde"><div class="ico">▶</div><h4>Navegador real y ritmo</h4><p><code>NAVEGADOR_CANAL=chrome</code> usa el Chrome instalado y <code>RITMO_HUMANO=si</code> agrega pausas entre acciones.</p></div>
+    <div class="tarjeta c-violeta"><div class="ico">✎</div><h4>Plan B manual</h4><p><code>npm run login</code> abre tu Chrome: resolvés el desafío o el captcha a mano y la sesión queda guardada (<code>SESION=si</code>). Las cookies anti-bots valen para el mismo navegador e IP.</p></div>
+  </div>
+  <p>La guía para el equipo de la app explica la excepción por header en Cloudflare, AWS WAF, Akamai, DataDome e Imperva, la lista blanca de IP y las claves de prueba de reCAPTCHA, Turnstile y hCaptcha: <code>herramientas/k0lmena/tools/navegador/README.md</code>. <code>npm run doctor</code> revisa la configuración.</p>
+  <div class="aviso warn"><span class="ico">!</span><p>No se disfraza el navegador ni se resuelven captchas automáticamente: esas técnicas fallan de forma intermitente, pueden violar los términos del proveedor y sirven para atacar sitios de terceros. Lighthouse (<code>npm run rendimiento</code>) mide sin el header, porque no puede limitarlo a la app.</p></div>
 </section>
 
 <!-- ======================================================= 12 BASE DE DATOS -->
@@ -1154,9 +1251,39 @@ npm run formularios -- --url https://staging.tu-app.com/registro --enviar-vacio 
     <p>Junta lo que ya dejaron las herramientas (ejecuciones, <code>npm test</code> y su historial, casos, cobertura, bugs, inestables, accesibilidad, rendimiento, performance y seguridad) y arma un dashboard con aprobados y tendencia, % automatizado, cobertura, bugs por severidad e historia, minutos de ejecución manual, alertas y un <b>resumen para gerencia</b>. Lo que no tiene datos dice "Sin datos".</p></div>
   <div class="codigo"><pre>npm run tablero -- --nombre sprint-12 --desde 2026-10-01 --hasta 2026-10-14
 npm run portal -- --abrir   <span class="c"># output/index.html</span></pre></div>
-  <p>El <b>portal de informes</b> (<code>output/index.html</code>) junta todos los informes, también los artefactos de los agentes (casos, BDD, bugs, análisis, datos…), que se pasan a HTML solos. Tiene un <b>menú por categoría</b> (Pruebas automatizadas, Ejecuciones, Diseño de pruebas, Bugs, Calidad y cierre, Web, Seguridad, Plataformas, Documentación), el <b>historial completo</b> de corridas y filtros por texto, herramienta, historia, estado y rango de fechas. Se regenera solo y se abre con doble clic.</p>
-  <p><b>Español e inglés:</b> cada informe tiene una carpeta por idioma (<code>es/informe.html</code> y <code>en/informe.html</code>, con la evidencia compartida) y un acceso <code>informe.html</code> que abre el idioma que elegiste con la banderita (español por defecto); la banderita recuerda la elección. El contexto y la documentación van en inglés solo a pedido: Claude lo pregunta (o <code>DOCUMENTACION_EN</code> en el <code>.env</code>). El agente traduce lo que escribe (bloque <code>en</code> del JSON, o <code>X.en.md</code> en los artefactos) y el script traduce la interfaz con un diccionario, sin gastar tokens.</p>
+  <h3>Portal de informes</h3>
+  <p>El <b>portal</b> (<code>output/index.html</code>) junta todos los informes. Antes de indexar arma el HTML de los artefactos de los agentes que no tienen informe propio: casos de prueba (también desde <code>generar_casos.py</code>), BDD legible con sus Examples, bugs, análisis de historias, datos, casos de API, contexto, triage, consultas, mapeos, verificaciones, la trazabilidad y los resultados publicados de la gestión de pruebas, y la documentación del proyecto (<code>input/documentacion/</code>, que se muestra en <code>output/documentacion/</code> sin tocar <code>input/</code>).</p>
+  <div class="tabla"><table>
+    <tr><th style="width:24%">Qué tiene</th><th>Cómo</th></tr>
+    <tr><td>Menú por categoría</td><td>Inicio, Pruebas automatizadas, Ejecuciones, Diseño de pruebas, Bugs, Calidad y cierre (con los evals de los agentes), Web, Seguridad, Plataformas y Documentación (con el relevamiento del proyecto).</td></tr>
+    <tr><td>Historial completo</td><td>Cada corrida guardada en <code>historial/</code> es una fila, no solo la última.</td></tr>
+    <tr><td>Filtros</td><td>Texto, herramienta, historia, estado y rango de fechas (24 h, 7 días, 30 días o desde/hasta), con la opción de ocultar las corridas anteriores; de a 100 filas.</td></tr>
+    <tr><td>Dos idiomas</td><td><code>output/es/index.html</code> y <code>output/en/index.html</code>; <code>output/index.html</code> abre el que elegiste. Cada fila enlaza a la versión de ese idioma.</td></tr>
+  </table></div>
+  <p>Se regenera solo cada vez que se arma un informe y se abre con doble clic. Ver también <a href="#idiomas">Informes en español e inglés</a>.</p>
 </section>
+
+<section class="seccion" id="idiomas">
+  <div class="kicker">Guías</div>
+  <h2>Informes en español e inglés</h2>
+  <p class="bajada">Cada informe sale en los dos idiomas, con una banderita para pasar de uno al otro, así elegís cuál mandar.</p>
+  <div class="codigo arbol"><pre>output/accesibilidad/app.com/
+├── informe-accesibilidad.html      <span class="c">acceso: abre el idioma elegido (español por defecto)</span>
+├── es/informe-accesibilidad.html   <span class="c">español</span>
+├── en/informe-accesibilidad.html   <span class="c">inglés</span>
+└── capturas/ analisis.json …       <span class="c">evidencia y datos, compartidos por los dos idiomas</span></pre></div>
+  <p>La banderita recuerda tu elección: el portal y los accesos abren siempre ese idioma. El historial guarda los dos idiomas de cada corrida. Para mandar un informe, mandás la carpeta del idioma junto con su evidencia.</p>
+  <div class="tabla"><table>
+    <tr><th style="width:26%">Qué se traduce</th><th>Cómo</th></tr>
+    <tr><td>Lo que escribe el agente</td><td>Veredicto, resumen, hallazgos y recomendaciones: el agente los escribe también en inglés en un bloque <code>"en"</code> del JSON del informe (mismas claves e IDs). En los artefactos escribe la versión al lado: <code>BUG-001.en.md</code>, <code>analisis-HU-001.en.md</code>, <code>X.en.csv</code>, y en el BDD <code>HU-001-x.feature.en</code>, que ningún runner toma.</td></tr>
+    <tr><td>La interfaz</td><td>Títulos, columnas, estados, gráficos y textos fijos: un diccionario de unas 2.300 entradas (<code>scripts/i18n/en/</code>), sin gastar tokens. Números, fechas e IDs son comodines.</td></tr>
+    <tr><td>Si falta la traducción</td><td>El informe en inglés sale igual: interfaz en inglés, contenido en español y un aviso.</td></tr>
+  </table></div>
+  <h3>Contexto y documentación: en inglés a pedido</h3>
+  <p>Las fichas de contexto, la documentación del proyecto, las consultas, los mapeos y las verificaciones de datos se escriben en español. Antes de armarlos, Claude pregunta si también los querés en inglés; con <code>DOCUMENTACION_EN=si</code> o <code>no</code> en el <code>.env</code> la respuesta queda fija y no vuelve a preguntar.</p>
+  <div class="aviso info"><span class="ico">i</span><p>El CI corre los tests con el <b>control estricto de traducciones</b> (<code>K0LMENIA_I18N_ESTRICTO</code>): si un informe en inglés deja texto de la interfaz en español, la corrida falla. Para encontrar lo que falta: <code>K0LMENIA_I18N_AUDITORIA=archivo.txt</code>.</p></div>
+</section>
+
 
 <section class="seccion" id="avisos">
   <div class="kicker">Guías</div>
@@ -1175,7 +1302,9 @@ npm run avisar -- --desde-cucumber herramientas/k0lmena/reports/web/cucumber-rep
   <h2>Evals de los agentes</h2>
   <p class="bajada">Los tests cubren los scripts; los <b>evals</b> miden la calidad de lo que generan los agentes.</p>
   <p>Cada caso de <code>evals/casos/</code> le da a un agente una historia, un contrato, una observación o un repositorio con <b>trampas deliberadas</b> (ambigüedades, contradicción entre descripción y comentario, mensajes sin definir, límites, un secreto falso) y verifica con chequeos determinísticos que marque la Falta información, aplique valores límite, respete las plantillas y no invente. Corre en un workspace aislado con <code>claude -p</code> y deja un informe con el puntaje por agente y las <b>regresiones</b> contra la corrida anterior.</p>
+  <p>Hay <b>17 casos</b>: análisis de historias, casos manuales, BDD, casos de API (REST y GraphQL), datos de prueba, reporte de bug, triage, revisión de código, documentación del proyecto, consultas, plan de pruebas, revisión de casos, charters, análisis de fallos, cobertura y selección de casos. Cada uno tiene una <b>salida de referencia</b> (lo que dejaría un agente correcto): <code>--referencia</code> la verifica sin gastar tokens y el CI la corre en cada cambio, así una modificación que rompa los chequeos o los scripts se detecta sola.</p>
   <div class="codigo"><pre>npm run evals -- --listar
+npm run evals -- --referencia                         <span class="c"># sin tokens: lo corre el CI</span>
 npm run evals -- --correr --agente generador-casos-manuales
 npm run evals -- --solo-verificar &lt;carpeta&gt; --caso casos-manuales-hu-registro   <span class="c"># sin volver a correr el agente</span></pre></div>
   <div class="aviso warn"><span class="ico">!</span><p>Correr los evals gasta tokens (cada caso es una conversación completa, con un tope por caso). Usalos antes y después de cambiar un agente o un skill.</p></div>
@@ -1300,6 +1429,7 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># un p
     <tr><td><code>linear</code> · <code>clickup</code> · <code>monday</code> · <code>asana</code> · <code>trello</code> · <code>notion</code> · <code>youtrack</code> · <code>shortcut</code></td><td>Historias y documentación si tu equipo no usa Jira ni Azure DevOps (servers MCP oficiales).</td><td>Cuenta (OAuth); YouTrack con token; Asana con app propia</td></tr>
     <tr><td><code>github</code> · <code>gitlab</code></td><td>Repositorio de la app para el documentador-proyecto (código, PRs y commits, solo lectura).</td><td>Token (GitLab: también OAuth)</td></tr>
     <tr><td><code>k0lmena-tmt</code></td><td>Cargar y consultar casos en k0lmenaTMT.</td><td>Token personal</td></tr>
+    <tr><td><code>scalar</code></td><td>APIs que están en Scalar: buscar y ejecutar lecturas, y el contrato del Registry (probador-scalar).</td><td><code>SCALAR_MCP_URL</code> · <code>SCALAR_API_KEY</code></td></tr>
   </table></div>
   <ol class="pasos">
     <li><b>Completá el .env</b>Si usa token, cargalo en el <code>.env</code> de la raíz. Atlassian y Figma se autorizan con tu cuenta desde <code>/mcp</code>.</li>
@@ -1307,7 +1437,7 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># un p
     <li><b>Verificá</b>Reiniciá Claude Code y revisá la conexión con <code>/mcp</code>.</li>
   </ol>
   <div class="pedido">Generá los casos de PROJ-12 usando la página de Confluence 'Reglas de facturación' y este diseño de Figma.</div>
-  <p>Para Xray no hace falta MCP: se usa <code>scripts/gestion/</code>. Guía completa en <code>CONECTORES.md</code>.</p>
+  <p>Para Xray y Zephyr Scale no hace falta MCP: se usa <code>scripts/gestion/</code>. Con el plugin, Playwright y Atlassian vienen dentro del plugin. Guía completa en <code>CONECTORES.md</code>.</p>
 </section>
 
 <!-- ======================================================= 13 CONVENCIONES -->
@@ -1380,30 +1510,34 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># un p
 ├── LICENSE                 <span class="c">Licencia MIT</span>
 ├── .env.example            <span class="c">Plantilla de variables (copiar a .env)</span>
 ├── .mcp.json               <span class="c">Conectores MCP (sin secretos; activos según settings)</span>
-├── package.json            <span class="c">Atajos para correr k0lmena desde la raíz (npm test…)</span>
-├── docs/                   <span class="c">Este sitio, el PDF y los diagramas</span>
+├── package.json            <span class="c">Atajos de npm (los de Python, con node scripts/py.js)</span>
+├── bin/                    <span class="c">k0lmenia: el comando del plugin (init, actualizar, py, ayuda…)</span>
+├── docs/                   <span class="c">Este sitio y los diagramas (el PDF se publica en el release "docs")</span>
 ├── tests/                  <span class="c">Tests de los scripts (pytest y node --test)</span>
-├── evals/                  <span class="c">Evals de los agentes: casos con trampas y chequeos</span>
-├── .github/workflows/      <span class="c">CI (tests), monitoreo sintético y evals (manuales)</span>
+├── evals/                  <span class="c">Evals de los agentes: 17 casos con trampas, chequeos y salidas de referencia</span>
+├── .github/workflows/      <span class="c">CI (tests y navegador real), plugin, PDF, monitoreo y evals (manuales)</span>
 ├── .claude/
 │   ├── agents/             <span class="c">Los 79 agentes</span>
-│   ├── skills/             <span class="c">Contexto, diseño, guía de performance, ejecución, k0lmena</span>
+│   ├── skills/             <span class="c">Los 52 skills: contexto, diseño, ejecución, k0lmena y cada plataforma</span>
 │   └── settings.json       <span class="c">Conectores habilitados y permisos</span>
 ├── input/                  <span class="c">historias/ documentacion/ api/ bugs/ correos/ logs/</span>
 ├── output/                 <span class="c">Lo que generan los agentes</span>
 ├── plantillas/             <span class="c">Bug, planilla de casos, cobertura, tiempo estimado</span>
-├── scripts/                <span class="c">Casos, tiempo estimado, revisión, charters, logs, índice de la documentación, informes y doctor</span>
+├── scripts/                <span class="c">Casos, tiempo estimado, revisión, charters, logs, informes, portal, doctor y armado del plugin</span>
+│   ├── i18n/en/            <span class="c">Diccionarios de los informes en inglés</span>
 │   ├── gestion/            <span class="c">Xray, QMetry (QTM4J), AIO Tests, Zephyr Scale y casos para Azure DevOps</span>
 │   └── mcp/                <span class="c">Lanzadores de los conectores MCP (leen el .env)</span>
 └── herramientas/
     ├── newman/             <span class="c">Colecciones de Postman</span>
     ├── zap/                <span class="c">OWASP ZAP: seguridad web (pasivo)</span>
     ├── mailpit/            <span class="c">Mailpit: buzón de prueba para los correos</span>
+    ├── ci/                 <span class="c">Plantillas de pipeline (GitHub, GitLab, Jenkins, Azure)</span>
     └── k0lmena/
         ├── web/            <span class="c">features/ steps/ locators/ + framework</span>
         ├── api/            <span class="c">features/ steps/ (steps genéricos)</span>
         ├── mobile/         <span class="c">features/ steps/ locators/ support/ apps/</span>
         ├── performance/    <span class="c">k6/http/, artillery/ y jmeter/</span>
+        ├── tools/navegador/ <span class="c">Navegador común: canal, bypass anti-bots y detección de bloqueos</span>
         ├── reports/        <span class="c">Reportes HTML</span>
         ├── run-tests.js    <span class="c">Runner de npm test</span>
         └── run-perf.js     <span class="c">Runner de npm run perf</span></pre></div>
@@ -1416,6 +1550,9 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># un p
   <details class="faq"><summary>¿Qué pasa si a la historia le falta información?</summary><div>Los agentes primero la buscan en los comentarios, subtareas, épica, issues vinculados, Confluence y Figma. Lo que no encuentran queda como <b>Falta información</b> (<code>FI-01</code>) con la pregunta para el PO, y se marca en los casos, los <code>.feature</code> y todos los reportes. Nunca se completa con lo que hace la app.</div></details>
   <details class="faq"><summary>No sé qué me falta instalar o configurar</summary><div>Corré <code>npm run doctor</code>: revisa por secciones Python, Node, k0lmena, Playwright, Newman, Java, Docker, las fuentes, el <code>.env</code> (también que cada integración esté completa y coherente, sin mostrar secretos), los conectores habilitados, git y lo que necesitan el portal, el monitoreo y los evals, y dice cómo resolver lo que falta. Con <code>--seccion</code> revisa solo una parte y con <code>--rapido</code> saltea lo lento.</div></details>
   <details class="faq"><summary>La app detecta bots y frena a Playwright o a los agentes</summary><div>k0lmenIA no intenta esquivar la protección (Cloudflare, Akamai, DataDome, captcha…). Cuando la app frena al navegador, el escenario queda <b>Bloqueado: anti-bots</b> y no Fallido, también en la herramienta de gestión, y los agentes frenan y lo reportan. La salida estable es una excepción para QA que da el equipo de la app: con <code>QA_BYPASS_HEADER</code> y <code>QA_BYPASS_TOKEN</code> en el <code>.env</code>, el header se manda solo a los hosts de la app. También sirven una lista blanca de IP o las claves de prueba del captcha. Mientras tanto, <code>npm run login</code> abre tu Chrome para resolverlo a mano, y <code>NAVEGADOR_CANAL=chrome</code> usa el Chrome instalado. Guía para el equipo de la app: <code>herramientas/k0lmena/tools/navegador/README.md</code>.</div></details>
+  <details class="faq"><summary>Si instalo el plugin, ¿pierdo mis cambios cuando se actualiza?</summary><div>No. El plugin vive en la caché de Claude Code y tu proyecto queda aparte: <code>input/</code>, <code>output/</code>, <code>.env</code> y <code>herramientas/k0lmena/</code> con tus pruebas no se tocan. El núcleo de k0lmena se actualiza a pedido con <code>k0lmenia actualizar</code>, que no toca tus <code>features/</code>, <code>steps/</code> ni <code>locators/</code>. Si personalizaste un agente, hacelo con una copia en <code>.claude/agents/</code> de tu proyecto, nunca editando la caché.</div></details>
+  <details class="faq"><summary>Un informe abre en inglés y lo quiero en español (o al revés)</summary><div>Tocá la banderita de arriba a la derecha: pasa a la otra versión y recuerda la elección para el portal y los demás informes. Las dos versiones están siempre en <code>es/</code> y <code>en/</code>, al lado del acceso.</div></details>
+  <details class="faq"><summary>El link para descargar el PDF da error</summary><div>Los PDF ya no se versionan: los publica el workflow <code>documentacion.yml</code> en el release <code>docs</code> cuando cambia <code>docs/</code>. Si todavía no corrió, se lanza desde GitHub → Actions → <i>Documentación en PDF</i> → <i>Run workflow</i>. En tu PC: <code>node docs/generar.js</code>.</div></details>
   <details class="faq"><summary>Un agente devuelve "Necesito que confirmes"</summary><div>Es a propósito: los agentes corren como subagentes y no pueden preguntarte a mitad del trabajo. Respondé las preguntas y Claude continúa al mismo agente con tus respuestas.</div></details>
   <details class="faq"><summary>Un agente nuevo no aparece</summary><div>Reiniciá Claude Code: los agentes se cargan al iniciar la sesión.</div></details>
   <details class="faq"><summary>La suite web falla sin URL o los clics dicen "outside of the viewport"</summary><div>Sin URL: falta el <code>.env</code> de la raíz (<code>cp .env.example .env</code>) o <code>BASEURL</code>/<code>APP_URL</code>. Lo del viewport ya está corregido: si <code>VIEWPORT_WIDTH</code> y <code>VIEWPORT_HEIGHT</code> están vacíos, la ventana usa 1366x768. Si un test falla porque cambió un locator, pedile al <b>reparador-automatizacion</b> que lo arregle.</div></details>
@@ -1436,10 +1573,12 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># un p
   <h2>Extender el proyecto</h2>
   <h3>Agregar un agente</h3>
   <ol class="pasos">
-    <li><b>Creá el archivo</b><code>.claude/agents/mi-agente.md</code> con frontmatter <code>name</code> y <code>description</code>. La descripción es lo que usa Claude Code para decidir cuándo invocarlo.</li>
+    <li><b>Creá el archivo</b><code>.claude/agents/mi-agente.md</code> con frontmatter <code>name</code> y <code>description</code>. La descripción es lo que usa Claude Code para decidir cuándo invocarlo y se carga en cada sesión: una o dos frases (máximo 400 caracteres) con qué hace, cómo se lo pide y en qué se diferencia del agente más parecido.</li>
+    <li><b>Cuerpo corto, referencia en un skill</b>En el agente van el rol, el flujo, las reglas y la salida. Las tablas de criterios, catálogos y formatos largos van a un skill, que se carga solo cuando hace falta.</li>
     <li><b>Escribí el cuerpo</b>En español: rol, entradas, proceso, salida y reglas.</li>
     <li><b>Definí el formato</b>Si genera un formato propio, sumá su plantilla en <code>plantillas/</code> o su script en <code>scripts/</code>, y su carpeta en <code>output/</code>.</li>
     <li><b>Normalizá las tablas</b>Si genera tablas en un <code>.md</code>, pasalas por <code>scripts/formatear_tablas.py</code>.</li>
+    <li><b>Informe en dos idiomas</b>Si arma un informe HTML, escribilo con <code>escribir_bilingue</code> y <code>localizar</code> (<code>scripts/_i18n.py</code>), sumá sus textos al diccionario <code>scripts/i18n/en/</code> y pedile al agente el bloque <code>"en"</code> del JSON.</li>
     <li><b>Si necesita una respuesta de la persona</b>Copiá la sección "Cuando te falta un dato o una confirmación" de cualquier agente: los subagentes no pueden preguntar a mitad del trabajo, así que devuelven "Necesito que confirmes".</li>
   </ol>
   <h3>Skills, conectores y herramientas</h3>
@@ -1447,10 +1586,14 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># un p
     <div class="tarjeta"><h4>Skill</h4><p>Una carpeta en <code>.claude/skills/</code> con su <code>SKILL.md</code>; se carga solo cuando hace falta.</p></div>
     <div class="tarjeta"><h4>Conector MCP</h4><p>Una entrada en <code>.mcp.json</code>, sin secretos; los tokens se leen del <code>.env</code> con un script de <code>scripts/mcp/</code>.</p></div>
     <div class="tarjeta"><h4>Herramienta</h4><p>Una subcarpeta en <code>herramientas/</code> con su README.</p></div>
-    <div class="tarjeta"><h4>Tests del repo</h4><p><code>python -m pytest tests</code> y <code>npm run test:repo</code>; corren en CI (Ubuntu y Windows) en cada cambio. Sumá un test cuando cambies un script.</p></div>
+    <div class="tarjeta"><h4>Tests del repo</h4><p><code>python -m pytest tests</code> y <code>npm run test:repo</code>. El CI los corre en Ubuntu y Windows (con el control estricto de traducciones), más un job con navegador real y los evals con referencia. Sumá un test cuando cambies un script.</p></div>
+    <div class="tarjeta"><h4>Script de Python con atajo</h4><p>En <code>package.json</code>: <code>"mi-script": "node scripts/py.js scripts/mi_script.py"</code>. En el plugin queda como <code>k0lmenia mi-script</code>.</p></div>
   </div>
+  <h3>Publicar el plugin</h3>
+  <p>En cada push a <code>main</code>, el workflow <code>plugin.yml</code> corre <code>python scripts/construir_plugin.py</code> y publica el resultado en la rama <code>plugin</code>. El armado traduce los comandos de agentes y skills (<code>npm run x</code> → <code>k0lmenia x</code>), pasa los estándares de CLAUDE.md al skill <code>estandares</code> y suma el hook de inicio, los conectores y el marketplace. Para probarlo en tu PC: <code>claude --plugin-dir dist/plugin</code> y <code>claude plugin validate dist/plugin</code>.</p>
   <h3>Regenerar esta documentación</h3>
   <div class="codigo"><pre>node docs/generar.js        <span class="c"># diagramas (PNG) y PDF en los dos idiomas, con el Playwright de k0lmena</span></pre></div>
+  <p>Los PDF no se versionan: los publica el workflow <code>documentacion.yml</code> en el release <code>docs</code> cada vez que cambia <code>docs/</code>.</p>
   <p>El sitio es <code>docs/index.html</code> (publicado con GitHub Pages en <a href="https://underc0delabs.github.io/k0lmenIA/">underc0delabs.github.io/k0lmenIA</a>); el PDF sale del mismo HTML con estilos de impresión, y los diagramas de <code>docs/diagramas/</code>. La versión en inglés está en <code>docs/en/index.html</code> (con sus diagramas en <code>docs/diagramas/en/</code>): si cambiás esta página, actualizá también esa; las dos usan los mismos <code>id</code> de sección.</p>
   <h3>Licencia</h3>
   <p>Licencia <b>MIT</b> — © 2026 <b>QARMY</b>. k0lmena es un proyecto open source de <b>Danilo Vezzoni</b>. Hecho por la comunidad de <b>Underc0de</b>.</p>

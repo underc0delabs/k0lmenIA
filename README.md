@@ -254,11 +254,11 @@ Además de clonar el repo, k0lmenIA se puede instalar como **plugin** en la carp
 Después, en la carpeta de tu proyecto: `k0lmenia init` (crea `input/`, `output/`, el `.env` y una copia de k0lmena para tus pruebas automatizadas) y `k0lmenia doctor`.
 
 - **Comandos**: lo que acá es `npm run <x>` o `python scripts/<x>.py`, en el plugin es `k0lmenia <x>` (`k0lmenia ayuda` los lista). Los agentes se llaman `k0lmenia:<agente>`.
-- **Actualizar**: `/plugin marketplace update k0lmenia`, o activá la actualización automática en `/plugin` → Marketplaces. El plugin vive en la caché de Claude Code; tu proyecto (`input/`, `output/`, `.env`, `herramientas/k0lmena` con tus pruebas) no se toca.
+- **Actualizar**: cada push a `main` se publica solo en la rama `plugin`. Para recibirlo, activá una vez la actualización automática (`/plugin` → Marketplaces → `k0lmenia` → *Enable auto-update*) o corré `/plugin marketplace update k0lmenia`. El plugin vive en la caché de Claude Code; tu proyecto (`input/`, `output/`, `.env`) no se toca.
+- **Actualizar k0lmena** (el framework de automatización de tu proyecto): `k0lmenia actualizar`. Claude te avisa al iniciar la sesión cuando hay versión nueva. Tus pruebas (features, steps, locators) no se tocan, y si modificaste un archivo del framework, la versión nueva queda al lado como `.nuevo` para que la compares.
 - **Personalizar un agente**: copialo a `.claude/agents/` de tu proyecto. Esa copia le gana a la del plugin, pero deja de recibir las mejoras de ese agente.
 - **Para todo el equipo**: declarás el marketplace y el plugin en el `.claude/settings.json` del proyecto (instrucciones en la rama [`plugin`](https://github.com/underc0delabs/k0lmenIA/tree/plugin)).
 - **Cómo se arma**: la rama `plugin` la publica sola el workflow `plugin.yml` en cada push a `main`, con `python scripts/construir_plugin.py`. Este repo sigue siendo donde se desarrolla.
-- **Limitación de esta primera versión**: `k0lmenia init` copia k0lmena entera a tu proyecto, así que las mejoras del framework de automatización no llegan solas a esa copia (los agentes, skills y scripts sí se actualizan). Separar el núcleo de k0lmena de tus pruebas es la fase 2.
 
 ## 🚀 Instalación
 

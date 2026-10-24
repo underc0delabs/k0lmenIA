@@ -2,6 +2,10 @@
 
 Los cambios más relevantes, del más nuevo al más viejo. El detalle de cada uno está en el historial de git.
 
+## 2026-10-24 (8) — Las actualizaciones llegan al plugin, también las de k0lmena
+- **Publicación automática**: con la rama del plugin en `main`, el workflow `plugin.yml` publica la rama `plugin` en cada push. Los QAs reciben cada cambio con la actualización automática del marketplace (se activa una vez en `/plugin` → Marketplaces) o con `/plugin marketplace update k0lmenia`.
+- **`k0lmenia actualizar`**: trae las mejoras del framework k0lmena a la copia del proyecto sin tocar las pruebas del QA (features, steps, locators, apps, scripts de performance). `init` guarda una huella de cada archivo del framework; si el QA modificó uno, la versión nueva queda al lado como `.nuevo` y se avisa. Al iniciar la sesión, Claude avisa si el proyecto tiene una versión vieja de k0lmena.
+
 ## 2026-10-24 (7) — k0lmenIA como plugin de Claude Code (fase 1)
 - **Plugin**: `/plugin marketplace add underc0delabs/k0lmenIA#plugin` y `/plugin install k0lmenia@k0lmenia` lo instalan en cualquier proyecto, sin clonar el repo. La rama `plugin` la arma y publica el workflow `plugin.yml` en cada push a `main` (`scripts/construir_plugin.py`).
   - Agentes y skills usan el comando `k0lmenia` en lugar de `npm run`/`python scripts/…`.

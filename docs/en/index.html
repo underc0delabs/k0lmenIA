@@ -64,6 +64,7 @@
   <div class="grupo">Getting started</div>
   <a href="#requisitos">Requirements</a>
   <a href="#instalacion">Installation</a>
+  <a href="#plugin">As a Claude Code plugin</a>
   <a href="#configuracion">Configuration (.env)</a>
   <div class="grupo">Guides</div>
   <a href="#documentacion">Project documentation</a>
@@ -72,6 +73,8 @@
   <a href="#k0lmena">Automation with k0lmena</a>
   <a href="#performance">Performance</a>
   <a href="#gestion">Xray, QMetry, AIO Tests, Zephyr and Azure DevOps</a>
+  <a href="#ci">k0lmena in the pipeline (CI)</a>
+  <a href="#anti-bots">Apps with bot protection</a>
   <a href="#base-de-datos">Database checks</a>
   <a href="#exploratorias">Exploratory testing</a>
   <a href="#accesibilidad">Accessibility</a>
@@ -94,6 +97,7 @@
   <a href="#triage">Bug triage and questions</a>
   <a href="#historial">Run history</a>
   <a href="#tablero">Dashboard and portal</a>
+  <a href="#idiomas">Reports in Spanish and English</a>
   <a href="#avisos">Notifications and monitoring</a>
   <a href="#evals">Agent evals</a>
   <a href="#tokens">Token usage</a>
@@ -116,14 +120,14 @@
     <div class="k">Project documentation</div>
     <h1><span>k0lmenIA</span></h1>
     <div class="l">QA agents for Claude Code: test design, automation with k0lmena and integration with Xray, QMetry, AIO Tests, Zephyr and Azure DevOps. The agents work in Spanish.</div>
-    <div class="chips"><span>79 agents</span><span>Web · API · Mobile · Performance</span><span>Playwright · Cucumber · Appium · k6 · Artillery · JMeter</span><span>Xray · QMetry · AIO Tests · Zephyr · Azure DevOps</span><span>Jira · Confluence · Figma</span><span>GitHub · GitLab · Bitbucket</span><span>Linear · ClickUp · monday · Asana · Trello · Notion</span><span>Slack · Teams</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Token-free suites</span></div>
+    <div class="chips"><span>79 agents</span><span>Web · API · Mobile · Performance</span><span>Playwright · Cucumber · Appium · k6 · Artillery · JMeter</span><span>Xray · QMetry · AIO Tests · Zephyr · Azure DevOps</span><span>Jira · Confluence · Figma</span><span>GitHub · GitLab · Bitbucket</span><span>Linear · ClickUp · monday · Asana · Trello · Notion</span><span>Slack · Teams</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Token-free suites</span><span>Claude Code plugin</span><span>Reports in ES · EN</span></div>
   </div>
   <div class="p"><span>QARMY · Underc0de</span><span>github.com/underc0delabs/k0lmenIA</span><span>MIT License</span></div>
 </section>
 <section class="solo-impresion indice">
   <h2>Contents</h2>
   <ol>
-    <li><span>1</span>What is k0lmenIA</li><li><span>2</span>Architecture</li><li><span>3</span>How to use it</li><li><span>4</span>Agents</li><li><span>5</span>Requirements</li><li><span>6</span>Installation</li><li><span>7</span>Configuration: the .env file</li><li><span>8</span>Project documentation</li><li><span>9</span>Context research and missing information</li><li><span>10</span>Task guide: design and execution</li><li><span>11</span>Automation with k0lmena</li><li><span>12</span>Performance testing</li><li><span>13</span>Test management: Xray, QMetry, AIO Tests, Zephyr and Azure DevOps</li><li><span>14</span>Database checks</li><li><span>15</span>Exploratory testing</li><li><span>16</span>Accessibility</li><li><span>17</span>Web performance</li><li><span>18</span>Failure analysis</li><li><span>19</span>Server logs</li><li><span>20</span>Coverage and traceability</li><li><span>21</span>Visual regression (pixel perfect)</li><li><span>22</span>Cross-browser</li><li><span>23</span>Repairing the automation</li><li><span>24</span>Selecting cases for a change</li><li><span>25</span>Case review and estimated time</li><li><span>26</span>Charters and exploratory sessions</li><li><span>27</span>Emails</li><li><span>28</span>Translations and languages</li><li><span>29</span>Usability</li><li><span>30</span>Forms</li><li><span>31</span>Role permissions</li><li><span>32</span>Resilience</li><li><span>33</span>Bug triage and questions</li><li><span>34</span>Run history</li><li><span>35</span>Quality dashboard and report portal</li><li><span>36</span>Notifications and synthetic monitoring</li><li><span>37</span>Agent evals</li><li><span>38</span>Token usage</li><li><span>39</span>Onboarding</li><li><span>40</span>Web security</li><li><span>41</span>Streaming and cameras</li><li><span>42</span>MCP connectors</li><li><span>43</span>Conventions</li><li><span>44</span>Repository structure</li><li><span>45</span>Troubleshooting</li><li><span>46</span>Extending the project</li>
+    <li><span>1</span>What is k0lmenIA</li><li><span>2</span>Architecture</li><li><span>3</span>How to use it</li><li><span>4</span>Agents</li><li><span>5</span>Requirements</li><li><span>6</span>Installation</li><li><span>7</span>As a Claude Code plugin</li><li><span>8</span>Configuration: the .env file</li><li><span>9</span>Project documentation</li><li><span>10</span>Context research and missing information</li><li><span>11</span>Task guide: design and execution</li><li><span>12</span>Automation with k0lmena</li><li><span>13</span>Performance testing</li><li><span>14</span>Test management: Xray, QMetry, AIO Tests, Zephyr and Azure DevOps</li><li><span>15</span>k0lmena in the pipeline (CI)</li><li><span>16</span>Apps with bot protection</li><li><span>17</span>Database checks</li><li><span>18</span>Exploratory testing</li><li><span>19</span>Accessibility</li><li><span>20</span>Web performance</li><li><span>21</span>Failure analysis</li><li><span>22</span>Server logs</li><li><span>23</span>Coverage and traceability</li><li><span>24</span>Visual regression (pixel perfect)</li><li><span>25</span>Cross-browser</li><li><span>26</span>Repairing the automation</li><li><span>27</span>Selecting cases for a change</li><li><span>28</span>Case review and estimated time</li><li><span>29</span>Charters and exploratory sessions</li><li><span>30</span>Emails</li><li><span>31</span>Translations and languages</li><li><span>32</span>Usability</li><li><span>33</span>Forms</li><li><span>34</span>Role permissions</li><li><span>35</span>Resilience</li><li><span>36</span>Bug triage and questions</li><li><span>37</span>Run history</li><li><span>38</span>Quality dashboard and report portal</li><li><span>39</span>Reports in Spanish and English</li><li><span>40</span>Notifications and synthetic monitoring</li><li><span>41</span>Agent evals</li><li><span>42</span>Token usage</li><li><span>43</span>Onboarding</li><li><span>44</span>Web security</li><li><span>45</span>Streaming and cameras</li><li><span>46</span>MCP connectors</li><li><span>47</span>Conventions</li><li><span>48</span>Repository structure</li><li><span>49</span>Troubleshooting</li><li><span>50</span>Extending the project</li>
   </ol>
 </section>
 
@@ -131,7 +135,7 @@
 <section class="hero" id="inicio">
   <div class="pildora">QA agents for Claude Code · token-free suites</div>
   <h1><span class="grad">k0lmenIA</span></h1>
-  <p class="lema">Design, run and automate tests by talking to Claude Code. The agents analyze user stories, write test cases, automate with <b>k0lmena</b> (web, API, mobile and performance) and take everything to <b>Xray, QMetry, AIO Tests or Azure DevOps</b>. The agents and their deliverables are in Spanish.</p>
+  <p class="lema">Design, run and automate tests by talking to Claude Code. The agents analyze user stories, write test cases, automate with <b>k0lmena</b> (web, API, mobile and performance) and take everything to <b>Xray, QMetry, AIO Tests, Zephyr or Azure DevOps</b>. Use it by cloning the repo or as a <b>Claude Code plugin</b>; every report comes in <b>Spanish and English</b>. The agents and their deliverables are in Spanish.</p>
   <div class="ctas">
     <a class="btn primario" href="#instalacion">Get started
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6l6 6-6 6"/></svg></a>
@@ -165,9 +169,9 @@
     <span class="tec"><i style="background:#47a248"></i>MongoDB</span>
   </div>
   <div class="metricas">
-    <div class="metrica"><div class="n">76</div><div class="t">specialized agents</div></div>
+    <div class="metrica"><div class="n">79</div><div class="t">specialized agents</div></div>
     <div class="metrica"><div class="n">4</div><div class="t">types of automation</div></div>
-    <div class="metrica"><div class="n">4</div><div class="t">test management tools</div></div>
+    <div class="metrica"><div class="n">5</div><div class="t">test management tools</div></div>
     <div class="metrica"><div class="n">0</div><div class="t">tokens to run the suites</div></div>
   </div>
 </section>
@@ -196,6 +200,8 @@
     <tr><td>Research before assuming</td><td>Before working on a story, the agents review the project documentation (repository, PRs, map of the web app), its comments, subtasks, epic, linked issues, Confluence and Figma. Whatever doesn't show up is marked as <b>Missing information</b> (<code>FI-01</code>).</td></tr>
     <tr><td>Token savings</td><td>What repeats is automated once and then runs without agents.</td></tr>
     <tr><td>Security</td><td>Secrets live in the <code>.env</code> at the root, which is never committed; the agents never ask for tokens in the chat.</td></tr>
+    <tr><td>Two languages</td><td>Every report comes in Spanish and English, with a flag to pick which one to send.</td></tr>
+    <tr><td>Wherever you work</td><td>Clone this repo or install it as a <b>Claude Code plugin</b> in any project folder: updates arrive without touching your work.</td></tr>
   </table></div>
 </section>
 
@@ -215,13 +221,15 @@
   </figure>
   <div class="tabla"><table>
     <tr><th style="width:22%">Piece</th><th>What it is</th><th style="width:26%">Where</th></tr>
-    <tr><td>Claude Code</td><td>Orchestrator: interprets the request, picks the agent and applies the project standards.</td><td><code>CLAUDE.md</code></td></tr>
+    <tr><td>Claude Code</td><td>Orchestrator: interprets the request, picks the agent and applies the project standards (short on purpose: the details are read on demand).</td><td><code>CLAUDE.md</code> · <code>REFERENCIA.md</code> (in the plugin: the <code>k0lmenia:estandares</code> skill)</td></tr>
     <tr><td>Agents</td><td>The "who": one specialist per task.</td><td><code>.claude/agents/</code></td></tr>
     <tr><td>Skills</td><td>The "how": knowledge loaded only when needed (design techniques, E2E and API execution, k0lmena conventions).</td><td><code>.claude/skills/</code></td></tr>
     <tr><td>Templates and scripts</td><td>Output format (test case spreadsheet, coverage, bug report) and deterministic HTML reports.</td><td><code>plantillas/</code> · <code>scripts/</code></td></tr>
     <tr><td>Test management integration</td><td><code>gestion.py</code> with one adapter per tool: Xray Cloud, Xray Server/DC, QTM4J, AIO Tests and Zephyr Scale. Azure DevOps goes through its MCP connector.</td><td><code>scripts/gestion/</code></td></tr>
     <tr><td>MCP connectors</td><td>Playwright and Atlassian (Jira and Confluence) active; Azure DevOps, Figma, GitHub, GitLab, Linear, ClickUp, monday.com, Asana, Trello, Notion, YouTrack, Shortcut, Appium, QMetry, AIO Tests and k0lmenaTMT ready to enable. Pinned versions, no secrets in the file.</td><td><code>.mcp.json</code></td></tr>
-    <tr><td>Tools</td><td>Newman for Postman collections and k0lmena for web, API, mobile and performance.</td><td><code>herramientas/</code></td></tr>
+    <tr><td>Tools</td><td>Newman for Postman collections and k0lmena for web, API, mobile and performance (with the shared browser for apps with bot protection), plus CI templates.</td><td><code>herramientas/</code></td></tr>
+    <tr><td>Reports and portal</td><td>Every report in Spanish and English (<code>es/</code> and <code>en/</code>) and the portal with categories and history.</td><td><code>scripts/_i18n.py</code> · <code>scripts/i18n/</code> · <code>output/index.html</code></td></tr>
+    <tr><td>Plugin</td><td>The same k0lmenIA, installable in any project. The <code>k0lmenia</code> command replaces <code>npm run</code>; the code stays in the plugin and the data in the project.</td><td><code>bin/k0lmenia</code> · <code>scripts/construir_plugin.py</code> · <code>plugin</code> branch</td></tr>
     <tr><td>Input and output</td><td>User inputs and generated artifacts, organized by type.</td><td><code>input/</code> · <code>output/</code></td></tr>
   </table></div>
 </section>
@@ -416,6 +424,10 @@
     <tr><td><code>pruebas-documentos</code></td><td>Test generated documents (PDF/Excel/CSV): data and calculations, placeholders, format/locale, layout, metadata, security and PDF a11y</td><td>probador-documentos</td></tr>
     <tr><td><code>pruebas-contenido</code></td><td>Review content and typos: spelling/grammar, placeholders, visible i18n keys, duplicate words, microcopy and consistency</td><td>revisor-contenido</td></tr>
     <tr><td><code>pruebas-mutacion</code></td><td>Mutation testing: mutants and states (killed/survived/no-coverage), mutation score, survivors vs. equivalents, bounded cost (diff/module) and per-language tools</td><td>analista-mutacion</td></tr>
+    <tr><td><code>documentacion-proyecto</code></td><td>The documenter's reference: tools by repository provider, what to look for in the code, functional map, the structure of <code>input/documentacion/</code>, the dossier and the sweep and update modes</td><td>documentador-proyecto</td></tr>
+    <tr><td><code>pruebas-exploratorias</code></td><td>What <code>npm run explorar</code> checks, manual checklist, <code>analisis.json</code>, severity and final checklist</td><td>explorador-web</td></tr>
+    <tr><td><code>pruebas-resiliencia</code></td><td>Resilience scenarios, manual exploration, Toxiproxy step by step, <code>analisis.json</code> and checklist</td><td>probador-resiliencia</td></tr>
+    <tr><td><code>redaccion-casos-manuales</code></td><td>Spreadsheet columns, the JSON schema of <code>generar_casos.py</code> (with the <code>en</code> block), field rules and the coverage report</td><td>generador-casos-manuales</td></tr>
     <tr><td><code>pruebas-accesibilidad</code></td><td>Accessibility (a11y) on web (WCAG 2.2, axe-core), mobile (TalkBack/VoiceOver, labels) and desktop (UI Automation, accessible names)</td><td>analista-accesibilidad, probador-mobile, probador-desktop</td></tr>
   </table></div>
 </section>
@@ -441,6 +453,7 @@
   <div class="kicker">Getting started</div>
   <h2>Installation</h2>
   <p class="bajada">In five minutes you have the agents running; k0lmena and the rest can be added when you need them.</p>
+  <div class="aviso info"><span class="ico">i</span><p><b>Don't want to clone the repo?</b> Install it as a <a href="#plugin">Claude Code plugin</a> in your project folder: same agents, and updates arrive with one command.</p></div>
   <figure class="figura">
     <a href="../assets/img/en/puesta-en-marcha.png" target="_blank" rel="noopener"><img src="../assets/img/en/puesta-en-marcha.png" alt="Getting k0lmenIA running: installation steps, how to set the tokens in the .env and example requests to the agents"></a>
     <figcaption>Getting started: installation, <code>.env</code> tokens and example requests · click to see it full size</figcaption>
@@ -474,11 +487,58 @@ npm run bootstrap:jmeter                           <span class="c"># performance
   </ol>
 </section>
 
+
+<!-- ======================================================= PLUGIN -->
+<section class="seccion" id="plugin">
+  <div class="kicker">Getting started</div>
+  <h2>As a Claude Code plugin</h2>
+  <p class="bajada">The same k0lmenIA, installed in any project folder, without cloning this repo. Updates arrive with one command and never touch your work.</p>
+  <ol class="pasos">
+    <li><b>Install it in Claude Code</b>
+      <div class="codigo"><pre>/plugin marketplace add underc0delabs/k0lmenIA#plugin
+/plugin install k0lmenia@k0lmenia</pre></div></li>
+    <li><b>Set up the project</b>In your project folder (or ask Claude to do it):
+      <div class="codigo"><pre>k0lmenia init        <span class="c"># input/, output/, .env, .gitignore and your copy of k0lmena (npm install)</span>
+k0lmenia configurar  <span class="c"># fills in the .env by asking you questions</span>
+k0lmenia doctor      <span class="c"># checks that everything is in place</span></pre></div></li>
+    <li><b>Work as usual</b>Ask in plain language. The agents are named <code>k0lmenia:&lt;agent&gt;</code> (for example <code>k0lmenia:generador-casos-manuales</code>), and at the start of every session a hook reminds Claude of the k0lmenIA standards and installs the Python dependencies.</li>
+  </ol>
+  <h3>The <code>k0lmenia</code> command</h3>
+  <p>With the plugin enabled, Claude Code puts it on the PATH. What is <code>npm run &lt;x&gt;</code> or <code>python scripts/&lt;x&gt;.py</code> in the repo is <code>k0lmenia &lt;x&gt;</code> in the plugin.</p>
+  <div class="tabla"><table>
+    <tr><th style="width:32%">Command</th><th>What it does</th></tr>
+    <tr><td><code>k0lmenia init [--sin-npm]</code></td><td>Sets up the project. If it was already set up, it only adds what's missing: it never overwrites your <code>.env</code> or your tests.</td></tr>
+    <tr><td><code>k0lmenia actualizar</code></td><td>Updates the k0lmena core in your project (runner, framework and tools) without touching your tests (<code>features/</code>, <code>steps/</code>, <code>locators/</code>, apps and performance scripts). If you modified a framework file, it isn't overwritten: the new version is saved next to it as <code>&lt;file&gt;.nuevo</code> so you can compare them. When a session starts, Claude tells you if a new version is available. <code>--sin-npm</code> skips installing dependencies.</td></tr>
+    <tr><td><code>k0lmenia &lt;command&gt; [args]</code></td><td>Any command from the repo: <code>doctor</code>, <code>portal</code>, <code>explorar</code>, <code>accesibilidad</code>, <code>sast</code>, <code>login</code>, <code>ci</code>…</td></tr>
+    <tr><td><code>k0lmenia test[:web|:api|:mobile]</code></td><td>Your project's k0lmena suites (<code>npm test</code>).</td></tr>
+    <tr><td><code>k0lmenia py &lt;script.py&gt; [args]</code></td><td>A Python script from the plugin (<code>scripts/…</code> or <code>herramientas/…</code>).</td></tr>
+    <tr><td><code>k0lmenia ayuda</code></td><td>The full list.</td></tr>
+  </table></div>
+  <h3>Code and data, kept apart</h3>
+  <div class="tarjetas">
+    <div class="tarjeta c-violeta"><div class="ico">◆</div><h4>In the plugin (gets updated)</h4><p>Agents, skills, scripts, templates and tools. They live in Claude Code's cache (<code>~/.claude/plugins/</code>).</p></div>
+    <div class="tarjeta c-verde"><div class="ico">▣</div><h4>In your project (never touched)</h4><p><code>input/</code>, <code>output/</code>, <code>.env</code>, <code>.auth/</code> and <code>herramientas/k0lmena/</code> with your automated tests.</p></div>
+    <div class="tarjeta c-cian"><div class="ico">↻</div><h4>Updating</h4><p><code>/plugin marketplace update k0lmenia</code>, or turn on auto-update in <code>/plugin</code> → Marketplaces (it's off by default for your own marketplaces).</p></div>
+  </div>
+  <h3>How updates arrive</h3>
+  <p>This repo is where development happens. On every push to <code>main</code>, the <code>plugin.yml</code> workflow builds the plugin (<code>scripts/construir_plugin.py</code>) and publishes it to the <code>plugin</code> branch, which is lightweight and has none of the repo's history. The plugin doesn't pin a version, so every publication is a new version: you get it with <code>/plugin marketplace update k0lmenia</code>, or automatically if you turned auto-update on. The previous version is deleted after 14 days.</p>
+  <h3>Customizing and working as a team</h3>
+  <ul>
+    <li><b>An agent of your own</b>: copy it to your project's <code>.claude/agents/</code>. That copy takes precedence over the plugin's, but it stops receiving that agent's improvements. Anything you can solve with the <code>.env</code> or your project's CLAUDE.md is better solved there.</li>
+    <li><b>For the whole team</b>: declare the marketplace and the plugin in the project's <code>.claude/settings.json</code>. Each person installs it once and accepts the folder's trust dialog.</li>
+  </ul>
+  <div class="codigo"><pre>{
+  "extraKnownMarketplaces": {"k0lmenia": {"source": {"source": "github", "repo": "underc0delabs/k0lmenIA", "ref": "plugin"}}},
+  "enabledPlugins": {"k0lmenia@k0lmenia": true}
+}</pre></div>
+  <div class="aviso warn"><span class="ico">!</span><p><b>Limitations.</b> A plugin can't ship the list of allowed commands: the first time, Claude asks for approval to run <code>k0lmenia …</code> (each team can add it to its <code>.claude/settings.json</code>). If you use the plugin and the cloned repo in the same folder, you'll see the agents twice (with and without the prefix).</p></div>
+</section>
+
 <!-- ======================================================= 7 CONFIGURATION -->
 <section class="seccion" id="configuracion">
   <div class="kicker">Getting started</div>
   <h2>Configuration: the <code>.env</code> file</h2>
-  <p class="bajada">There is <b>a single <code>.env</code>, at the root of the repo</b>. The agents, k0lmena and the management scripts use it. It's in <code>.gitignore</code> and the commented template is <code>.env.example</code>.</p>
+  <p class="bajada">There is <b>a single <code>.env</code>, at the root of the repo</b> (or of your project, if you use the plugin). The agents, k0lmena and the management scripts use it. It's in <code>.gitignore</code> and the commented template is <code>.env.example</code>.</p>
   <div class="tabla"><table>
     <tr><th style="width:18%">Group</th><th style="width:47%">Variables</th><th>What for</th></tr>
     <tr><td>App under test</td><td><code>APP_URL</code> <code>APP_USER</code> <code>APP_PASSWORD</code></td><td>E2E execution and logins</td></tr>
@@ -490,7 +550,9 @@ npm run bootstrap:jmeter                           <span class="c"># performance
     <tr><td>Mobile</td><td><code>MOBILE_TARGET</code> <code>MOBILE_PLATFORM</code> <code>MOBILE_DEVICE_NAME</code> <code>MOBILE_APP</code> <code>MOBILE_UDID</code> <code>BROWSERSTACK_*</code></td><td>Where the mobile suite runs</td></tr>
     <tr><td>Performance</td><td><code>PERF_VUS</code> <code>PERF_DURACION</code></td><td>Override the load of the k6 scripts</td></tr>
     <tr><td>Databases</td><td><code>DB_CONEXIONES</code> + <code>DB_&lt;NAME&gt;_MOTOR</code> <code>_HOST</code> <code>_PUERTO</code> <code>_BASE</code> <code>_USUARIO</code> <code>_CLAVE</code> (or <code>_URL</code>) <code>_ESCRITURA</code> <code>_PRODUCCION</code></td><td>Database checks</td></tr>
-    <tr><td>Test management</td><td><code>GESTION_HERRAMIENTA</code> <code>GESTION_PROYECTO</code> + the tool's credentials</td><td>Xray, QMetry, AIO Tests and Zephyr Scale</td></tr>
+    <tr><td>Test management</td><td><code>GESTION_HERRAMIENTA</code> <code>GESTION_PROYECTO</code> + the tool's credentials (Zephyr Scale: <code>ZEPHYR_API_TOKEN</code> <code>ZEPHYR_API_URL</code> plus the Jira ones)</td><td>Xray, QMetry, AIO Tests and Zephyr Scale</td></tr>
+    <tr><td>Browser and bot protection</td><td><code>NAVEGADOR_CANAL</code> <code>RITMO_HUMANO</code> <code>QA_BYPASS_HEADER</code> <code>QA_BYPASS_TOKEN</code> <code>QA_BYPASS_HOSTS</code></td><td>Installed Chrome or Edge, pauses and the exception header for apps with bot protection</td></tr>
+    <tr><td>Documentation language</td><td><code>DOCUMENTACION_EN</code> (empty · <code>si</code> · <code>no</code>)</td><td>Context and project documentation in English too: empty = Claude asks</td></tr>
     <tr><td>Azure DevOps (MCP)</td><td><code>ADO_ORGANIZACION</code> <code>ADO_PAT</code> <code>ADO_PROYECTO</code></td><td>Boards, Wiki, Repos and Test Plans</td></tr>
     <tr><td>Role permissions</td><td><code>PERMISOS_ROLES</code> <code>PERMISOS_&lt;ROLE&gt;_USUARIO</code> <code>_CLAVE</code> <code>_TOKEN</code> <code>PERMISOS_LOGIN_URL</code></td><td>Roles tested by probador-permisos</td></tr>
     <tr><td>Notifications</td><td><code>SLACK_WEBHOOK_URL</code> <code>TEAMS_WEBHOOK_URL</code></td><td>Notifications to Slack and Teams (scripts/avisar.py)</td></tr>
@@ -755,12 +817,47 @@ python scripts/gestion/gestion.py crear-ciclo --nombre "Sprint 5" --historia PRO
 python scripts/gestion/gestion.py extraer-resultados --reporte &lt;cucumber-report.json&gt;
 python scripts/gestion/gestion.py publicar-resultados --ciclo PROJ-60 --resultados &lt;resultados.json&gt; --traza HU-001</pre></div>
   <p>Folders go without a leading slash (in Git Bash, <code>/HU-001</code> becomes a Windows path). Full reference in <code>scripts/gestion/README.md</code>.</p>
-  <h3>In the pipeline (CI)</h3>
-  <p>The k0lmena suites run on their own in the team's pipeline, with no agents and no tokens. <code>npm run ci -- generar --plataforma github|gitlab|jenkins|azure [--suite web|api|all]</code> puts the pipeline file in place (it never overwrites an existing one unless you pass <code>--forzar</code>): it installs k0lmena and Chromium, runs the suites, keeps the reports as an artifact and, if there is a <code>GESTION_CICLO</code>, publishes the results to the test management tool. The template holds no values: the whole <code>.env</code> goes in as a pipeline secret and arrives through <code>K0LMENA_ENV_FILE</code>. Details in <code>herramientas/ci/README.md</code>.</p>
   <h3>Azure DevOps (Test Plans)</h3>
   <p>Azure DevOps doesn't go through <code>gestion.py</code>: it's integrated through its official MCP connector (<code>azure-devops</code>), with <code>ADO_ORGANIZACION</code>, <code>ADO_PAT</code> and <code>ADO_PROYECTO</code> in the <code>.env</code>. The agents read the stories (with comments, tasks, parent and links) and the Wiki, and <b>gestor-pruebas</b> creates the <i>Test Cases</i> with their steps (built by <code>scripts/gestion/para_azure_devops.py</code>), links them to the story and adds them to a suite. Execution results aren't published to Azure DevOps yet.</p>
   <div class="pedido">Subí los casos de casos-HU-001.xlsx a Azure Test Plans, plan 'Sprint 5', suite 'HU-001 Registro', vinculados a la historia 1234.</div>
   <p class="nota-en">Upload the test cases from casos-HU-001.xlsx to Azure Test Plans, plan 'Sprint 5', suite 'HU-001 Registro', linked to story 1234.</p>
+</section>
+
+
+<!-- ======================================================= CI -->
+<section class="seccion" id="ci">
+  <div class="kicker">Guides</div>
+  <h2>k0lmena in the pipeline (CI)</h2>
+  <p class="bajada">The k0lmena suites run on their own in the team's pipeline, with no agents and no tokens.</p>
+  <div class="codigo"><pre>npm run ci -- listar
+npm run ci -- generar --plataforma github               <span class="c"># → .github/workflows/k0lmena.yml</span>
+npm run ci -- generar --plataforma gitlab --suite all   <span class="c"># → .gitlab-ci.yml (web and api)</span>
+npm run ci -- generar --plataforma jenkins              <span class="c"># → Jenkinsfile</span>
+npm run ci -- generar --plataforma azure --suite api    <span class="c"># → azure-pipelines.yml</span></pre></div>
+  <p>The pipeline installs k0lmena and Chromium, runs the suites, keeps the reports as an artifact and, if there is a <code>GESTION_CICLO</code>, publishes the results to Xray, QMetry, AIO Tests or Zephyr (<code>npm run ci -- publicar</code>). It never overwrites an existing pipeline unless you pass <code>--forzar</code>.</p>
+  <div class="tabla"><table>
+    <tr><th style="width:20%">Platform</th><th>Where the <code>.env</code> goes (as a secret, never in the file)</th></tr>
+    <tr><td>GitHub Actions</td><td><code>K0LMENIA_ENV</code> secret with the file's content</td></tr>
+    <tr><td>GitLab CI</td><td>Protected <code>K0LMENA_ENV_FILE</code> variable of type File</td></tr>
+    <tr><td>Jenkins</td><td><i>Secret file</i> credential with id <code>k0lmenia-env</code></td></tr>
+    <tr><td>Azure Pipelines</td><td><code>k0lmenia.env</code> secure file (Pipelines → Library)</td></tr>
+  </table></div>
+  <div class="aviso info"><span class="ico">i</span><p>If a suite fails, the pipeline still keeps the reports and publishes the results, and fails at the end. Details in <code>herramientas/ci/README.md</code>.</p></div>
+</section>
+
+<!-- ======================================================= BOT PROTECTION -->
+<section class="seccion" id="anti-bots">
+  <div class="kicker">Guides</div>
+  <h2>Apps with bot protection</h2>
+  <p class="bajada">Cloudflare, Akamai, DataDome, Imperva, AWS WAF or a captcha can block the automated browser. k0lmenIA doesn't try to get around it: it detects it, reports it and uses the official exception given by the app team.</p>
+  <div class="tarjetas">
+    <div class="tarjeta c-naranja"><div class="ico">⊘</div><h4>No false failures</h4><p>If the app answers with a challenge or an access-denied page, the scenario is marked <b>Blocked: anti-bot</b> (also when it's published to the test management tool) and the failure analysis keeps it apart from bugs. The tools warn about it at the end and the agents stop and report it.</p></div>
+    <div class="tarjeta c-cian"><div class="ico">⇄</div><h4>Exception header</h4><p>With <code>QA_BYPASS_HEADER</code> and <code>QA_BYPASS_TOKEN</code>, <code>npm test</code>, the tools and the agents' browser send the agreed header <b>only to the app's hosts</b> (<code>QA_BYPASS_HOSTS</code>), never to third parties.</p></div>
+    <div class="tarjeta c-verde"><div class="ico">▶</div><h4>Real browser and pace</h4><p><code>NAVEGADOR_CANAL=chrome</code> uses your installed Chrome and <code>RITMO_HUMANO=si</code> adds pauses between actions.</p></div>
+    <div class="tarjeta c-violeta"><div class="ico">✎</div><h4>Manual plan B</h4><p><code>npm run login</code> opens your Chrome: you solve the challenge or captcha by hand and the session is saved (<code>SESION=si</code>). Anti-bot cookies only work for the same browser and IP.</p></div>
+  </div>
+  <p>The guide for the app team explains the header exception in Cloudflare, AWS WAF, Akamai, DataDome and Imperva, the IP allowlist and the reCAPTCHA, Turnstile and hCaptcha test keys: <code>herramientas/k0lmena/tools/navegador/README.md</code>. <code>npm run doctor</code> checks the configuration.</p>
+  <div class="aviso warn"><span class="ico">!</span><p>The browser is never disguised and captchas are never solved automatically: those techniques fail intermittently, can break the provider's terms and are the same ones used to attack third-party sites. Lighthouse (<code>npm run rendimiento</code>) measures without the header, because it can't restrict it to the app.</p></div>
 </section>
 
 <!-- ======================================================= 12 DATABASE -->
@@ -1176,9 +1273,39 @@ npm run formularios -- --url https://staging.tu-app.com/registro --enviar-vacio 
     <p><i>Build the quality dashboard for sprint 12 (October 1 to 14).</i> It gathers what the tools already left (executions, <code>npm test</code> and its history, test cases, coverage, bugs, flaky tests, accessibility, web performance, load performance and security) and builds a dashboard with pass rate and trend, % automated, coverage, bugs by severity and story, manual execution minutes, alerts and a <b>management summary</b>. Whatever has no data says "Sin datos" (no data).</p></div>
   <div class="codigo"><pre>npm run tablero -- --nombre sprint-12 --desde 2026-10-01 --hasta 2026-10-14
 npm run portal -- --abrir   <span class="c"># output/index.html</span></pre></div>
-  <p>The <b>report portal</b> (<code>output/index.html</code>) gathers every report, including the agents' artifacts (test cases, BDD, bugs, story analyses, test data…), which are turned into HTML automatically. It has a <b>menu by category</b> (Automated tests, Test runs, Test design, Bugs, Quality and closure, Web, Security, Platforms, Documentation), the <b>full history</b> of runs and filters by text, tool, story, status and date range. It regenerates itself and opens with a double click.</p>
-  <p><b>Spanish and English:</b> every report has one folder per language (<code>es/informe.html</code> and <code>en/informe.html</code>, sharing the evidence) and an entry file <code>informe.html</code> that opens the language you picked with the flag (Spanish by default); the flag remembers your choice. Context and documentation are written in English only on request: Claude asks (or set <code>DOCUMENTACION_EN</code> in the <code>.env</code>). The agent translates what it writes (the <code>en</code> block of the JSON, or <code>X.en.md</code> for artifacts) and the script translates the interface with a dictionary, at no token cost.</p>
+  <h3>Report portal</h3>
+  <p>The <b>portal</b> (<code>output/index.html</code>) gathers every report. Before indexing, it builds the HTML of the agents' artifacts that don't have a report of their own: test cases (also from <code>generar_casos.py</code>), readable BDD with its Examples, bugs, story analyses, test data, API test cases, context sheets, triage, questions, mappings, data checks, the traceability and published results of test management, and the project documentation (<code>input/documentacion/</code>, shown in <code>output/documentacion/</code> without touching <code>input/</code>).</p>
+  <div class="tabla"><table>
+    <tr><th style="width:24%">What it has</th><th>How</th></tr>
+    <tr><td>Menu by category</td><td>Home, Automated tests, Test runs, Test design, Bugs, Quality and closure (with the agent evals), Web, Security, Platforms and Documentation (with the project survey).</td></tr>
+    <tr><td>Full history</td><td>Every run saved in <code>historial/</code> is a row, not just the latest one.</td></tr>
+    <tr><td>Filters</td><td>Text, tool, story, status and date range (24 h, 7 days, 30 days or from/to), with the option to hide previous runs; 100 rows at a time.</td></tr>
+    <tr><td>Two languages</td><td><code>output/es/index.html</code> and <code>output/en/index.html</code>; <code>output/index.html</code> opens the one you picked. Each row links to that language's version.</td></tr>
+  </table></div>
+  <p>It regenerates itself every time a report is built and opens with a double click. See also <a href="#idiomas">Reports in Spanish and English</a>.</p>
 </section>
+
+<section class="seccion" id="idiomas">
+  <div class="kicker">Guides</div>
+  <h2>Reports in Spanish and English</h2>
+  <p class="bajada">Every report comes in both languages, with a flag to switch between them, so you can pick which one to send.</p>
+  <div class="codigo arbol"><pre>output/accesibilidad/app.com/
+├── informe-accesibilidad.html      <span class="c">entry file: opens the language you picked (Spanish by default)</span>
+├── es/informe-accesibilidad.html   <span class="c">Spanish</span>
+├── en/informe-accesibilidad.html   <span class="c">English</span>
+└── capturas/ analisis.json …       <span class="c">evidence and data, shared by both languages</span></pre></div>
+  <p>The flag remembers your choice: the portal and the entry files always open that language. The history keeps both languages of every run. To send a report, send the language folder together with its evidence.</p>
+  <div class="tabla"><table>
+    <tr><th style="width:26%">What gets translated</th><th>How</th></tr>
+    <tr><td>What the agent writes</td><td>Verdict, summary, findings and recommendations: the agent also writes them in English in an <code>"en"</code> block of the report's JSON (same keys and IDs). For artifacts it writes the version next to them: <code>BUG-001.en.md</code>, <code>analisis-HU-001.en.md</code>, <code>X.en.csv</code>, and for BDD <code>HU-001-x.feature.en</code>, which no runner picks up.</td></tr>
+    <tr><td>The interface</td><td>Titles, columns, statuses, charts and fixed text: a dictionary of about 2,300 entries (<code>scripts/i18n/en/</code>), at no token cost. Numbers, dates and IDs are wildcards.</td></tr>
+    <tr><td>If a translation is missing</td><td>The English report is still built: interface in English, content in Spanish and a notice.</td></tr>
+  </table></div>
+  <h3>Context and documentation: English on request</h3>
+  <p>Context sheets, project documentation, questions, mappings and data checks are written in Spanish. Before writing them, Claude asks whether you also want them in English; with <code>DOCUMENTACION_EN=si</code> or <code>no</code> in the <code>.env</code> the answer is fixed and it stops asking.</p>
+  <div class="aviso info"><span class="ico">i</span><p>CI runs the tests with the <b>strict translation check</b> (<code>K0LMENIA_I18N_ESTRICTO</code>): if an English report leaves interface text in Spanish, the run fails. To find what's missing: <code>K0LMENIA_I18N_AUDITORIA=file.txt</code>.</p></div>
+</section>
+
 
 <section class="seccion" id="avisos">
   <div class="kicker">Guides</div>
@@ -1197,7 +1324,9 @@ npm run avisar -- --desde-cucumber herramientas/k0lmena/reports/web/cucumber-rep
   <h2>Agent evals</h2>
   <p class="bajada">The tests cover the scripts; the <b>evals</b> measure the quality of what the agents generate.</p>
   <p>Each case in <code>evals/casos/</code> gives an agent a story, a contract, an observation or a repository with <b>deliberate traps</b> (ambiguities, a contradiction between description and comment, undefined messages, limits, a fake secret) and verifies with deterministic checks that it marks the Missing information, applies boundary values, respects the templates and doesn't make things up. It runs in an isolated workspace with <code>claude -p</code> and leaves a report with the score per agent and the <b>regressions</b> against the previous run.</p>
+  <p>There are <b>17 cases</b>: story analysis, manual test cases, BDD, API test cases (REST and GraphQL), test data, bug report, triage, code review, project documentation, questions, test plan, test case review, charters, failure analysis, coverage and test selection. Each one has a <b>reference output</b> (what a correct agent would leave): <code>--referencia</code> checks it without spending tokens and CI runs it on every change, so a change that breaks the checks or the scripts is caught on its own.</p>
   <div class="codigo"><pre>npm run evals -- --listar
+npm run evals -- --referencia                         <span class="c"># no tokens: CI runs it</span>
 npm run evals -- --correr --agente generador-casos-manuales
 npm run evals -- --solo-verificar &lt;folder&gt; --caso casos-manuales-hu-registro   <span class="c"># without running the agent again</span></pre></div>
   <div class="aviso warn"><span class="ico">!</span><p>Running the evals spends tokens (each case is a full conversation, with a cap per case). Use them before and after changing an agent or a skill.</p></div>
@@ -1324,6 +1453,7 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># one 
     <tr><td><code>linear</code> · <code>clickup</code> · <code>monday</code> · <code>asana</code> · <code>trello</code> · <code>notion</code> · <code>youtrack</code> · <code>shortcut</code></td><td>Stories and documentation if your team uses neither Jira nor Azure DevOps (official MCP servers).</td><td>Account (OAuth); YouTrack with a token; Asana with your own app</td></tr>
     <tr><td><code>github</code> · <code>gitlab</code></td><td>The app repository for documentador-proyecto (code, PRs and commits, read-only).</td><td>Token (GitLab: OAuth too)</td></tr>
     <tr><td><code>k0lmena-tmt</code></td><td>Upload and query test cases in k0lmenaTMT.</td><td>Personal token</td></tr>
+    <tr><td><code>scalar</code></td><td>APIs hosted in Scalar: search and run read operations, and the Registry contract (probador-scalar).</td><td><code>SCALAR_MCP_URL</code> · <code>SCALAR_API_KEY</code></td></tr>
   </table></div>
   <ol class="pasos">
     <li><b>Fill in the .env</b>If it uses a token, put it in the <code>.env</code> at the root. Atlassian and Figma are authorized with your account from <code>/mcp</code>.</li>
@@ -1332,7 +1462,7 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># one 
   </ol>
   <div class="pedido">Generá los casos de PROJ-12 usando la página de Confluence 'Reglas de facturación' y este diseño de Figma.</div>
   <p class="nota-en">Generate the PROJ-12 test cases using the Confluence page 'Reglas de facturación' and this Figma design.</p>
-  <p>Xray doesn't need MCP: it uses <code>scripts/gestion/</code>. Full guide in <code>CONECTORES.md</code> (in Spanish).</p>
+  <p>Xray and Zephyr Scale don't need MCP: they use <code>scripts/gestion/</code>. With the plugin, Playwright and Atlassian come inside the plugin. Full guide in <code>CONECTORES.md</code> (in Spanish).</p>
 </section>
 
 <!-- ======================================================= 13 CONVENTIONS -->
@@ -1405,30 +1535,34 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># one 
 ├── LICENSE                 <span class="c">MIT license</span>
 ├── .env.example            <span class="c">Variables template (copy to .env)</span>
 ├── .mcp.json               <span class="c">MCP connectors (no secrets; enabled per settings)</span>
-├── package.json            <span class="c">Shortcuts to run k0lmena from the root (npm test…)</span>
-├── docs/                   <span class="c">This site, the PDFs and the diagrams (en/ for English)</span>
+├── package.json            <span class="c">npm shortcuts (the Python ones through node scripts/py.js)</span>
+├── bin/                    <span class="c">k0lmenia: the plugin command (init, actualizar, py, ayuda…)</span>
+├── docs/                   <span class="c">This site and the diagrams, en/ for English (the PDFs are published in the "docs" release)</span>
 ├── tests/                  <span class="c">Script tests (pytest and node --test)</span>
-├── evals/                  <span class="c">Agent evals: cases with traps and checks</span>
-├── .github/workflows/      <span class="c">CI (tests), synthetic monitoring and evals (manual)</span>
+├── evals/                  <span class="c">Agent evals: 17 cases with traps, checks and reference outputs</span>
+├── .github/workflows/      <span class="c">CI (tests and real browser), plugin, PDFs, monitoring and evals (manual)</span>
 ├── .claude/
 │   ├── agents/             <span class="c">The 79 agents</span>
-│   ├── skills/             <span class="c">Context, design, performance guide, execution, k0lmena</span>
+│   ├── skills/             <span class="c">The 52 skills: context, design, execution, k0lmena and each platform</span>
 │   └── settings.json       <span class="c">Enabled connectors and permissions</span>
 ├── input/                  <span class="c">historias/ documentacion/ api/ bugs/ correos/ logs/</span>
 ├── output/                 <span class="c">What the agents generate</span>
 ├── plantillas/             <span class="c">Bug, test case spreadsheet, coverage, estimated time</span>
-├── scripts/                <span class="c">Test cases, estimated time, review, charters, logs, documentation index, reports and doctor</span>
+├── scripts/                <span class="c">Test cases, estimated time, review, charters, logs, reports, portal, doctor and plugin build</span>
+│   ├── i18n/en/            <span class="c">Dictionaries for the English reports</span>
 │   ├── gestion/            <span class="c">Xray, QMetry (QTM4J), AIO Tests, Zephyr Scale and test cases for Azure DevOps</span>
 │   └── mcp/                <span class="c">MCP connector launchers (they read the .env)</span>
 └── herramientas/
     ├── newman/             <span class="c">Postman collections</span>
     ├── zap/                <span class="c">OWASP ZAP: web security (passive)</span>
     ├── mailpit/            <span class="c">Mailpit: test mailbox for the emails</span>
+    ├── ci/                 <span class="c">Pipeline templates (GitHub, GitLab, Jenkins, Azure)</span>
     └── k0lmena/
         ├── web/            <span class="c">features/ steps/ locators/ + framework</span>
         ├── api/            <span class="c">features/ steps/ (generic steps)</span>
         ├── mobile/         <span class="c">features/ steps/ locators/ support/ apps/</span>
         ├── performance/    <span class="c">k6/http/, artillery/ and jmeter/</span>
+        ├── tools/navegador/ <span class="c">Shared browser: channel, anti-bot bypass and block detection</span>
         ├── reports/        <span class="c">HTML reports</span>
         ├── run-tests.js    <span class="c">npm test runner</span>
         └── run-perf.js     <span class="c">npm run perf runner</span></pre></div>
@@ -1441,6 +1575,9 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># one 
   <details class="faq"><summary>What happens if the story is missing information?</summary><div>The agents first look for it in the comments, subtasks, epic, linked issues, Confluence and Figma. Whatever they don't find is recorded as <b>Missing information</b> (<code>FI-01</code>) with the question for the PO, and it's marked in the test cases, the <code>.feature</code> files and every report. It's never filled in with what the app does.</div></details>
   <details class="faq"><summary>I don't know what I'm missing to install or configure</summary><div>Run <code>npm run doctor</code>: it checks, section by section, Python, Node, k0lmena, Playwright, Newman, Java, Docker, the fonts, the <code>.env</code> (including that each integration is complete and consistent, without showing secrets), the enabled connectors, git and what the portal, the monitoring and the evals need, and tells you how to fix what's missing. With <code>--seccion</code> it checks only one part and with <code>--rapido</code> it skips the slow checks.</div></details>
   <details class="faq"><summary>The app detects bots and blocks Playwright or the agents</summary><div>k0lmenIA doesn't try to get around the protection (Cloudflare, Akamai, DataDome, captcha…). When the app blocks the browser, the scenario is marked <b>Blocked: anti-bot</b> instead of Failed, also in the test management tool, and the agents stop and report it. The reliable fix is a QA exception from the app team: with <code>QA_BYPASS_HEADER</code> and <code>QA_BYPASS_TOKEN</code> in the <code>.env</code>, the header is sent only to the app's hosts. An IP allowlist or the captcha test keys also work. Meanwhile, <code>npm run login</code> opens your Chrome so you can solve it by hand, and <code>NAVEGADOR_CANAL=chrome</code> uses your installed Chrome. Guide for the app team: <code>herramientas/k0lmena/tools/navegador/README.md</code>.</div></details>
+  <details class="faq"><summary>If I install the plugin, do I lose my changes when it updates?</summary><div>No. The plugin lives in Claude Code's cache and your project stays separate: <code>input/</code>, <code>output/</code>, <code>.env</code> and <code>herramientas/k0lmena/</code> with your tests are never touched. The k0lmena core is updated on demand with <code>k0lmenia actualizar</code>, which doesn't touch your <code>features/</code>, <code>steps/</code> or <code>locators/</code>. If you customized an agent, do it with a copy in your project's <code>.claude/agents/</code>, never by editing the cache.</div></details>
+  <details class="faq"><summary>A report opens in English and I want it in Spanish (or the other way around)</summary><div>Click the flag at the top right: it switches to the other version and remembers your choice for the portal and the other reports. Both versions are always in <code>es/</code> and <code>en/</code>, next to the entry file.</div></details>
+  <details class="faq"><summary>The PDF download link fails</summary><div>The PDFs are no longer committed: the <code>documentacion.yml</code> workflow publishes them in the <code>docs</code> release whenever <code>docs/</code> changes. If it hasn't run yet, start it from GitHub → Actions → <i>Documentación en PDF</i> → <i>Run workflow</i>. On your machine: <code>node docs/generar.js</code>.</div></details>
   <details class="faq"><summary>An agent returns "Necesito que confirmes" (I need you to confirm)</summary><div>That's on purpose: the agents run as subagents and can't ask you mid-task. Answer the questions and Claude resumes the same agent with your answers.</div></details>
   <details class="faq"><summary>A new agent doesn't show up</summary><div>Restart Claude Code: agents are loaded when the session starts.</div></details>
   <details class="faq"><summary>The web suite fails without a URL or clicks say "outside of the viewport"</summary><div>No URL: the root <code>.env</code> is missing (<code>cp .env.example .env</code>) or <code>BASEURL</code>/<code>APP_URL</code> is. The viewport issue is already fixed: if <code>VIEWPORT_WIDTH</code> and <code>VIEWPORT_HEIGHT</code> are empty, the window uses 1366x768. If a test fails because a locator changed, ask <b>reparador-automatizacion</b> to fix it.</div></details>
@@ -1461,10 +1598,12 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># one 
   <h2>Extending the project</h2>
   <h3>Adding an agent</h3>
   <ol class="pasos">
-    <li><b>Create the file</b><code>.claude/agents/mi-agente.md</code> with <code>name</code> and <code>description</code> frontmatter. The description is what Claude Code uses to decide when to invoke it.</li>
+    <li><b>Create the file</b><code>.claude/agents/mi-agente.md</code> with <code>name</code> and <code>description</code> frontmatter. The description is what Claude Code uses to decide when to invoke it, and it's loaded in every session: one or two sentences (400 characters at most) with what it does, how to ask for it and how it differs from the most similar agent.</li>
+    <li><b>Short body, reference in a skill</b>The agent holds the role, the flow, the rules and the output. Criteria tables, catalogs and long formats go into a skill, which is only loaded when needed.</li>
     <li><b>Write the body</b>In Spanish, like the rest: role, inputs, process, output and rules.</li>
     <li><b>Define the format</b>If it generates its own format, add its template in <code>plantillas/</code> or its script in <code>scripts/</code>, and its folder in <code>output/</code>.</li>
     <li><b>Normalize the tables</b>If it generates tables in a <code>.md</code>, run them through <code>scripts/formatear_tablas.py</code>.</li>
+    <li><b>Report in two languages</b>If it builds an HTML report, write it with <code>escribir_bilingue</code> and <code>localizar</code> (<code>scripts/_i18n.py</code>), add its texts to the <code>scripts/i18n/en/</code> dictionary and ask the agent for the <code>"en"</code> block of the JSON.</li>
     <li><b>If it needs an answer from the person</b>Copy the "Cuando te falta un dato o una confirmación" section from any agent: subagents can't ask mid-task, so they return "Necesito que confirmes".</li>
   </ol>
   <h3>Skills, connectors and tools</h3>
@@ -1472,10 +1611,14 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># one 
     <div class="tarjeta"><h4>Skill</h4><p>A folder in <code>.claude/skills/</code> with its <code>SKILL.md</code>; it's loaded only when needed.</p></div>
     <div class="tarjeta"><h4>MCP connector</h4><p>An entry in <code>.mcp.json</code>, without secrets; tokens are read from the <code>.env</code> by a script in <code>scripts/mcp/</code>.</p></div>
     <div class="tarjeta"><h4>Tool</h4><p>A subfolder in <code>herramientas/</code> with its README.</p></div>
-    <div class="tarjeta"><h4>Repo tests</h4><p><code>python -m pytest tests</code> and <code>npm run test:repo</code>; they run in CI (Ubuntu and Windows) on every change. Add a test when you change a script.</p></div>
+    <div class="tarjeta"><h4>Repo tests</h4><p><code>python -m pytest tests</code> and <code>npm run test:repo</code>. CI runs them on Ubuntu and Windows (with the strict translation check), plus a real-browser job and the evals with reference outputs. Add a test when you change a script.</p></div>
+    <div class="tarjeta"><h4>Python script with a shortcut</h4><p>In <code>package.json</code>: <code>"mi-script": "node scripts/py.js scripts/mi_script.py"</code>. In the plugin it becomes <code>k0lmenia mi-script</code>.</p></div>
   </div>
+  <h3>Publishing the plugin</h3>
+  <p>On every push to <code>main</code>, the <code>plugin.yml</code> workflow runs <code>python scripts/construir_plugin.py</code> and publishes the result to the <code>plugin</code> branch. The build translates the agents' and skills' commands (<code>npm run x</code> → <code>k0lmenia x</code>), moves the CLAUDE.md standards into the <code>estandares</code> skill and adds the session-start hook, the connectors and the marketplace. To try it on your machine: <code>claude --plugin-dir dist/plugin</code> and <code>claude plugin validate dist/plugin</code>.</p>
   <h3>Regenerating this documentation</h3>
   <div class="codigo"><pre>node docs/generar.js        <span class="c"># diagrams (PNG) and PDFs in both languages, with k0lmena's Playwright</span></pre></div>
+  <p>The PDFs aren't committed: the <code>documentacion.yml</code> workflow publishes them in the <code>docs</code> release every time <code>docs/</code> changes.</p>
   <p>The site is <code>docs/index.html</code> in Spanish and <code>docs/en/index.html</code> in English (published with GitHub Pages at <a href="https://underc0delabs.github.io/k0lmenIA/en/">underc0delabs.github.io/k0lmenIA/en</a>); the PDF comes out of the same HTML with print styles, and the diagrams from <code>docs/diagramas/en/</code>. When the Spanish page changes, update this one too: both keep the same section <code>id</code>s.</p>
   <h3>License</h3>
   <p><b>MIT</b> license — © 2026 <b>QARMY</b>. k0lmena is an open source project by <b>Danilo Vezzoni</b>. Made by the <b>Underc0de</b> community.</p>

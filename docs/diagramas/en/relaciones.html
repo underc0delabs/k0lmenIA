@@ -85,7 +85,7 @@
       <h2>One specialist per task</h2>
       <p><code>.claude/agents/&lt;name&gt;.md</code>: its role, its step-by-step process and its rules.</p>
       <p>Decides what to do and with what; delegates the mechanical parts to scripts and tools, and doesn't make things up: what's missing is recorded as <b>Missing information</b> (<code>FI-01</code>).</p>
-      <div class="lista"><span>documentador-proyecto</span><span>analista-historias</span><span>generador-casos-manuales</span><span>generador-casos-bdd</span><span>ejecutor-e2e</span><span>web-mapper</span><span>probador-permisos</span><span>tablero-calidad</span><span>gestor-pruebas</span><span>… 51 in total</span></div>
+      <div class="lista"><span>documentador-proyecto</span><span>analista-historias</span><span>generador-casos-manuales</span><span>generador-casos-bdd</span><span>ejecutor-e2e</span><span>web-mapper</span><span>probador-permisos</span><span>tablero-calidad</span><span>gestor-pruebas</span><span>… 79 in total</span></div>
     </div>
 
     <div class="relh">
@@ -98,12 +98,12 @@
         <div class="que c-cian">Scripts · the MECHANICAL</div><h3>The repo's own Python</h3>
         <div class="donde">scripts/</div>
         <p>What's better done by code than by the model: exact formats, calculations and HTML reports. Always the same, with no tokens spent.</p>
-        <div class="ej"><b>generar_casos.py</b> (spreadsheet) · formatear_tablas.py · generar_informe_*.py · gestion/ (Xray, QMetry, AIO, Zephyr)</div></div>
+        <div class="ej"><b>generar_casos.py</b> (spreadsheet) · formatear_tablas.py · generar_informe_*.py · _i18n.py (ES/EN reports) · portal_informes.py · gestion/ (Xray, QMetry, AIO, Zephyr) · construir_plugin.py</div></div>
       <div class="caja acento-verde pieza">
         <div class="que c-verde">Tools · EXECUTION</div><h3>Testing tools</h3>
         <div class="donde">herramientas/</div>
         <p>They run from the command line. What the agent automates once in k0lmena then runs <b>with no agents and no tokens</b>.</p>
-        <div class="ej"><b>k0lmena</b> (npm test, explorar, permisos…) · Newman · OWASP ZAP · Mailpit</div></div>
+        <div class="ej"><b>k0lmena</b> (npm test, explorar, permisos…) · Newman · OWASP ZAP · Mailpit · ci (pipelines) · shared browser (bot protection)</div></div>
     </div>
   </div>
 
@@ -118,11 +118,11 @@
     <div class="caja acento-azul pieza">
       <div class="que c-azul">MCP connectors · EXTERNAL SYSTEMS</div><h3><code>.mcp.json</code> + <code>scripts/mcp/</code></h3>
       <p>Bridges to talk to outside systems. No secrets in the file: tokens are read from the <code>.env</code>. Playwright and Atlassian are active by default; the rest with <code>npm run conector</code>.</p>
-      <div class="chips"><span>Playwright (browser)</span><span>Jira · Confluence</span><span>Azure DevOps</span><span>Figma</span><span>GitHub · GitLab</span><span>Linear · ClickUp · Asana…</span><span>QMetry · AIO</span><span>Appium</span></div></div>
+      <div class="chips"><span>Playwright (browser)</span><span>Jira · Confluence</span><span>Azure DevOps</span><span>Figma</span><span>GitHub · GitLab</span><span>Linear · ClickUp · Asana…</span><span>QMetry · AIO</span><span>Appium</span><span>Scalar</span></div></div>
     <div class="caja acento-naranja pieza">
       <div class="que c-naranja">Output · WHAT IT LEAVES</div><h3><code>output/</code> and k0lmena</h3>
-      <p>Each artifact in its folder, with traceability (<code>HU-001</code>, <code>CP-001</code>). Reports keep their last 5 runs and the <code>output/index.html</code> portal brings them together.</p>
-      <div class="chips"><span>casos-de-prueba/</span><span>contexto/</span><span>ejecuciones/</span><span>reportes-bug/</span><span>herramientas/k0lmena/…/features</span></div></div>
+      <p>Each artifact in its folder, with traceability (<code>HU-001</code>, <code>CP-001</code>). Every report comes in Spanish and English (<code>es/</code> · <code>en/</code>), keeps its last 5 runs, and the <code>output/index.html</code> portal brings them together by category.</p>
+      <div class="chips"><span>casos-de-prueba/</span><span>contexto/</span><span>ejecuciones/</span><span>reportes-bug/</span><span>es/ · en/</span><span>index.html (portal)</span><span>herramientas/k0lmena/…/features</span></div></div>
   </div>
 
   <!-- Ejemplo -->
@@ -143,6 +143,6 @@
     <div class="caja acento-violeta"><div class="et">Agent vs. skill</div><p>The agent is <b>who</b> does the whole task; the skill is <b>how</b> a part is done, and several agents share it.</p></div>
     <div class="caja acento-cian"><div class="et">Script vs. tool</div><p>A script is the repo's own code for formatting and calculation; a tool is external testing software (k0lmena, Newman, ZAP).</p></div>
     <div class="caja acento-azul"><div class="et">MCP vs. tool</div><p>MCP connects Claude Code to an external system to read from or write to it; a tool runs from the terminal.</p></div>
-    <div class="caja acento-gris"><div class="et">To grow</div><p>Adding a capability means adding a piece: an agent, a skill, a connector, a tool or a script (see <code>ARQUITECTURA.md</code>).</p></div>
+    <div class="caja acento-gris"><div class="et">To grow</div><p>Adding a capability means adding a piece: an agent, a skill, a connector, a tool or a script (see <code>ARQUITECTURA.md</code>). The <code>k0lmenia</code> plugin is built from this repo automatically.</p></div>
   </div>
 </div></body></html>

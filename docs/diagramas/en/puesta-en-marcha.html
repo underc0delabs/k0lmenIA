@@ -55,6 +55,7 @@
       <div class="paso"><div class="n">6</div><div><b>Open Claude Code</b>
         <div class="term">code .<br>claude <span class="c">                       # asks you to sign in the 1st time</span></div>
         <span>For extra browsers: <code>cd herramientas/k0lmena</code> · <code>npx playwright install chromium firefox webkit</code></span></div></div>
+      <div class="alerta" style="margin-top:14px"><b>Or without cloning: as a Claude Code plugin.</b> <code>/plugin marketplace add underc0delabs/k0lmenIA#plugin</code> · <code>/plugin install k0lmenia@k0lmenia</code> · in your project, <code>k0lmenia init</code> and <code>k0lmenia doctor</code>. Commands are <code>k0lmenia &lt;x&gt;</code>, and it updates with <code>/plugin marketplace update k0lmenia</code> without touching your work.</div>
     </div>
 
     <!-- 2 · TOKENS -->
@@ -77,7 +78,9 @@
         <div class="env"><span class="k">DB_CONEXIONES</span>=<span class="v">principal</span> + <span class="k">DB_PRINCIPAL_MOTOR</span> · <span class="k">_HOST</span> · <span class="k">_BASE</span> · <span class="k">_USUARIO</span> · <span class="k">_CLAVE</span><br><span class="k">SEGURIDAD_URLS_AUTORIZADAS</span>=<span class="v">https://staging.tu-app.com</span></div></div>
       <div class="grupo" style="border-left-color:var(--cian)"><div class="t">Email, languages, roles and notifications <i>email, translator, permissions, Slack/Teams</i></div>
         <div class="env"><span class="k">MAILPIT_URL</span>=<span class="v">http://localhost:8025</span><br><span class="k">TRADUCTOR_IDIOMAS</span>=<span class="v">es-AR,en-US,pt-BR</span><br><span class="k">PERMISOS_ROLES</span>=<span class="v">admin,operador</span> + <span class="k">PERMISOS_&lt;ROLE&gt;_USUARIO</span> · <span class="k">_CLAVE</span><br><span class="k">SLACK_WEBHOOK_URL</span> · <span class="k">TEAMS_WEBHOOK_URL</span> · <span class="k">MONITOREO_URLS</span><br><span class="v">Mailpit: docker compose -f herramientas/mailpit/docker-compose.yml up -d</span></div></div>
-      <div class="alerta"><b>Optional connectors</b> (Azure DevOps, Figma, GitHub, GitLab, Linear, ClickUp, monday, Asana, Trello, Notion, YouTrack, Shortcut, QMetry, AIO Tests, k0lmenaTMT, Appium): <code>npm run conector -- activar &lt;name&gt;</code>, restart Claude Code and check with <code>/mcp</code>. Use test credentials, never production ones.</div>
+      <div class="grupo" style="border-left-color:var(--naranja)"><div class="t">Browser, bot protection and language <i>npm test, tools, agents</i></div>
+        <div class="env"><span class="k">NAVEGADOR_CANAL</span>=<span class="v">chrome</span> · <span class="k">RITMO_HUMANO</span>=<span class="v">si</span><br><span class="k">QA_BYPASS_HEADER</span>=<span class="v">X-QA-Bypass</span> · <span class="k">QA_BYPASS_TOKEN</span>=<span class="v">…</span><br><span class="k">DOCUMENTACION_EN</span>=<span class="v">(empty: Claude asks) | si | no</span></div></div>
+      <div class="alerta"><b>Optional connectors</b> (Azure DevOps, Figma, GitHub, GitLab, Linear, ClickUp, monday, Asana, Trello, Notion, YouTrack, Shortcut, QMetry, AIO Tests, k0lmenaTMT, Appium, Scalar): <code>npm run conector -- activar &lt;name&gt;</code>, restart Claude Code and check with <code>/mcp</code>. Use test credentials, never production ones.</div>
     </div>
 
     <!-- 3 · PROMPTS -->
@@ -115,6 +118,6 @@
     <div class="caja acento-azul"><div class="et">If a fact is missing</div><p>The agent doesn't make it up: it returns <b>"Necesito que confirmes"</b> (I need you to confirm) and Claude asks you.</p></div>
     <div class="caja acento-naranja"><div class="et">Actions with side effects</div><p>Writing to a database, creating data in Jira/Xray or running load: always with your ok.</p></div>
     <div class="caja acento-verde"><div class="et">Saves tokens</div><p>What's automated runs with <code>npm test</code>, with no agents.</p></div>
-    <div class="caja acento-violeta"><div class="et">Everything ends up in</div><p><code>output/</code> (HTML reports, with the last 5 runs in <code>historial/</code>) and <code>herramientas/k0lmena/</code> (automation).</p></div>
+    <div class="caja acento-violeta"><div class="et">Everything ends up in</div><p><code>output/</code> (HTML reports in Spanish and English, with the last 5 runs in <code>historial/</code> and the <code>index.html</code> portal) and <code>herramientas/k0lmena/</code> (automation).</p></div>
   </div>
 </div></body></html>
