@@ -5,7 +5,7 @@
 ### Agentes de QA para Claude Code
 
 **Diseñá, ejecutá y automatizá pruebas conversando en español.**<br>
-Análisis de historias, casos de prueba, automatización con k0lmena y gestión en Xray, QMetry, AIO Tests, Zephyr Scale o Azure DevOps.
+Análisis de historias, casos de prueba, automatización con k0lmena y gestión en Xray, QMetry, AIO Tests, Zephyr Scale, k0lmenaTMT o Azure DevOps.
 
 <br>
 
@@ -52,6 +52,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 ![QMetry](https://img.shields.io/badge/QMetry-QTM4J-1E88E5?style=flat-square)
 ![AIO Tests](https://img.shields.io/badge/AIO%20Tests-Jira%20Cloud-F59E0B?style=flat-square)
 ![Zephyr Scale](https://img.shields.io/badge/Zephyr%20Scale-Jira%20Cloud-6554C0?style=flat-square)
+![k0lmenaTMT](https://img.shields.io/badge/k0lmenaTMT-MCP-F9B006?style=flat-square)
 ![Azure DevOps](https://img.shields.io/badge/Azure%20DevOps-Test%20Plans-0078D7?style=flat-square)
 
 <br>
@@ -72,7 +73,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 | 🤖 **Automatización sin tokens**      | Los agentes *mapper* recorren tu app **una sola vez** y escriben la automatización en k0lmena. Después corre con `npm test`, sin agentes.                                             |
 | 🌐 **Web, API, mobile y performance** | Playwright + Cucumber, axios + Cucumber (REST y GraphQL; colecciones de Postman, Bruno o Insomnia), WebdriverIO + Appium (dispositivo, emulador o BrowserStack), k6, Artillery y JMeter.                                                         |
 | 📸 **Evidencia completa**             | Captura (y GIF) de cada test que pasa; video, logs, trace y error de cada test que falla, en reportes HTML.                                                                           |
-| 🗂️ **Gestión de pruebas**             | Carpetas, casos, ciclos y resultados con evidencias en **Xray** (Cloud y Server/DC), **QMetry (QTM4J)**, **AIO Tests** y **Zephyr Scale**; casos y suites en **Azure DevOps Test Plans**. |
+| 🗂️ **Gestión de pruebas**             | Carpetas, casos, ciclos y resultados con evidencias en **Xray** (Cloud y Server/DC), **QMetry (QTM4J)**, **AIO Tests**, **Zephyr Scale** y **k0lmenaTMT**; casos y suites en **Azure DevOps Test Plans**. |
 | 🗄️ **Verificación en base de datos**  | Revisa lo que dejaron guardado tus pruebas en **PostgreSQL, MySQL/MariaDB, SQL Server o MongoDB**, a pedido o, si lo pedís, como steps dentro de los tests. Solo lectura por defecto. |
 | 🔌 **Conectado**                      | Lee historias de **Jira**, **Azure DevOps**, **Linear**, **ClickUp**, **monday.com**, **Asana**, **Trello**, **Notion**, **YouTrack** o **Shortcut**, el repositorio de **GitHub, GitLab, Azure Repos o Bitbucket**, documentación de **Confluence** o de la Wiki de Azure DevOps y diseños de **Figma** por MCP.                                            |
 | 🔎 **Investiga antes de suponer**     | Lee la historia de Jira con **todos sus comentarios, subtareas, épica e issues vinculados**, más Confluence y Figma, y arma una ficha de contexto.                                    |
@@ -104,7 +105,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 - [Documentación del proyecto](#-documentación-del-proyecto)
 - [Automatización con k0lmena](#️-automatización-con-k0lmena)
 - [Pruebas de performance](#-pruebas-de-performance)
-- [Gestión de pruebas: Xray, QMetry, AIO Tests, Zephyr y Azure DevOps](#️-gestión-de-pruebas-xray-qmetry-aio-tests-zephyr-y-azure-devops)
+- [Gestión de pruebas: Xray, QMetry, AIO Tests, Zephyr, k0lmenaTMT y Azure DevOps](#️-gestión-de-pruebas-xray-qmetry-aio-tests-zephyr-k0lmenatmt-y-azure-devops)
 - [k0lmena en el pipeline (CI)](#-k0lmena-en-el-pipeline-ci)
 - [Pruebas exploratorias](#-pruebas-exploratorias)
 - [Accesibilidad](#-accesibilidad)
@@ -221,7 +222,7 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 <tr><td><code>analista-seguridad</code></td><td>Escaneo de seguridad web pasivo con OWASP ZAP e informe HTML con hallazgos, evidencia y cómo corregirlos</td></tr>
 <tr><td><code>pentester-web</code></td><td>Pentest web autorizado (ethical hacking): escaneo activo de OWASP ZAP más verificación manual del OWASP Top 10 con Playwright; confirma cada hallazgo y arma el informe con pasos para reproducir y cómo corregir. Solo URLs autorizadas y con permiso</td></tr>
 <tr><td rowspan="2"><b>🗂️ Gestión</b></td>
-  <td><code>gestor-pruebas</code></td><td>Carpetas, casos, vínculos con la historia y ciclos en Xray, QMetry, AIO Tests, Zephyr Scale o Azure DevOps</td></tr>
+  <td><code>gestor-pruebas</code></td><td>Carpetas, casos, vínculos con la historia y ciclos en Xray, QMetry, AIO Tests, Zephyr Scale, k0lmenaTMT o Azure DevOps</td></tr>
 <tr><td><code>publicador-resultados</code></td><td>Sube los resultados de <code>npm test</code> al ciclo con sus evidencias</td></tr>
 </table>
 
@@ -317,7 +318,7 @@ Hay **un solo `.env`, en la raíz**. Lo usan los agentes, k0lmena y los scripts 
 | Mobile                 | `MOBILE_TARGET` (`device` · `emulator` · `browserstack`) `MOBILE_PLATFORM` `MOBILE_DEVICE_NAME` `MOBILE_APP` `MOBILE_UDID` `BROWSERSTACK_*` |
 | Performance            | `PERF_VUS` `PERF_DURACION` (opcionales)                                                                                                     |
 | Bases de datos         | `DB_CONEXIONES` + por conexión `DB_<NOMBRE>_MOTOR` `_HOST` `_PUERTO` `_BASE` `_USUARIO` `_CLAVE` (o `_URL`) `_ESCRITURA` `_PRODUCCION`      |
-| Gestión                | `GESTION_HERRAMIENTA` `GESTION_PROYECTO` + credenciales de Xray, QTM4J, AIO o Zephyr                                                        |
+| Gestión                | `GESTION_HERRAMIENTA` `GESTION_PROYECTO` + credenciales de Xray, QTM4J, AIO, Zephyr o k0lmenaTMT (`K0LMENA_TMT_TOKEN`)                       |
 | Azure DevOps (MCP)     | `ADO_ORGANIZACION` `ADO_PAT` `ADO_PROYECTO`                                                                                                 |
 
 > [!WARNING]
@@ -383,7 +384,7 @@ El resultado es una **ficha de contexto** reutilizable (`output/contexto/context
 | Reporte de mapeo                   | Estado `Falta información`: el mapper **no usa la app para completar el dato**                                                        |
 | Reportes de k0lmena y de ejecución | Nota visible en el escenario y aviso en el resumen                                                                                    |
 | Informe de cierre                  | Sección **Falta información** con los ítems abiertos como riesgo                                                                      |
-| Xray · QMetry · AIO · Zephyr       | El comentario del resultado aclara que el caso depende de información faltante                                                        |
+| Xray · QMetry · AIO · Zephyr · TMT | El comentario del resultado (en k0lmenaTMT, el `resultado.txt` de la ejecución) aclara que el caso depende de información faltante |
 
 > *"Investigá el contexto de PROJ-12 y generá los casos"* → ficha de contexto + casos, con lo que falte marcado y las preguntas listas para el PO.
 
@@ -473,15 +474,37 @@ Cada corrida deja además su propio **reporte HTML** en `herramientas/k0lmena/re
 
 ---
 
-## 🗂️ Gestión de pruebas: Xray, QMetry, AIO Tests, Zephyr y Azure DevOps
+## 🗂️ Gestión de pruebas: Xray, QMetry, AIO Tests, Zephyr, k0lmenaTMT y Azure DevOps
 
-Configurá `GESTION_HERRAMIENTA` (`xray-cloud` · `xray-dc` · `qtm4j` · `aio` · `zephyr-scale`), `GESTION_PROYECTO` y las credenciales en el `.env`, y pedí:
+Configurá `GESTION_HERRAMIENTA` (`xray-cloud` · `xray-dc` · `qtm4j` · `aio` · `zephyr-scale` · `k0lmena-tmt`), `GESTION_PROYECTO` y las credenciales en el `.env`, y pedí:
 
 - *"Subí los casos de HU-001 a Xray en la carpeta 'HU-001 Registro', vinculados a PROJ-12"* → **gestor-pruebas** crea la carpeta, sube los casos y los vincula a la historia.
 - *"Creá el ciclo Sprint 5 con esos casos"* → crea el ciclo (Test Execution en Xray) vinculado a la historia.
 - *"Subí los resultados de la última corrida al ciclo PROJ-60"* → **publicador-resultados** carga estado, error y evidencias (captura, GIF y video si falló).
 
 La trazabilidad (`output/gestion/<HU>-<herramienta>.json`) evita duplicados. También hay comandos manuales: [`scripts/gestion/README.md`](scripts/gestion/README.md).
+
+### k0lmenaTMT
+
+**k0lmenaTMT** es el gestor de pruebas de la suite k0lmena. Se integra con el **token personal** (`kolm_pat_...`) que se genera en k0lmenaTMT:
+
+```env
+GESTION_HERRAMIENTA=k0lmena-tmt
+GESTION_PROYECTO=3            # el id numérico del proyecto (está en su URL en k0lmenaTMT)
+K0LMENA_TMT_TOKEN=kolm_pat_…
+# K0LMENA_TMT_URL=http://localhost:4000/api/v1/mcp   (si no es la de por defecto)
+```
+
+- **Las cargas las hace el script, no el agente**: con el token, k0lmenaTMT expone su server MCP. `scripts/gestion` es el cliente: crea carpetas, casos (con pasos, etiquetas, prioridad y tiempo estimado), ciclos y resultados sin pasar cada caso ni cada evidencia por la conversación. Cada escritura de k0lmenaTMT es una propuesta (change-set) que el script aplica, así que todo queda registrado y se puede deshacer desde k0lmenaTMT.
+- **El conector MCP `k0lmena-tmt`** queda para **consultar** desde el chat (qué casos o planes hay, estadísticas, los tests que más fallan) y para ajustes puntuales.
+- **Keys**: `TC-<id>` (casos) y `CY-<id>` (ciclos): *"publicá en el ciclo CY-45"*, tags `@TC-123` en los escenarios.
+- **Historia**: k0lmenaTMT no se conecta a Jira, así que la historia va como etiqueta del caso y en la descripción del ciclo.
+- **Resultados**: cada caso del ciclo registra su estado y tiempo, y como evidencia la captura, el GIF, el video si falló y un `resultado.txt` con el error (la ejecución no tiene campo de comentario). Hasta 10 MB por archivo.
+- **Ritmo**: k0lmenaTMT acepta 20 pedidos por minuto por usuario por defecto y cada escritura son dos, así que una historia de 30 casos con su ciclo y resultados tarda unos minutos. `K0LMENA_TMT_RPM` lo ajusta si tu instancia acepta más; `K0LMENA_TMT_PRIORIDADES` mapea las prioridades a sus ids.
+
+> *"Subí a k0lmenaTMT los casos de `casos-HU-001.xlsx` en la carpeta 'HU-001 Registro' y creá el ciclo Sprint 5"* · *"Publicá en k0lmenaTMT los resultados de la última corrida en el ciclo CY-45"* · *"¿Cuáles son los tests que más fallan en k0lmenaTMT?"*
+
+Las mejoras que conviene sumar del lado de k0lmenaTMT (límite propio para tokens, escritura en lote, comentario en la ejecución, consultas de carpetas y ciclos) están en [`scripts/gestion/README.md`](scripts/gestion/README.md#lo-que-conviene-sumar-en-k0lmenatmt).
 
 ### Azure DevOps (Test Plans)
 
@@ -505,7 +528,7 @@ npm run ci -- generar --plataforma jenkins               # → Jenkinsfile
 npm run ci -- generar --plataforma azure --suite api     # → azure-pipelines.yml
 ```
 
-El pipeline instala k0lmena y Chromium, corre las suites y guarda los reportes como artefacto. Si hay `GESTION_CICLO`, además publica los resultados en Xray, QMetry, AIO Tests o Zephyr Scale. La plantilla no lleva ningún valor: el `.env` entero va como **secret del pipeline** y llega por `K0LMENA_ENV_FILE`. No pisa un pipeline existente salvo `--forzar`. Detalle por plataforma en [`herramientas/ci/README.md`](herramientas/ci/README.md).
+El pipeline instala k0lmena y Chromium, corre las suites y guarda los reportes como artefacto. Si hay `GESTION_CICLO`, además publica los resultados en Xray, QMetry, AIO Tests, Zephyr Scale o k0lmenaTMT. La plantilla no lleva ningún valor: el `.env` entero va como **secret del pipeline** y llega por `K0LMENA_ENV_FILE`. No pisa un pipeline existente salvo `--forzar`. Detalle por plataforma en [`herramientas/ci/README.md`](herramientas/ci/README.md).
 
 ---
 
@@ -843,7 +866,7 @@ El **guia-onboarding** arma el plan de incorporación de un QA nuevo: qué es el
 
 Si la app tiene Cloudflare, Akamai, DataDome, Imperva, AWS WAF o un captcha, puede frenar al navegador automatizado. k0lmenIA no intenta esquivarlo. Lo trabaja así:
 
-- **No da falsos fallos.** Cuando la app responde con un desafío o un acceso denegado, el escenario queda **Bloqueado: anti-bots** (también en Xray, QMetry, AIO y Zephyr) y el análisis de fallos lo separa de los bugs. Las herramientas avisan al terminar y los agentes frenan y lo reportan.
+- **No da falsos fallos.** Cuando la app responde con un desafío o un acceso denegado, el escenario queda **Bloqueado: anti-bots** (también en Xray, QMetry, AIO, Zephyr y k0lmenaTMT) y el análisis de fallos lo separa de los bugs. Las herramientas avisan al terminar y los agentes frenan y lo reportan.
 - **Header de bypass.** Si el equipo de la app crea una excepción para QA, ponés `QA_BYPASS_HEADER` y `QA_BYPASS_TOKEN` en el `.env`. `npm test`, las herramientas y el navegador de los agentes mandan el header **solo a los hosts de la app**, nunca a terceros.
 - **Chrome real y ritmo humano.** `NAVEGADOR_CANAL=chrome` usa el Chrome instalado y `RITMO_HUMANO=si` agrega pausas entre acciones.
 - **Plan B manual.** `npm run login` abre tu Chrome: resolvés el desafío o el captcha a mano y la sesión queda guardada (`SESION=si`).
@@ -910,7 +933,7 @@ También se usa sin agente: `npm run bd -- conexiones | esquema | existe | consu
 | `appium-mcp`                     | Recorrer la app para el mobile-mapper                       | `ANDROID_HOME`                                    |
 | `qmetry` · `qtm4j` · `aio-tests` | Consultar la herramienta de gestión desde el chat           | API key / token                                   |
 | `azure-devops`                   | **Azure DevOps**: historias, Wiki y casos en Test Plans     | PAT                                               |
-| `k0lmena-tmt`                    | Cargar y consultar casos en k0lmenaTMT                      | Token personal                                    |
+| `k0lmena-tmt`                    | Consultas en k0lmenaTMT (las cargas, por `gestion.py`)      | Token personal                                    |
 | `github` · `gitlab`              | Repositorio de la app para el documentador-proyecto         | Token de solo lectura (GitLab: también OAuth)     |
 | `linear` · `clickup` · `monday` · `asana` · `trello` · `notion` · `youtrack` · `shortcut` | Historias y documentación si tu equipo no usa Jira ni Azure DevOps | Tu cuenta (OAuth); YouTrack con token; Asana con app propia |
 
@@ -997,7 +1020,7 @@ k0lmenIA/
 ├── output/                 Lo que generan los agentes (contexto/, casos, reportes, mapeos…)
 ├── plantillas/             Bug, planilla de casos, cobertura
 ├── scripts/                Casos, reportes HTML, informes, Newman, recolector y doctor
-│   ├── gestion/            Xray, QMetry (QTM4J), AIO Tests, Zephyr Scale y casos para Azure DevOps
+│   ├── gestion/            Xray, QMetry (QTM4J), AIO Tests, Zephyr Scale, k0lmenaTMT y casos para Azure DevOps
 │   └── mcp/                Lanzadores de los conectores MCP (leen el .env)
 └── herramientas/
     ├── newman/             Colecciones de Postman

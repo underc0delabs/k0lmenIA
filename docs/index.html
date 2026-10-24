@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>k0lmenIA · Documentación</title>
-  <meta name="description" content="Agentes de QA para Claude Code: diseño de pruebas, automatización con k0lmena (web, API, mobile y performance) e integración con Xray, QMetry, AIO Tests, Zephyr y Azure DevOps. Todo en español.">
+  <meta name="description" content="Agentes de QA para Claude Code: diseño de pruebas, automatización con k0lmena (web, API, mobile y performance) e integración con Xray, QMetry, AIO Tests, Zephyr, k0lmenaTMT y Azure DevOps. Todo en español.">
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#0E0C09">
   <meta property="og:title" content="k0lmenIA · Agentes de QA para Claude Code">
-  <meta property="og:description" content="Diseño de pruebas, automatización con k0lmena e integración con Xray, QMetry, AIO Tests, Zephyr y Azure DevOps.">
+  <meta property="og:description" content="Diseño de pruebas, automatización con k0lmena e integración con Xray, QMetry, AIO Tests, Zephyr, k0lmenaTMT y Azure DevOps.">
   <meta property="og:image" content="assets/img/arquitectura.png">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23FFD60A'/%3E%3Cstop offset='1' stop-color='%23FF8A00'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon points='16,3 48,3 63,32 48,61 16,61 1,32' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='Saira,Segoe UI,Arial' font-size='26' font-weight='800' fill='%230E0C09' text-anchor='middle'%3Ek0%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="assets/fuentes/saira.woff2" as="font" type="font/woff2" crossorigin>
@@ -63,7 +63,7 @@
   <a href="#guia">Diseño y ejecución</a>
   <a href="#k0lmena">Automatización con k0lmena</a>
   <a href="#performance">Performance</a>
-  <a href="#gestion">Xray, QMetry, AIO Tests, Zephyr y Azure DevOps</a>
+  <a href="#gestion">Xray, QMetry, AIO Tests, Zephyr, k0lmenaTMT y Azure DevOps</a>
   <a href="#ci">k0lmena en el pipeline (CI)</a>
   <a href="#anti-bots">Apps con protección anti-bots</a>
   <a href="#base-de-datos">Verificación en base de datos</a>
@@ -110,15 +110,15 @@
   <div>
     <div class="k">Documentación del proyecto</div>
     <h1><span>k0lmenIA</span></h1>
-    <div class="l">Agentes de QA para Claude Code: diseño de pruebas, automatización con k0lmena e integración con Xray, QMetry, AIO Tests, Zephyr y Azure DevOps — todo en español.</div>
-    <div class="chips"><span>79 agentes</span><span>Web · API · Mobile · Performance</span><span>Playwright · Cucumber · Appium · k6 · Artillery · JMeter</span><span>Xray · QMetry · AIO Tests · Zephyr · Azure DevOps</span><span>Jira · Confluence · Figma</span><span>GitHub · GitLab · Bitbucket</span><span>Linear · ClickUp · monday · Asana · Trello · Notion</span><span>Slack · Teams</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Suites sin tokens</span><span>Plugin de Claude Code</span><span>Informes ES · EN</span></div>
+    <div class="l">Agentes de QA para Claude Code: diseño de pruebas, automatización con k0lmena e integración con Xray, QMetry, AIO Tests, Zephyr, k0lmenaTMT y Azure DevOps — todo en español.</div>
+    <div class="chips"><span>79 agentes</span><span>Web · API · Mobile · Performance</span><span>Playwright · Cucumber · Appium · k6 · Artillery · JMeter</span><span>Xray · QMetry · AIO Tests · Zephyr · k0lmenaTMT · Azure DevOps</span><span>Jira · Confluence · Figma</span><span>GitHub · GitLab · Bitbucket</span><span>Linear · ClickUp · monday · Asana · Trello · Notion</span><span>Slack · Teams</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Suites sin tokens</span><span>Plugin de Claude Code</span><span>Informes ES · EN</span></div>
   </div>
   <div class="p"><span>QARMY · Underc0de</span><span>github.com/underc0delabs/k0lmenIA</span><span>Licencia MIT</span></div>
 </section>
 <section class="solo-impresion indice">
   <h2>Contenido</h2>
   <ol>
-    <li><span>1</span>Qué es k0lmenIA</li><li><span>2</span>Arquitectura</li><li><span>3</span>Cómo se usa</li><li><span>4</span>Agentes</li><li><span>5</span>Requisitos</li><li><span>6</span>Instalación</li><li><span>7</span>Como plugin de Claude Code</li><li><span>8</span>Configuración: el archivo .env</li><li><span>9</span>Documentación del proyecto</li><li><span>10</span>Investigación de contexto y falta información</li><li><span>11</span>Guía por tarea: diseño y ejecución</li><li><span>12</span>Automatización con k0lmena</li><li><span>13</span>Pruebas de performance</li><li><span>14</span>Gestión de pruebas: Xray, QMetry, AIO Tests, Zephyr y Azure DevOps</li><li><span>15</span>k0lmena en el pipeline (CI)</li><li><span>16</span>Apps con protección anti-bots</li><li><span>17</span>Verificación en base de datos</li><li><span>18</span>Pruebas exploratorias</li><li><span>19</span>Accesibilidad</li><li><span>20</span>Rendimiento web</li><li><span>21</span>Análisis de fallos</li><li><span>22</span>Logs del servidor</li><li><span>23</span>Cobertura y trazabilidad</li><li><span>24</span>Regresión visual (pixel perfect)</li><li><span>25</span>Cross-browser</li><li><span>26</span>Reparación de la automatización</li><li><span>27</span>Selección de casos para un cambio</li><li><span>28</span>Revisión de casos y tiempo estimado</li><li><span>29</span>Charters y sesiones exploratorias</li><li><span>30</span>Correos</li><li><span>31</span>Traducciones e idiomas</li><li><span>32</span>Usabilidad</li><li><span>33</span>Formularios</li><li><span>34</span>Permisos por rol</li><li><span>35</span>Resiliencia</li><li><span>36</span>Triage de bugs y consultas</li><li><span>37</span>Historial de corridas</li><li><span>38</span>Tablero de calidad y portal de informes</li><li><span>39</span>Informes en español e inglés</li><li><span>40</span>Avisos y monitoreo sintético</li><li><span>41</span>Evals de los agentes</li><li><span>42</span>Uso de tokens</li><li><span>43</span>Onboarding</li><li><span>44</span>Seguridad web</li><li><span>45</span>Streaming y cámaras</li><li><span>46</span>Conectores MCP</li><li><span>47</span>Convenciones</li><li><span>48</span>Estructura del repositorio</li><li><span>49</span>Problemas frecuentes</li><li><span>50</span>Extender el proyecto</li>
+    <li><span>1</span>Qué es k0lmenIA</li><li><span>2</span>Arquitectura</li><li><span>3</span>Cómo se usa</li><li><span>4</span>Agentes</li><li><span>5</span>Requisitos</li><li><span>6</span>Instalación</li><li><span>7</span>Como plugin de Claude Code</li><li><span>8</span>Configuración: el archivo .env</li><li><span>9</span>Documentación del proyecto</li><li><span>10</span>Investigación de contexto y falta información</li><li><span>11</span>Guía por tarea: diseño y ejecución</li><li><span>12</span>Automatización con k0lmena</li><li><span>13</span>Pruebas de performance</li><li><span>14</span>Gestión de pruebas: Xray, QMetry, AIO Tests, Zephyr, k0lmenaTMT y Azure DevOps</li><li><span>15</span>k0lmena en el pipeline (CI)</li><li><span>16</span>Apps con protección anti-bots</li><li><span>17</span>Verificación en base de datos</li><li><span>18</span>Pruebas exploratorias</li><li><span>19</span>Accesibilidad</li><li><span>20</span>Rendimiento web</li><li><span>21</span>Análisis de fallos</li><li><span>22</span>Logs del servidor</li><li><span>23</span>Cobertura y trazabilidad</li><li><span>24</span>Regresión visual (pixel perfect)</li><li><span>25</span>Cross-browser</li><li><span>26</span>Reparación de la automatización</li><li><span>27</span>Selección de casos para un cambio</li><li><span>28</span>Revisión de casos y tiempo estimado</li><li><span>29</span>Charters y sesiones exploratorias</li><li><span>30</span>Correos</li><li><span>31</span>Traducciones e idiomas</li><li><span>32</span>Usabilidad</li><li><span>33</span>Formularios</li><li><span>34</span>Permisos por rol</li><li><span>35</span>Resiliencia</li><li><span>36</span>Triage de bugs y consultas</li><li><span>37</span>Historial de corridas</li><li><span>38</span>Tablero de calidad y portal de informes</li><li><span>39</span>Informes en español e inglés</li><li><span>40</span>Avisos y monitoreo sintético</li><li><span>41</span>Evals de los agentes</li><li><span>42</span>Uso de tokens</li><li><span>43</span>Onboarding</li><li><span>44</span>Seguridad web</li><li><span>45</span>Streaming y cámaras</li><li><span>46</span>Conectores MCP</li><li><span>47</span>Convenciones</li><li><span>48</span>Estructura del repositorio</li><li><span>49</span>Problemas frecuentes</li><li><span>50</span>Extender el proyecto</li>
   </ol>
 </section>
 
@@ -126,7 +126,7 @@
 <section class="hero" id="inicio">
   <div class="pildora">agentes de QA para Claude Code · suites sin tokens</div>
   <h1><span class="grad">k0lmenIA</span></h1>
-  <p class="lema">Diseñá, ejecutá y automatizá pruebas conversando en español. Los agentes analizan historias, escriben casos, automatizan con <b>k0lmena</b> (web, API, mobile y performance) y llevan todo a <b>Xray, QMetry, AIO Tests, Zephyr o Azure DevOps</b>. Se usa clonando el repo o como <b>plugin de Claude Code</b>, y cada informe sale en <b>español e inglés</b>.</p>
+  <p class="lema">Diseñá, ejecutá y automatizá pruebas conversando en español. Los agentes analizan historias, escriben casos, automatizan con <b>k0lmena</b> (web, API, mobile y performance) y llevan todo a <b>Xray, QMetry, AIO Tests, Zephyr, k0lmenaTMT o Azure DevOps</b>. Se usa clonando el repo o como <b>plugin de Claude Code</b>, y cada informe sale en <b>español e inglés</b>.</p>
   <div class="ctas">
     <a class="btn primario" href="#instalacion">Empezar
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6l6 6-6 6"/></svg></a>
@@ -153,7 +153,7 @@
     <span class="tec"><i style="background:#5e6ad2"></i>Linear · ClickUp · monday · Asana · Trello · Notion · YouTrack · Shortcut</span>
     <span class="tec"><i style="background:#e01e5a"></i>Slack · Teams</span>
     <span class="tec"><i style="background:#e10098"></i>GraphQL · Bruno · Insomnia</span>
-    <span class="tec"><i style="background:#00c7b1"></i>Xray · QMetry · AIO Tests · Zephyr · Azure DevOps</span>
+    <span class="tec"><i style="background:#00c7b1"></i>Xray · QMetry · AIO Tests · Zephyr · k0lmenaTMT · Azure DevOps</span>
     <span class="tec"><i style="background:#4169e1"></i>PostgreSQL</span>
     <span class="tec"><i style="background:#4479a1"></i>MySQL · MariaDB</span>
     <span class="tec"><i style="background:#cc2927"></i>SQL Server</span>
@@ -177,7 +177,7 @@
   <div class="tarjetas">
     <div class="tarjeta c-violeta"><div class="ico">◆</div><h4>1 · Diseño</h4><p>Analizar historias, planificar, escribir y revisar casos manuales, BDD y de API (con su tiempo estimado), generar datos y charters, y redactar bugs.</p><div class="salida">Queda en <code>output/</code></div></div>
     <div class="tarjeta c-verde"><div class="ico">▶</div><h4>2 · Automatización</h4><p>Los agentes <i>mapper</i> escriben la automatización una sola vez; después corre con <code>npm</code>, sin tokens.</p><div class="salida">Queda en <code>herramientas/k0lmena/</code></div></div>
-    <div class="tarjeta c-cian"><div class="ico">⇄</div><h4>3 · Gestión</h4><p>Casos, ciclos y resultados con evidencias en Xray, QMetry, AIO Tests o Zephyr (casos también en Azure DevOps), y el informe de cierre.</p><div class="salida">Tu herramienta + <code>output/</code></div></div>
+    <div class="tarjeta c-cian"><div class="ico">⇄</div><h4>3 · Gestión</h4><p>Casos, ciclos y resultados con evidencias en Xray, QMetry, AIO Tests, Zephyr o k0lmenaTMT (casos también en Azure DevOps), y el informe de cierre.</p><div class="salida">Tu herramienta + <code>output/</code></div></div>
   </div>
 
   <h3>Principios</h3>
@@ -215,7 +215,7 @@
     <tr><td>Agentes</td><td>El "quién": un especialista por tarea.</td><td><code>.claude/agents/</code></td></tr>
     <tr><td>Skills</td><td>El "cómo": conocimiento que se carga cuando hace falta (técnicas de diseño, ejecución E2E y de API, convenciones de k0lmena).</td><td><code>.claude/skills/</code></td></tr>
     <tr><td>Plantillas y scripts</td><td>Formato de salida (planilla de casos, cobertura, bug) y reportes HTML determinísticos.</td><td><code>plantillas/</code> · <code>scripts/</code></td></tr>
-    <tr><td>Integración de gestión</td><td><code>gestion.py</code> con un adaptador por herramienta: Xray Cloud, Xray Server/DC, QTM4J, AIO Tests y Zephyr Scale. Azure DevOps va por su conector MCP.</td><td><code>scripts/gestion/</code></td></tr>
+    <tr><td>Integración de gestión</td><td><code>gestion.py</code> con un adaptador por herramienta: Xray Cloud, Xray Server/DC, QTM4J, AIO Tests, Zephyr Scale y k0lmenaTMT (por su server MCP, sin el modelo). Azure DevOps va por su conector MCP.</td><td><code>scripts/gestion/</code></td></tr>
     <tr><td>Conectores MCP</td><td>Playwright y Atlassian (Jira y Confluence) activos; Azure DevOps, Figma, GitHub, GitLab, Linear, ClickUp, monday.com, Asana, Trello, Notion, YouTrack, Shortcut, Appium, QMetry, AIO Tests y k0lmenaTMT listos para habilitar. Versiones fijas, sin secretos en el archivo.</td><td><code>.mcp.json</code></td></tr>
     <tr><td>Herramientas</td><td>Newman para colecciones de Postman y k0lmena para web, API, mobile y performance (con el navegador común para apps con protección anti-bots), más plantillas de CI.</td><td><code>herramientas/</code></td></tr>
     <tr><td>Informes y portal</td><td>Cada informe en español e inglés (<code>es/</code> y <code>en/</code>) y el portal con categorías e historial.</td><td><code>scripts/_i18n.py</code> · <code>scripts/i18n/</code> · <code>output/index.html</code></td></tr>
@@ -360,7 +360,7 @@
 
   <div class="subtitulo-grupo"><h3>Gestión de pruebas</h3></div>
   <div class="tarjetas">
-    <div class="tarjeta c-cian"><h4>gestor-pruebas</h4><p>Carpetas, casos, vínculos con la historia y ciclos en Xray, QMetry (QTM4J), AIO Tests, Zephyr Scale o Azure DevOps Test Plans.</p><div class="usa"><b>Usa</b> scripts/gestion/gestion.py<br><b>Conectores</b> azure-devops (Azure Test Plans)</div><div class="salida">La herramienta + <code>output/gestion/</code></div></div>
+    <div class="tarjeta c-cian"><h4>gestor-pruebas</h4><p>Carpetas, casos, vínculos con la historia y ciclos en Xray, QMetry (QTM4J), AIO Tests, Zephyr Scale, k0lmenaTMT o Azure DevOps Test Plans.</p><div class="usa"><b>Usa</b> scripts/gestion/gestion.py<br><b>Conectores</b> azure-devops (Azure Test Plans)</div><div class="salida">La herramienta + <code>output/gestion/</code></div></div>
     <div class="tarjeta c-cian"><h4>publicador-resultados</h4><p>Sube los resultados de <code>npm test</code> al ciclo: estado, error y evidencias.</p><div class="usa"><b>Usa</b> scripts/gestion/gestion.py</div><div class="salida">La herramienta</div></div>
   </div>
   <div class="subtitulo-grupo"><h3>Skills: el cómo que usan los agentes</h3></div>
@@ -539,7 +539,7 @@ k0lmenia doctor      <span class="c"># revisa que esté todo</span></pre></div><
     <tr><td>Mobile</td><td><code>MOBILE_TARGET</code> <code>MOBILE_PLATFORM</code> <code>MOBILE_DEVICE_NAME</code> <code>MOBILE_APP</code> <code>MOBILE_UDID</code> <code>BROWSERSTACK_*</code></td><td>Dónde corre la suite mobile</td></tr>
     <tr><td>Performance</td><td><code>PERF_VUS</code> <code>PERF_DURACION</code></td><td>Pisar la carga de los scripts k6</td></tr>
     <tr><td>Bases de datos</td><td><code>DB_CONEXIONES</code> + <code>DB_&lt;NOMBRE&gt;_MOTOR</code> <code>_HOST</code> <code>_PUERTO</code> <code>_BASE</code> <code>_USUARIO</code> <code>_CLAVE</code> (o <code>_URL</code>) <code>_ESCRITURA</code> <code>_PRODUCCION</code></td><td>Verificación en base de datos</td></tr>
-    <tr><td>Gestión</td><td><code>GESTION_HERRAMIENTA</code> <code>GESTION_PROYECTO</code> + credenciales de la herramienta (Zephyr Scale: <code>ZEPHYR_API_TOKEN</code> <code>ZEPHYR_API_URL</code> y las de Jira)</td><td>Xray, QMetry, AIO Tests y Zephyr Scale</td></tr>
+    <tr><td>Gestión</td><td><code>GESTION_HERRAMIENTA</code> <code>GESTION_PROYECTO</code> + credenciales de la herramienta (Zephyr Scale: <code>ZEPHYR_API_TOKEN</code> <code>ZEPHYR_API_URL</code> y las de Jira; k0lmenaTMT: <code>K0LMENA_TMT_TOKEN</code> y el id numérico del proyecto)</td><td>Xray, QMetry, AIO Tests, Zephyr Scale y k0lmenaTMT</td></tr>
     <tr><td>Navegador y anti-bots</td><td><code>NAVEGADOR_CANAL</code> <code>RITMO_HUMANO</code> <code>QA_BYPASS_HEADER</code> <code>QA_BYPASS_TOKEN</code> <code>QA_BYPASS_HOSTS</code></td><td>Chrome o Edge instalados, pausas y el header de excepción para apps con protección anti-bots</td></tr>
     <tr><td>Idioma de la documentación</td><td><code>DOCUMENTACION_EN</code> (vacío · <code>si</code> · <code>no</code>)</td><td>Contexto y documentación del proyecto también en inglés: vacío = Claude pregunta</td></tr>
     <tr><td>Azure DevOps (MCP)</td><td><code>ADO_ORGANIZACION</code> <code>ADO_PAT</code> <code>ADO_PROYECTO</code></td><td>Boards, Wiki, Repos y Test Plans</td></tr>
@@ -628,7 +628,7 @@ k0lmenia doctor      <span class="c"># revisa que esté todo</span></pre></div><
     <tr><td>Reporte de mapeo</td><td>Estado <code>Falta información</code>. El mapper no usa la app para completar el dato: lo que muestra la app queda como observación.</td></tr>
     <tr><td>Reportes de k0lmena y de ejecución</td><td>Nota visible en el escenario y aviso en el resumen.</td></tr>
     <tr><td>Informe de cierre</td><td>Sección <b>Falta información</b>; los ítems abiertos cuentan como riesgo para el go/no-go.</td></tr>
-    <tr><td>Xray · QMetry · AIO · Zephyr</td><td>El comentario del resultado aclara que el caso depende de información faltante.</td></tr>
+    <tr><td>Xray · QMetry · AIO · Zephyr · k0lmenaTMT</td><td>El comentario del resultado (en k0lmenaTMT, el <code>resultado.txt</code> de la ejecución) aclara que el caso depende de información faltante.</td></tr>
   </table></div>
 </section>
 
@@ -777,23 +777,23 @@ npm run perf -- &lt;script&gt; load --vus 20 --duracion 2m   <span class="c"># k
 <!-- ======================================================= 11 GESTIÓN -->
 <section class="seccion" id="gestion">
   <div class="kicker">Guías</div>
-  <h2>Xray, QMetry, AIO Tests, Zephyr y Azure DevOps</h2>
-  <p class="bajada"><b>gestor-pruebas</b> y <b>publicador-resultados</b> trabajan con Xray Cloud, Xray Server/Data Center, QMetry para Jira (QTM4J), AIO Tests y Zephyr Scale, con los mismos comandos para todas.</p>
-  <p>Se configura en el <code>.env</code>: <code>GESTION_HERRAMIENTA</code> (<code>xray-cloud</code>, <code>xray-dc</code>, <code>qtm4j</code>, <code>aio</code> o <code>zephyr-scale</code>), <code>GESTION_PROYECTO</code> (la key del proyecto de Jira) y las credenciales de tu herramienta, explicadas en <code>.env.example</code>.</p>
+  <h2>Xray, QMetry, AIO Tests, Zephyr, k0lmenaTMT y Azure DevOps</h2>
+  <p class="bajada"><b>gestor-pruebas</b> y <b>publicador-resultados</b> trabajan con Xray Cloud, Xray Server/Data Center, QMetry para Jira (QTM4J), AIO Tests, Zephyr Scale y k0lmenaTMT, con los mismos comandos para todas.</p>
+  <p>Se configura en el <code>.env</code>: <code>GESTION_HERRAMIENTA</code> (<code>xray-cloud</code>, <code>xray-dc</code>, <code>qtm4j</code>, <code>aio</code>, <code>zephyr-scale</code> o <code>k0lmena-tmt</code>), <code>GESTION_PROYECTO</code> (la key del proyecto de Jira; en k0lmenaTMT, el id numérico del proyecto) y las credenciales de tu herramienta, explicadas en <code>.env.example</code>.</p>
   <div class="guia"><h4>gestor-pruebas</h4>
     <div class="pedido">Subí los casos de HU-001 a Xray en la carpeta 'HU-001 Registro', vinculados a PROJ-12, y creá el ciclo Sprint 5.</div>
     <p>Crea la carpeta, sube los casos (manuales desde el <code>.xlsx</code> o BDD desde el <code>.feature</code>), los vincula a la historia, crea ciclos y les agrega casos. La primera vez hace una prueba en seco (<code>--dry-run</code>). Guarda la trazabilidad en <code>output/gestion/HU-001-&lt;herramienta&gt;.json</code>: un caso nunca se sube dos veces.</p></div>
-  <div class="aviso info"><span class="ico">i</span><p><b>Tiempo estimado.</b> Cada caso se sube con su tiempo de ejecución manual: en la descripción y en el campo de tiempo de la herramienta — <i>Original Estimate</i> de Jira en Xray (si el proyecto tiene time tracking), <code>estimatedTime</code> en QTM4J y Zephyr Scale y <code>estimatedEffort</code> en AIO Tests. En Azure DevOps viaja en el JSON de <code>para_azure_devops.py</code> y como etiqueta <code>tiempo-estimado-Xmin</code>. Si la herramienta rechaza el campo, el caso se crea igual con el tiempo en la descripción (<code>GESTION_TIEMPO_NATIVO=0</code> lo desactiva). Ver <a href="#revision">la fórmula</a>.</p></div>
+  <div class="aviso info"><span class="ico">i</span><p><b>Tiempo estimado.</b> Cada caso se sube con su tiempo de ejecución manual: en la descripción y en el campo de tiempo de la herramienta — <i>Original Estimate</i> de Jira en Xray (si el proyecto tiene time tracking), <code>estimatedTime</code> en QTM4J y Zephyr Scale, <code>estimatedEffort</code> en AIO Tests y <code>estimatedDuration</code> en k0lmenaTMT. En Azure DevOps viaja en el JSON de <code>para_azure_devops.py</code> y como etiqueta <code>tiempo-estimado-Xmin</code>. Si la herramienta rechaza el campo, el caso se crea igual con el tiempo en la descripción (<code>GESTION_TIEMPO_NATIVO=0</code> lo desactiva). Ver <a href="#revision">la fórmula</a>.</p></div>
   <div class="guia"><h4>publicador-resultados</h4>
     <div class="pedido">Subí los resultados de la última corrida web al ciclo PROJ-60.</div>
     <p>Asocia cada escenario a su caso por el tag <code>@CP-XXX</code> y carga el estado, un comentario con el error y las evidencias: captura siempre, GIF si se generó y video solo si falló. Nunca asigna un resultado por aproximación.</p></div>
   <h3>Equivalencias</h3>
   <div class="tabla"><table>
-    <tr><th style="width:18%">Concepto</th><th>Xray</th><th>QTM4J</th><th>AIO Tests</th><th>Zephyr Scale</th></tr>
-    <tr><td>Caso</td><td>Issue Test (Manual o Cucumber)</td><td>Test case</td><td>Caso (Classic o BDD)</td><td>Test case (pasos o script BDD)</td></tr>
-    <tr><td>Ciclo</td><td>Test Execution</td><td>Test cycle</td><td>Test cycle</td><td>Test cycle</td></tr>
-    <tr><td>Caso ↔ historia</td><td>Link "Test" (cobertura)</td><td>Requirement link</td><td>jiraRequirementIDs</td><td>links/issues</td></tr>
-    <tr><td>Ciclo ↔ historia</td><td>Link "Relates"</td><td>Requirement link</td><td>jiraTaskIDs</td><td>links/issues</td></tr>
+    <tr><th style="width:18%">Concepto</th><th>Xray</th><th>QTM4J</th><th>AIO Tests</th><th>Zephyr Scale</th><th>k0lmenaTMT</th></tr>
+    <tr><td>Caso</td><td>Issue Test (Manual o Cucumber)</td><td>Test case</td><td>Caso (Classic o BDD)</td><td>Test case (pasos o script BDD)</td><td>Test case (pasos; BDD con <code>automated</code>)</td></tr>
+    <tr><td>Ciclo</td><td>Test Execution</td><td>Test cycle</td><td>Test cycle</td><td>Test cycle</td><td>Test cycle (cada caso, un <i>cycle suite</i>)</td></tr>
+    <tr><td>Caso ↔ historia</td><td>Link "Test" (cobertura)</td><td>Requirement link</td><td>jiraRequirementIDs</td><td>links/issues</td><td>La historia como etiqueta</td></tr>
+    <tr><td>Ciclo ↔ historia</td><td>Link "Relates"</td><td>Requirement link</td><td>jiraTaskIDs</td><td>links/issues</td><td>La historia en la descripción</td></tr>
   </table></div>
   <h3>Comandos manuales</h3>
   <div class="codigo"><pre>python scripts/gestion/gestion.py --dry-run carpeta --ruta "HU-001 Registro"
@@ -802,6 +802,20 @@ python scripts/gestion/gestion.py crear-ciclo --nombre "Sprint 5" --historia PRO
 python scripts/gestion/gestion.py extraer-resultados --reporte &lt;cucumber-report.json&gt;
 python scripts/gestion/gestion.py publicar-resultados --ciclo PROJ-60 --resultados &lt;resultados.json&gt; --traza HU-001</pre></div>
   <p>Las carpetas van sin barra inicial (en Git Bash, <code>/HU-001</code> se convierte en una ruta de Windows). Referencia completa en <code>scripts/gestion/README.md</code>.</p>
+  <h3>k0lmenaTMT</h3>
+  <p><b>k0lmenaTMT</b> es el gestor de pruebas de la suite k0lmena. Se integra con el <b>token personal</b> (<code>kolm_pat_...</code>) que se genera en k0lmenaTMT: <code>GESTION_HERRAMIENTA=k0lmena-tmt</code>, <code>GESTION_PROYECTO</code> = el id numérico del proyecto (está en su URL) y <code>K0LMENA_TMT_TOKEN</code> (más <code>K0LMENA_TMT_URL</code> si no es <code>http://localhost:4000/api/v1/mcp</code>).</p>
+  <div class="tabla"><table>
+    <tr><th style="width:22%">Tema</th><th>Cómo funciona</th></tr>
+    <tr><td>Cargas</td><td>Las hace el script, no el agente: con el token, k0lmenaTMT expone su server MCP y <code>scripts/gestion</code> es el cliente. Crea carpetas, casos (pasos, etiquetas, prioridad y tiempo estimado), ciclos y resultados sin pasar cada caso ni cada evidencia por la conversación. Cada escritura es una propuesta (change-set) que el script aplica: todo queda registrado y se puede deshacer desde k0lmenaTMT.</td></tr>
+    <tr><td>Conector MCP <code>k0lmena-tmt</code></td><td>Para consultar desde el chat (casos, planes, estadísticas, los tests que más fallan) y ajustes puntuales.</td></tr>
+    <tr><td>Keys</td><td><code>TC-&lt;id&gt;</code> (casos) y <code>CY-&lt;id&gt;</code> (ciclos): se usan igual que las de Xray o Zephyr (<code>--ciclo CY-45</code>, tags <code>@TC-123</code>).</td></tr>
+    <tr><td>Historia</td><td>k0lmenaTMT no se conecta a Jira: la historia va como etiqueta del caso y en la descripción del ciclo.</td></tr>
+    <tr><td>Resultados</td><td>Estado y tiempo de cada caso del ciclo, con la captura, el GIF, el video si falló y un <code>resultado.txt</code> con el error como evidencia (la ejecución no tiene campo de comentario). Hasta 10 MB por archivo.</td></tr>
+    <tr><td>Ritmo</td><td>k0lmenaTMT acepta 20 pedidos por minuto por usuario por defecto y cada escritura son dos: una historia de 30 casos con su ciclo y resultados tarda unos minutos. <code>K0LMENA_TMT_RPM</code> lo ajusta; <code>K0LMENA_TMT_PRIORIDADES</code> mapea las prioridades a sus ids.</td></tr>
+  </table></div>
+  <div class="pedido">Subí a k0lmenaTMT los casos de casos-HU-001.xlsx en la carpeta 'HU-001 Registro' y creá el ciclo Sprint 5.</div>
+  <div class="pedido">Publicá en k0lmenaTMT los resultados de la última corrida en el ciclo CY-45.</div>
+  <p>Las mejoras que conviene sumar del lado de k0lmenaTMT (un límite propio para los tokens, escritura en lote, comentario en la ejecución y consultas de carpetas y ciclos) están en <code>scripts/gestion/README.md</code>.</p>
   <h3>Azure DevOps (Test Plans)</h3>
   <p>Azure DevOps no pasa por <code>gestion.py</code>: se integra por su conector MCP oficial (<code>azure-devops</code>), con <code>ADO_ORGANIZACION</code>, <code>ADO_PAT</code> y <code>ADO_PROYECTO</code> en el <code>.env</code>. Los agentes leen las historias (con comentarios, tareas, padre y vínculos) y la Wiki, y <b>gestor-pruebas</b> crea los <i>Test Cases</i> con sus pasos (los arma <code>scripts/gestion/para_azure_devops.py</code>), los vincula a la historia y los agrega a una suite. Todavía no se publican resultados de ejecución en Azure DevOps.</p>
   <div class="pedido">Subí los casos de casos-HU-001.xlsx a Azure Test Plans, plan 'Sprint 5', suite 'HU-001 Registro', vinculados a la historia 1234.</div>
@@ -818,7 +832,7 @@ npm run ci -- generar --plataforma github               <span class="c"># → .g
 npm run ci -- generar --plataforma gitlab --suite all   <span class="c"># → .gitlab-ci.yml (web y api)</span>
 npm run ci -- generar --plataforma jenkins              <span class="c"># → Jenkinsfile</span>
 npm run ci -- generar --plataforma azure --suite api    <span class="c"># → azure-pipelines.yml</span></pre></div>
-  <p>El pipeline instala k0lmena y Chromium, corre las suites, guarda los reportes como artefacto y, si hay <code>GESTION_CICLO</code>, publica los resultados en Xray, QMetry, AIO Tests o Zephyr (<code>npm run ci -- publicar</code>). No pisa un pipeline que ya existe, salvo con <code>--forzar</code>.</p>
+  <p>El pipeline instala k0lmena y Chromium, corre las suites, guarda los reportes como artefacto y, si hay <code>GESTION_CICLO</code>, publica los resultados en Xray, QMetry, AIO Tests, Zephyr o k0lmenaTMT (<code>npm run ci -- publicar</code>). No pisa un pipeline que ya existe, salvo con <code>--forzar</code>.</p>
   <div class="tabla"><table>
     <tr><th style="width:20%">Plataforma</th><th>Dónde va el <code>.env</code> (como secret, nunca en el archivo)</th></tr>
     <tr><td>GitHub Actions</td><td>Secret <code>K0LMENIA_ENV</code> con el contenido del archivo</td></tr>
@@ -1428,7 +1442,7 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># un p
     <tr><td><code>azure-devops</code></td><td>Azure DevOps: historias, Wiki, Azure Repos y casos en Test Plans.</td><td>PAT</td></tr>
     <tr><td><code>linear</code> · <code>clickup</code> · <code>monday</code> · <code>asana</code> · <code>trello</code> · <code>notion</code> · <code>youtrack</code> · <code>shortcut</code></td><td>Historias y documentación si tu equipo no usa Jira ni Azure DevOps (servers MCP oficiales).</td><td>Cuenta (OAuth); YouTrack con token; Asana con app propia</td></tr>
     <tr><td><code>github</code> · <code>gitlab</code></td><td>Repositorio de la app para el documentador-proyecto (código, PRs y commits, solo lectura).</td><td>Token (GitLab: también OAuth)</td></tr>
-    <tr><td><code>k0lmena-tmt</code></td><td>Cargar y consultar casos en k0lmenaTMT.</td><td>Token personal</td></tr>
+    <tr><td><code>k0lmena-tmt</code></td><td>Consultar k0lmenaTMT desde el chat (casos, planes, estadísticas). Las cargas van por <code>scripts/gestion/</code>.</td><td>Token personal</td></tr>
     <tr><td><code>scalar</code></td><td>APIs que están en Scalar: buscar y ejecutar lecturas, y el contrato del Registry (probador-scalar).</td><td><code>SCALAR_MCP_URL</code> · <code>SCALAR_API_KEY</code></td></tr>
   </table></div>
   <ol class="pasos">
@@ -1437,7 +1451,7 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># un p
     <li><b>Verificá</b>Reiniciá Claude Code y revisá la conexión con <code>/mcp</code>.</li>
   </ol>
   <div class="pedido">Generá los casos de PROJ-12 usando la página de Confluence 'Reglas de facturación' y este diseño de Figma.</div>
-  <p>Para Xray y Zephyr Scale no hace falta MCP: se usa <code>scripts/gestion/</code>. Con el plugin, Playwright y Atlassian vienen dentro del plugin. Guía completa en <code>CONECTORES.md</code>.</p>
+  <p>Para Xray y Zephyr Scale no hace falta MCP: se usa <code>scripts/gestion/</code>. k0lmenaTMT también carga por <code>scripts/gestion/</code> (que habla con su server MCP sin el modelo); el conector queda para consultas. Con el plugin, Playwright y Atlassian vienen dentro del plugin. Guía completa en <code>CONECTORES.md</code>.</p>
 </section>
 
 <!-- ======================================================= 13 CONVENCIONES -->
@@ -1525,7 +1539,7 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># un p
 ├── plantillas/             <span class="c">Bug, planilla de casos, cobertura, tiempo estimado</span>
 ├── scripts/                <span class="c">Casos, tiempo estimado, revisión, charters, logs, informes, portal, doctor y armado del plugin</span>
 │   ├── i18n/en/            <span class="c">Diccionarios de los informes en inglés</span>
-│   ├── gestion/            <span class="c">Xray, QMetry (QTM4J), AIO Tests, Zephyr Scale y casos para Azure DevOps</span>
+│   ├── gestion/            <span class="c">Xray, QMetry (QTM4J), AIO Tests, Zephyr Scale, k0lmenaTMT y casos para Azure DevOps</span>
 │   └── mcp/                <span class="c">Lanzadores de los conectores MCP (leen el .env)</span>
 └── herramientas/
     ├── newman/             <span class="c">Colecciones de Postman</span>

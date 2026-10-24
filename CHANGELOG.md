@@ -2,6 +2,14 @@
 
 Los cambios más relevantes, del más nuevo al más viejo. El detalle de cada uno está en el historial de git.
 
+## 2026-10-24 (9) — k0lmenIA + k0lmenaTMT
+- **k0lmenaTMT como herramienta de gestión** (`GESTION_HERRAMIENTA=k0lmena-tmt`, adaptador `scripts/gestion/adaptadores/k0lmena_tmt.py`). Carpetas, casos (con pasos, etiquetas, prioridad y tiempo estimado), ciclos, casos en el ciclo y resultados con evidencias, con los mismos comandos que Xray o Zephyr; lo usan `gestor-pruebas`, `publicador-resultados` y `npm run ci -- publicar`.
+  - **El script es el cliente MCP**: con el token personal, k0lmenaTMT solo expone su server MCP, así que el script hace las llamadas que antes tenía que hacer el agente (proponer y aplicar cada change-set), sin pasar cada caso ni cada evidencia en base64 por la conversación.
+  - **Detalles**: keys `TC-<id>`/`CY-<id>`; la historia va como etiqueta; el detalle del resultado va como `resultado.txt`, porque la ejecución no tiene comentario; respeta el límite de pedidos por minuto (`K0LMENA_TMT_RPM`) y los de evidencias (10 archivos y 10 MB).
+  - **El conector MCP** `k0lmena-tmt` queda para consultas.
+- **Mejoras propuestas para k0lmenaTMT** (en `scripts/gestion/README.md`): límite propio para tokens personales, escritura en lote o importación de resultados, comentario en la ejecución, consultas de carpetas y ciclos y referencia externa del caso.
+- **Probado contra un server MCP que imita al de k0lmenaTMT** (propuestas, aplicación y respuestas SSE). La prueba contra una instancia real queda pendiente: hace falta un token personal.
+
 ## 2026-10-24 (8) — Las actualizaciones llegan al plugin, también las de k0lmena
 - **Publicación automática**: con la rama del plugin en `main`, el workflow `plugin.yml` publica la rama `plugin` en cada push. Los QAs reciben cada cambio con la actualización automática del marketplace (se activa una vez en `/plugin` → Marketplaces) o con `/plugin marketplace update k0lmenia`.
 - **`k0lmenia actualizar`**: trae las mejoras del framework k0lmena a la copia del proyecto sin tocar las pruebas del QA (features, steps, locators, apps, scripts de performance). `init` guarda una huella de cada archivo del framework; si el QA modificó uno, la versión nueva queda al lado como `.nuevo` y se avisa. Al iniciar la sesión, Claude avisa si el proyecto tiene una versión vieja de k0lmena.

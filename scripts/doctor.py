@@ -59,6 +59,7 @@ VARIABLES_GESTION = {
     "qtm4j": ["GESTION_PROYECTO", "QTM4J_API_KEY"],
     "aio": ["GESTION_PROYECTO", "AIO_API_TOKEN"],
     "zephyr-scale": ["GESTION_PROYECTO", "ZEPHYR_API_TOKEN", "JIRA_BASE_URL", "JIRA_EMAIL", "JIRA_API_TOKEN"],
+    "k0lmena-tmt": ["GESTION_PROYECTO", "K0LMENA_TMT_TOKEN"],
 }
 # Conector que necesita cada proveedor del repositorio de la app (documentador-proyecto).
 CONECTOR_REPO = {"github": "github", "gitlab": "gitlab", "azure-repos": "azure-devops", "bitbucket": "atlassian"}
@@ -292,7 +293,7 @@ def revisar_env(ctx):
     herramienta = env.get("GESTION_HERRAMIENTA", "")
     if herramienta:
         if herramienta not in VARIABLES_GESTION:
-            linea(FALTA, f"GESTION_HERRAMIENTA={herramienta} no es válida", "Usá xray-cloud, xray-dc, qtm4j, aio o zephyr-scale")
+            linea(FALTA, f"GESTION_HERRAMIENTA={herramienta} no es válida", "Usá xray-cloud, xray-dc, qtm4j, aio, zephyr-scale o k0lmena-tmt")
         else:
             faltan = faltantes(VARIABLES_GESTION[herramienta], env)
             if faltan:

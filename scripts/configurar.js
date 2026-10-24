@@ -79,7 +79,8 @@ const PASOS = [
           ayuda: 'EU: https://eu.api.zephyrscale.smartbear.com/v2 · AU: https://au.api.zephyrscale.smartbear.com/v2 · DE: https://de.api.zephyrscale.smartbear.com/v2' },
         JIRA_URL, JIRA_EMAIL, JIRA_TOKEN] },
       { nombre: 'Azure Test Plans', conectores: ['azure-devops'], datos: ADO },
-      { nombre: 'k0lmenaTMT', conectores: ['k0lmena-tmt'], datos: [
+      { nombre: 'k0lmenaTMT', conectores: ['k0lmena-tmt'], fijos: { GESTION_HERRAMIENTA: 'k0lmena-tmt' }, datos: [
+        { clave: 'GESTION_PROYECTO', texto: 'Id del proyecto en k0lmenaTMT', ayuda: 'el número que aparece en la URL del proyecto (por ejemplo /projects/3)' },
         { clave: 'K0LMENA_TMT_TOKEN', texto: 'Token personal de k0lmenaTMT (kolm_pat_...)', secreto: true },
         { clave: 'K0LMENA_TMT_URL', texto: 'URL de k0lmenaTMT', opcional: true, defecto: 'http://localhost:4000/api/v1/mcp' }] },
     ],
