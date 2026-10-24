@@ -537,5 +537,7 @@
   "No existe el caso {n} en {n}": "Test case {n} doesn't exist in {n}",
   "Por qué esa herramienta": "Why that tool",
   "Plan de onboarding": "Onboarding plan",
-  "Agentes": "Agents"
+  "Agentes": "Agents",
+  "No encuentro las transcripciones de Claude Code en esta carpeta:": "Claude Code transcripts not found in this folder:",
+  "Se generan al usar Claude Code en este proyecto (en CI o en otra máquina no existen); pasá otra carpeta con --carpeta.": "They are created when Claude Code is used in this project (they don't exist in CI or on another machine); pass another folder with --carpeta."
 }

@@ -277,7 +277,11 @@ def build_html(datos, carpeta=None):
     import _historial
     r = datos["resumen"]
     if not datos["agentes"]:
-        cuerpo = section("Sin datos", f'<div class="cardbody"><p>{e(datos.get("aviso") or "No hay uso registrado en el período.")}</p></div>')
+        # La carpeta va aparte, como código: el texto se traduce y la ruta (distinta en cada máquina) no.
+        aviso = (f'<p>{e("No encuentro las transcripciones de Claude Code en esta carpeta:")} <code>{e(datos["fuente"])}</code></p>'
+                 f'<p>{e("Se generan al usar Claude Code en este proyecto (en CI o en otra máquina no existen); pasá otra carpeta con --carpeta.")}</p>'
+                 if datos.get("aviso") else f'<p>{e("No hay uso registrado en el período.")}</p>')
+        cuerpo = section("Sin datos", f'<div class="cardbody">{aviso}</div>')
         return page("Uso de tokens", "Métricas de tokens", meta([("Período", datos.get("periodo"))]), cuerpo)
     serie = [d["costo_usd"] for d in datos["dias"]]
     body = [kpi_tiles([

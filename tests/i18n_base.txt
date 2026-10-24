@@ -149,7 +149,6 @@ Manejo de errores: {n}
 Marca como ambiguo que la contraseña sea 'segura' (sin reglas)
 Mensajes de error
 NOMBRE DEL PROYECTO
-No encuentro las transcripciones de Claude Code en C:\Users\Dinno\AppData\Local\Temp\pytest-of-Dinno\pytest-{n}\test_sin_transcripciones_lo_di0\no-existe. Se generan al usar Claude Code en este proyecto (en CI o en otra máquina no existen); pasá otra carpeta con --carpeta.
 No es idempotente
 No hay conector de Figma.
 No hay criterios para el cupón
