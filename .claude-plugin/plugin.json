@@ -1,0 +1,19 @@
+{
+  "name": "k0lmenia",
+  "description": "Agentes de QA para Claude Code, en español: análisis de historias, casos de prueba (Excel, BDD, API), datos, bugs, ejecución E2E y de API, accesibilidad, rendimiento, seguridad, automatización sin tokens con k0lmena, gestión en Xray, QMetry, AIO, Zephyr y Azure DevOps, e informes en español e inglés.",
+  "author": {
+    "name": "Underc0de"
+  },
+  "homepage": "https://underc0delabs.github.io/k0lmenIA/",
+  "repository": "https://github.com/underc0delabs/k0lmenIA",
+  "license": "MIT",
+  "keywords": [
+    "qa",
+    "testing",
+    "español",
+    "playwright",
+    "xray",
+    "bdd",
+    "k0lmena"
+  ]
+}

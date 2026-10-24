@@ -1,0 +1,2 @@
+bin/k0lmenia text eol=lf
+*.sh text eol=lf

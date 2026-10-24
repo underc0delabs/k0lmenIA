@@ -1,0 +1,15 @@
+# Buzón de prueba para el agente verificador-correos y los steps de correo de k0lmena.
+#   docker compose -f herramientas/mailpit/docker-compose.yml up -d
+# Web y API: http://localhost:8025 · SMTP para la app: localhost:1025 (sin usuario ni TLS)
+services:
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: k0lmenia-mailpit
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    environment:
+      MP_MAX_MESSAGES: 2000
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1

@@ -1,0 +1,220 @@
+{
+  "_info": "Conectores MCP opcionales de k0lmenIA. No están en .mcp.json para que Claude Code arranque sin pedir aprobaciones: cada persona activa los que usa con  npm run conector -- activar <nombre>  (quedan registrados solo para ella). Ver CONECTORES.md.",
+  "conectores": {
+    "azure-devops": {
+      "descripcion": "Azure DevOps: historias de Boards, Wiki y casos en Test Plans",
+      "variables": "ADO_ORGANIZACION, ADO_PAT (o ADO_AUTENTICACION=interactive|azcli)",
+      "servidor": {
+        "type": "stdio",
+        "command": "node",
+        "args": [
+          "scripts/mcp/azure-devops.js"
+        ]
+      }
+    },
+    "figma": {
+      "descripcion": "Figma (remoto): diseños desde un link a un frame o archivo",
+      "variables": "ninguna (OAuth desde /mcp)",
+      "servidor": {
+        "type": "http",
+        "url": "https://mcp.figma.com/mcp"
+      }
+    },
+    "figma-desktop": {
+      "descripcion": "Figma (app de escritorio, servidor local)",
+      "variables": "ninguna (la app de escritorio abierta)",
+      "servidor": {
+        "type": "http",
+        "url": "http://127.0.0.1:3845/mcp"
+      }
+    },
+    "github": {
+      "descripcion": "GitHub (remoto, solo lectura): código, PRs, issues y commits del repositorio de la app",
+      "variables": "GITHUB_TOKEN",
+      "servidor": {
+        "type": "http",
+        "url": "https://api.githubcopilot.com/mcp/readonly",
+        "headersHelper": "node scripts/mcp/github-headers.js"
+      }
+    },
+    "gitlab": {
+      "descripcion": "GitLab (GitLab.com o self-managed 19.5+): código, merge requests, work items y wiki",
+      "variables": "GITLAB_URL (opcional), GITLAB_TOKEN (opcional: sin token, OAuth desde /mcp)",
+      "servidor": {
+        "type": "http",
+        "url": "${GITLAB_URL:-https://gitlab.com}/api/v4/mcp",
+        "headersHelper": "node scripts/mcp/gitlab-headers.js"
+      }
+    },
+    "linear": {
+      "descripcion": "Linear (solo lectura): issues, comentarios, proyectos y ciclos como fuente de historias",
+      "variables": "ninguna (OAuth desde /mcp) · opcional LINEAR_API_KEY",
+      "servidor": {
+        "type": "http",
+        "url": "https://mcp.linear.app/mcp/readonly",
+        "headersHelper": "node scripts/mcp/bearer-headers.js linear LINEAR_API_KEY --opcional"
+      }
+    },
+    "clickup": {
+      "descripcion": "ClickUp: tareas, subtareas, checklists, comentarios y Docs como fuente de historias",
+      "variables": "ninguna (OAuth desde /mcp)",
+      "servidor": {
+        "type": "http",
+        "url": "https://mcp.clickup.com/mcp"
+      }
+    },
+    "monday": {
+      "descripcion": "monday.com: ítems de los tableros, subítems, updates y docs como fuente de historias",
+      "variables": "ninguna (OAuth desde /mcp) · opcional MONDAY_API_TOKEN",
+      "servidor": {
+        "type": "http",
+        "url": "https://mcp.monday.com/mcp",
+        "headersHelper": "node scripts/mcp/bearer-headers.js monday MONDAY_API_TOKEN --opcional"
+      }
+    },
+    "asana": {
+      "descripcion": "Asana (server V2): tareas, subtareas, comentarios y proyectos como fuente de historias",
+      "variables": "ASANA_CLIENT_ID, ASANA_CLIENT_SECRET (app MCP propia en Asana)",
+      "servidor": {
+        "type": "http",
+        "url": "https://mcp.asana.com/v2/mcp"
+      },
+      "oauth": {
+        "clientId": "ASANA_CLIENT_ID",
+        "clientSecret": "ASANA_CLIENT_SECRET",
+        "callbackPort": 8080
+      }
+    },
+    "trello": {
+      "descripcion": "Trello: tarjetas, checklists, comentarios y listas como fuente de historias",
+      "variables": "ninguna (OAuth desde /mcp)",
+      "servidor": {
+        "type": "http",
+        "url": "https://mcp.trello.com/v1"
+      }
+    },
+    "notion": {
+      "descripcion": "Notion: páginas, bases de datos (backlogs) y wikis del proyecto",
+      "variables": "ninguna (OAuth desde /mcp)",
+      "servidor": {
+        "type": "http",
+        "url": "https://mcp.notion.com/mcp"
+      }
+    },
+    "youtrack": {
+      "descripcion": "YouTrack (Cloud o Server): issues, comentarios, vínculos y artículos de la base de conocimiento",
+      "variables": "YOUTRACK_URL, YOUTRACK_TOKEN",
+      "servidor": {
+        "type": "http",
+        "url": "${YOUTRACK_URL}/mcp",
+        "headersHelper": "node scripts/mcp/bearer-headers.js youtrack YOUTRACK_TOKEN"
+      }
+    },
+    "shortcut": {
+      "descripcion": "Shortcut: stories, epics, comentarios y documentos como fuente de historias",
+      "variables": "ninguna (OAuth desde /mcp)",
+      "servidor": {
+        "type": "http",
+        "url": "https://mcp.shortcut.com/mcp"
+      }
+    },
+    "qtm4j": {
+      "descripcion": "QMetry para Jira (QTM4J)",
+      "variables": "QTM4J_API_KEY",
+      "servidor": {
+        "type": "stdio",
+        "command": "node",
+        "args": [
+          "scripts/mcp/con-env.js",
+          "qtm4j",
+          "--requeridas",
+          "QTM4J_API_KEY",
+          "--opcionales",
+          "QTM4J_BASE_URL=https://qtmcloud.qmetry.com,QTM4J_AUTOMATION_API_KEY",
+          "--",
+          "@smartbear/mcp"
+        ],
+        "env": {
+          "MCP_CLIENTS": "QTM4J"
+        }
+      }
+    },
+    "qmetry": {
+      "descripcion": "QMetry Test Management (standalone)",
+      "variables": "QMETRY_API_KEY",
+      "servidor": {
+        "type": "stdio",
+        "command": "node",
+        "args": [
+          "scripts/mcp/con-env.js",
+          "qmetry",
+          "--requeridas",
+          "QMETRY_API_KEY",
+          "--opcionales",
+          "QMETRY_BASE_URL=https://testmanagement.qmetry.com",
+          "--",
+          "@smartbear/mcp"
+        ],
+        "env": {
+          "MCP_CLIENTS": "QMetry"
+        }
+      }
+    },
+    "aio-tests": {
+      "descripcion": "AIO Tests for Jira",
+      "variables": "AIO_MCP_URL, AIO_API_TOKEN",
+      "servidor": {
+        "type": "stdio",
+        "command": "node",
+        "args": [
+          "scripts/mcp/aio-tests.js"
+        ]
+      }
+    },
+    "k0lmena-tmt": {
+      "descripcion": "k0lmenaTMT",
+      "variables": "K0LMENA_TMT_TOKEN",
+      "servidor": {
+        "type": "http",
+        "url": "${K0LMENA_TMT_URL:-http://localhost:4000/api/v1/mcp}",
+        "headersHelper": "node scripts/mcp/k0lmena-tmt-headers.js"
+      }
+    },
+    "appium-mcp": {
+      "descripcion": "Appium (mobile-mapper)",
+      "variables": "ANDROID_HOME (si no está en el entorno)",
+      "servidor": {
+        "type": "stdio",
+        "command": "node",
+        "args": [
+          "scripts/mcp/con-env.js",
+          "appium-mcp",
+          "--opcionales",
+          "ANDROID_HOME",
+          "--",
+          "appium-mcp"
+        ]
+      }
+    },
+    "salesforce": {
+      "descripcion": "Salesforce DX (probador-salesforce): consultas SOQL de solo lectura y tests de Apex en UNA org autorizada (sandbox)",
+      "variables": "SALESFORCE_ORG, SALESFORCE_ORGS_AUTORIZADAS (la org se autoriza antes con sf org login web)",
+      "servidor": {
+        "type": "stdio",
+        "command": "node",
+        "args": [
+          "scripts/mcp/salesforce.js"
+        ]
+      }
+    },
+    "scalar": {
+      "descripcion": "Scalar (probador-scalar): MCP de tu API generado desde el OpenAPI en Scalar; busca operaciones y ejecuta las que el dashboard deja en modo Execute",
+      "variables": "SCALAR_MCP_URL · opcional SCALAR_API_KEY (sin token, OAuth desde /mcp)",
+      "servidor": {
+        "type": "http",
+        "url": "${SCALAR_MCP_URL}",
+        "headersHelper": "node scripts/mcp/bearer-headers.js scalar SCALAR_API_KEY --opcional"
+      }
+    }
+  }
+}

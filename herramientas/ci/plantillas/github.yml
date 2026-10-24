@@ -1,0 +1,81 @@
+# k0lmena en CI (GitHub Actions). Generado con: npm run ci -- generar --plataforma github
+#
+# Corre las suites de k0lmena sin agentes ni tokens, guarda los reportes como artefacto y, si hay
+# ciclo (GESTION_CICLO), publica los resultados en Xray, QMetry, AIO Tests o Zephyr.
+#
+# Configuración (Settings > Secrets and variables > Actions):
+#   - Secret K0LMENIA_ENV: el contenido de tu .env (APP_URL, GESTION_HERRAMIENTA, GESTION_PROYECTO y los
+#     tokens de la herramienta de gestión). Nunca pongas valores en este archivo.
+#   - Variable GESTION_CICLO (opcional): key del ciclo donde publicar (ej. PROJ-60). También se puede
+#     pasar al correrlo a mano (Actions > k0lmena > Run workflow).
+name: k0lmena
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      ciclo:
+        description: "Ciclo donde publicar los resultados (vacío = no publica)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      K0LMENA_SUITES: "__SUITES__"
+      K0LMENA_ENV_FILE: ${{ github.workspace }}/.env.ci
+      GESTION_CICLO: ${{ inputs.ciclo || vars.GESTION_CICLO }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: .env desde el secret
+        env:
+          K0LMENIA_ENV: ${{ secrets.K0LMENIA_ENV }}
+        run: printf '%s\n' "$K0LMENIA_ENV" > "$K0LMENA_ENV_FILE"
+
+      - name: Dependencias de k0lmena y navegador
+        run: |
+          npm ci --prefix herramientas/k0lmena
+          cd herramientas/k0lmena && npx playwright install --with-deps chromium
+
+      - name: Suites de k0lmena
+        id: suites
+        run: |
+          estado=0
+          for suite in $K0LMENA_SUITES; do npm run test:$suite || estado=1; done
+          echo "estado=$estado" >> "$GITHUB_OUTPUT"
+
+      - name: Publicar resultados en la herramienta de gestión
+        if: always() && env.GESTION_CICLO != ''
+        run: |
+          python -m pip install -r requirements.txt
+          python herramientas/ci/ci.py publicar --suites "$K0LMENA_SUITES"
+
+      - name: Reportes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reportes-k0lmena
+          path: |
+            herramientas/k0lmena/reports/
+            output/gestion/
+          if-no-files-found: ignore
+
+      - name: Resultado de las suites
+        if: steps.suites.outputs.estado != '0'
+        run: exit 1
