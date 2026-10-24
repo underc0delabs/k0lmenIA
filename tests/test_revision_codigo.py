@@ -14,6 +14,7 @@ sys.path.insert(0, str(RAIZ / "scripts"))
 import obtener  # noqa: E402
 import revision  # noqa: E402
 import generar_informe_revision_codigo as informe  # noqa: E402
+from _i18n import ruta_en, ruta_es  # noqa: E402
 
 
 @pytest.mark.parametrize("url,prov,repo,rama,pr", [
@@ -238,7 +239,7 @@ def test_informe_html_y_markdown(tmp_path, monkeypatch):
     entrada.write_text(json.dumps(analisis), encoding="utf-8")
     md = tmp_path / "comentarios.md"
     informe.generar(entrada, tmp_path / "informe.html", md)
-    html = (tmp_path / "informe.html").read_text(encoding="utf-8")
+    html = ruta_es(tmp_path / "informe.html").read_text(encoding="utf-8")
     assert "Pedir cambios" in html and "https://github.com/a/b/blob/abc/db.py#L7" in html
     assert "interpola &lt;n&gt;" in html and "Descartados" in html and "Funciones más complejas" in html
     texto = md.read_text(encoding="utf-8")

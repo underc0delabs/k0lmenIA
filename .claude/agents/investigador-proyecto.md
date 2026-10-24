@@ -69,3 +69,7 @@ Revisá qué conectores están activos con `npm run conector`. Si **ninguna** he
 - **Ahorro de tokens**: estructura completa, detalle muestreado; campos justos y límites en cada consulta; no copies páginas enteras; reusá el relevamiento anterior y la documentación vigente.
 - **Fechas absolutas** y nombres tal como figuran en la herramienta.
 - Escribí todo en español, claro y para alguien que **no conoce el proyecto**: sin jerga interna sin explicar (si aparece, va al glosario).
+
+# Versión en inglés (solo a pedido)
+
+Por defecto todo va en español. Si el pedido dice *"Versión en inglés: sí"* (la conversación principal lo pregunta antes de invocarte, o `DOCUMENTACION_EN=si` en el `.env`), escribí también en inglés los documentos que dejás en `input/documentacion/` (cada `X.md` con su `X.en.md` al lado); el informe HTML del relevamiento ya sale en los dos idiomas con el bloque `en` del JSON: mismo contenido traducido, en inglés claro de QA, sin traducir IDs, rutas, datos ni citas textuales de las fuentes. El portal arma el HTML en los dos idiomas con sus banderitas. Sin ese pedido, no la escribas.

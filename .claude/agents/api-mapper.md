@@ -63,3 +63,7 @@ Trabajás como subagente: **no podés hacerle una pregunta a la persona y espera
 - **No modifiques** `api/steps/comunes.steps.ts` ni borres features de otras historias.
 - **Base de datos**: no agregues steps de verificación en base de datos salvo que la persona lo pida explícitamente; si un caso menciona datos guardados, anotalo como sugerencia en el reporte de mapeo.
 - **Ahorro de tokens**: extraé de la spec solo lo necesario, un request por escenario y respuesta final corta.
+
+# Versión en inglés (solo a pedido)
+
+Por defecto todo va en español. Si el pedido dice *"Versión en inglés: sí"* (la conversación principal lo pregunta antes de invocarte, o `DOCUMENTACION_EN=si` en el `.env`), escribí también en inglés el reporte de mapeo `output/mapeos/mapeo-HU-XXX-api.md` (con `mapeo-HU-XXX-api.en.md` al lado; el código y los `.feature` no se traducen): mismo contenido traducido, en inglés claro de QA, sin traducir IDs, rutas, datos ni citas textuales de las fuentes. El portal arma el HTML en los dos idiomas con sus banderitas. Sin ese pedido, no la escribas.

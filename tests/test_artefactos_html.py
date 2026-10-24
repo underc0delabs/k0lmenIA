@@ -8,6 +8,7 @@ from pathlib import Path
 
 import generar_casos
 import generar_informe_artefacto as art
+from _i18n import ruta_acceso, ruta_en, ruta_es  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parents[1]
 
@@ -108,7 +109,7 @@ def test_bug_con_ingles(tmp_path):
     (c / "BUG-004.md").write_text(BUG_ES, encoding="utf-8")
     (c / "BUG-004.en.md").write_text(BUG_EN, encoding="utf-8")
     art.generar(c / "BUG-004.md", raiz=tmp_path / "output")
-    es, en = _leer(c / "BUG-004.html"), _leer(c / "BUG-004.en.html")
+    es, en = _leer(ruta_es(c / "BUG-004.html")), _leer(ruta_en(c / "BUG-004.html"))
     assert 'lang="es"' in es and "Pasos de reproducción" in es and "DESC15" in es
     assert 'lang="en"' in en and "The coupon applies only once." in en and "Steps to reproduce" in en
     assert "Severity" in en and ">High<" in en  # la escala sale del original y la traduce el diccionario
@@ -119,7 +120,7 @@ def test_bug_sin_ingles_avisa(tmp_path):
     c = _carpeta(tmp_path, "reportes-bug")
     (c / "BUG-004.md").write_text(BUG_ES, encoding="utf-8")
     art.generar(c / "BUG-004.md", raiz=tmp_path / "output")
-    en = _leer(c / "BUG-004.en.html")
+    en = _leer(ruta_en(c / "BUG-004.html"))
     assert "did not generate the English version" in en
     assert "DESC15" in en  # el contenido queda en español
 
@@ -143,7 +144,7 @@ def test_casos_desde_generar_casos_con_bloque_en(tmp_path):
                        capture_output=True, text=True, encoding="utf-8", env={**os.environ, "K0LMENIA_PORTAL": "0", "PYTHONIOENCODING": "utf-8"})
     assert r.returncode == 0, r.stderr
     assert (c / "casos-HU-901.en.json").exists()
-    es, en = _leer(c / "casos-HU-901.html"), _leer(c / "casos-HU-901.en.html")
+    es, en = _leer(ruta_es(c / "casos-HU-901.html")), _leer(ruta_en(c / "casos-HU-901.html"))
     assert "Registro con datos válidos" in es and "Falta información" in es
     assert "Sign-up with valid data" in en and "Fill in the fields" in en and "HU-901 — Sign-up" in en
     assert "Edad mínima" in en  # CP-002 no trae inglés: queda en español
@@ -159,8 +160,9 @@ def test_casos_desde_planilla_sin_ingles(tmp_path):
     generar_casos.preparar_tiempos(data)
     generar_casos.to_xlsx(data, str(c / "casos-HU-902.xlsx"))
     escritos = art.actualizar_artefactos(tmp_path / "output")
-    assert c / "casos-HU-902.html" in escritos
-    en = _leer(c / "casos-HU-902.en.html")
+    assert c / "casos-HU-902.html" in [ruta_acceso(x) for x in escritos]
+    assert "k0-idioma" in _leer(c / "casos-HU-902.html")  # el acceso abre el idioma elegido
+    en = _leer(ruta_en(c / "casos-HU-902.html"))
     assert "did not generate the English version" in en and ">Passed<" in en
 
 
@@ -170,7 +172,7 @@ def test_feature_legible_con_outline_y_examples(tmp_path):
     (c / "HU-901-registro.feature.en").write_text(
         FEATURE.replace("Registro de cuenta", "Account sign-up").replace("Edad límite", "Age boundary"), encoding="utf-8")
     art.generar(c / "HU-901-registro.feature", raiz=tmp_path / "output")
-    es, en = _leer(c / "HU-901-registro.html"), _leer(c / "HU-901-registro.en.html")
+    es, en = _leer(ruta_es(c / "HU-901-registro.html")), _leer(ruta_en(c / "HU-901-registro.html"))
     assert "Scenario Outline" in es and "Edad límite" in es and "@falta-info" in es
     assert "<th>edad</th>" in es and "<td>17</td>" in es  # Examples como tabla
     assert "Background" in es and "estoy en el formulario de registro" in es
@@ -182,12 +184,12 @@ def test_markdown_con_tablas_ascii(tmp_path):
     c = _carpeta(tmp_path, "analisis-historias")
     (c / "analisis-HU-901.md").write_text(ANALISIS, encoding="utf-8")
     art.generar(c / "analisis-HU-901.md", raiz=tmp_path / "output")
-    es = _leer(c / "analisis-HU-901.html")
+    es = _leer(ruta_es(c / "analisis-HU-901.html"))
     assert "<table>" in es and "<th>Pregunta</th>" in es
     assert "¿Cuál es la edad mínima? La descripción dice 18 y el CA4 16." in es  # celda ajustada, unida
     assert "+=====" not in es  # la tabla ASCII no queda como texto
     assert "Ambigüedades" in es and "Riesgos" in es
-    en = _leer(c / "analisis-HU-901.en.html")
+    en = _leer(ruta_en(c / "analisis-HU-901.html"))
     assert "Ambiguities" in en and "Questions" in en
 
 
@@ -196,7 +198,7 @@ def test_datos_csv(tmp_path):
     (c / "datos-HU-901.csv").write_text("Nombre;Email;Tipo;Resultado esperado\nAna;ana@test.com;Válido;Aceptado\n"
                                         "X;mal;Inválido;Rechazado: email\n", encoding="utf-8")
     art.generar(c / "datos-HU-901.csv", raiz=tmp_path / "output")
-    es = _leer(c / "datos-HU-901.html")
+    es = _leer(ruta_es(c / "datos-HU-901.html"))
     assert "<td>ana@test.com</td>" in es and "Válido" in es
 
 
@@ -211,7 +213,7 @@ def test_lote_idempotente_y_traducciones_no_son_artefactos(tmp_path):
     assert art.actualizar_artefactos(tmp_path / "output") == []
     os.utime(c / "BUG-004.en.md", None)
     (c / "BUG-004.en.md").write_text(BUG_EN + "\n", encoding="utf-8")
-    t = (c / "BUG-004.html").stat().st_mtime + 5
+    t = max(x.stat().st_mtime for x in (c / "BUG-004.html", ruta_es(c / "BUG-004.html"), ruta_en(c / "BUG-004.html"))) + 5
     os.utime(c / "BUG-004.en.md", (t, t))
     assert [p.name for p in art.actualizar_artefactos(tmp_path / "output")] == ["BUG-004.html"]
 

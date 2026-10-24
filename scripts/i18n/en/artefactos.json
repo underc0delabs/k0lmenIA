@@ -17,7 +17,6 @@
   "Cobertura de los escenarios BDD": "BDD scenario coverage",
   "Proyecto": "Project",
   "Feature": "Feature",
-
   "Pasos de reproducción": "Steps to reproduce",
   "Precondiciones": "Preconditions",
   "Resultado actual": "Actual result",
@@ -31,7 +30,6 @@
   "Resuelto": "Resolved",
   "Rechazado": "Rejected",
   "En curso": "In progress",
-
   "Título": "Title",
   "Tiempo estimado": "Estimated time",
   "Tiempo (min)": "Time (min)",
@@ -45,7 +43,6 @@
   "Por estado": "By status",
   "casos que dependen de un dato sin definir": "test cases that depend on undefined data",
   "Total estimado": "Estimated total",
-
   "Escenarios": "Scenarios",
   "Escenario": "Scenario",
   "Ejemplos": "Examples",
@@ -53,7 +50,6 @@
   "Índice de escenarios": "Scenario index",
   "filas de Examples": "Examples rows",
   "escenarios con @falta-info": "scenarios tagged @falta-info",
-
   "Ambigüedades": "Ambiguities",
   "Preguntas": "Questions",
   "Preguntas para el PO": "Questions for the PO",
@@ -83,7 +79,6 @@
   "Aceptado": "Accepted",
   "Información faltante": "Missing information",
   "Conclusión del triador": "Triager's conclusion",
-
   "Crítica: {n}": "Critical: {n}",
   "Alta: {n}": "High: {n}",
   "Media: {n}": "Medium: {n}",
@@ -92,5 +87,24 @@
   "Aprobado: {n}": "Passed: {n}",
   "Fallido: {n}": "Failed: {n}",
   "Bloqueado: {n}": "Blocked: {n}",
-  "En ejecución: {n}": "In progress: {n}"
+  "En ejecución: {n}": "In progress: {n}",
+  "Este documento está en español: el contexto y la documentación se escriben en inglés solo a pedido (Claude lo pregunta antes de armarlos, o DOCUMENTACION_EN=si en el .env).": "This document is in Spanish: context and documentation are written in English only on request (Claude asks before writing them, or set DOCUMENTACION_EN=si in the .env).",
+  "Gestión de pruebas": "Test management",
+  "Casos subidos": "Test cases uploaded",
+  "Ciclos": "Cycles",
+  "Sin vincular a la historia": "Not linked to the story",
+  "Key": "Key",
+  "Vinculado": "Linked",
+  "Trazabilidad · {n}": "Traceability · {n}",
+  "Resultados publicados · {n}": "Published results · {n}",
+  "Aprobados": "Passed",
+  "Fallidos": "Failed",
+  "Bloqueados": "Blocked",
+  "Tags": "Tags",
+  "Evidencias": "Evidence",
+  "Carpeta": "Folder",
+  "Documentación del proyecto": "Project documentation",
+  "Casos de API (Scalar)": "API test cases (Scalar)",
+  "Trazabilidad": "Traceability",
+  "Resultados publicados": "Published results"
 }

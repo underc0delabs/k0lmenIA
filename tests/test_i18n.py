@@ -56,14 +56,19 @@ def test_localizar_mezcla_por_id_y_por_posicion():
         assert localizar(analisis)["veredicto"] == "Apto" and "en" not in localizar(analisis)
 
 
-def test_escribir_bilingue_y_selector(tmp_path):
-    from _estilos_reporte import page, section, kpi_tiles
+def test_escribir_bilingue_carpetas_acceso_y_selector(tmp_path):
+    from _estilos_reporte import page, section, kpi_tiles, miniatura
+    from _i18n import ruta_acceso, ruta_es
     salida = tmp_path / "informe-x.html"
-    escribir_bilingue(salida, lambda: page("Informe", "Prueba", "", section("Resumen", kpi_tiles([("Casos", 3, "ok")]))))
-    es, en = salida.read_text(encoding="utf-8"), ruta_en(salida).read_text(encoding="utf-8")
-    assert ruta_en(salida).name == "informe-x.en.html"
+    cuerpo = lambda: page("Informe", "Prueba", "", section("Resumen", kpi_tiles([("Casos", 3, "ok")]) + miniatura("capturas/a.png", "a")))  # noqa: E731
+    es_, en_ = escribir_bilingue(salida, cuerpo)
+    assert es_ == tmp_path / "es" / "informe-x.html" and en_ == tmp_path / "en" / "informe-x.html"
+    assert ruta_en(salida) == en_ and ruta_es(en_) == es_ and ruta_acceso(en_) == salida
+    es, en, acceso = es_.read_text(encoding="utf-8"), en_.read_text(encoding="utf-8"), salida.read_text(encoding="utf-8")
     assert '<html lang="es">' in es and '<html lang="en">' in en
+    assert "k0-idioma" in acceso and 'href="es/informe-x.html"' in acceso and 'href="en/informe-x.html"' in acceso
     assert 'class="idioma"' in es and 'data-idioma="en"' in es and 'data-idioma="es"' in en
     assert ">Resumen<" in es and ">Summary<" in en and "Test cases" in en
+    assert 'href="../capturas/a.png"' in es and 'src="../capturas/a.png"' in en  # la evidencia queda en la unidad
     assert "Buscar en la tabla…" in es and "Search the table…" in en  # el JS del informe también
     assert _i18n.idioma_actual() == "es"  # vuelve al español después de escribir

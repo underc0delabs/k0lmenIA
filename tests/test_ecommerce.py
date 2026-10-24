@@ -15,6 +15,7 @@ import prestashop  # noqa: E402
 import shopify  # noqa: E402
 import vtex  # noqa: E402
 import wordpress  # noqa: E402
+from _i18n import ruta_en, ruta_es  # noqa: E402
 
 
 def test_autorizacion_por_host_y_ruta():
@@ -240,7 +241,7 @@ def test_informe_html_con_analisis_e_historial(tmp_path, monkeypatch):
                 "falta_informacion": [{"id": "FI-01", "que_falta": "monto mínimo de envío gratis", "pregunta": "¿Cuál es?"}]}
     (tmp_path / "analisis.json").write_text(json.dumps(analisis, ensure_ascii=False), encoding="utf-8")
     gi.generar(tmp_path / "wordpress.json", tmp_path / "informe-wordpress.html", tmp_path / "analisis.json")
-    html = (tmp_path / "informe-wordpress.html").read_text(encoding="utf-8")
+    html = ruta_es(tmp_path / "informe-wordpress.html").read_text(encoding="utf-8")
     for esperado in ("WordPress / WooCommerce", "Lista con 1 riesgo", "Pasarela en modo REAL", "Pago rechazado", "Pasarelas de pago",
                      "FI-01", "HTTP 403", "Evolución de las corridas", "Chequeos de la vidriera"):
         assert esperado in html, esperado

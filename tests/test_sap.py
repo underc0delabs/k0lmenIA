@@ -11,6 +11,7 @@ sys.path.insert(0, str(RAIZ / "herramientas" / "sap"))
 
 import generar_informe_sap as gi  # noqa: E402
 import sap_gui  # noqa: E402
+from _i18n import ruta_en, ruta_es  # noqa: E402
 
 ANALISIS = {
     "titulo": "SAP — HU-010 (Order to Cash)", "historia": "HU-010", "ambiente": "QA (no productivo)",
@@ -36,7 +37,7 @@ def _gen(tmp_path, datos, monkeypatch):
     monkeypatch.setenv("K0LMENIA_PORTAL", "0")
     (tmp_path / "analisis.json").write_text(json.dumps(datos, ensure_ascii=False), encoding="utf-8")
     gi.generar(tmp_path / "analisis.json", tmp_path / "informe.html")
-    return (tmp_path / "informe.html").read_text(encoding="utf-8")
+    return ruta_es(tmp_path / "informe.html").read_text(encoding="utf-8")
 
 
 def test_informe_completo(tmp_path, monkeypatch):

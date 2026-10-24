@@ -124,10 +124,10 @@ def test_tablero_cli_informe_historial_y_analisis(proyecto, capsys):
                                                "recomendaciones": [{"accion": "Automatizar HU-002", "porque": "3 casos manuales", "prioridad": "Alta"}],
                                                "notas": {"HU-002": "en curso"}})
     assert tablero.main(["--nombre", "sprint 12", "--analisis", str(analisis)]) == 0
-    html = (carpeta / "informe-tablero.html").read_text(encoding="utf-8")
+    html = (carpeta / "es" / "informe-tablero.html").read_text(encoding="utf-8")
     assert "Apto con observaciones" in html and "Automatizar HU-002" in html and "en curso" in html
     assert "Evolución de las corridas" in html  # la corrida anterior quedó en historial/
-    en = (carpeta / "informe-tablero.en.html").read_text(encoding="utf-8")
+    en = (carpeta / "en" / "informe-tablero.html").read_text(encoding="utf-8")
     assert 'lang="en"' in en and "Quality dashboard" in en and "Pass with observations" in en
     assert len(list((carpeta / "historial").iterdir())) == 1
     assert tablero.main(["--nombre", "sprint 12", "--solo-informe"]) == 0
@@ -193,15 +193,15 @@ def test_portal_html_con_links_relativos(tmp_path):
     o = tmp_path / "output"
     _escribir(o / "accesibilidad" / "mi-app.com" / "informe-accesibilidad.html", "x")
     destino, h = portal.generar(o, tmp_path / "no-existe")
-    html = destino.read_text(encoding="utf-8")
-    assert destino == o / "index.html"
-    assert 'href="accesibilidad/mi-app.com/informe-accesibilidad.html"' in html
+    html = (o / "es" / "index.html").read_text(encoding="utf-8")
+    assert destino == o / "index.html" and "k0-idioma" in destino.read_text(encoding="utf-8")  # el acceso abre el idioma elegido
+    assert 'href="../accesibilidad/mi-app.com/informe-accesibilidad.html"' in html
     assert "Accesibilidad" in html and "Portal de informes" in html
 
 
 def test_portal_sin_output_y_tonos(tmp_path):
     destino, h = portal.generar(tmp_path / "output", tmp_path / "reports")
-    assert "Cuando los agentes generen informes" in destino.read_text(encoding="utf-8")
+    assert "Cuando los agentes generen informes" in (destino.parent / "es" / "index.html").read_text(encoding="utf-8")
     assert portal._tono("No apto") == "bad" and portal._tono("Apto con observaciones") == "warn"
     assert portal._tono("Apto") == "ok" and portal._tono("10/10 aprobados") == "ok" and portal._tono("5/10 aprobados") == "bad"
 
@@ -228,7 +228,7 @@ def test_portal_historia_y_filtros(tmp_path):
     (d / "informe-permisos.html").write_text("<html></html>", encoding="utf-8")
     (d / "analisis.json").write_text('{"veredicto": "Hay accesos indebidos: crítico"}', encoding="utf-8")
     destino, _ = portal.generar(tmp_path / "output", tmp_path / "reports")
-    html = destino.read_text(encoding="utf-8")
+    html = (destino.parent / "es" / "index.html").read_text(encoding="utf-8")
     assert 'id="filtros"' in html and 'name="desde"' in html and 'name="conhist"' in html
     assert 'data-herr="permisos"' in html and 'data-hist="HU-002" data-tono="bad"' in html
     assert 'id="cat-web"' in html and 'data-nav="Web"' in html  # permisos cae en la categoría Web
@@ -237,30 +237,46 @@ def test_portal_historia_y_filtros(tmp_path):
 
 def test_portal_categorias_historial_e_ingles(tmp_path):
     o = tmp_path / "output"
-    _escribir(o / "accesibilidad" / "app.com" / "informe-accesibilidad.html", "x")
-    _escribir(o / "accesibilidad" / "app.com" / "informe-accesibilidad.en.html", "x")
-    _escribir(o / "accesibilidad" / "app.com" / "historial" / "2026-10-01T10-00-00" / "informe-accesibilidad.html", "viejo")
-    _escribir(o / "accesibilidad" / "app.com" / "historial" / "2026-09-20T08-30-00" / "informe-accesibilidad.html", "más viejo")
+    unidad = o / "accesibilidad" / "app.com"
+    _escribir(unidad / "informe-accesibilidad.html", "acceso")
+    _escribir(unidad / "es" / "informe-accesibilidad.html", "x")
+    _escribir(unidad / "en" / "informe-accesibilidad.html", "x")
+    _escribir(unidad / "historial" / "2026-10-01T10-00-00" / "informe-accesibilidad.html", "acceso")
+    _escribir(unidad / "historial" / "2026-10-01T10-00-00" / "es" / "informe-accesibilidad.html", "viejo")
+    _escribir(unidad / "historial" / "2026-10-01T10-00-00" / "en" / "informe-accesibilidad.html", "old")
+    _escribir(unidad / "historial" / "2026-09-20T08-30-00" / "informe-accesibilidad.html", "más viejo, de antes de los idiomas")
     _escribir(o / "reportes-bug" / "BUG-001.html", "x")
     k0 = tmp_path / "reports"
     _escribir(k0 / "web" / "index.html", "x")
     _escribir(k0 / "web" / "cucumber-report.json", [{"elements": [_escenario("a", [], "passed")]}])
 
     h = portal.descubrir(o, k0)
-    assert [u["html"].name for u in h["accesibilidad"]] == ["informe-accesibilidad.html"]  # el .en.html no es otro informe
+    assert [u["html"].name for u in h["accesibilidad"]] == ["informe-accesibilidad.html"]  # es/ y en/ no son otros informes
     todas = portal.entradas(h)
     acc = [x for x in todas if x["herramienta"] == "accesibilidad"]
     assert [x["anterior"] for x in acc] == [False, True, True]
     assert acc[1]["fecha"].strftime("%Y-%m-%d %H:%M") == "2026-10-01 10:00"
-    assert acc[0]["html_en"].name == "informe-accesibilidad.en.html" and acc[1]["html_en"] is None
+    assert acc[0]["html"].parent.name == "es" and acc[0]["html_en"].parent.name == "en"
+    assert acc[1]["html_en"].parent.name == "en"
+    assert acc[2]["html_en"] is None and acc[2]["html"].parent.name == "2026-09-20T08-30-00"  # informe viejo: el que hay
     assert {x["categoria"] for x in todas} == {"web", "bugs", "automatizadas"}
 
     destino, _ = portal.generar(o, k0)
-    es, en = destino.read_text(encoding="utf-8"), (o / "index.en.html").read_text(encoding="utf-8")
+    es, en = (o / "es" / "index.html").read_text(encoding="utf-8"), (o / "en" / "index.html").read_text(encoding="utf-8")
     assert 'id="cat-automatizadas"' in es and 'id="cat-bugs"' in es and 'data-anterior="1"' in es
-    assert 'lang="en"' in en and 'href="accesibilidad/app.com/informe-accesibilidad.en.html"' in en
+    assert 'href="../accesibilidad/app.com/es/informe-accesibilidad.html"' in es
+    assert 'lang="en"' in en and 'href="../accesibilidad/app.com/en/informe-accesibilidad.html"' in en
     assert "Automated tests" in en and "Report portal" in en
 
+
+def test_portal_suma_evals_e_investigacion(tmp_path):
+    o = tmp_path / "output"
+    _escribir(o / "investigacion" / "mi-proyecto" / "informe-investigacion.html", "x")
+    evals = tmp_path / "evals"
+    _escribir(evals / "20261023-235727" / "informe-evals.html", "x")
+    h = portal.descubrir(o, None, evals)
+    assert h["evals"] and portal.categoria_de("evals") == "calidad"
+    assert portal.categoria_de("investigacion") == "documentacion" and portal.NOMBRES["investigacion"] == "Relevamiento del proyecto"
 
 def test_tablero_calcula_el_ahorro_al_automatizar(monkeypatch):
     # 2 casos automatizados (10 y 20 min a mano, 0,5 y 1 min automatizado) y 1 manual (15 min pendientes).

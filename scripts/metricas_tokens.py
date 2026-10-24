@@ -53,7 +53,7 @@ _P = {  # modelo: (entrada, salida, lectura de caché o None)
 }
 PRECIOS = {m: {"entrada": e, "salida": s, "cache_5m": e * 1.25, "cache_1h": e * 2.0, "cache_lectura": r if r is not None else e * 0.1}
            for m, (e, s, r) in _P.items()}
-GENERADOS = ["metricas.json", "informe-metricas.html", "informe-metricas.en.html"]
+GENERADOS = ["metricas.json", "informe-metricas.html"]
 PRINCIPAL = "conversación principal"
 # Un agente usado esta cantidad de veces o más en el período es candidato a automatizar.
 UMBRAL_REPETIDO = 5

@@ -786,11 +786,12 @@ ul{margin:.2em 0;padding-left:1.1em}li{margin:.35em 0}.muted{color:var(--muted)}
     from _i18n import idioma_actual, traducir_html
     lang = idioma_actual()
     otro = "en" if lang == "es" else "es"
-    # Link al otro idioma (presentacion-investigacion.html <-> presentacion-investigacion.en.html).
+    # Link al otro idioma: cada versión vive en su carpeta (es/presentacion-investigacion.html, en/…).
     css += ".nav a{color:var(--accent);text-decoration:none;margin-left:8px}"
-    js += (r"(function(){var a=document.querySelector('.nav a[data-idioma]');if(!a)return;"
-           r"var f=decodeURIComponent(location.pathname.split('/').pop()||'');"
-           r"a.href=encodeURIComponent(a.getAttribute('data-idioma')==='en'?f.replace(/\.html$/i,'.en.html'):f.replace(/\.en\.html$/i,'.html'));})();")
+    js += (r"(function(){var k='k0-idioma';try{localStorage.setItem(k,'" + lang + r"');}catch(e){}"
+           r"var a=document.querySelector('.nav a[data-idioma]');if(!a)return;"
+           r"a.href='../'+a.getAttribute('data-idioma')+'/'+(location.pathname.split('/').pop()||'');"
+           r"a.addEventListener('click',function(){try{localStorage.setItem(k,a.getAttribute('data-idioma'));}catch(e){}});})();")
     documento = (f'<!doctype html><html lang="{lang}"><head><meta charset="utf-8">'
                  f'<meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="dark">'
                  f'<title>{e(d.get("proyecto", "Proyecto"))} — {_tr("presentación", "presentation")}</title><style>{css}</style></head>'
@@ -822,8 +823,12 @@ def guardar_historial(carpeta, archivos, maximo=MAX_HISTORIAL):
     destino = hist / datetime.now().strftime("%Y-%m-%d-%H%M%S")
     destino.mkdir(parents=True, exist_ok=True)
     for a in archivos:
-        if Path(a).exists():
-            shutil.copy2(a, destino / Path(a).name)
+        a = Path(a)
+        if a.exists():
+            # Las versiones por idioma (es/, en/) conservan su carpeta en el historial.
+            sub = destino / a.parent.name if a.parent.name in ("es", "en") else destino
+            sub.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(a, sub / a.name)
     for viejo in sorted((p for p in hist.iterdir() if p.is_dir()), reverse=True)[maximo:]:
         shutil.rmtree(viejo, ignore_errors=True)
     return destino
@@ -956,7 +961,7 @@ def main(argv=None):
     carpeta = Path(a.salida) if a.salida else origen.resolve().parent
     carpeta.mkdir(parents=True, exist_ok=True)
     cambios = None if a.sin_historial else comparar(d, anterior(carpeta))
-    from _i18n import escribir_bilingue, localizar, ruta_en
+    from _i18n import escribir_bilingue, localizar, ruta_en, ruta_es
     html = carpeta / "informe-investigacion.html"
     escribir_bilingue(html, lambda: build_html(localizar(d), cambios))
     md = carpeta / "informe-investigacion.md"
@@ -968,7 +973,8 @@ def main(argv=None):
     presentacion = carpeta / "presentacion-investigacion.html"
     escribir_bilingue(presentacion, lambda: build_presentacion(localizar(d)))
     if not a.sin_historial:
-        guardar_historial(carpeta, [origen, html, ruta_en(html), md, resumen, presentacion, ruta_en(presentacion)])
+        guardar_historial(carpeta, [origen, html, ruta_es(html), ruta_en(html), md, resumen, presentacion,
+                                    ruta_es(presentacion), ruta_en(presentacion)])
     print(f"Relevamiento: {html}")
     print(f"  resumen breve: {resumen}")
     print(f"  presentación (imprime a PDF): {presentacion}")

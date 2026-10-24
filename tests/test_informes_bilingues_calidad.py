@@ -7,6 +7,7 @@ import generar_informe_cierre
 import generar_informe_performance
 import generar_informe_seguridad
 import generar_plan
+from _i18n import ruta_en, ruta_es  # noqa: E402
 
 
 def _correr(modulo, argv, monkeypatch):
@@ -15,8 +16,10 @@ def _correr(modulo, argv, monkeypatch):
 
 
 def _par(salida):
-    es = salida.read_text(encoding="utf-8")
-    en = salida.with_name(salida.stem + ".en.html").read_text(encoding="utf-8")
+    acceso = salida.read_text(encoding="utf-8")  # el acceso abre el idioma elegido
+    assert "k0-idioma" in acceso and "es/" in acceso and "en/" in acceso
+    es = ruta_es(salida).read_text(encoding="utf-8")
+    en = ruta_en(salida).read_text(encoding="utf-8")
     assert '<html lang="es">' in es and '<html lang="en">' in en
     assert 'class="idioma"' in es and 'data-idioma="en"' in es and 'data-idioma="es"' in en
     return es, en

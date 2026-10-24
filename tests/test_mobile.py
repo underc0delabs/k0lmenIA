@@ -8,6 +8,7 @@ import pytest
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ / "scripts"))
 import generar_informe_mobile as gi  # noqa: E402
+from _i18n import ruta_en, ruta_es  # noqa: E402
 
 ANALISIS = {
     "titulo": "MiApp — HU-010", "historia": "HU-010", "ambiente": "QA", "generado": "2026-10-19T12:00:00",
@@ -29,7 +30,7 @@ def _gen(tmp_path, datos, monkeypatch):
     monkeypatch.setenv("K0LMENIA_PORTAL", "0")
     (tmp_path / "analisis.json").write_text(json.dumps(datos, ensure_ascii=False), encoding="utf-8")
     gi.generar(tmp_path / "analisis.json", tmp_path / "informe.html")
-    return (tmp_path / "informe.html").read_text(encoding="utf-8")
+    return ruta_es(tmp_path / "informe.html").read_text(encoding="utf-8")
 
 
 def test_informe_completo(tmp_path, monkeypatch):

@@ -317,6 +317,16 @@ def revisar_env(ctx):
     elif autorizadas:
         linea(OK, f"Seguridad web: {len(autorizadas)} URL(s) autorizada(s)")
     _revisar_navegador(env, archivo)
+    _revisar_idioma(env, archivo)
+
+
+def _revisar_idioma(env, archivo):
+    """DOCUMENTACION_EN: vacío (Claude pregunta), si o no."""
+    valor = (env.get("DOCUMENTACION_EN") or "").strip().lower()
+    if valor and valor not in ("si", "sí", "no"):
+        linea(FALTA, f"DOCUMENTACION_EN={valor} no es válido", "Usá si, no o dejalo vacío (Claude pregunta)")
+    elif valor:
+        linea(OK, f"Contexto y documentación en inglés: {'siempre' if valor != 'no' else 'nunca'}")
 
 
 def _revisar_navegador(env, archivo):

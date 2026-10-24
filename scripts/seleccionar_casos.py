@@ -550,7 +550,7 @@ def main():
             c["etiquetas"] = sorted(c["etiquetas"])
             c.pop("texto", None)
         # La selección anterior con el mismo nombre pasa a historial/<fecha>/ (se guardan las últimas 5).
-        _historial.archivar(carpeta, ["seleccion.json", "seleccion.csv", "informe-seleccion.html", "informe-seleccion.en.html", "analisis.json", "cambios.json"], "seleccion.json")
+        _historial.archivar(carpeta, ["seleccion.json", "seleccion.csv", "informe-seleccion.html", "analisis.json", "cambios.json"], "seleccion.json")
         carpeta.mkdir(parents=True, exist_ok=True)
         orden = {g: i for i, g in enumerate(GRUPOS)}
         casos.sort(key=lambda c: (orden[c["grupo"]], -c["puntaje"], c["historia"], c["id"]))

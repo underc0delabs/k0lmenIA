@@ -11,6 +11,7 @@ sys.path.insert(0, str(RAIZ / "herramientas" / "mensajeria"))
 
 import generar_informe_mensajeria as gi  # noqa: E402
 import mensajeria  # noqa: E402
+from _i18n import ruta_en, ruta_es  # noqa: E402
 
 
 def test_verificar_orden():
@@ -42,7 +43,7 @@ def test_informe(tmp_path, monkeypatch):
              "falta_informacion": [{"id": "FI-01", "que_falta": "clave de dedup", "pregunta": "¿con qué id deduplica?"}]}
     (tmp_path / "a.json").write_text(json.dumps(datos, ensure_ascii=False), encoding="utf-8")
     gi.generar(tmp_path / "a.json", tmp_path / "i.html")
-    html = (tmp_path / "i.html").read_text(encoding="utf-8")
+    html = ruta_es(tmp_path / "i.html").read_text(encoding="utf-8")
     assert "Eventos — HU-010" in html and "Kafka" in html and "Doble procesamiento" in html and "FI-01" in html
     assert "publicar el mismo evento dos veces" in html
 

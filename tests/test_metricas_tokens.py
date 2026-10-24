@@ -2,6 +2,7 @@
 import json
 
 import metricas_tokens as mt
+from _i18n import ruta_en, ruta_es  # noqa: E402
 
 
 def _respuesta(mid, modelo, entrada, salida, lectura=0, escritura=0, ts="2026-10-14T12:00:00Z", herramientas=(), texto="secreto"):
@@ -72,15 +73,15 @@ def test_cli_e_informe_y_candidatos(tmp_path, capsys):
     assert mt.main(["--carpeta", str(base), "--salida", str(salida), "--nombre", "t"]) == 0
     d = json.loads((salida / "metricas.json").read_text(encoding="utf-8"))
     assert any(o["tipo"] == "Candidato a automatizar" and o["agente"] == "ejecutor-e2e" for o in d["oportunidades"])
-    html = (salida / "informe-metricas.html").read_text(encoding="utf-8")
+    html = ruta_es(salida / "informe-metricas.html").read_text(encoding="utf-8")
     assert "Costo por agente" in html and "secreto" not in html
-    en = (salida / "informe-metricas.en.html").read_text(encoding="utf-8")
+    en = ruta_en(salida / "informe-metricas.html").read_text(encoding="utf-8")
     assert "Cost per agent" in en and "Automation candidate" in en and "secreto" not in en
 
 
 def test_sin_transcripciones_lo_dice(tmp_path, capsys):
     assert mt.main(["--carpeta", str(tmp_path / "no-existe"), "--salida", str(tmp_path / "o")]) == 0
-    assert "No encuentro las transcripciones" in (tmp_path / "o" / "informe-metricas.html").read_text(encoding="utf-8")
+    assert "No encuentro las transcripciones" in ruta_es(tmp_path / "o" / "informe-metricas.html").read_text(encoding="utf-8")
 
 
 def test_tablero_suma_uso_de_tokens(tmp_path):

@@ -4,6 +4,7 @@ import json
 import pytest
 
 import generar_informe_investigacion as inv
+from _i18n import ruta_en, ruta_es  # noqa: E402
 
 RELEVAMIENTO = {
     "proyecto": "Tienda online", "clave": "PROJ", "fecha": "2026-10-19", "profundidad": "normal", "para": "QA manual",
@@ -57,7 +58,7 @@ def _escribir(carpeta, datos):
 def test_html_y_md(tmp_path):
     archivo = _escribir(tmp_path / "proj", RELEVAMIENTO)
     assert inv.main([str(archivo), "--input", str(tmp_path / "doc")]) == 0
-    html = (tmp_path / "proj" / "informe-investigacion.html").read_text(encoding="utf-8")
+    html = ruta_es(tmp_path / "proj" / "informe-investigacion.html").read_text(encoding="utf-8")
     assert "Relevamiento de Tienda online" in html
     assert "AMB-01" in html and "P-01" in html and "Reembolso inmediato" in html
     assert "PROJ-45 <b>vs.</b> Confluence" in html  # las dos fuentes de la contradicción, juntas
@@ -79,7 +80,7 @@ def test_html_y_md(tmp_path):
     resumen = (tmp_path / "proj" / "resumen.md").read_text(encoding="utf-8")
     assert "# Tienda online — resumen" in resumen and "Las 3 preguntas más urgentes" in resumen and "reembolso" in resumen.lower()
     # Presentación autocontenida
-    pres = (tmp_path / "proj" / "presentacion-investigacion.html").read_text(encoding="utf-8")
+    pres = ruta_es(tmp_path / "proj" / "presentacion-investigacion.html").read_text(encoding="utf-8")
     assert pres.startswith("<!doctype html>") and "De un vistazo" in pres and "Arquitectura" in pres
     assert pres.count('<section class="s"') >= 5 and "imprimí a PDF" in pres
     # Lo relevado queda como documentación del proyecto para los demás agentes, con el encabezado del índice
@@ -104,7 +105,7 @@ def test_compara_con_el_relevamiento_anterior(tmp_path):
     import time
     time.sleep(1.1)  # el historial se nombra por segundo
     assert inv.main([str(_escribir(carpeta, nuevo)), "--sin-input"]) == 0
-    html = (carpeta / "informe-investigacion.html").read_text(encoding="utf-8")
+    html = ruta_es(carpeta / "informe-investigacion.html").read_text(encoding="utf-8")
     assert "Cambios desde el relevamiento anterior" in html
     assert "No hay criterios para el cupón" in html and "Reembolso inmediato vs. 48 h hábiles" in html  # nueva y resuelta
     assert "Resuelta" in html and "Nueva" in html

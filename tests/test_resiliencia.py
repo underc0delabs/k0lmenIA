@@ -8,6 +8,7 @@ RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ / "scripts"))
 
 import generar_informe_resiliencia as informe  # noqa: E402
+from _i18n import ruta_es  # noqa: E402
 
 
 def _datos():
@@ -50,4 +51,4 @@ def test_linea_de_comandos_y_evolucion(tmp_path):
     salida = tmp_path / "informe-resiliencia.html"
     r = subprocess.run([sys.executable, str(RAIZ / "scripts" / "generar_informe_resiliencia.py"), str(datos), str(salida)], capture_output=True, text=True)
     assert r.returncode == 0, r.stderr
-    assert "Evolución de las corridas" in salida.read_text(encoding="utf-8")
+    assert "Evolución de las corridas" in ruta_es(salida).read_text(encoding="utf-8")

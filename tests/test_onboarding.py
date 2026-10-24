@@ -2,6 +2,7 @@
 import json
 
 import generar_onboarding as onb
+from _i18n import ruta_en, ruta_es  # noqa: E402
 
 PLAN = {
     "persona": "Ana Pérez", "rol": "QA manual", "proyecto": "Tienda", "fecha": "2026-10-14",
@@ -23,9 +24,9 @@ def test_html_y_md(tmp_path):
     archivo = tmp_path / "plan.json"
     archivo.write_text(json.dumps(PLAN, ensure_ascii=False), encoding="utf-8")
     assert onb.main([str(archivo), "--salida", str(tmp_path / "o")]) == 0
-    html = (tmp_path / "o" / "plan-onboarding.html").read_text(encoding="utf-8")
+    html = ruta_es(tmp_path / "o" / "plan-onboarding.html").read_text(encoding="utf-8")
     assert "Onboarding · Ana Pérez" in html and "Generá los casos de PROJ-12" in html and "FI-01" in html
-    en = (tmp_path / "o" / "plan-onboarding.en.html").read_text(encoding="utf-8")
+    en = ruta_en(tmp_path / "o" / "plan-onboarding.html").read_text(encoding="utf-8")
     assert 'lang="en"' in en and "Plan for the first weeks" in en and "' of '+cajas.length" in en
     assert html.count('type="checkbox"') == 2 and "localStorage" in html and "1 pendiente(s)" in html
     md = (tmp_path / "o" / "plan-onboarding.md").read_text(encoding="utf-8")

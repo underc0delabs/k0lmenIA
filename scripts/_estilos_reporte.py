@@ -562,7 +562,7 @@ _JS_EN = [
 
 
 def _selector_idioma(actual):
-    """ES / EN: cada informe sale en dos archivos (informe.html e informe.en.html) y este selector lleva al otro."""
+    """ES / EN: cada idioma vive en su carpeta (es/informe.html, en/informe.html) y este selector lleva al otro."""
     nombres = {"es": "Español", "en": "English"}
     partes = []
     for cod in ("es", "en"):
@@ -571,9 +571,13 @@ def _selector_idioma(actual):
             partes.append(f'<span class="on" aria-current="true" title="{nombres[cod]}">{contenido}</span>')
         else:
             partes.append(f'<a href="#" data-idioma="{cod}" title="{nombres[cod]}" lang="{cod}">{contenido}</a>')
-    script = (r"<script>(function(){var a=document.querySelector('.idioma a[data-idioma]');if(!a)return;"
-              r"var f=decodeURIComponent(location.pathname.split('/').pop()||'');"
-              r"a.href=encodeURIComponent(a.getAttribute('data-idioma')==='en'?f.replace(/\.html$/i,'.en.html'):f.replace(/\.en\.html$/i,'.html'));})();</script>")
+    # Cada idioma vive en su carpeta (unidad/es/x.html, unidad/en/x.html): la banderita lleva a la otra y recuerda
+    # la elección (el acceso unidad/x.html y el portal la usan para abrir siempre ese idioma).
+    script = (r"<script>(function(){var k='k0-idioma';try{localStorage.setItem(k,'" + actual + r"');}catch(e){}"
+              r"var a=document.querySelector('.idioma a[data-idioma]');if(!a)return;"
+              r"var f=location.pathname.split('/').pop()||'';"
+              r"a.href='../'+a.getAttribute('data-idioma')+'/'+f;"
+              r"a.addEventListener('click',function(){try{localStorage.setItem(k,a.getAttribute('data-idioma'));}catch(e){}});})();</script>")
     return f'<nav class="idioma" aria-label="Idioma">{"".join(partes)}</nav>{script}'
 
 

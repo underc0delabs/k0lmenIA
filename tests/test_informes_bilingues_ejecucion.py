@@ -8,6 +8,9 @@ from pathlib import Path
 
 import pytest
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+from _i18n import ruta_en, ruta_es  # noqa: E402
+
 RAIZ = Path(__file__).resolve().parents[1]
 CON_ANALISIS = ["generar_informe_exploratorio", "generar_informe_accesibilidad", "generar_informe_rendimiento",
                 "generar_informe_pixel_perfect", "generar_informe_cross_browser", "generar_informe_reparacion",
@@ -25,8 +28,10 @@ def _correr(script, *args, cwd):
 
 
 def _par(carpeta, nombre):
-    es, en = carpeta / f"{nombre}.html", carpeta / f"{nombre}.en.html"
-    assert es.exists() and en.exists(), "tiene que escribir las dos versiones"
+    acceso = carpeta / f"{nombre}.html"
+    es, en = ruta_es(acceso), ruta_en(acceso)
+    assert es.exists() and en.exists(), "tiene que escribir las dos versiones (es/ y en/)"
+    assert "k0-idioma" in acceso.read_text(encoding="utf-8"), "el acceso abre el idioma elegido"
     return es.read_text(encoding="utf-8"), en.read_text(encoding="utf-8")
 
 

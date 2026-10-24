@@ -32,8 +32,8 @@ scripts/estimacion.py (columna "Tiempo estimado (min)" del .xlsx, con el total a
 (ej. {"titulo": "...", "pasos": "...", "resultado": "..."} dentro de cada caso; {"modulo": "...",
 "falta_informacion": [...]} en el general). Con eso se escribe <salida>.en.json al lado de la planilla y el
 informe HTML sale completo en inglés. Prioridad y estado no se traducen (los traduce el informe).
-Al terminar se arma el informe HTML de los casos en los dos idiomas (<salida>.html y <salida>.en.html,
-scripts/generar_informe_artefacto.py).
+Al terminar se arma el informe HTML de los casos en los dos idiomas (es/<salida>.html y en/<salida>.html, más el
+acceso <salida>.html que abre el idioma elegido; scripts/generar_informe_artefacto.py).
 "falta_info" (opcional, por caso): IDs de "Falta información" de los que depende el caso.
 Esos casos se resaltan en la planilla, suman la etiqueta @falta-info y el detalle en
 Comentarios. "falta_informacion" (opcional) arma la hoja "Falta información" del .xlsx
@@ -327,7 +327,7 @@ def informe_html(salida_xlsx):
     try:
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
         from generar_informe_artefacto import generar
-        print(f"OK: {generar(salida_xlsx)} (y su versión .en.html)")
+        print(f"OK: {generar(salida_xlsx)} (versiones en es/ y en/)")
     except Exception as ex:  # noqa: BLE001
         print(f"[aviso] No se pudo armar el informe HTML de los casos: {type(ex).__name__}: {ex}", file=sys.stderr)
 

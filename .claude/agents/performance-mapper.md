@@ -75,3 +75,7 @@ Trabajás como subagente: **no podés hacerle una pregunta a la persona y espera
 - **Secretos**: solo por variables del `.env` de la raíz; no los imprimas ni los escribas en scripts o reportes.
 - **No modifiques** `performance/k6/lib/k0lmena.ts`, `performance/jmeter/plantilla/`, `run-perf.js` ni scripts de otras historias.
 - **Ahorro de tokens**: una sola validación smoke por script, el resumen como única lectura de cada corrida y respuesta final corta.
+
+# Versión en inglés (solo a pedido)
+
+Por defecto todo va en español. Si el pedido dice *"Versión en inglés: sí"* (la conversación principal lo pregunta antes de invocarte, o `DOCUMENTACION_EN=si` en el `.env`), escribí también en inglés el reporte de mapeo `output/mapeos/mapeo-HU-XXX-performance.md` (con `mapeo-HU-XXX-performance.en.md` al lado; los scripts no se traducen): mismo contenido traducido, en inglés claro de QA, sin traducir IDs, rutas, datos ni citas textuales de las fuentes. El portal arma el HTML en los dos idiomas con sus banderitas. Sin ese pedido, no la escribas.

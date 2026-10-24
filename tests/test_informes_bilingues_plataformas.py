@@ -4,6 +4,7 @@ import importlib
 import json
 
 import pytest
+from _i18n import ruta_en, ruta_es  # noqa: E402
 
 SOLO_ANALISIS = ["billeteras", "dependencias", "desktop", "ia", "mensajeria", "mobile", "sap", "sast", "soap",
                  "revision_codigo"]
@@ -23,8 +24,10 @@ ANALISIS = {"titulo": "Informe", "resumen": "Resumen en castellano", "veredicto"
 
 
 def _comprobar(salida):
-    es = salida.read_text(encoding="utf-8")
-    en = salida.with_name(salida.stem + ".en.html").read_text(encoding="utf-8")
+    acceso = salida.read_text(encoding="utf-8")  # el acceso abre el idioma elegido
+    assert "k0-idioma" in acceso and "es/" in acceso and "en/" in acceso
+    es = ruta_es(salida).read_text(encoding="utf-8")
+    en = ruta_en(salida).read_text(encoding="utf-8")
     assert 'lang="es"' in es and 'lang="en"' in en
     assert 'class="idioma"' in es and 'class="idioma"' in en
     assert "Summary in English" in en and "Works fine" in en and "Summary in English" not in es
@@ -70,8 +73,8 @@ def test_investigacion_informe_y_presentacion_bilingues(tmp_path):
                                   "en": {"resumen": "A store"}}), encoding="utf-8")
     assert inv.main([str(origen), "--sin-input", "--sin-historial"]) == 0
     for nombre in ("informe-investigacion", "presentacion-investigacion"):
-        es = (tmp_path / f"{nombre}.html").read_text(encoding="utf-8")
-        en = (tmp_path / f"{nombre}.en.html").read_text(encoding="utf-8")
+        es = ruta_es(tmp_path / f"{nombre}.html").read_text(encoding="utf-8")
+        en = ruta_en(tmp_path / f"{nombre}.html").read_text(encoding="utf-8")
         assert 'lang="en"' in en and "A store" in en and "Una tienda" in es and "A store" not in es
-    en = (tmp_path / "informe-investigacion.en.html").read_text(encoding="utf-8")
+    en = ruta_en(tmp_path / "informe-investigacion.html").read_text(encoding="utf-8")
     assert "Project survey: Acme" in en and "Surveyed from the board" in en

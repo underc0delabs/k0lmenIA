@@ -32,7 +32,7 @@ const { archivar } = require('../historial/historial.js');
 const RAIZ = path.resolve(__dirname, '..', '..', '..', '..');
 const K0 = path.resolve(__dirname, '..', '..');
 const desde = (p) => path.resolve(process.env.INIT_CWD || process.cwd(), p);
-const GENERADOS = ['monitoreo.json', 'informe-monitoreo.html', 'informe-monitoreo.en.html', 'escenarios'];
+const GENERADOS = ['monitoreo.json', 'informe-monitoreo.html', 'escenarios'];
 const METODOS = new Set(['GET', 'HEAD']);
 
 function argumentos(argv) {

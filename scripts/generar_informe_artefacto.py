@@ -4,7 +4,8 @@ Informe HTML (ES + EN) de los artefactos que escriben los agentes sin informe pr
 reportes de bug, análisis de historias, datos de prueba, casos de API, fichas de contexto, triage, consultas,
 mapeos, verificaciones de datos y la base de conocimiento. Cada artefacto queda con su HTML al lado:
 
-    output/reportes-bug/BUG-001.md  ->  BUG-001.html (ES) y BUG-001.en.html (EN)
+    output/reportes-bug/BUG-001.md  ->  es/BUG-001.html (ES), en/BUG-001.html (EN) y BUG-001.html (acceso: abre
+                                        el idioma elegido)
 
 Uso (desde la raíz del repo):
     python scripts/generar_informe_artefacto.py <artefacto> [--salida <archivo.html>]
@@ -34,10 +35,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _estilos_reporte import (page, meta, section, kpi_tiles, banner, table, nivel_badge, estado_pill,  # noqa: E402
                               bar_chart, miniatura, resolver_evidencia, e, SERIES)
-from _i18n import escribir_bilingue, idioma_actual, localizar  # noqa: E402
+from _i18n import escribir_bilingue, idioma_actual, localizar, ruta_en, ruta_es  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parents[1]
 OUTPUT = RAIZ / "output"
+DOCUMENTACION = RAIZ / "input" / "documentacion"
 
 # Carpeta de output/ -> (tipo, eyebrow). La clave puede ser "carpeta/subcarpeta".
 CARPETAS = {
@@ -53,8 +55,16 @@ CARPETAS = {
     "mapeos": ("md", "Mapeo a automatización"),
     "verificaciones-datos": ("md", "Verificación de datos"),
     "conocimiento": ("md", "Base de conocimiento"),
+    "scalar": ("casos-api", "Casos de API (Scalar)"),
+    "gestion": ("gestion", "Gestión de pruebas"),
 }
+# La documentación del proyecto (input/documentacion/: documentador-proyecto, investigador-proyecto y redactor-manual)
+# se muestra en output/documentacion/ con la misma estructura, sin tocar input/ (ver DOCUMENTACION).
 AVISO_SIN_EN = "El agente no generó la versión en inglés de este artefacto: el contenido se muestra en español."
+AVISO_A_PEDIDO = ("Este documento está en español: el contexto y la documentación se escriben en inglés solo a pedido "
+                  "(Claude lo pregunta antes de armarlos, o DOCUMENTACION_EN=si en el .env).")
+# Tipos que van en inglés solo a pedido (contexto y documentación de trabajo, no entregables).
+A_PEDIDO = {"contexto", "md"}
 
 CSS_EXTRA = """<style>
 .md{line-height:1.6}.md h3{font-family:var(--display,inherit);font-size:15px;margin:18px 0 8px}.md h4{font-size:13.5px;margin:14px 0 6px}
@@ -99,6 +109,8 @@ def tipo_de(origen, raiz=None):
     except ValueError:
         partes = origen.parts[-3:]
     sufijo = origen.suffix.lower()
+    if sufijo == ".json" and "gestion" in partes and not es_traduccion(origen):
+        return "gestion", "Gestión de pruebas"  # trazabilidad (<HU>-<herramienta>.json) y resultados publicados
     if es_traduccion(origen) or sufijo not in (".md", ".csv", ".feature", ".xlsx"):
         return None
     for clave, (tipo, eyebrow) in CARPETAS.items():
@@ -378,8 +390,10 @@ def _meta(origen, texto="", extra=()):
     return meta([("Historia", historia_de(origen, texto)), ("Archivo", Path(origen).name), ("Generado", _fecha(origen)), *extra])
 
 
-def _aviso_en(hay_en):
-    return banner(AVISO_SIN_EN, "warn") if idioma_actual() == "en" and not hay_en else ""
+def _aviso_en(hay_en, tipo=None):
+    if idioma_actual() != "en" or hay_en:
+        return ""
+    return banner(AVISO_A_PEDIDO if tipo in A_PEDIDO else AVISO_SIN_EN, "warn")
 
 
 def _cuenta_en(secs, patron, contar):
@@ -768,9 +782,9 @@ def render_md(origen, origen_en, tipo, eyebrow):
     if Path(origen).suffix.lower() == ".csv":
         texto = _csv_a_md(texto)
     titulo, secs = partir_secciones(bloques(texto))
-    cuerpo = CSS_EXTRA + _aviso_en(hay_en) + section("Resumen", kpi_tiles(_kpis_md(tipo, texto, secs)))
+    cuerpo = CSS_EXTRA + _aviso_en(hay_en, tipo) + section("Resumen", kpi_tiles(_kpis_md(tipo, texto, secs)))
     if secs and secs[0][0] == "Resumen":
-        cuerpo = CSS_EXTRA + _aviso_en(hay_en) + section("Resumen", kpi_tiles(_kpis_md(tipo, texto, secs)) + render_bloques(secs[0][1]))
+        cuerpo = CSS_EXTRA + _aviso_en(hay_en, tipo) + section("Resumen", kpi_tiles(_kpis_md(tipo, texto, secs)) + render_bloques(secs[0][1]))
         secs = secs[1:]
     cuerpo += secciones_html(secs)
     titulo = re.sub(r"[*`]", "", titulo) or Path(origen).stem
@@ -779,7 +793,7 @@ def render_md(origen, origen_en, tipo, eyebrow):
 
 # ------------------------------------------------------------------ entrada
 def generar(origen, salida=None, raiz=None):
-    """Escribe el HTML del artefacto (ES) y su .en.html (EN). Devuelve la ruta del HTML en español."""
+    """Escribe el HTML del artefacto en es/ y en/ (y el acceso al lado del artefacto). Devuelve la ruta del acceso."""
     origen = Path(origen)
     detectado = tipo_de(origen, raiz)
     if not detectado:
@@ -800,6 +814,8 @@ def generar(origen, salida=None, raiz=None):
         render = lambda: render_casos(origen, origen_en)  # noqa: E731
     elif tipo == "feature":
         render = lambda: render_feature(origen, origen_en)  # noqa: E731
+    elif tipo == "gestion":
+        render = lambda: render_gestion(origen)  # noqa: E731
     else:
         render = lambda: render_md(origen, origen_en, tipo, eyebrow)  # noqa: E731
     escribir_bilingue(salida, render)
@@ -818,22 +834,99 @@ def artefactos(raiz_output=None):
                 yield p
 
 
-def actualizar_artefactos(raiz_output=None, forzar=False):
-    """Regenera el HTML de cada artefacto de output/ cuyo origen (o su inglés) es más nuevo que el HTML.
-    Rápido e idempotente; pensado para que el portal lo llame antes de indexar. Devuelve los HTML escritos."""
+def _al_dia(destino, fuentes):
+    """¿Las dos versiones (es/ y en/) existen y son más nuevas que el artefacto y su inglés?"""
+    versiones = [ruta_es(destino), ruta_en(destino)]
+    if not destino.exists() or not all(v.exists() for v in versiones):
+        return False
+    return min(v.stat().st_mtime for v in versiones) >= max(f.stat().st_mtime for f in fuentes)
+
+
+def documentos_del_proyecto(documentacion=None):
+    """Los Markdown de la documentación del proyecto (input/documentacion/), sin sus versiones en inglés."""
+    base = Path(documentacion or DOCUMENTACION)
+    if not base.is_dir():
+        return []
+    return [p for p in sorted(base.rglob("*.md")) if not es_traduccion(p) and "historial" not in p.parts]
+
+
+def actualizar_artefactos(raiz_output=None, forzar=False, documentacion=None):
+    """Regenera el HTML de cada artefacto de output/ cuyo origen (o su inglés) es más nuevo que el HTML, y el de la
+    documentación del proyecto (input/documentacion/ -> output/documentacion/). Rápido e idempotente; lo llama el
+    portal antes de indexar. Devuelve los HTML escritos (los accesos; las versiones van en es/ y en/)."""
     raiz = Path(raiz_output or OUTPUT)
     escritos = []
     for origen in artefactos(raiz):
         destino = html_de(origen)
         fuentes = [origen] + [x for x in [ruta_en_de(origen)] if x.exists()]
-        if not forzar and destino.exists() and destino.with_name(destino.stem + ".en.html").exists() \
-                and destino.stat().st_mtime >= max(f.stat().st_mtime for f in fuentes):
+        if not forzar and _al_dia(destino, fuentes):
             continue
         try:
             escritos.append(generar(origen, raiz=raiz))
         except Exception as ex:  # un artefacto mal formado no frena al resto
             print(f"[aviso] {origen}: no se pudo armar el HTML ({type(ex).__name__}: {ex})", file=sys.stderr)
+    if documentacion is None and raiz_output is None:
+        documentacion = DOCUMENTACION
+    if documentacion:
+        base = Path(documentacion)
+        for origen in documentos_del_proyecto(base):
+            destino = raiz / "documentacion" / origen.relative_to(base).with_suffix(".html")
+            fuentes = [origen] + [x for x in [ruta_en_de(origen)] if x.exists()]
+            if not forzar and _al_dia(destino, fuentes):
+                continue
+            destino.parent.mkdir(parents=True, exist_ok=True)
+            try:
+                escribir_bilingue(destino, lambda o=origen: render_md(o, ruta_en_de(o), "md", "Documentación del proyecto"))
+                escritos.append(destino)
+            except Exception as ex:
+                print(f"[aviso] {origen}: no se pudo armar el HTML ({type(ex).__name__}: {ex})", file=sys.stderr)
     return escritos
+
+
+def render_gestion(origen):
+    """Trazabilidad con la herramienta de gestión (<HU>-<herramienta>.json: qué CP-XXX es qué key, ciclos) o los
+    resultados que se publicaron (resultados-<fecha>.json: estado de cada escenario y evidencias)."""
+    datos = json.loads(Path(origen).read_text(encoding="utf-8"))
+    cuerpo = ""
+    if isinstance(datos, dict):  # trazabilidad
+        casos = datos.get("casos") or {}
+        ciclos = datos.get("ciclos") or []
+        sin_vinculo = sum(1 for c in casos.values() if isinstance(c, dict) and c.get("vinculado") is False)
+        cuerpo += section("Resumen", kpi_tiles([
+            ("Casos subidos", len(casos), "ok" if casos else "", datos.get("herramienta", ""), "lista"),
+            ("Ciclos", len(ciclos), "", "", "carga"),
+            ("Sin vincular a la historia", sin_vinculo, "warn" if sin_vinculo else "ok", "", "link"),
+        ]))
+        if casos:
+            def vinculado(c):
+                v = c.get("vinculado")
+                return "No" if v is False else ("Sí" if v else "—")
+            filas = [[f'<span class="id">{e(cid)}</span>', f'<span class="id">{e(c.get("key", ""))}</span>', e(c.get("titulo", "")),
+                      e(vinculado(c))] for cid, c in casos.items() if isinstance(c, dict)]
+            cuerpo += section("Casos", table(["Caso", "Key", "Título", "Vinculado"], filas))
+        if ciclos:
+            cuerpo += section("Ciclos", table(["Key", "Nombre", "Fecha"],
+                                              [[f'<span class="id">{e(c.get("key", ""))}</span>', e(c.get("nombre", "")), e(c.get("fecha", ""))]
+                                               for c in ciclos if isinstance(c, dict)]))
+        extra = [("Herramienta", datos.get("herramienta")), ("Proyecto", datos.get("proyecto")),
+                 ("Carpeta", (datos.get("carpeta") or {}).get("ruta"))]
+        titulo = f"Trazabilidad · {Path(origen).stem}"
+    else:  # resultados publicados
+        lista = [r for r in datos if isinstance(r, dict)]
+        cuenta = Counter(r.get("estado", "") for r in lista)
+        cuerpo += section("Resumen", kpi_tiles([
+            ("Escenarios", len(lista), "", "", "lista"),
+            ("Aprobados", cuenta.get("aprobado", 0), "ok", "", "ok"),
+            ("Fallidos", cuenta.get("fallido", 0), "bad" if cuenta.get("fallido") else "ok", "", "bad"),
+            ("Bloqueados", cuenta.get("bloqueado", 0), "warn" if cuenta.get("bloqueado") else "", "", "blk"),
+        ]))
+        estados = {"aprobado": "Aprobado", "fallido": "Fallido", "bloqueado": "Bloqueado", "pendiente": "Pendiente"}
+        filas = [[e(r.get("feature", "")), e(r.get("escenario", "")), estado_pill(estados.get(r.get("estado"), r.get("estado", ""))),
+                  e(", ".join(r.get("tags") or [])), e((r.get("error") or "")[:300]), e(len(r.get("evidencias") or []))] for r in lista]
+        cuerpo += section("Escenarios", table(["Feature", "Escenario", "Estado", "Tags", "Error", "Evidencias"], filas))
+        extra = []
+        titulo = f"Resultados publicados · {Path(origen).stem}"
+    return page(titulo, "Gestión de pruebas", _meta(origen, "", extra), CSS_EXTRA + cuerpo)
 
 
 def main():

@@ -57,3 +57,7 @@ Trabajás como subagente: **no podés hacerle una pregunta a la persona y espera
 - **No borres** features, steps ni locators de otras historias.
 - **Base de datos**: no agregues steps de verificación en base de datos salvo que la persona lo pida explícitamente; si un caso menciona datos guardados, anotalo como sugerencia en el reporte de mapeo.
 - **Ahorro de tokens**: snapshots de accesibilidad en vez de screenshots (solo una captura si un paso queda bloqueado), no leas archivos del framework completos y no repitas recorridos.
+
+# Versión en inglés (solo a pedido)
+
+Por defecto todo va en español. Si el pedido dice *"Versión en inglés: sí"* (la conversación principal lo pregunta antes de invocarte, o `DOCUMENTACION_EN=si` en el `.env`), escribí también en inglés el reporte de mapeo `output/mapeos/mapeo-HU-XXX-web.md` (con `mapeo-HU-XXX-web.en.md` al lado; el código y los `.feature` no se traducen): mismo contenido traducido, en inglés claro de QA, sin traducir IDs, rutas, datos ni citas textuales de las fuentes. El portal arma el HTML en los dos idiomas con sus banderitas. Sin ese pedido, no la escribas.

@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """
-Informes en español e inglés: cada informe HTML sale en dos archivos, informe.html (ES) e informe.en.html (EN),
-con una banderita para pasar de uno al otro. Lo usan _estilos_reporte.page y todos los generadores.
+Informes en español e inglés: cada informe tiene una carpeta por idioma y un acceso que abre el elegido,
+
+    unidad/informe.html      acceso (abre es/ o en/ según la banderita que elegiste; español por defecto)
+    unidad/es/informe.html   español
+    unidad/en/informe.html   inglés
+
+con una banderita en cada informe para pasar de uno al otro. Lo usan _estilos_reporte.page y todos los generadores.
 
 Cómo se arma la versión en inglés:
 - **Lo que escribe el agente** (resumen, hallazgos, recomendaciones…): el analisis.json trae un bloque "en" con
@@ -12,7 +17,7 @@ Cómo se arma la versión en inglés:
 
 Uso en un generador:
     from _i18n import escribir_bilingue, localizar
-    escribir_bilingue(salida, lambda: construir_html(localizar(analisis)))   # escribe salida y salida .en.html
+    escribir_bilingue(salida, lambda: construir_html(localizar(analisis)))   # es/<salida>, en/<salida> y el acceso
 
 Para completar el diccionario: K0LMENIA_I18N_AUDITORIA=archivo.txt guarda ahí cada texto de la versión en inglés
 que quedó en español (ya convertido en clave, con {n}); se traduce y se suma a scripts/i18n/en/<grupo>.json.
@@ -215,24 +220,87 @@ def localizar(obj, codigo=None):
     return loc(obj)
 
 
-def ruta_en(ruta):
-    """informe.html -> informe.en.html"""
+# Estructura en disco: cada informe tiene una carpeta por idioma y un archivo de acceso que abre el elegido.
+#   unidad/informe.html          acceso: abre es/ o en/ según el idioma que elegiste con la banderita
+#   unidad/es/informe.html       español
+#   unidad/en/informe.html       inglés
+# La evidencia (capturas/, videos/…) y los JSON quedan en la unidad, compartidos por los dos idiomas.
+CLAVE_PREFERENCIA = "k0-idioma"  # localStorage: el idioma que eligió la persona (lo guarda la banderita)
+
+
+def idioma_de(ruta):
+    """'es' o 'en' si el HTML está en la carpeta de un idioma; None si es un acceso o un informe viejo."""
+    nombre = Path(ruta).parent.name
+    return nombre if nombre in IDIOMAS else None
+
+
+def ruta_acceso(ruta):
+    """unidad/es/informe.html -> unidad/informe.html (el archivo de acceso)."""
     ruta = Path(ruta)
-    return ruta.with_name(ruta.stem + ".en" + ruta.suffix)
+    return ruta.parent.parent / ruta.name if idioma_de(ruta) else ruta
+
+
+def ruta_idioma(ruta, codigo):
+    """unidad/informe.html (o unidad/<otro idioma>/informe.html) -> unidad/<codigo>/informe.html"""
+    ruta = ruta_acceso(ruta)
+    return ruta.parent / codigo / ruta.name
+
+
+def ruta_es(ruta):
+    return ruta_idioma(ruta, "es")
+
+
+def ruta_en(ruta):
+    return ruta_idioma(ruta, "en")
 
 
 def es_version_en(ruta):
-    return str(ruta).lower().endswith(".en.html")
+    return idioma_de(ruta) == "en"
+
+
+# URLs relativas de src/href/poster (no anclas, ni absolutas, ni con esquema: http:, data:, file:, mailto:…).
+_URL_RELATIVA = re.compile(r'(\s(?:src|href|poster)=")(?!#|/|[A-Za-z][\w+.-]*:)([^"]+)(")')
+_SCRIPTS = re.compile(r"(<script\b.*?</script>|<style\b.*?</style>)", re.S | re.I)
+
+
+def reubicar(documento, prefijo="../"):
+    """El HTML se arma con rutas relativas a la unidad; como queda un nivel más adentro (es/ o en/), cada ruta
+    relativa (evidencia, historial, otros informes) suma "../". No toca scripts ni estilos."""
+    partes = _SCRIPTS.split(documento)
+    return "".join(p if _SCRIPTS.fullmatch(p) else
+                   _URL_RELATIVA.sub(lambda m: m.group(1) + prefijo + m.group(2) + m.group(3), p) for p in partes)
+
+
+def html_acceso(nombre_archivo, titulo="k0lmenIA"):
+    """El archivo de acceso: abre la versión del idioma elegido (español si no se eligió ninguno)."""
+    destino = json.dumps(nombre_archivo)
+    archivo = _html.escape(nombre_archivo)
+    script = ("<script>(function(){var l='es';try{l=localStorage.getItem('" + CLAVE_PREFERENCIA + "')||'es';}catch(e){}"
+              "if(l!=='en')l='es';location.replace(l+'/'+encodeURIComponent(" + destino + ")+location.hash);})();</script>")
+    return ("<!doctype html>\n<html lang=\"es\"><head><meta charset=\"utf-8\">"
+            "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><meta name=\"color-scheme\" content=\"dark\">"
+            f"<title>{_html.escape(titulo)}</title>{script}</head>"
+            "<body style=\"background:#0E0C09;color:#F4EFE6;font-family:system-ui,sans-serif;padding:32px\">"
+            "<p>Abriendo el informe… / Opening the report…</p>"
+            f"<p><a style=\"color:#F9B006\" href=\"es/{archivo}\">Español</a> · "
+            f"<a style=\"color:#F9B006\" href=\"en/{archivo}\">English</a></p></body></html>\n")
 
 
 def escribir_bilingue(ruta, render, encoding="utf-8"):
-    """Arma el informe en los dos idiomas y escribe ruta (ES) y ruta .en.html (EN). render() devuelve el HTML;
-    se llama una vez por idioma (adentro, localizar() y page() saben cuál es). Devuelve las dos rutas."""
-    ruta = Path(ruta)
-    with idioma("es"):
-        es = render()
-    with idioma("en"):
-        en = render()
-    ruta.write_text(es, encoding=encoding)
-    ruta_en(ruta).write_text(en, encoding=encoding)
-    return ruta, ruta_en(ruta)
+    """Arma el informe en los dos idiomas: unidad/es/<nombre>, unidad/en/<nombre> y el acceso unidad/<nombre>.
+    render() devuelve el HTML con rutas relativas a la unidad (como siempre); se llama una vez por idioma (adentro,
+    localizar() y page() saben cuál es). Devuelve (ruta en español, ruta en inglés)."""
+    acceso = ruta_acceso(Path(ruta))
+    escritas, documento = [], ""
+    for codigo in IDIOMAS:
+        with idioma(codigo):
+            documento = render()
+        destino = ruta_idioma(acceso, codigo)
+        destino.parent.mkdir(parents=True, exist_ok=True)
+        destino.write_text(reubicar(documento), encoding=encoding)
+        escritas.append(destino)
+    titulo = re.search(r"<title>(.*?)</title>", documento, re.S)
+    acceso.write_text(html_acceso(acceso.name, _html.unescape(titulo.group(1)) if titulo else "k0lmenIA"), encoding=encoding)
+    return tuple(escritas)
+
+

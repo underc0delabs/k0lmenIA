@@ -11,6 +11,7 @@ sys.path.insert(0, str(RAIZ / "scripts"))
 
 import evaluar_agentes as ev  # noqa: E402
 import generar_casos  # noqa: E402
+from _i18n import ruta_en, ruta_es  # noqa: E402
 
 CASOS = {c["id"]: c for c in ev.cargar_casos()}
 
@@ -346,7 +347,7 @@ def test_comparacion_con_la_corrida_anterior_e_informe(tmp_path):
     datos = json.loads((destino / "resultados.json").read_text(encoding="utf-8"))
     assert datos["comparacion"]["regresiones"] == 1 and datos["comparacion"]["casos"]["c1"]["regresiones"] == ["b"]
     assert datos["por_agente"] == {"analista-historias": {"casos": 1, "aprobados": 0, "puntaje": 50}}
-    html = (destino / "informe-evals.html").read_text(encoding="utf-8")
+    html = ruta_es(destino / "informe-evals.html").read_text(encoding="utf-8")
     assert "Evals de los agentes" in html and "Comparación con la corrida anterior" in html and "Se omite" in html
 
 

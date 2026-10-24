@@ -72,7 +72,7 @@ def _ordenar(d):
 
 
 def generar(analisis_json, salida, markdown=None):
-    """Escribe salida (ES) y su .en.html (EN); el inglés del agente va en el bloque "en" del analisis.json.
+    """Escribe es/<salida> y en/<salida> (más el acceso <salida>, que abre el idioma elegido); el inglés del agente va en el bloque "en" del analisis.json.
     Los comentarios para el PR (--markdown) quedan en español."""
     datos = json.loads(Path(analisis_json).read_text(encoding="utf-8"))
     for h in _ordenar(datos):

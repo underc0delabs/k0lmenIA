@@ -8,6 +8,7 @@ RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ / "scripts"))
 
 import generar_informe_permisos as gp  # noqa: E402
+from _i18n import ruta_en, ruta_es  # noqa: E402
 
 DATOS = {
     "url": "https://a.com/", "host": "a.com", "fecha": "2026-10-14T10:00:00Z", "marca": "20261014-100000",
@@ -62,5 +63,5 @@ def test_linea_de_comandos_con_historial(tmp_path):
     r = subprocess.run([sys.executable, str(RAIZ / "scripts" / "generar_informe_permisos.py"), str(carpeta / "permisos.json"), str(carpeta / "informe-permisos.html")],
                        capture_output=True, text=True, encoding="utf-8")
     assert r.returncode == 0, r.stderr
-    html = (carpeta / "informe-permisos.html").read_text(encoding="utf-8")
+    html = ruta_es(carpeta / "informe-permisos.html").read_text(encoding="utf-8")
     assert "Evolución de las corridas" in html and "Corridas guardadas" in html

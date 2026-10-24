@@ -285,3 +285,7 @@ Detalle en `CONECTORES.md`.
 - **No toques lo que agregó la persona** en `input/documentacion/`: lo listás en el índice y lo usás como fuente.
 - `input/documentacion/` **no se versiona** (está en `.gitignore`): se regenera con este agente.
 - Escribí todo en español, claro y profesional.
+
+# Versión en inglés (solo a pedido)
+
+Por defecto todo va en español. Si el pedido dice *"Versión en inglés: sí"* (la conversación principal lo pregunta antes de invocarte, o `DOCUMENTACION_EN=si` en el `.env`), escribí también en inglés los documentos que escribís en `input/documentacion/` (cada `X.md` con su `X.en.md` al lado; el `INDICE.md` también): mismo contenido traducido, en inglés claro de QA, sin traducir IDs, rutas, datos ni citas textuales de las fuentes. El portal arma el HTML en los dos idiomas con sus banderitas. Sin ese pedido, no la escribas.

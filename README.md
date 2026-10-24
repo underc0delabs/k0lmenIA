@@ -763,9 +763,20 @@ Cada herramienta guarda sus **últimas 5 corridas** con su evidencia en `histori
 
 ### 🌐 Informes en español e inglés
 
-Cada informe HTML sale en dos archivos: `informe.html` (español) e `informe.en.html` (inglés). Arriba a la derecha tiene una banderita para pasar de uno al otro, así elegís cuál mandar. El portal también tiene las dos versiones (`index.html` e `index.en.html`).
+Cada informe tiene una carpeta por idioma y un acceso que abre el que elegiste:
+
+```
+output/accesibilidad/app.com/
+  informe-accesibilidad.html      ← acceso: abre el idioma elegido (español por defecto)
+  es/informe-accesibilidad.html   ← español
+  en/informe-accesibilidad.html   ← inglés
+  capturas/ analisis.json …       ← la evidencia es la misma para los dos
+```
+
+La banderita de arriba a la derecha pasa de un idioma al otro y recuerda tu elección: el portal (`output/index.html`) y los accesos abren siempre ese idioma. Para mandar un informe, mandás la carpeta del idioma que corresponda junto con su evidencia.
 
 - **Lo que escribe el agente** (veredicto, resumen, hallazgos, recomendaciones) lo traduce el mismo agente al armar el informe: lo pone en un bloque `"en"` del JSON. En los artefactos en Markdown escribe la versión al lado: `BUG-001.en.md`, `analisis-HU-001.en.md`; en las `.feature`, `HU-001-x.feature.en`, que ningún runner toma.
+- **Contexto y documentación** (fichas de contexto, documentación del proyecto, consultas, mapeos y verificaciones) se escriben en español. Antes de armarlos, Claude pregunta si también los querés en inglés (o lo decide `DOCUMENTACION_EN` en el `.env`).
 - **La interfaz** (títulos, columnas, estados, gráficos) la traduce el script con un diccionario (`scripts/i18n/en/`), sin gastar tokens.
 - Si al agente le faltó la traducción, el informe en inglés sale igual: la interfaz en inglés, el contenido en español y un aviso.
 

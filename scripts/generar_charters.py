@@ -241,7 +241,7 @@ def main():
                "preguntas": sum(len(s["preguntas"]) for s in sesiones), "minutos": sum(s.get("duracion") or 0 for s in sesiones)}
     resultado = {"historia": datos.get("historia"), "fecha": ahora.isoformat(timespec="seconds"), "marca": ahora.strftime("%Y%m%d-%H%M%S"),
                  "resumen": resumen, "sesiones": sesiones, "hallazgos": [dict(b, charter=s["charter"]) for s in sesiones for b in s["bugs"]]}
-    _historial.archivar(carpeta, ["sesiones.json", "informe-sesiones.html", "informe-sesiones.en.html"], "sesiones.json")
+    _historial.archivar(carpeta, ["sesiones.json", "informe-sesiones.html"], "sesiones.json")
     (carpeta / "sesiones.json").write_text(json.dumps(resultado, ensure_ascii=False, indent=2), encoding="utf-8")
     hist = _historial.seccion("charters", carpeta, resultado)
     escribir_bilingue(carpeta / "informe-sesiones.html", lambda: informe_html(localizar(datos), sesiones, hist))

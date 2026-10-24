@@ -52,7 +52,7 @@ from _i18n import escribir_bilingue, localizar, idioma_actual  # noqa: E402
 import recolectar_resultados as rec  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parents[1]
-GENERADOS = ["tablero.json", "analisis.json", "informe-tablero.html", "informe-tablero.en.html"]
+GENERADOS = ["tablero.json", "analisis.json", "informe-tablero.html"]
 SEVERIDADES = rec.SEVERIDADES
 SUITES = ("web", "api", "mobile")
 

@@ -40,7 +40,7 @@ TONO = {"ok": "ok", "warn": "warn", "bad": "bad"}
 
 
 def generar(analisis_json, salida):
-    """Escribe salida (ES) y su .en.html (EN). El inglés del agente va en el bloque "en" del analisis.json."""
+    """Escribe es/<salida> y en/<salida> (más el acceso <salida>, que abre el idioma elegido). El inglés del agente va en el bloque "en" del analisis.json."""
     datos = json.loads(Path(analisis_json).read_text(encoding="utf-8"))
     base = Path(salida).resolve().parent
     escribir_bilingue(salida, lambda: _html(localizar(datos), base))

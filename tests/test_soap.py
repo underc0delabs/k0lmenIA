@@ -11,6 +11,7 @@ sys.path.insert(0, str(RAIZ / "herramientas" / "soap"))
 
 import generar_informe_soap as gi  # noqa: E402
 import wsdl  # noqa: E402
+from _i18n import ruta_en, ruta_es  # noqa: E402
 
 WSDL = """<?xml version="1.0"?>
 <definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
@@ -66,7 +67,7 @@ def test_informe(tmp_path, monkeypatch):
              "falta_informacion": [{"id": "FI-01", "que_falta": "Faults definidos", "pregunta": "¿qué Faults define la operación?"}]}
     (tmp_path / "a.json").write_text(json.dumps(datos, ensure_ascii=False), encoding="utf-8")
     gi.generar(tmp_path / "a.json", tmp_path / "i.html")
-    html = (tmp_path / "i.html").read_text(encoding="utf-8")
+    html = ruta_es(tmp_path / "i.html").read_text(encoding="utf-8")
     assert "ClienteService" in html and "500 en vez de Fault" in html and "Operaciones del servicio" in html and "FI-01" in html
     assert "pedir un id inexistente" in html
 

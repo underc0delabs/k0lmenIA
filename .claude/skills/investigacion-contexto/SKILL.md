@@ -172,3 +172,7 @@ Reglas que valen para todos los agentes:
 ## 6. La ficha de contexto
 
 Guardala en `output/contexto/contexto-<HU>.md` siguiendo `plantillas/plantilla-contexto.md` y normalizala con `python scripts/formatear_tablas.py`. Secciones: fuentes consultadas (incluidos los documentos de `input/documentacion/` que usaste), resumen de la funcionalidad, reglas y hallazgos por criterio (cada uno con su fuente), decisiones en comentarios, contradicciones y **Falta información**. Respondé a la persona con un resumen corto: fuentes revisadas, hallazgos clave y la lista de `FI-XX` abiertos.
+
+## 7. Versión en inglés (solo a pedido)
+
+La ficha va en español. Si el pedido dice *"Versión en inglés: sí"* (la conversación principal lo pregunta, o `DOCUMENTACION_EN=si` en el `.env`), escribí al lado `contexto-<HU>.en.md` con el mismo contenido traducido (inglés claro de QA; IDs, rutas y citas textuales de las fuentes sin traducir). El HTML de la ficha queda en los dos idiomas, con sus banderitas. Sin ese pedido, no la escribas.

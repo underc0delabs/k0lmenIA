@@ -10,6 +10,7 @@ import generar_informe_cobertura
 import generar_informe_fallos
 import generar_informe_rendimiento
 import recolectar_resultados
+from _i18n import ruta_en, ruta_es  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parents[1]
 
@@ -53,9 +54,9 @@ def test_fallos_detecta_inestables(tmp_path):
     assert por_caso["CP-003"]["categoria"] == "Inestable (flaky)"
     assert por_caso["CP-003"]["historial"] == ["Fallido", "Aprobado"]
     assert datos["resumen"]["aprobados"] == 1 and datos["suites"] == ["web"]
-    html = (salida / "informe-fallos.html").read_text(encoding="utf-8")
+    html = ruta_es(salida / "informe-fallos.html").read_text(encoding="utf-8")
     assert "Inestable (flaky)" in html and "F-01" in html
-    en = (salida / "informe-fallos.en.html").read_text(encoding="utf-8")  # y su versión en inglés
+    en = ruta_en(salida / "informe-fallos.html").read_text(encoding="utf-8")  # y su versión en inglés
     assert 'lang="en"' in en and "Flaky" in en and "Failure analysis" in en
 
 

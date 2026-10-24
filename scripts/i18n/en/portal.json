@@ -130,5 +130,7 @@
   "Base de conocimiento": "Knowledge base",
   "Gestión de pruebas": "Test management",
   "{n} aprobados": "{n} passed",
-  "{n} escenarios aprobados": "{n} scenarios passed"
+  "{n} escenarios aprobados": "{n} scenarios passed",
+  "Relevamiento del proyecto": "Project survey",
+  "Documentación del proyecto": "Project documentation"
 }

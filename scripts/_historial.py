@@ -46,12 +46,23 @@ def archivar(carpeta, nombres, archivo_datos, max_corridas=MAX_CORRIDAS):
     while destino.exists():
         destino, n = Path(f"{base}-{n}"), n + 1
     destino.mkdir(parents=True)
-    for nombre in nombres:
+    for nombre in _con_idiomas(nombres):
         src = carpeta / nombre
         if src.exists():
+            (destino / nombre).parent.mkdir(parents=True, exist_ok=True)
             shutil.move(str(src), str(destino / nombre))
     podar(carpeta, max_corridas - 1)
     return destino
+
+
+def _con_idiomas(nombres):
+    """Cada informe HTML va con sus dos idiomas (es/<nombre> y en/<nombre>, scripts/_i18n.py) aunque la lista no los nombre."""
+    salida = []
+    for n in nombres:
+        salida.append(n)
+        if str(n).lower().endswith(".html") and "/" not in str(n):
+            salida += [f"es/{n}", f"en/{n}"]
+    return list(dict.fromkeys(salida))
 
 
 def podar(carpeta, guardar):

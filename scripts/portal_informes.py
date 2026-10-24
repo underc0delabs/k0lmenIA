@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Portal de informes: output/index.html (y output/index.en.html) con todos los informes y su historial.
+Portal de informes: output/index.html (abre output/es/index.html u output/en/index.html, según el idioma elegido)
+con todos los informes y su historial.
 
 Uso (desde la raíz del repo):
     python scripts/portal_informes.py [--abrir]
@@ -58,6 +59,7 @@ NOMBRES = {
     "analisis-historias": "Análisis de historias", "contexto": "Fichas de contexto", "reportes-bug": "Reportes de bug",
     "mapeos": "Mapeos a automatización", "verificaciones-datos": "Verificaciones en base de datos", "consultas": "Consultas",
     "conocimiento": "Base de conocimiento", "gestion": "Gestión de pruebas", "reparaciones": "Reparación de la automatización",
+    "investigacion": "Relevamiento del proyecto", "documentacion": "Documentación del proyecto",
 }
 # Orden de las tarjetas: primero lo que más se mira.
 ORDEN = ["tablero", "informes-cierre", "ejecuciones", "k0lmena", "fallos", "cobertura", "monitoreo", "planes-de-prueba",
@@ -69,7 +71,8 @@ ORDEN = ["tablero", "informes-cierre", "ejecuciones", "k0lmena", "fallos", "cobe
          "blockchain", "billeteras", "pos", "ivr", "juegos", "streaming",
          "observabilidad", "busqueda", "documentos", "contenido", "mutacion"]
 IGNORAR = {"historial", "evidencia", "capturas", "videos", "recortes", "diferencias", "lighthouse", "referencia",
-           "actual", "respaldo", "suite", "eml", "sesiones", "node_modules"}
+           "actual", "respaldo", "suite", "eml", "sesiones", "node_modules",
+           "es", "en"}  # las versiones por idioma: el informe se indexa por su acceso (unidad/informe.html)
 _SELLO = re.compile(r"[-_]?\d{4}-?\d{2}-?\d{2}([-_T]?\d{2}-?\d{2}(-?\d{2})?)?$")
 
 
@@ -82,7 +85,7 @@ def _htmls(carpeta):
     for raiz, dirs, archivos in os.walk(carpeta):
         dirs[:] = [d for d in dirs if d not in IGNORAR and not d.startswith((".", "_"))]
         for a in archivos:
-            # La versión en inglés (informe.en.html) va con su informe, no como uno aparte.
+            # Las versiones en es/ y en/ van con su informe (su acceso), no como informes aparte.
             if a.lower().endswith(".html") and not a.lower().endswith(".en.html"):
                 yield Path(raiz) / a
 
@@ -179,7 +182,7 @@ def unidades(carpeta):
     return sorted(salida, key=lambda u: u["fecha"], reverse=True)
 
 
-def descubrir(output, reportes_k0=None):
+def descubrir(output, reportes_k0=None, evals=None):
     """{herramienta: [unidades]} de todas las carpetas de output/ (y npm test), con o sin informes."""
     herramientas = {}
     if output.is_dir():
@@ -202,6 +205,8 @@ def descubrir(output, reportes_k0=None):
                     u["historial"], u["anterior"] = _anterior(suite)
                 k0.append(u)
         herramientas["k0lmena"] = sorted(k0, key=lambda u: u["fecha"], reverse=True)
+    if evals and Path(evals).is_dir():  # los evals de los agentes escriben en evals/resultados/<fecha>/
+        herramientas["evals"] = unidades(Path(evals))
     orden = {n: i for i, n in enumerate(ORDEN)}
     return dict(sorted(herramientas.items(), key=lambda kv: (orden.get(kv[0], len(ORDEN)), kv[0])))
 
@@ -249,7 +254,7 @@ CATEGORIAS = [
     ("plataformas", "Plataformas", ["mobile", "desktop", "shopify", "wordpress", "prestashop", "vtex", "salesforce", "sap", "dynamics",
                                     "ia", "mensajeria", "soap", "contratos", "datos", "scalar", "blockchain", "billeteras", "pos", "ivr",
                                     "juegos", "streaming"]),
-    ("documentacion", "Documentación", ["conocimiento", "manuales", "consultas", "onboarding"]),
+    ("documentacion", "Documentación", ["documentacion", "investigacion", "conocimiento", "manuales", "consultas", "onboarding"]),
 ]
 CATEGORIA_DE = {h: c for c, _, hs in CATEGORIAS for h in hs}
 
@@ -271,34 +276,44 @@ def _fecha_corrida(carpeta, html):
 
 def estado_en(html):
     """El veredicto en inglés (bloque "en" del analisis.json), si el agente lo escribió."""
-    d = _leer_json(Path(html).parent / "analisis.json")
+    carpeta = Path(html).parent
+    carpeta = carpeta.parent if carpeta.name in ("es", "en") else carpeta
+    d = _leer_json(carpeta / "analisis.json")
     en = d.get("en") if isinstance(d, dict) else None
     return str(en["veredicto"]) if isinstance(en, dict) and en.get("veredicto") else ""
 
 
+def versiones(html):
+    """(versión en español, versión en inglés o None) de un informe. Con la estructura por idioma son es/<x> y en/<x>;
+    los informes viejos (un solo archivo) se muestran como están."""
+    from _i18n import ruta_en, ruta_es
+    es, en = ruta_es(html), ruta_en(html)
+    return (es if es.exists() else Path(html)), (en if en.exists() else None)
+
+
 def entradas(herramientas):
     """Todos los informes en una lista plana: el último de cada unidad y cada corrida guardada en historial/."""
-    from _i18n import ruta_en
     salida = []
     for h, us in herramientas.items():
         for u in us:
-            html_en = ruta_en(u["html"])
+            html_es, html_en = versiones(u["html"])
             salida.append({"herramienta": h, "categoria": categoria_de(h), "unidad": u["unidad"], "historia": historia_de(u),
-                           "html": u["html"], "html_en": html_en if html_en.exists() else None, "fecha": u["fecha"],
+                           "html": html_es, "html_en": html_en, "fecha": u["fecha"],
                            "estado": u["estado"], "estado_en": estado_en(u["html"]), "tono": _tono(u["estado"]), "anterior": False,
                            "otros": u.get("otros") or []})
             base = Path(u["html"]).parent
             historial = base / "historial"
             if u.get("historial") and historial.is_dir():
                 for corrida in sorted((d for d in historial.iterdir() if d.is_dir()), key=lambda d: d.name, reverse=True):
-                    informes = [p for p in corrida.rglob("*.html") if not p.name.lower().endswith(".en.html")]
+                    informes = [p for p in corrida.rglob("*.html")
+                                if not p.name.lower().endswith(".en.html") and p.parent.name not in ("es", "en")]
                     if not informes:
                         continue
                     html = _principal(informes)
-                    html_en = ruta_en(html)
+                    html_es, html_en = versiones(html)
                     estado = estado_de(html)
                     salida.append({"herramienta": h, "categoria": categoria_de(h), "unidad": u["unidad"],
-                                   "historia": historia_de(u), "html": html, "html_en": html_en if html_en.exists() else None,
+                                   "historia": historia_de(u), "html": html_es, "html_en": html_en,
                                    "fecha": _fecha_corrida(corrida, html), "estado": estado, "estado_en": estado_en(html),
                                    "tono": _tono(estado),
                                    "anterior": True, "otros": []})
@@ -386,7 +401,8 @@ setTimeout(function(){window.scrollTo(0,0);},0);
 
 
 def armar_html(herramientas, destino):
-    """El portal en el idioma actual (_i18n): en inglés, los links van a la versión .en.html si existe."""
+    """El portal en el idioma actual (_i18n): cada link va a la versión de ese idioma (es/ o en/); si un informe no
+    tiene versión en inglés (uno viejo), el portal en inglés lleva a la que hay."""
     from _estilos_reporte import page, meta, kpi_tiles, e, _pastilla, OK, AVISO, CRITICO, NEUTRO
     from _i18n import idioma_actual, t
 
@@ -512,7 +528,8 @@ def generar(output=None, reportes_k0=None, destino=None):
     destino = Path(destino or output / "index.html")
     destino.parent.mkdir(parents=True, exist_ok=True)
     _regenerar_artefactos(output)
-    herramientas = descubrir(output, reportes_k0)
+    evals = RAIZ / "evals" / "resultados" if output == RAIZ / "output" else None
+    herramientas = descubrir(output, reportes_k0, evals)
     escribir_bilingue(destino, lambda: armar_html(herramientas, destino))
     return destino, herramientas
 

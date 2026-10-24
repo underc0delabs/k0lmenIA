@@ -8,6 +8,7 @@ import pytest
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ / "scripts"))
 import generar_informe_generico as gi  # noqa: E402
+from _i18n import ruta_en, ruta_es  # noqa: E402
 
 ANALISIS = {
     "titulo": "Contratos — HU-010", "eyebrow": "Contract testing (Pact)", "historia": "HU-010", "ambiente": "QA",
@@ -29,7 +30,7 @@ def _gen(tmp_path, datos, monkeypatch):
     monkeypatch.setenv("K0LMENIA_PORTAL", "0")
     (tmp_path / "a.json").write_text(json.dumps(datos, ensure_ascii=False), encoding="utf-8")
     gi.generar(tmp_path / "a.json", tmp_path / "i.html")
-    return (tmp_path / "i.html").read_text(encoding="utf-8")
+    return ruta_es(tmp_path / "i.html").read_text(encoding="utf-8")
 
 
 def test_informe_completo(tmp_path, monkeypatch):

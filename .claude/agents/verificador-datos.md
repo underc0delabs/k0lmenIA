@@ -69,3 +69,7 @@ Preparar o limpiar datos de prueba es posible, con estas condiciones:
 - **No modifiques** `herramientas/k0lmena/tools/bd/` ni los steps de otras historias.
 - **SSL**: si una conexión falla por el certificado (`DB_<NOMBRE>_SSL=si` lo verifica), no lo desactives por tu cuenta: avisá y proponé `DB_<NOMBRE>_SSL_CA` con la CA del servidor o, solo en ambientes de prueba y con el ok de la persona, `DB_<NOMBRE>_SSL=sin-verificar`.
 - **Ahorro de tokens**: consultas acotadas, sin volcar tablas enteras; respuesta final corta.
+
+# Versión en inglés (solo a pedido)
+
+Por defecto todo va en español. Si el pedido dice *"Versión en inglés: sí"* (la conversación principal lo pregunta antes de invocarte, o `DOCUMENTACION_EN=si` en el `.env`), escribí también en inglés la verificación que guardás en `output/verificaciones-datos/` (cada `X.md` con su `X.en.md` al lado): mismo contenido traducido, en inglés claro de QA, sin traducir IDs, rutas, datos ni citas textuales de las fuentes. El portal arma el HTML en los dos idiomas con sus banderitas. Sin ese pedido, no la escribas.

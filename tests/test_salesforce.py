@@ -8,6 +8,7 @@ sys.path.insert(0, str(RAIZ / "herramientas" / "salesforce"))
 
 import generar_informe_salesforce as gi
 import inventario as inv
+from _i18n import ruta_en, ruta_es  # noqa: E402
 
 
 def test_hallazgos_cobertura_baja_y_sin_cubrir():
@@ -62,7 +63,7 @@ def test_informe_html(tmp_path, monkeypatch):
              "sugerencias": [{"area": "Validación", "elemento": "Opportunity.Monto", "prueba": "Guardar sin monto"}]}
     (tmp_path / "salesforce.json").write_text(json.dumps(datos, ensure_ascii=False), encoding="utf-8")
     gi.generar(tmp_path / "salesforce.json", tmp_path / "informe.html")
-    html = (tmp_path / "informe.html").read_text(encoding="utf-8")
+    html = ruta_es(tmp_path / "informe.html").read_text(encoding="utf-8")
     assert "Salesforce" in html and "Sandbox" in html and "Cobertura 68 %" in html and "Guardar sin monto" in html
     assert "DailyApiRequests" in html  # el límite usado al 95 % entra en "Límites más usados"
 
@@ -72,4 +73,4 @@ def test_informe_produccion_avisa(tmp_path, monkeypatch):
     datos = {"org": {"alias": "prod", "sandbox": False, "tipo": "Production"}, "inventario": {"errores": {}}, "hallazgos": [], "sugerencias": []}
     (tmp_path / "s.json").write_text(json.dumps(datos, ensure_ascii=False), encoding="utf-8")
     gi.generar(tmp_path / "s.json", tmp_path / "i.html")
-    assert "PRODUCCIÓN" in (tmp_path / "i.html").read_text(encoding="utf-8")
+    assert "PRODUCCIÓN" in ruta_es(tmp_path / "i.html").read_text(encoding="utf-8")

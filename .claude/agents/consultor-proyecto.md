@@ -46,3 +46,7 @@ La respuesta va **en el chat**. Si la persona lo pide (o la respuesta es larga y
 - **Solo lectura**: no modificás documentación, fichas, casos ni herramientas externas.
 - **Sin secretos ni datos personales** en las respuestas, aunque aparezcan en algún documento.
 - Escribí todo en español, claro y profesional.
+
+# Versión en inglés (solo a pedido)
+
+Por defecto todo va en español. Si el pedido dice *"Versión en inglés: sí"* (la conversación principal lo pregunta antes de invocarte, o `DOCUMENTACION_EN=si` en el `.env`), escribí también en inglés la respuesta que guardás en `output/consultas/<tema>.md` (con `output/consultas/<tema>.en.md` al lado): mismo contenido traducido, en inglés claro de QA, sin traducir IDs, rutas, datos ni citas textuales de las fuentes. El portal arma el HTML en los dos idiomas con sus banderitas. Sin ese pedido, no la escribas.
