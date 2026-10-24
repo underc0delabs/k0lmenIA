@@ -60,6 +60,9 @@ Esta skill la usa **la conversación principal** (no un subagente: los subagente
 | Mutation testing             | analista-mutacion                                          |
 | Seguridad dinámica / pentest | analista-seguridad (pasivo) · pentester-web (activo)        |
 | Seguridad estática           | analista-dependencias (SCA) · analista-codigo-seguro (SAST) |
+| Revisión de código / PR      | revisor-codigo                                              |
+| Manual de usuario            | redactor-manual                                             |
+| Documentar todo el proyecto  | skill base-conocimiento (investigador + documentador + manual) |
 | Logs / fallos                | analista-logs · analista-fallos                             |
 | Cobertura / trazabilidad     | analista-cobertura                                          |
 | Reportar un bug              | generador-reportes-bug · triador-bugs (duplicados)          |
@@ -87,6 +90,7 @@ Esta skill la usa **la conversación principal** (no un subagente: los subagente
 | IA / LLM                  | probador-ia                  |
 | Mensajería / eventos      | probador-mensajeria          |
 | SOAP                      | probador-soap                |
+| APIs en Scalar            | probador-scalar              |
 | Blockchain / Web3         | probador-blockchain          |
 | Voz / IVR                 | probador-ivr                 |
 | Videojuegos               | probador-juegos              |
@@ -102,6 +106,8 @@ Esta skill la usa **la conversación principal** (no un subagente: los subagente
 - **"Quiero que el producto quede sólido antes de una release"** → `selector-casos-de-prueba` (qué correr) + regresión (npm test) + `auditor-rendimiento-web` + `analista-accesibilidad` + `analista-seguridad`; cierre con `generador-reporte-cierre`.
 - **"Es una tienda online"** → el `probador-<plataforma>` + `pruebas-ecommerce`; sumá `verificador-correos`, `probador-formularios`, `pixel-perfect`.
 - **"Me preocupa la seguridad"** → estática (`analista-dependencias` + `analista-codigo-seguro`) y dinámica (`analista-seguridad`, y `pentester-web` con autorización).
+- **"Quiero documentar el proyecto para tener más contexto"** → `investigador-proyecto` (tableros y wiki) + `documentador-proyecto` (repo, historias y mapa funcional) + `redactor-manual` (cómo se usa la app, verificado); los tres dejan su conocimiento en `input/documentacion/` y los casos lo usan solos.
+- **"Revisá este PR / el código"** → `revisor-codigo` (seguridad, performance, malas prácticas y mantenibilidad; repo, rama o PR/MR de GitHub, GitLab, Bitbucket o Azure Repos).
 - **"¿Mis tests son buenos?"** → `analista-cobertura` (qué se ejecuta) + `analista-mutacion` (qué se verifica).
 
 ## 6. Reglas

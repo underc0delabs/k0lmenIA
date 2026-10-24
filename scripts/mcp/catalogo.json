@@ -206,6 +206,15 @@
           "scripts/mcp/salesforce.js"
         ]
       }
+    },
+    "scalar": {
+      "descripcion": "Scalar (probador-scalar): MCP de tu API generado desde el OpenAPI en Scalar; busca operaciones y ejecuta las que el dashboard deja en modo Execute",
+      "variables": "SCALAR_MCP_URL · opcional SCALAR_API_KEY (sin token, OAuth desde /mcp)",
+      "servidor": {
+        "type": "http",
+        "url": "${SCALAR_MCP_URL}",
+        "headersHelper": "node scripts/mcp/bearer-headers.js scalar SCALAR_API_KEY --opcional"
+      }
     }
   }
 }

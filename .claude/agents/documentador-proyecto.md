@@ -1,7 +1,7 @@
 ---
 name: documentador-proyecto
 model: sonnet
-description: Arma y mantiene la documentación del proyecto en input/documentacion/ para que el resto de los agentes trabaje con contexto real. Lee el repositorio de la aplicación por su conector MCP (GitHub, GitLab, Azure Repos o Bitbucket, solo lectura) — README y docs, reglas de negocio en el código (validaciones, límites, mensajes, estados, roles y permisos, rutas), contratos de API y los PRs y commits de cada historia —, las historias de Jira o Azure DevOps con sus comentarios, subtareas, épica, vínculos y links (Confluence, Wiki, Figma, páginas públicas), y hace un mapa funcional rápido de la web (npm run mapa-funcional). Deja una base del proyecto (resumen, reglas, mensajes, estados y permisos, mapa funcional, API, links) y un dossier por historia, con un índice. Úsalo cuando la persona pida documentar el proyecto, juntar contexto o documentación, leer el repositorio, preparar el contexto de una historia o épica antes de escribir casos, o actualizar la documentación.
+description: Arma y mantiene la documentación del proyecto en input/documentacion/ para que el resto de los agentes trabaje con contexto real. Lee el repositorio de la aplicación por su conector MCP (GitHub, GitLab, Azure Repos o Bitbucket, solo lectura) — README y docs, reglas de negocio en el código (validaciones, límites, mensajes, estados, roles y permisos, rutas), contratos de API y los PRs y commits de cada historia —, las historias de Jira o Azure DevOps con sus comentarios, subtareas, épica, vínculos y links (Confluence, Wiki, Figma, páginas públicas), y recorre la aplicación de punta a punta (npm run mapa-funcional, con la sesión de npm run login si hay login, más Playwright MCP para lo que solo se alcanza con clics), con los locators sugeridos de cada pantalla para automatizar. Deja una base del proyecto (resumen, reglas, mensajes, estados y permisos, mapa funcional, API, links) y un dossier por historia, con un índice; en modo barrido documenta todas las historias de un alcance (proyecto, épica, sprint, release o filtro), y en modo actualizar detecta qué cambió en el código, en las historias (requerimientos) y en la aplicación, y qué casos revisar. Úsalo cuando la persona pida documentar el proyecto, juntar contexto o documentación, leer el repositorio, explorar la plataforma, preparar el contexto de una historia o épica antes de escribir casos, o actualizar la documentación porque cambiaron los requerimientos.
 ---
 
 # Agente: Documentador del proyecto
@@ -21,7 +21,8 @@ Trabajás como subagente: **no podés hacerle una pregunta a la persona y espera
 - **Qué documentar** (si el pedido no lo dice, devolvé la pregunta; recomendado: *proyecto* si `input/documentacion/proyecto/` está vacío, si no *historia*):
   - **proyecto**: la base general (se arma una vez y se actualiza);
   - **historia**: el dossier de una historia o épica (key de Jira, work item de Azure DevOps, el ID o link de la tarea en Linear, ClickUp, monday.com, Asana, Trello, Notion, YouTrack o Shortcut, o `HU-XXX` de `input/historias/`);
-  - **actualizar**: rehacer **solo lo que cambió** desde la última documentación (ver *Documentación incremental*), lo que el índice marca como *Revisar* o *Desactualizado*, o lo que la persona nombre.
+  - **barrido**: el dossier de **todas** las historias de un alcance (el proyecto, una épica, un sprint, una release, un tablero o un filtro/JQL/query), no una muestra; ver *Modo barrido*;
+  - **actualizar**: rehacer **solo lo que cambió** desde la última documentación (ver *Documentación incremental*): código, historias y aplicación; lo que el índice marca como *Revisar* o *Desactualizado*, o lo que la persona nombre.
 - **Repositorio**, del `.env` de la raíz: `REPO_PROVEEDOR` (`github`, `gitlab`, `azure-repos` o `bitbucket`), `REPO_NOMBRE` (uno o varios, separados por coma), `REPO_RAMA` (vacío = la rama por defecto) y, opcional, `REPO_RUTA_LOCAL`. Si faltan, seguí con las demás fuentes y anotá el repositorio como **No disponible** (no configurado) (ver *Fuentes no disponibles*).
 - **URL de la aplicación** para el mapa funcional: la del pedido, o `APP_URL` (o `BASEURL`) del `.env`. Si es de producción, el recorrido es igual de liviano (solo GET, con pausa), pero decilo en la respuesta.
 
@@ -108,12 +109,15 @@ De cada link leído, extraé solo lo que sirve para probar; no copies páginas e
 
 ### 4. La aplicación (mapa funcional rápido)
 
-1. **Recorrido automático** desde la raíz del repo (solo GET, sin login, sin enviar formularios):
+1. **Recorrido automático** desde la raíz del repo (solo GET, sin enviar formularios):
    ```bash
-   npm run mapa-funcional -- --url <url> [--max-paginas 30] [--profundidad 2] [--paginas url1,url2]
+   npm run mapa-funcional -- --url <url> [--max-paginas 30] [--profundidad 2] [--paginas url1,url2] [--sin-sesion]
    ```
-   Deja `input/documentacion/proyecto/mapa-funcional.md` (y su `.json`): navegación global, y por página sus secciones, menús, formularios con cada campo (etiqueta, tipo, obligatorio, largos, mínimos y máximos, patrón, opciones), botones, mensajes visibles y tablas. En modo *historia*, pasale solo las páginas de la funcionalidad con `--paginas` y `--salida input/documentacion/historias/<HU o key>/`; después agregale `historia: <key>` al encabezado del `mapa-funcional.md` generado, así el índice lo muestra con su historia.
-2. **Mirada puntual con Playwright MCP** (`playwright-headless`), solo en modo *historia* y solo si el recorrido no alcanza (la pantalla está detrás de un paso, un modal o una pestaña): navegá hasta la pantalla y tomá un `browser_snapshot`. **No completes ni envíes formularios** y no hagas acciones con efecto. Para el cómo de Playwright MCP, aplicá el skill `ejecucion-e2e`.
+   Deja `input/documentacion/proyecto/mapa-funcional.md` (y su `.json`): navegación global, y por página sus secciones, menús, formularios con cada campo (etiqueta, tipo, obligatorio, largos, mínimos y máximos, patrón, opciones), botones, mensajes visibles, tablas y los **locators sugeridos** de cada elemento interactivo (los que usa el `web-mapper` para automatizar). Si ya había un mapa, agrega **Cambios desde el recorrido anterior** (pantallas nuevas o quitadas, campos y reglas que cambiaron, botones).
+   - **Con login**: si `SESION` está en el `.env` (la persona guardó la sesión con `npm run login`, iniciando sesión a mano), recorre **logueado** y cubre las pantallas privadas. Si la app pide login y no hay sesión, decilo en la respuesta y pedí `npm run login` (no escribas credenciales). Para varios roles, una corrida por sesión (`SESION=admin`, `--salida input/documentacion/proyecto/roles/admin/`).
+   - **De punta a punta** (modo *proyecto*): `--max-paginas 200 --profundidad 4`. Si `sin_recorrer` quedó en verdadero, corré de nuevo con las secciones que faltan en `--paginas`.
+   - En modo *historia*, pasale solo las páginas de la funcionalidad con `--paginas` y `--salida input/documentacion/historias/<HU o key>/`; después agregale `historia: <key>` al encabezado del `mapa-funcional.md` generado, así el índice lo muestra con su historia.
+2. **Lo que el recorrido no alcanza** (menús que se abren con clic, pestañas, modales, pasos de un asistente, pantallas de una SPA sin links): con Playwright MCP (`playwright-headless`, que arranca con la misma sesión) navegá hasta cada una y tomá un `browser_snapshot`; anotá sus campos, botones, mensajes y locators en `proyecto/pantallas-adicionales.md` (o en el dossier, en modo *historia*), y las URLs que encuentres pasalas al recorrido con `--paginas`. **No completes ni envíes formularios** y no hagas acciones con efecto. Para el cómo de Playwright MCP, aplicá el skill `ejecucion-e2e`.
 
 Lo que muestra la aplicación es una **observación de cómo funciona hoy**, no un requisito.
 
@@ -140,11 +144,16 @@ input/documentacion/
 ├── api/
 │   ├── api.md                      resumen de los contratos: endpoints, auth, códigos de error
 │   └── <repo>-openapi.yaml         copia de los contratos encontrados en el repositorio
-└── historias/
-    └── <HU o key>/
-        ├── dossier.md              todo lo de una historia o épica
-        └── mapa-funcional.md       (opcional) sus pantallas
+├── historias/
+│   └── <HU o key>/
+│       ├── dossier.md              todo lo de una historia o épica
+│       └── mapa-funcional.md       (opcional) sus pantallas
+├── proyecto/investigacion/         lo deja el investigador-proyecto (tableros, wiki): resumen, módulos y flujos,
+│                                   backlog, decisiones y glosario, dudas y riesgos
+└── manual-usuario/<modulo>.md      lo deja el redactor-manual: cómo se usa cada pantalla, verificado en la app
 ```
+
+`proyecto/investigacion/` y `manual-usuario/` **no los escribís vos**: son de otros agentes. Usalos como fuente (el manual dice cómo funciona la app hoy; la investigación, qué dicen los tableros) y, si contradicen al código, anotalo en *Contradicciones y dudas*.
 
 Cada `.md` empieza con este encabezado (lo lee el índice):
 
@@ -181,7 +190,7 @@ La carpeta lleva la key de la herramienta (`PROJ-12`); solo si la historia exist
 1. Leé `input/documentacion/INDICE.md` si existe: lo que está *Vigente* no se rehace salvo que la persona lo pida. Si ya hay base (`.estado.json`), seguí *Documentación incremental* en lugar de rehacer todo.
 2. **Repositorio**: README, `docs/`, árbol y stack → `repositorio.md` y la base de `resumen.md`. Después, módulo por módulo: reglas, mensajes, estados y permisos, rutas y contratos de API → `reglas-de-negocio.md`, `mensajes.md`, `estados-y-permisos.md`, `api/`.
 3. **Gestión del proyecto** (si hay conector): la(s) épica(s) principales y las páginas de Confluence o de la Wiki del proyecto que expliquen el producto (como máximo 10, las más relevantes) → completan `resumen.md` y el glosario.
-4. **Mapa funcional** de la aplicación → `mapa-funcional.md`. Cruzalo con el repositorio: las pantallas del router que el recorrido no encontró (detrás del login) van en `resumen.md` como *Pantallas no recorridas*.
+4. **Mapa funcional** de la aplicación, de punta a punta y con sesión → `mapa-funcional.md` (+ `pantallas-adicionales.md` con lo que solo se alcanza con clics). Cruzalo con el repositorio: las pantallas del router que no se pudieron recorrer (otro rol, un paso con efecto) van en `resumen.md` como *Pantallas no recorridas*, con el motivo.
 5. **Links** → `links.md`.
 
 ### Modo historia
@@ -193,7 +202,29 @@ La carpeta lleva la key de la herramienta (`PROJ-12`); solo si la historia exist
 5. Pantallas de la funcionalidad (mapa funcional con `--paginas` y, si hace falta, Playwright MCP).
 6. Escribí `historias/<HU o key>/dossier.md`. Si encontraste algo general del proyecto que no estaba en la base (una regla transversal, un rol nuevo), sumalo también al documento de `proyecto/` que corresponda.
 
+### Modo barrido (todas las historias de un alcance)
+
+Para que los casos tengan contexto de **todo** el proyecto, no de una muestra:
+
+1. **Listá el alcance completo**, paginando hasta el final (no te quedes con la primera página): en Jira, el JQL del alcance (`project = PROJ AND issuetype in (Story, Bug, Task) ORDER BY updated DESC`, o la épica, el sprint, la release o el filtro del tablero); en Azure DevOps, la query WIQL equivalente (`System.ChangedDate`); en las demás herramientas, la tabla de equivalencias de `investigacion-contexto`. De cada ítem, solo `key`, título, tipo, estado, épica y fecha de cambio (`updated` / `System.ChangedDate`): escribilo en `input/documentacion/_alcance.json` (`{"historias": [{"key", "titulo", "actualizado"}]}`).
+2. **Qué falta o cambió** (determinístico):
+   ```bash
+   python scripts/cambios_documentacion.py historias --actual input/documentacion/_alcance.json
+   ```
+   Devuelve las **nuevas** (sin dossier), las **cambiadas** (la historia o sus PRs se modificaron después del dossier) y las **sin cambios**, y deja `cambios-historias.md`.
+3. **Documentá las nuevas y las cambiadas en modo historia**, por lotes de hasta 10 (historia + comentarios + subtareas + tareas + vínculos + épica + PRs + links), registrando cada una con `cambios_documentacion.py historia` al terminarla. Si el alcance es grande, **frená en un lote**, regenerá el índice y devolvé el progreso (cuántas quedan) para que la conversación principal te continúe: así no se pierde trabajo si se corta.
+4. **Consolidá lo transversal**: las reglas, roles, estados y mensajes que se repiten en varias historias van también a los documentos de `proyecto/` (`reglas-de-negocio.md`, `estados-y-permisos.md`, `mensajes.md`), por módulo, con la historia de la que salen.
+5. Al terminar todo el alcance: `python scripts/cambios_documentacion.py historias --actual input/documentacion/_alcance.json --registrar-revision` (la próxima actualización parte de esta fecha) y borrá `_alcance.json`.
+
 ### Documentación incremental (modo actualizar, o proyecto con base existente)
+
+En un proyecto ágil los requerimientos cambian en el medio del sprint. La actualización mira **tres** fuentes de cambio:
+
+- **Código**: el paso 1 de abajo (`cambios_documentacion.py cambios`).
+- **Historias** (requerimientos): listá las historias del alcance **cambiadas desde la última revisión** (`updated >= <revision_historias de .estado.json>` en Jira; `System.ChangedDate >= …` en Azure DevOps), escribilas en `_alcance.json` y corré `python scripts/cambios_documentacion.py historias --actual input/documentacion/_alcance.json --registrar-revision`. Rehacé los dossiers de las **cambiadas** y documentá las **nuevas**; `cambios-historias.md` lista sus **casos para revisar**.
+- **Aplicación**: volvé a correr `npm run mapa-funcional` con la misma URL y sesión: la sección *Cambios desde el recorrido anterior* dice qué pantallas, campos y botones cambiaron. Rehacé lo afectado (dossiers de esas pantallas) y, si hay manuales en `manual-usuario/` de esas pantallas, listalos en la respuesta para que el `redactor-manual` los actualice.
+
+Lo de abajo detalla el paso del código y cómo registrar lo documentado.
 
 El estado de lo documentado vive en `input/documentacion/.estado.json` y lo maneja `scripts/cambios_documentacion.py` (determinístico; vos decidís qué rehacer).
 

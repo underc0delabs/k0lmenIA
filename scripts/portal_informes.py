@@ -48,6 +48,7 @@ NOMBRES = {
     "ivr": "Voz / IVR", "juegos": "Videojuegos", "pos": "Punto de venta (POS)", "streaming": "Streaming y cámaras",
     "observabilidad": "Observabilidad", "busqueda": "Búsqueda y relevancia", "documentos": "Documentos generados",
     "contenido": "Contenido y typos", "mutacion": "Mutation testing",
+    "revision-codigo": "Revisión de código", "manuales": "Manuales de usuario", "scalar": "APIs en Scalar",
 }
 # Orden de las tarjetas: primero lo que más se mira.
 ORDEN = ["tablero", "informes-cierre", "ejecuciones", "k0lmena", "fallos", "cobertura", "monitoreo", "planes-de-prueba",
@@ -55,7 +56,7 @@ ORDEN = ["tablero", "informes-cierre", "ejecuciones", "k0lmena", "fallos", "cobe
          "resiliencia", "pixel-perfect", "cross-browser", "formularios", "ux", "correos", "traductor", "logs",
          "reparaciones", "revision-casos", "charters", "triage", "evals",
          "mobile", "shopify", "wordpress", "prestashop", "vtex", "dynamics", "salesforce", "sap",
-         "desktop", "ia", "mensajeria", "soap", "contratos", "datos", "seo", "dependencias", "sast",
+         "desktop", "ia", "mensajeria", "soap", "contratos", "datos", "seo", "dependencias", "sast", "revision-codigo", "manuales", "scalar",
          "blockchain", "billeteras", "pos", "ivr", "juegos", "streaming",
          "observabilidad", "busqueda", "documentos", "contenido", "mutacion"]
 IGNORAR = {"historial", "evidencia", "capturas", "videos", "recortes", "diferencias", "lighthouse", "referencia",

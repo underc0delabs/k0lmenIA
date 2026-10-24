@@ -28,6 +28,10 @@ Las integradas:
 - **salesforce** (en `salesforce/`): la CLI `sf` para relevar una org de Salesforce en solo lectura (`probador-salesforce`, `npm run salesforce`). Ver `herramientas/salesforce/README.md`.
 - **ecommerce** (en `ecommerce/`): relevamientos funcionales de solo lectura de tiendas Shopify (`npm run shopify`, Admin API y Theme Check opcionales) y WordPress / WooCommerce (`npm run wordpress`, REST API de WooCommerce y WP-CLI opcionales), para el `probador-shopify` y el `probador-wordpress`. Ver `herramientas/ecommerce/README.md`.
 
+- **codigo** (en `codigo/`): code review estático de solo lectura para el `revisor-codigo` — trae el código de GitHub, GitLab, Bitbucket, Azure Repos, Gitea o cualquier git sin ejecutar nada (`npm run obtener-codigo`, con el diff de un PR/MR contra el merge-base) y lo revisa con reglas por lenguaje, métricas, duplicados, secretos y semgrep/ruff/bandit si están (`npm run revision-codigo`). Ver `herramientas/codigo/README.md`.
+
+- **manual** (en `manual/`): la herramienta del `redactor-manual` (`npm run manual`) — carpetas y versiones de cada manual, capturas, HTML autocontenido y Word con el diseño de k0lmena, checklist antes de la versión final, plan de la plataforma por módulos y exportación del conocimiento a `input/documentacion/manual-usuario/`.
+- **scalar** (en `scalar/`): la herramienta del `probador-scalar` (`npm run scalar`) — trae las APIs del Registry de Scalar, arma los casos como colección con tests `pm` (corre con Newman) y como OpenAPI con `x-post-response` para publicar en Scalar con la CLI oficial. Ver `herramientas/scalar/README.md`.
 Las que vengan se suman con el mismo patrón: una subcarpeta + su README.
 
 > ¿En qué se diferencia de `scripts/` y de `.mcp.json`?

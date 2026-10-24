@@ -14,8 +14,9 @@ Cada .md que escribe el documentador lleva un encabezado (frontmatter) así:
 
     ---
     titulo: Reglas de negocio de pagos
-    tipo: proyecto | repositorio | web | historia | api | links
+    tipo: proyecto | repositorio | web | historia | api | links | investigacion | manual-usuario
     historia: HU-001            (solo en los dossiers de una historia)
+    estado: confirmado | borrador | investigacion | sin-confirmar   (opcional: qué tan confiable es)
     fuentes: github mi-empresa/mi-app (src/pagos), PROJ-12
     actualizado: 2026-10-14
     ---
@@ -38,10 +39,12 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parents[1]
 INDICE = "INDICE.md"
 IGNORAR = {INDICE, ".gitkeep"}
-ORDEN_TIPOS = ["cambios", "proyecto", "repositorio", "api", "web", "historia", "links"]
+ORDEN_TIPOS = ["cambios", "proyecto", "investigacion", "repositorio", "api", "web", "manual-usuario", "historia", "links"]
 NOMBRE_TIPO = {
     "cambios": "Cambios desde la última documentación",
     "proyecto": "Proyecto",
+    "investigacion": "Investigación del proyecto (tableros y wiki)",
+    "manual-usuario": "Manual de usuario (cómo se usa la aplicación)",
     "repositorio": "Repositorio",
     "api": "Contratos de API",
     "web": "Aplicación web",
@@ -102,6 +105,7 @@ def documentos(carpeta):
             "tipo": tipo,
             "historia": meta.get("historia", ""),
             "fuentes": meta.get("fuentes", ""),
+            "confiabilidad": meta.get("estado", ""),
             "actualizado": fecha,
         })
     orden = {t: i for i, t in enumerate(ORDEN_TIPOS + ["manual"])}
@@ -133,6 +137,9 @@ def armar_indice(docs, hoy, dias, marcados=None):
         "`python scripts/indice_documentacion.py`). Leé primero este índice y abrí solo lo que necesites.",
         "Lo que viene del código o de la aplicación describe cómo funciona **hoy**: es contexto, no "
         "reemplaza a la historia ni a las decisiones del PO.",
+        "Confiabilidad (cuando el documento la declara): `confirmado` (verificado en la aplicación o aprobado) · "
+        "`borrador` (verificado en parte; lo dudoso está aparte) · `investigacion` (sale de tickets y wiki, sin verificar "
+        "en la app) · `sin-confirmar` (dudas y contradicciones: van como preguntas, nunca como hechos).",
         "",
     ]
     if not docs:
@@ -147,15 +154,32 @@ def armar_indice(docs, hoy, dias, marcados=None):
             continue
         lineas += [f"## {NOMBRE_TIPO[tipo]}", ""]
         con_historia = any(d["historia"] for d in grupo)
-        cab = ["Documento", "Título"] + (["Historia"] if con_historia else []) + ["Fuentes", "Actualizado", "Estado"]
+        con_conf = any(d.get("confiabilidad") for d in grupo)
+        cab = (["Documento", "Título"] + (["Historia"] if con_historia else []) + (["Confiabilidad"] if con_conf else [])
+               + ["Fuentes", "Actualizado", "Estado"])
         lineas += ["| " + " | ".join(cab) + " |", "|" + "---|" * len(cab)]
         for d in grupo:
             estado = f"Desactualizado ({marcados[d['ruta']]})" if d["ruta"] in marcados else "Revisar" if d in viejos else "Vigente"
-            fila = [f"`{d['ruta']}`", d["titulo"]] + ([d["historia"]] if con_historia else []) + [
-                d["fuentes"] or "-", d["actualizado"].isoformat(), estado]
+            fila = ([f"`{d['ruta']}`", d["titulo"]] + ([d["historia"]] if con_historia else [])
+                    + ([d.get("confiabilidad") or "-"] if con_conf else [])
+                    + [d["fuentes"] or "-", d["actualizado"].isoformat(), estado])
             lineas.append("| " + " | ".join(str(c).replace("|", "/") for c in fila) + " |")
         lineas.append("")
     return "\n".join(lineas)
+
+
+def escribir_documento(ruta, titulo, tipo, cuerpo, fuentes="", estado="", historia="", actualizado=None):
+    """Escribe un .md de input/documentacion/ con el encabezado que lee el índice (y alinea sus tablas).
+    La usan las herramientas que suman conocimiento a la documentación (investigación, manual de usuario)."""
+    ruta = Path(ruta)
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    fecha = actualizado if isinstance(actualizado, str) else (actualizado or dt.date.today()).isoformat()
+    front = [("titulo", titulo), ("tipo", tipo), ("historia", historia), ("estado", estado), ("fuentes", fuentes),
+             ("actualizado", fecha)]
+    encabezado = "---\n" + "".join(f"{k}: {' '.join(str(v).split())}\n" for k, v in front if v) + "---\n\n"
+    ruta.write_text(encabezado + cuerpo.rstrip() + "\n", encoding="utf-8")
+    subprocess.run([sys.executable, str(RAIZ / "scripts" / "formatear_tablas.py"), str(ruta)], capture_output=True, text=True)
+    return ruta
 
 
 def main(argv=None):

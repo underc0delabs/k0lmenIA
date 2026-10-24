@@ -29,6 +29,7 @@ const REQUERIDAS = {
   github: () => ['GITHUB_TOKEN'],
   asana: () => ['ASANA_CLIENT_ID', 'ASANA_CLIENT_SECRET'],
   youtrack: () => ['YOUTRACK_URL', 'YOUTRACK_TOKEN'],
+  scalar: () => ['SCALAR_MCP_URL'],
 };
 
 /**

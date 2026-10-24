@@ -208,7 +208,9 @@ def revisar_herramientas(ctx):
     for cmd, nombre, para, como in (
             ("pip-audit", "pip-audit", "SCA de Python del analista-dependencias", "pip install pip-audit"),
             ("osv-scanner", "osv-scanner", "SCA multi-ecosistema del analista-dependencias", "https://google.github.io/osv-scanner/"),
-            ("semgrep", "semgrep", "SAST del analista-codigo-seguro", "pip install semgrep")):
+            ("semgrep", "semgrep", "SAST del analista-codigo-seguro y el revisor-codigo", "pip install semgrep"),
+            ("ruff", "ruff", "linter de Python del revisor-codigo", "pip install ruff"),
+            ("bandit", "bandit", "seguridad de Python del revisor-codigo", "pip install bandit")):
         if shutil.which(cmd):
             linea(OK, f"{nombre} instalado ({para})")
         else:

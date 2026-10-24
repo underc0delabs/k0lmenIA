@@ -223,6 +223,63 @@ def armar_cambios_md(r, desde, hasta):
     return "\n".join(l) + "\n"
 
 
+# ------------------------------------------------------------------ historias que cambiaron (requerimientos)
+def _fecha_iso(v):
+    return str(v or "").strip().replace(" ", "T")[:19]
+
+
+def comparar_historias(estado, actuales, raiz=RAIZ):
+    """Compara las historias del alcance (con su fecha de cambio actual) con las documentadas.
+    actuales: [{key, hu?, titulo?, actualizado, prs?}]. Devuelve nuevas, cambiadas (con qué cambió),
+    sin_cambios y los casos existentes de las cambiadas para revisar."""
+    nuevas, cambiadas, iguales = [], [], []
+    for h in actuales:
+        key = h.get("key")
+        if not key:
+            continue
+        previo = estado["historias"].get(key)
+        if not previo:
+            nuevas.append({"key": key, "titulo": h.get("titulo", ""), "actualizado": h.get("actualizado", "")})
+            continue
+        que = []
+        if _fecha_iso(h.get("actualizado")) > _fecha_iso(previo.get("cambio_historia")):
+            que.append("historia")
+        if h.get("prs") and _fecha_iso(h.get("prs")) > _fecha_iso(previo.get("cambio_prs")):
+            que.append("PRs")
+        if que:
+            cambiadas.append({"key": key, "hu": previo.get("hu") or h.get("hu", ""), "titulo": h.get("titulo", ""),
+                              "cambio": " y ".join(que), "antes": previo.get("cambio_historia", ""), "ahora": h.get("actualizado", "")})
+        else:
+            iguales.append(key)
+    claves = [c["key"] for c in cambiadas]
+    modulos = sorted({m for k in claves for m in estado["historias"].get(k, {}).get("modulos", [])})
+    casos = casos_afectados(estado, claves, [], inventario_casos(raiz)) if claves else []
+    return {"nuevas": nuevas, "cambiadas": cambiadas, "sin_cambios": iguales, "modulos": modulos, "casos": casos}
+
+
+def armar_cambios_historias_md(r, desde):
+    l = ["---", "titulo: Historias nuevas o que cambiaron", "tipo: cambios", f"fuentes: gestión del proyecto (desde {desde or 'el inicio'})",
+         f"actualizado: {_hoy()}", "---", "", "# Historias nuevas o que cambiaron", "",
+         f"Revisión del {_hoy()} contra la documentación (desde {desde or 'el inicio'}): {len(r['nuevas'])} nueva(s), "
+         f"{len(r['cambiadas'])} con cambios, {len(r['sin_cambios'])} sin cambios.", ""]
+    l += ["## Historias que cambiaron (rehacer el dossier y revisar sus casos)", ""]
+    if r["cambiadas"]:
+        l += ["| Historia | HU | Título | Qué cambió | Documentada | Ahora |", "|---|---|---|---|---|---|"]
+        l += [f"| {c['key']} | {c['hu'] or '-'} | {c['titulo'] or '-'} | {c['cambio']} | {c['antes'] or '-'} | {c['ahora'] or '-'} |" for c in r["cambiadas"]]
+    else:
+        l.append("Ninguna.")
+    l += ["", "## Historias nuevas (documentar)", ""]
+    l += ([f"- {n['key']}{' · ' + n['titulo'] if n['titulo'] else ''}" for n in r["nuevas"]] or ["Ninguna."])
+    l += ["", "## Casos para revisar", ""]
+    if r["casos"]:
+        l += ["Los requerimientos de estas historias cambiaron después de escribir sus casos. Sugerencia: pasarlos al "
+              "`revisor-casos` (o regenerarlos) después de actualizar el dossier.", "",
+              "| Archivo | Por qué |", "|---|---|"] + [f"| `{c['archivo']}` | {c['motivo']} |" for c in r["casos"]]
+    else:
+        l.append("No hay casos existentes de las historias que cambiaron.")
+    return "\n".join(l) + "\n"
+
+
 def archivos_desde_git(ruta, desde, hasta="HEAD"):
     r = subprocess.run(["git", "-C", str(ruta), "diff", "--name-only", f"{desde}..{hasta}"], capture_output=True, text=True)
     if r.returncode != 0:
@@ -266,6 +323,9 @@ def main(argv=None):
     p.add_argument("--desde", help="commit de partida (por defecto, el documentado del repo)")
     p.add_argument("--hasta", default="HEAD")
     p.add_argument("--marcar", action="store_true")
+    p = sub.add_parser("historias", help="qué historias del alcance son nuevas o cambiaron desde que se documentaron")
+    p.add_argument("--actual", required=True, help='JSON con [{"key", "hu", "titulo", "actualizado", "prs"}] de la herramienta de gestión')
+    p.add_argument("--registrar-revision", action="store_true", help="guardar la fecha de esta revisión (la próxima consulta parte de ahí)")
     a = ap.parse_args(argv)
     carpeta = Path(a.carpeta)
     estado = leer_estado(carpeta)
@@ -279,6 +339,17 @@ def main(argv=None):
     elif a.comando == "historia":
         guardar_estado(registrar_historia(estado, a.key, a.hu, a.cambio_historia, a.cambio_prs, _lista(a.modulos), _lista(a.archivos)), carpeta)
         print(f"Historia {a.key} registrada")
+    elif a.comando == "historias":
+        actuales = json.loads(Path(a.actual).read_text(encoding="utf-8"))
+        desde = estado.get("revision_historias", "")
+        r = comparar_historias(estado, actuales.get("historias", actuales) if isinstance(actuales, dict) else actuales)
+        md = carpeta / "cambios-historias.md"
+        md.write_text(armar_cambios_historias_md(r, desde), encoding="utf-8")
+        _formatear(md)
+        if a.registrar_revision:
+            estado["revision_historias"] = dt.datetime.now().isoformat(timespec="seconds")
+            guardar_estado(estado, carpeta)
+        print(json.dumps(r | {"revision_anterior": desde}, ensure_ascii=False, indent=2))
     else:
         repos = estado["repositorios"]
         repo = a.repo or (next(iter(repos)) if len(repos) == 1 else "")

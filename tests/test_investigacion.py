@@ -56,7 +56,7 @@ def _escribir(carpeta, datos):
 
 def test_html_y_md(tmp_path):
     archivo = _escribir(tmp_path / "proj", RELEVAMIENTO)
-    assert inv.main([str(archivo)]) == 0
+    assert inv.main([str(archivo), "--input", str(tmp_path / "doc")]) == 0
     html = (tmp_path / "proj" / "informe-investigacion.html").read_text(encoding="utf-8")
     assert "Relevamiento de Tienda online" in html
     assert "AMB-01" in html and "P-01" in html and "Reembolso inmediato" in html
@@ -82,17 +82,28 @@ def test_html_y_md(tmp_path):
     pres = (tmp_path / "proj" / "presentacion-investigacion.html").read_text(encoding="utf-8")
     assert pres.startswith("<!doctype html>") and "De un vistazo" in pres and "Arquitectura" in pres
     assert pres.count('<section class="s"') >= 5 and "imprimí a PDF" in pres
+    # Lo relevado queda como documentación del proyecto para los demás agentes, con el encabezado del índice
+    doc = tmp_path / "doc" / "proyecto" / "investigacion"
+    assert sorted(p.name for p in doc.iterdir()) == ["backlog.md", "decisiones-y-glosario.md", "dudas-y-riesgos.md",
+                                                     "modulos-y-flujos.md", "resumen.md"]
+    backlog = (doc / "backlog.md").read_text(encoding="utf-8")
+    assert backlog.startswith("---\ntitulo: Épicas, historias y releases — Tienda online\ntipo: investigacion\nestado: investigacion\n")
+    assert "PROJ-12" in backlog and "cuotas hasta 12" in backlog and "+====" in backlog  # tablas alineadas
+    dudas = (doc / "dudas-y-riesgos.md").read_text(encoding="utf-8")
+    assert "estado: sin-confirmar" in dudas and "AMB-01" in dudas and "FI-XX" in dudas
+    indice = (tmp_path / "doc" / "INDICE.md").read_text(encoding="utf-8")
+    assert "Investigación del proyecto" in indice and "sin-confirmar" in indice
 
 
 def test_compara_con_el_relevamiento_anterior(tmp_path):
     carpeta = tmp_path / "proj"
-    assert inv.main([str(_escribir(carpeta, RELEVAMIENTO))]) == 0
+    assert inv.main([str(_escribir(carpeta, RELEVAMIENTO)), "--sin-input"]) == 0
     nuevo = json.loads(json.dumps(RELEVAMIENTO))
     nuevo["ambiguedades"] = [{"id": "AMB-01", "tipo": "Vacío", "que": "No hay criterios para el cupón", "impacto": "Media"}]
     nuevo["preguntas"] = [{"id": "P-01", "pregunta": "¿El cupón se acumula con otras promos?", "prioridad": "Alta"}]
     import time
     time.sleep(1.1)  # el historial se nombra por segundo
-    assert inv.main([str(_escribir(carpeta, nuevo))]) == 0
+    assert inv.main([str(_escribir(carpeta, nuevo)), "--sin-input"]) == 0
     html = (carpeta / "informe-investigacion.html").read_text(encoding="utf-8")
     assert "Cambios desde el relevamiento anterior" in html
     assert "No hay criterios para el cupón" in html and "Reembolso inmediato vs. 48 h hábiles" in html  # nueva y resuelta
@@ -116,7 +127,7 @@ def test_requiere_proyecto(tmp_path):
     archivo = tmp_path / "x.json"
     archivo.write_text("{}", encoding="utf-8")
     with pytest.raises(SystemExit):
-        inv.main([str(archivo)])
+        inv.main([str(archivo), "--sin-input"])
 
 
 def test_historial_se_poda(tmp_path):

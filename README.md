@@ -154,6 +154,7 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 <tr><td><code>consultor-proyecto</code></td><td>Preguntale cómo funciona cualquier parte del producto: responde con la documentación del proyecto, citando de dónde sale cada dato o diciendo que no está documentado</td></tr>
 <tr><td><code>guia-onboarding</code></td><td>Plan de incorporación para un QA nuevo: el producto, su entorno, los agentes para su rol, las primeras tareas y un checklist</td></tr>
 <tr><td><code>investigador-proyecto</code></td><td>Releva el proyecto entero por MCP (Jira, Azure DevOps, Confluence, repo, Figma) y arma un informe para un QA nuevo: de qué se trata, módulos, flujos, equipo, ambigüedades y contradicciones con sus fuentes, y preguntas priorizadas para el equipo</td></tr>
+<tr><td><code>redactor-manual</code></td><td>Arma el manual de usuario de una funcionalidad, un módulo o toda la plataforma: cruza lo que ya se sabe del proyecto (Jira/Azure DevOps, investigación, mapa funcional, casos) con la app recorrida con Playwright (capturas), marca cada duda para revisión humana y deja lo aprendido en <code>input/documentacion/</code> para que los casos de prueba tengan contexto real.</td></tr>
 <tr><td><code>revisor-casos</code></td><td>Revisa la calidad de los casos existentes: puntaje, problemas, duplicados, tiempo de ejecución manual y la versión mejorada</td></tr>
 <tr><td><code>generador-charters</code></td><td>Charters de exploración por sesiones (hojas y plantilla de notas) y el informe de las sesiones</td></tr>
 <tr><td><code>selector-casos-de-prueba</code></td><td>Qué casos correr para un cambio (git, PR, Jira, notas de la release), priorizados por riesgo, con el comando <code>npm test</code> listo y los cambios sin cobertura</td></tr>
@@ -178,10 +179,12 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 <tr><td><code>probador-desktop</code></td><td>Prueba apps de escritorio Windows (WinForms/WPF/UWP/Win32/Electron/Java/Qt): releva el árbol de controles (pywinauto) y prueba con Appium+WinAppDriver, pywinauto o Playwright (Electron); funcional, instalación, archivos, SO, regresión, rendimiento y seguridad.</td></tr>
 <tr><td><code>probador-mobile</code></td><td>Prueba apps móviles (Android/iOS; nativa/híbrida/web) en vivo con Appium: permisos, interrupciones, offline, deep links y push, ciclo de vida, compatibilidad de OS y pantallas, rendimiento y seguridad móvil (MASVS).</td></tr>
 <tr><td><code>analista-dependencias</code></td><td>SCA de dependencias (solo lectura): corre npm audit / pip-audit / osv-scanner, agrega los CVE por severidad, distingue directas de transitivas y vulnerable de desactualizado, y marca licencias a revisar.</td></tr>
+<tr><td><code>revisor-codigo</code></td><td>Code review estático (solo lectura) de un repo, rama o PR/MR de GitHub, GitLab, Bitbucket, Azure Repos o cualquier git: seguridad, performance, confiabilidad, malas prácticas y mantenibilidad (complejidad, duplicados); confirma cada hallazgo, sugiere aprobar o pedir cambios y deja los comentarios listos para pegar en el PR.</td></tr>
 <tr><td><code>analista-codigo-seguro</code></td><td>SAST y secretos (solo lectura): escáner de secretos integrado (redacta el valor) + semgrep si está, triage de falsos positivos y mapeo a OWASP/CWE; complementa el análisis dinámico (ZAP).</td></tr>
 <tr><td><code>probador-ia</code></td><td>Prueba funciones de IA/LLM (chatbot, RAG, clasificador, agente): golden set y evals, alucinaciones y grounding, seguridad de prompt (injection/jailbreak), formato, robustez, latencia y costo.</td></tr>
 <tr><td><code>probador-mensajeria</code></td><td>Prueba mensajería/eventos (Kafka/RabbitMQ/SQS/MQTT/WebSocket/SSE): entrega, orden, idempotencia, DLQ y reintentos, esquemas, consumer lag y outbox; publica/consume con la herramienta.</td></tr>
 <tr><td><code>probador-soap</code></td><td>Prueba servicios SOAP desde el WSDL: operaciones, validación XSD, SOAP Faults, namespaces/SOAPAction, WS-Security e idempotencia; envía los sobres con ejecutor-api.</td></tr>
+<tr><td><code>probador-scalar</code></td><td>Prueba APIs que están en Scalar: se conecta a su MCP, trae el contrato del Registry, escribe los casos, los corre como colección con tests (Newman, sin gastar tokens) y los importa a Scalar (ejemplos por caso y tests en <code>x-post-response</code>), publicando solo con confirmación.</td></tr>
 <tr><td><code>probador-contratos</code></td><td>Contract testing (Pact): consumer-driven y bi-direccional para REST, GraphQL, gRPC y eventos; verificación del proveedor, can-i-deploy y compatibilidad.</td></tr>
 <tr><td><code>analista-seo</code></td><td>SEO y GEO: indexabilidad, on-page, datos estructurados, hreflang y acceso de los crawlers de IA; releva con npm run seo y deriva los Core Web Vitals al auditor-rendimiento-web.</td></tr>
 <tr><td><code>probador-datos</code></td><td>Datos y pipelines (ETL): calidad por dimensiones, reconciliación origen-destino, validación de esquema, transformaciones e idempotencia; solo lectura con verificador-datos.</td></tr>
@@ -917,7 +920,7 @@ k0lmenIA/
 ├── evals/                  Evals de los agentes: casos con trampas, insumos y chequeos
 ├── .github/workflows/      CI (tests), monitoreo sintético y evals (manuales)
 ├── .claude/
-│   ├── agents/             Los 76 agentes
+│   ├── agents/             Los 79 agentes
 │   ├── skills/             Contexto, diseño, guía de performance, ejecución E2E y API, k0lmena
 │   └── settings.json       Conectores habilitados y permisos del proyecto
 ├── input/                  historias/ documentacion/ api/ bugs/ (ver input/README.md)

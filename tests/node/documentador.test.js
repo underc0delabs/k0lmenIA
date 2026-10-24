@@ -81,3 +81,39 @@ test('conector gitlab: sin token deja OAuth (solo toolsets); con token agrega el
   assert.equal(conToken.Authorization, 'Bearer glpat-prueba');
   assert.equal(conToken['X-Gitlab-Enabled-Mcp-Server-Toolsets'], 'repository,merge_requests');
 });
+
+test('mapa funcional: compara con el recorrido anterior (pantallas, campos, reglas y botones)', () => {
+  const antes = { host: 'a', paginas: [
+    { ruta: '/alta', titulo: 'Alta', botones: ['Guardar'], formularios: [{ nombre: 'f', campos: [
+      { etiqueta: 'Razón', tipo: 'text', requerido: true, maxlength: 100 }, { etiqueta: 'Fax', tipo: 'text' }] }] },
+    { ruta: '/viejo', titulo: 'x' }, { ruta: '/caida', error: 'timeout' }] };
+  const ahora = { host: 'a', paginas: [
+    { ruta: '/alta', titulo: 'Alta', botones: ['Guardar', 'Borrar'], formularios: [{ nombre: 'f', campos: [
+      { etiqueta: 'Razón', tipo: 'text', requerido: true, maxlength: 150 }, { etiqueta: 'Email', tipo: 'email' }] }] },
+    { ruta: '/nuevo', titulo: 'y' }] };
+  const c = mapa.compararMapas(antes, ahora);
+  assert.deepEqual(c.nuevas, ['/nuevo']);
+  assert.deepEqual(c.quitadas, ['/viejo']);
+  assert.deepEqual(c.paginas[0], { ruta: '/alta', campos_nuevos: ['f › Email'], campos_quitados: ['f › Fax'],
+    campos_cambiados: ['f › Razón'], botones_nuevos: ['Borrar'], botones_quitados: [], titulo: null });
+  assert.equal(mapa.compararMapas(ahora, ahora).hay, false);
+});
+
+test('mapa funcional: markdown con sesión, cambios y locators sugeridos', () => {
+  const md = mapa.aMarkdown({ url: 'https://a.com/', host: 'a.com', fecha: '2026-10-23T10:00:00.000Z', max_paginas: 30, sin_recorrer: false,
+    con_sesion: 'sesion.json', navegacion_global: [],
+    cambios: { desde: '2026-10-01T00:00:00Z', hay: true, nuevas: ['/nuevo'], quitadas: [], paginas: [
+      { ruta: '/alta', campos_nuevos: ['f › Email'], campos_quitados: [], campos_cambiados: [], botones_nuevos: [], botones_quitados: [], titulo: null }] },
+    paginas: [{ url: 'https://a.com/alta', ruta: '/alta', titulo: 'Alta', descripcion: '', encabezados: [], menus: [], botones: [], mensajes: [],
+      tablas: [], extracto: '', formularios: [],
+      locators: [{ elemento: 'Guardar', rol: 'button', locator: "getByTestId('guardar')", unico: true },
+        { elemento: 'Cancelar', rol: 'button', locator: "getByRole('button', { name: 'Cancelar' })", unico: false }] }] });
+  assert.match(md, /\*\*con la sesión iniciada\*\* \(sesion\.json\)/);
+  assert.doesNotMatch(md, /Sin sesión:/);
+  assert.match(md, /## Cambios desde el recorrido anterior \(2026-10-01\)/);
+  assert.match(md, /- Pantallas nuevas: \/nuevo/);
+  assert.match(md, /- \/alta: campos nuevos: f › Email/);
+  assert.match(md, /### Locators sugeridos/);
+  assert.match(md, /\| Guardar \| button \| `getByTestId\('guardar'\)` \| Sí \|/);
+  assert.match(md, /\| Cancelar \| button \| .* \| No \|/);
+});

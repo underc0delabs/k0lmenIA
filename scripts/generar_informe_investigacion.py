@@ -10,6 +10,10 @@ Arma, a partir del JSON que escribe el agente, en la carpeta del JSON (o en --sa
   - informe-investigacion.md     (lo mismo en Markdown, con las tablas alineadas)
   - resumen.md                   (resumen breve, una carilla: qué es el proyecto y lo más urgente)
   - presentacion-investigacion.html  (presentación autocontenida; ←/→ para navegar e imprime a PDF, una diapo por hoja)
+  - input/documentacion/proyecto/investigacion/*.md  (lo relevado como documentación del proyecto, con el encabezado
+                                 del índice, para que los demás agentes lo usen al analizar historias y escribir casos:
+                                 resumen, módulos y flujos, backlog, decisiones y glosario, dudas y riesgos; --sin-input
+                                 no lo escribe). Regenera input/documentacion/INDICE.md.
   - historial/<fecha-hora>/      (copia de este relevamiento; se guardan los últimos 5). Si hay uno anterior,
                                  el informe trae "Cambios desde el relevamiento anterior": ambigüedades y
                                  preguntas nuevas y resueltas.
@@ -800,6 +804,114 @@ def guardar_historial(carpeta, archivos, maximo=MAX_HISTORIAL):
     return destino
 
 
+# ------------------------------------------------------------------ conocimiento para los demás agentes
+
+def _celda(v):
+    if isinstance(v, (list, tuple)):
+        v = ", ".join(str(x) for x in v)
+    return " ".join(str(v if v is not None else "").split()).replace("|", "/") or "-"
+
+
+def _tabla(cab, filas):
+    if not filas:
+        return ""
+    out = ["| " + " | ".join(cab) + " |", "|" + "---|" * len(cab)]
+    out += ["| " + " | ".join(_celda(c) for c in f) + " |" for f in filas]
+    return "\n".join(out) + "\n"
+
+
+def _seccion(titulo, cuerpo):
+    return f"## {titulo}\n\n{cuerpo}\n" if cuerpo and cuerpo.strip() else ""
+
+
+def exportar_a_input(d, carpeta):
+    """Escribe lo relevado como documentación del proyecto en <carpeta> (input/documentacion/proyecto/investigacion/),
+    con el encabezado del índice, para que investigacion-contexto lo use al analizar historias y escribir casos.
+    Todo sale de tickets, wiki y comentarios: va como estado `investigacion` (y las dudas, `sin-confirmar`), nunca
+    como comportamiento verificado de la aplicación. Devuelve las rutas escritas."""
+    sys.path.insert(0, str(RAIZ / "scripts"))
+    from indice_documentacion import escribir_documento
+    carpeta = Path(carpeta)
+    fecha = d.get("fecha") or datetime.now().date().isoformat()
+    proyecto = d.get("proyecto")
+    fuentes = ", ".join(x for x in [d.get("clave"), d.get("tablero")] if x) or proyecto
+    aviso = (f"> Relevado por el `investigador-proyecto` el {fecha} desde tickets, wiki y comentarios (no verificado en la "
+             "aplicación). Cada dato cita su fuente: ante una duda, volvé a la fuente. El informe completo está en "
+             f"`output/investigacion/`.\n\n")
+    escritos = []
+
+    def doc(nombre, titulo, cuerpo, estado="investigacion"):
+        if cuerpo.strip():
+            escritos.append(escribir_documento(carpeta / nombre, f"{titulo} — {proyecto}", "investigacion",
+                                               f"# {titulo}\n\n{aviso}{cuerpo}", fuentes=fuentes, estado=estado, actualizado=fecha))
+
+    cob = d.get("cobertura") or {}
+    fuentes_t = _tabla(["Fuente", "Tipo", "Alcance", "Estado", "Motivo"],
+                       [[f.get("fuente"), f.get("tipo"), f.get("alcance"), f.get("estado"), f.get("motivo")] for f in d.get("fuentes") or []])
+    doc("resumen.md", "Resumen del proyecto",
+        (f"{d['resumen']}\n\n" if d.get("resumen") else "")
+        + (f"Cobertura: {cob.get('leidos', '?')} de {cob.get('total_items', '?')} ítems leídos en detalle"
+           + (f" ({cob['criterio']})" if cob.get("criterio") else "") + ".\n\n" if cob else "")
+        + _seccion("Ambientes", _tabla(["Ambiente", "URL", "Para qué", "Fuente"],
+                                       [[a.get("nombre"), a.get("url"), a.get("para_que"), a.get("fuente")] for a in d.get("ambientes") or []]))
+        + _seccion("Stack", _tabla(["Capa", "Tecnología", "Fuente"], [[s.get("capa"), s.get("tecnologia"), s.get("fuente")] for s in d.get("stack") or []]))
+        + _seccion("Equipo (a quién preguntar)", _tabla(["Rol", "Nombre", "Temas", "Fuente"],
+                   [[e_.get("rol"), e_.get("nombre"), e_.get("temas"), e_.get("fuente")] for e_ in d.get("equipo") or []]))
+        + _seccion("Fuentes consultadas", fuentes_t)
+        + _seccion("Fuentes que no se pudieron leer", "\n".join(f"- {x}" for x in d.get("faltantes") or [])))
+
+    doc("modulos-y-flujos.md", "Módulos, actores, flujos e integraciones",
+        _seccion("Módulos", _tabla(["Módulo", "Descripción", "Estado", "Avance", "Fuente"],
+                 [[m.get("nombre"), m.get("descripcion"), m.get("estado"),
+                   f"{(m.get('avance') or {}).get('hechas', '?')}/{(m.get('avance') or {}).get('total', '?')}" if m.get("avance") else "-",
+                   m.get("fuente")] for m in d.get("modulos") or []]))
+        + _seccion("Actores y roles", _tabla(["Rol", "Qué puede hacer", "Fuente"], [[a.get("rol"), a.get("puede"), a.get("fuente")] for a in d.get("actores") or []]))
+        + _seccion("Flujos", _tabla(["Flujo", "Pasos", "Ítems", "Fuente"],
+                   [[f.get("nombre"), f.get("pasos"), f.get("items"), f.get("fuente")] for f in d.get("flujos") or []]))
+        + _seccion("Integraciones", _tabla(["Sistema", "Para qué", "Tipo", "Fuente"],
+                   [[i.get("sistema"), i.get("para_que"), i.get("tipo"), i.get("fuente")] for i in d.get("integraciones") or []])))
+
+    jer = []
+    for rama in d.get("jerarquia") or []:
+        ep = rama.get("epica") or {}
+        jer.append(f"### {ep.get('id', '')} {ep.get('titulo', '')}".rstrip() + (f" ({ep['estado']})" if ep.get("estado") else ""))
+        jer.append("")
+        hs = rama.get("historias") or []
+        if hs:
+            jer.append(_tabla(["Historia", "Título", "Estado", "Responsable", "Tareas", "Comentarios", "Links", "Nota"],
+                              [[h.get("id"), h.get("titulo"), h.get("estado"), h.get("responsable"), h.get("tareas"),
+                                h.get("comentarios"), h.get("links"), h.get("nota")] for h in hs]))
+    bk = d.get("backlog") or {}
+    releases = _tabla(["Release", "Fecha", "Estado", "Fuente"], [[r.get("nombre"), r.get("fecha"), r.get("estado"), r.get("fuente")]
+                                                                  for r in bk.get("releases") or []])
+    sprint = bk.get("sprint_actual") or {}
+    doc("backlog.md", "Épicas, historias y releases",
+        _seccion("Épicas e historias recorridas", "\n".join(jer))
+        + (f"Sprint actual: {sprint.get('nombre')} ({sprint.get('inicio')} a {sprint.get('fin')}, {sprint.get('items', '?')} ítems).\n\n" if sprint else "")
+        + _seccion("Releases", releases)
+        + _seccion("Cómo se prueba hoy", _tabla(["Qué", "Estado", "Fuente"], [[p.get("que"), p.get("estado"), p.get("fuente")] for p in d.get("pruebas_hoy") or []])))
+
+    doc("decisiones-y-glosario.md", "Decisiones, glosario y referencias",
+        _seccion("Decisiones", _tabla(["Fecha", "Decisión", "Quién", "Fuente"],
+                 [[x.get("fecha"), x.get("decision"), x.get("quien"), x.get("fuente")] for x in d.get("decisiones") or []]))
+        + _seccion("Glosario", _tabla(["Término", "Definición", "Fuente"], [[g.get("termino"), g.get("definicion"), g.get("fuente")] for g in d.get("glosario") or []]))
+        + _seccion("Línea de tiempo", _tabla(["Fecha", "Hito", "Fuente"], [[t.get("fecha"), t.get("hito"), t.get("fuente")] for t in d.get("linea_de_tiempo") or []]))
+        + _seccion("Referencias (links)", _tabla(["Tipo", "Título", "URL", "Dónde apareció", "Leído"],
+                   [[r.get("tipo"), r.get("titulo"), r.get("url"), r.get("origen"), "Sí" if r.get("leido") else "No"] for r in d.get("referencias") or []])))
+
+    doc("dudas-y-riesgos.md", "Ambigüedades, preguntas abiertas y riesgos",
+        "Esto **no** son reglas: son dudas y contradicciones entre fuentes. Al escribir casos, cada una va como "
+        "`Falta información` (`FI-XX`) con su pregunta, no como resultado esperado.\n\n"
+        + _seccion("Ambigüedades y contradicciones", _tabla(["ID", "Tipo", "Qué", "Fuentes", "Impacto", "Pregunta"],
+                   [[a.get("id"), a.get("tipo"), a.get("que"), a.get("fuentes"), a.get("impacto"), a.get("pregunta")] for a in d.get("ambiguedades") or []]))
+        + _seccion("Preguntas para el equipo", _tabla(["ID", "Pregunta", "A quién", "Prioridad", "Relacionado"],
+                   [[p.get("id"), p.get("pregunta"), p.get("a_quien"), p.get("prioridad"), p.get("relacionado")] for p in d.get("preguntas") or []]))
+        + _seccion("Riesgos para QA", _tabla(["Riesgo", "Nivel", "Motivo", "Mitigación"],
+                   [[r.get("riesgo"), r.get("nivel"), r.get("motivo"), r.get("mitigacion")] for r in d.get("riesgos") or []])),
+        estado="sin-confirmar")
+    return escritos
+
+
 def main(argv=None):
     for flujo in (sys.stdout, sys.stderr):
         flujo.reconfigure(encoding="utf-8")
@@ -807,6 +919,9 @@ def main(argv=None):
     ap.add_argument("investigacion_json")
     ap.add_argument("--salida", help="carpeta de salida (por defecto, la del JSON)")
     ap.add_argument("--sin-historial", action="store_true", help="no guarda la copia en historial/ ni compara")
+    ap.add_argument("--input", default=str(RAIZ / "input" / "documentacion"),
+                    help="carpeta de la documentación del proyecto donde se deja lo relevado (por defecto input/documentacion)")
+    ap.add_argument("--sin-input", action="store_true", help="no deja lo relevado en input/documentacion/")
     a = ap.parse_args(argv)
     origen = Path(a.investigacion_json)
     d = json.loads(origen.read_text(encoding="utf-8"))
@@ -832,6 +947,12 @@ def main(argv=None):
     print(f"  resumen breve: {resumen}")
     print(f"  presentación (imprime a PDF): {presentacion}")
     print(f"  Markdown completo: {md}")
+    if not a.sin_input:
+        destino = Path(a.input) / "proyecto" / "investigacion"
+        escritos = exportar_a_input(d, destino)
+        import indice_documentacion
+        indice_documentacion.main(["--carpeta", str(a.input)])
+        print(f"  contexto para los demás agentes: {len(escritos)} documento(s) en {destino}")
     return 0
 
 

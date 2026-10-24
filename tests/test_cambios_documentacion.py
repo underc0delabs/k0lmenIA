@@ -110,3 +110,39 @@ def test_linea_de_comandos_con_git_e_indice(tmp_path):
     assert f"Desactualizado (desde {inicial[:10]})" in texto
     assert texto.index("Cambios desde la última documentación") < texto.index("## Proyecto")
     assert ".estado.json" not in texto
+
+
+def test_historias_nuevas_cambiadas_y_sus_casos(tmp_path):
+    e = cd.estado_vacio()
+    cd.registrar_historia(e, "PROJ-12", hu="HU-001", cambio_historia="2026-10-01T10:00:00", cambio_prs="2026-10-02", modulos=["pagos"])
+    cd.registrar_historia(e, "PROJ-20", hu="HU-007", cambio_historia="2026-10-05T10:00:00")
+    casos = tmp_path / "output" / "casos-de-prueba" / "manuales"
+    casos.mkdir(parents=True)
+    (casos / "casos-HU-001.md").write_text("# Casos HU-001", encoding="utf-8")
+    (casos / "casos-HU-007.md").write_text("# Casos HU-007", encoding="utf-8")
+    actuales = [{"key": "PROJ-12", "titulo": "Pago con tarjeta", "actualizado": "2026-10-20T09:00:00.000+0000"},
+                {"key": "PROJ-20", "actualizado": "2026-10-05T10:00:00", "prs": "2026-10-21"},
+                {"key": "PROJ-33", "titulo": "Cupones", "actualizado": "2026-10-19"},
+                {"key": "PROJ-40"}]  # sin fecha y no documentada: nueva
+    r = cd.comparar_historias(e, actuales, raiz=tmp_path)
+    assert [n["key"] for n in r["nuevas"]] == ["PROJ-33", "PROJ-40"]
+    assert [(c["key"], c["cambio"]) for c in r["cambiadas"]] == [("PROJ-12", "historia"), ("PROJ-20", "PRs")]
+    assert r["sin_cambios"] == [] and r["modulos"] == ["pagos"]
+    assert sorted(c["archivo"] for c in r["casos"]) == ["output/casos-de-prueba/manuales/casos-HU-001.md",
+                                                       "output/casos-de-prueba/manuales/casos-HU-007.md"]
+    md = cd.armar_cambios_historias_md(r, "2026-10-10T00:00:00")
+    assert md.startswith("---\ntitulo: Historias nuevas o que cambiaron\ntipo: cambios\n")
+    assert "| PROJ-12 | HU-001 | Pago con tarjeta | historia |" in md and "- PROJ-33 · Cupones" in md and "revisor-casos" in md
+
+
+def test_comando_historias_registra_la_revision(tmp_path, capsys):
+    e = cd.estado_vacio()
+    cd.registrar_historia(e, "PROJ-12", cambio_historia="2026-10-01")
+    cd.guardar_estado(e, tmp_path)
+    actual = tmp_path / "actual.json"
+    actual.write_text(json.dumps({"historias": [{"key": "PROJ-12", "actualizado": "2026-10-01"}]}), encoding="utf-8")
+    assert cd.main(["--carpeta", str(tmp_path), "historias", "--actual", str(actual), "--registrar-revision"]) == 0
+    salida = json.loads(capsys.readouterr().out)
+    assert salida["sin_cambios"] == ["PROJ-12"] and salida["revision_anterior"] == ""
+    assert cd.leer_estado(tmp_path)["revision_historias"][:4] == str(dt.date.today().year)
+    assert (tmp_path / "cambios-historias.md").exists()

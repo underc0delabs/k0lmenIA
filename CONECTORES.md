@@ -58,6 +58,9 @@ Claude Code **arranca directo, sin pedir aprobar conectores**: `.mcp.json` trae 
 +----------------------------------+-----------------------------------------+-----------------------------------------+---------+--------------+--------------------------+
 | salesforce                       | Salesforce (probador-salesforce)        | @salesforce/mcp (Salesforce DX)         | Oficial | stdio        | No                       |
 +----------------------------------+-----------------------------------------+-----------------------------------------+---------+--------------+--------------------------+
+| scalar                           | Scalar (probador-scalar): tu API        | Scalar MCP (remoto, generado desde el   | Oficial | http         | No                       |
+|                                  |                                         | OpenAPI)                                |         |              |                          |
++----------------------------------+-----------------------------------------+-----------------------------------------+---------+--------------+--------------------------+
 ```
 
 > **Para crear carpetas, casos, ciclos y publicar resultados no hace falta ningún MCP**: lo hace la integración propia `scripts/gestion/` (agentes `gestor-pruebas` y `publicador-resultados`), que soporta **Xray Cloud, Xray Server/Data Center, QTM4J y AIO Tests** con sus APIs oficiales. Configuración en [`scripts/gestion/README.md`](scripts/gestion/README.md). La excepción es **Azure DevOps**, que se integra por su MCP (ver [Azure DevOps](#azure-devops)). Los MCP de esta página son opcionales, para consultar o explorar la herramienta desde el chat.
@@ -573,6 +576,30 @@ sf org login web --alias mi-sandbox-qa --instance-url https://test.salesforce.co
 ```
 
 El conector apunta a **una** org concreta (`SALESFORCE_ORG`), que tiene que estar en `SALESFORCE_ORGS_AUTORIZADAS`; nunca `ALLOW_ALL_ORGS`. La autorización vive en la CLI local, así que **por `.mcp.json` no viaja ningún token**. Se activa con `npm run conector -- activar salesforce`. El relevamiento de solo lectura (sin este MCP, con la CLI directa) lo hace `npm run salesforce` (ver `herramientas/salesforce/README.md`).
+
+---
+
+## Scalar (para el probador-scalar)
+
+[Scalar](https://scalar.com) genera un **server MCP hosteado desde el OpenAPI** de tu API (Dashboard → **MCP** → crear el server, elegir la API y el ambiente, y en **Configure → MCP Tools** qué operaciones exponer). Cada operación está en modo **Search** (el agente la consulta sin llamar a la API) o **Execute** (manda requests reales, con las credenciales que guarda Scalar: el agente nunca las ve). Recomendado para QA: **lecturas en Execute y escrituras en Search** hasta que el equipo lo decida.
+
+```
++------------------+---------------+-------------------------------------------------------------+
+| Variable         | Obligatoria   | Descripción                                                 |
++==================+===============+=============================================================+
+| SCALAR_MCP_URL   | Sí            | URL de conexión del server, p. ej.                          |
+|                  |               | https://mcp.scalar.com/@mi-equipo/pagos (con ?env=staging   |
+|                  |               | para elegir el ambiente)                                    |
++------------------+---------------+-------------------------------------------------------------+
+| SCALAR_API_KEY   | No            | Token personal (Account → API Keys). Sin token, el conector |
+|                  |               | se autoriza con tu cuenta (OAuth) desde /mcp. También lo    |
+|                  |               | usa npm run scalar para el Registry y la CLI.               |
++------------------+---------------+-------------------------------------------------------------+
+| SCALAR_NAMESPACE | No            | Namespace del equipo en el Registry (npm run scalar)        |
++------------------+---------------+-------------------------------------------------------------+
+```
+
+Se activa con `npm run conector -- activar scalar` (y reiniciando Claude Code). Los MCP hosteados de Scalar son de los planes pagos y cada llamada que ejecuta consume créditos del dueño. Además del MCP, `npm run scalar` (`herramientas/scalar/scalar.py`) baja los documentos del **Registry**, arma los casos como colección ejecutable y publica el OpenAPI con los tests en `x-post-response` (con la CLI oficial `@scalar/cli`; publicar siempre con confirmación). Ver `herramientas/scalar/README.md`.
 
 ---
 

@@ -33,6 +33,9 @@ npm-debug.log*
 # Sesiones guardadas con npm run login (cookies de la app: equivalen a una contraseña)
 .auth/
 
+# Dependencias del conversor a Word del manual de usuario (las instala herramientas/manual/manual.py word)
+/herramientas/manual/.deps/
+
 # Python
 __pycache__/
 *.pyc

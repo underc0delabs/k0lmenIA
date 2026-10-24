@@ -8,9 +8,11 @@
 |                  | de aceptación (`HU-XXX-<tema>.md`)       |                                       |
 +------------------+------------------------------------------+---------------------------------------+
 | `documentacion/` | Documentación del proyecto: la que arma  | `INDICE.md`, `proyecto/`, `api/`,     |
-|                  | el documentador-proyecto (repositorio,   | `historias/<HU o key>/dossier.md` (no |
-|                  | historias, links, mapa funcional) y la   | se versiona)                          |
-|                  | que agregues a mano (manuales, actas)    |                                       |
+|                  | el documentador-proyecto (repositorio,   | `historias/<HU o key>/dossier.md`,    |
+|                  | historias, links, mapa funcional), la    | `proyecto/investigacion/`,            |
+|                  | del investigador-proyecto (tableros), la | `manual-usuario/` (no se versiona)    |
+|                  | del redactor-manual (cómo se usa la app) |                                       |
+|                  | y la que agregues a mano (actas, PDFs)   |                                       |
 +------------------+------------------------------------------+---------------------------------------+
 | `api/`           | Contratos de API, colecciones y          | incluye `auth-endpoints.md` y         |
 |                  | environments de Postman, Bruno (carpeta  | `demo.postman_collection.json`,       |

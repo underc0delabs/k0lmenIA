@@ -13,15 +13,27 @@
 //
 // Es documentación, no una prueba: no saca capturas ni busca errores (eso es npm run explorar).
 // Solo navega con GET: no completa ni envía formularios (toda navegación que no sea GET se corta) y
-// no sigue links de cierre de sesión ni de borrado. Cubre las páginas públicas (sin login).
+// no sigue links de cierre de sesión ni de borrado.
 //
-// Deja en input/documentacion/proyecto/ (o --salida) mapa-funcional.json y mapa-funcional.md; cada
-// corrida reemplaza a la anterior.
+// Con sesión: si SESION está en el .env (npm run login guarda la sesión en .auth/), recorre la aplicación
+// logueado y cubre también las pantallas privadas; --sin-sesion recorre solo lo público.
+//
+// Para automatizar: por cada página guarda los **locators sugeridos** de sus elementos interactivos
+// (botones, links, campos, pestañas, menús), en el orden que recomienda Playwright: data-testid, rol +
+// nombre accesible, label, placeholder y, si no hay otra cosa, #id o [name]; y si cada uno es único. El
+// web-mapper los usa como punto de partida (los verifica en el snapshot antes de escribirlos).
+//
+// Cambios: si ya había un mapa, compara y deja "Cambios desde el recorrido anterior" (pantallas nuevas o
+// que ya no están, campos agregados, quitados o con otra regla, botones). Así se ve cuándo la aplicación
+// cambió y qué documentación y casos revisar. La corrida anterior queda en _mapa-funcional.anterior.json.
+//
+// Deja en input/documentacion/proyecto/ (o --salida) mapa-funcional.json y mapa-funcional.md.
 const fs = require('fs');
 const path = require('path');
 const { normalizar, recorrerScroll, cargar } = require('../explorador/explorar.js');
 const { descubrir } = require('../pixel-perfect/pixel-perfect.js');
 const { extraerFormularios } = require('../formularios/formularios.js');
+const { sesionActiva } = require('../login/sesion');
 
 const RAIZ = path.resolve(__dirname, '..', '..', '..', '..');
 const desde = (p) => path.resolve(process.env.INIT_CWD || process.cwd(), p);
@@ -39,6 +51,7 @@ function argumentos(argv) {
     else if (k === '--pausa-ms') a.pausaMs = parseInt(v(), 10);
     else if (k === '--salida') a.salida = v();
     else if (k === '--headed') a.headed = true;
+    else if (k === '--sin-sesion') a.sinSesion = true;
     else if (k === '-h' || k === '--help') a.ayuda = true;
     else throw new Error(`Opción desconocida: ${k}`);
   }
@@ -75,6 +88,89 @@ function _contenido() {
     encabezados, menus, botones, mensajes, tablas, extracto };
 }
 
+// Corre en el navegador: locators sugeridos de los elementos interactivos visibles, en el orden que
+// recomienda Playwright (data-testid > rol + nombre > label > placeholder > #id/[name]) y si son únicos.
+function _locators() {
+  const visible = (el) => { const r = el.getBoundingClientRect(); const cs = getComputedStyle(el); return r.width > 0 && r.height > 0 && cs.visibility !== 'hidden' && cs.display !== 'none'; };
+  const limpio = (t) => (t || '').replace(/\s+/g, ' ').trim();
+  const q = (s) => `'${String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
+  const rolDe = (el) => {
+    const r = el.getAttribute('role');
+    if (r) return r;
+    const t = el.tagName.toLowerCase();
+    const tipo = (el.getAttribute('type') || 'text').toLowerCase();
+    if (t === 'button' || (t === 'input' && ['submit', 'button', 'reset'].includes(tipo))) return 'button';
+    if (t === 'a' && el.hasAttribute('href')) return 'link';
+    if (t === 'select') return el.multiple ? 'listbox' : 'combobox';
+    if (t === 'textarea') return 'textbox';
+    if (t === 'input') return { checkbox: 'checkbox', radio: 'radio', number: 'spinbutton', range: 'slider', search: 'searchbox' }[tipo] || 'textbox';
+    return null;
+  };
+  const etiqueta = (el) => {
+    const lab = (el.id && document.querySelector(`label[for="${CSS.escape(el.id)}"]`)) || el.closest('label');
+    return lab ? limpio(lab.innerText) : '';
+  };
+  const nombre = (el) => {
+    if (el.getAttribute('aria-label')) return limpio(el.getAttribute('aria-label'));
+    const ids = (el.getAttribute('aria-labelledby') || '').split(/\s+/).filter(Boolean);
+    if (ids.length) return limpio(ids.map((i) => (document.getElementById(i) || {}).innerText || '').join(' '));
+    const lab = etiqueta(el);
+    if (lab) return lab;
+    if (['INPUT', 'SELECT', 'TEXTAREA'].includes(el.tagName)) return limpio(el.getAttribute('title') || '');
+    return limpio(el.innerText || el.value || el.getAttribute('title') || el.getAttribute('alt') || '').slice(0, 80);
+  };
+  const SEL = 'button, a[href], input:not([type=hidden]), select, textarea, [role=button], [role=link], [role=tab], [role=menuitem], [role=checkbox], [role=radio], [role=switch], [role=combobox], [role=option]';
+  const els = [...document.querySelectorAll(SEL)].filter(visible);
+  const claves = new Map();
+  const items = els.map((el) => {
+    const testid = el.getAttribute('data-testid') || el.getAttribute('data-test') || el.getAttribute('data-qa') || el.getAttribute('data-cy');
+    const attrTestid = el.hasAttribute('data-testid') ? 'data-testid' : el.hasAttribute('data-test') ? 'data-test' : el.hasAttribute('data-qa') ? 'data-qa' : 'data-cy';
+    const rol = rolDe(el);
+    const n = nombre(el);
+    const lab = etiqueta(el);
+    let locator, por;
+    if (testid) { locator = attrTestid === 'data-testid' ? `getByTestId(${q(testid)})` : `locator('[${attrTestid}=${JSON.stringify(testid)}]')`; por = 'testid'; }
+    else if (rol && n) { locator = `getByRole(${q(rol)}, { name: ${q(n)} })`; por = 'rol'; }
+    else if (lab) { locator = `getByLabel(${q(lab)})`; por = 'label'; }
+    else if (el.getAttribute('placeholder')) { locator = `getByPlaceholder(${q(el.getAttribute('placeholder'))})`; por = 'placeholder'; }
+    else if (el.id) { locator = `locator('#${CSS.escape(el.id)}')`; por = 'css'; }
+    else if (el.getAttribute('name')) { locator = `locator('[name="${el.getAttribute('name')}"]')`; por = 'css'; }
+    else return null;
+    claves.set(locator, (claves.get(locator) || 0) + 1);
+    return { elemento: n || lab || el.getAttribute('placeholder') || el.getAttribute('name') || el.id || el.tagName.toLowerCase(), rol: rol || el.tagName.toLowerCase(), locator, por };
+  }).filter(Boolean);
+  const vistos = new Set();
+  return items.filter((x) => (vistos.has(x.locator) ? false : vistos.add(x.locator)))
+    .map((x) => ({ ...x, unico: claves.get(x.locator) === 1 })).slice(0, 80);
+}
+
+// Diferencias entre dos mapas (el anterior y el actual): para saber qué documentación y qué casos revisar.
+function compararMapas(anterior, actual) {
+  const porRuta = (m) => new Map((m.paginas || []).filter((p) => !p.error).map((p) => [p.ruta, p]));
+  const a = porRuta(anterior), b = porRuta(actual);
+  const campos = (p) => new Map((p.formularios || []).flatMap((f) => f.campos.map((c) => [`${f.nombre} › ${c.etiqueta || c.nombre}`, c])));
+  const regla = (c) => JSON.stringify([c.tipo, Boolean(c.requerido), c.maxlength, c.minlength, c.min, c.max, c.pattern,
+    (c.opciones || []).map((o) => o.texto || o.valor)]);
+  const cambios = { nuevas: [...b.keys()].filter((r) => !a.has(r)), quitadas: [...a.keys()].filter((r) => !b.has(r)), paginas: [] };
+  for (const [ruta, pb] of b) {
+    const pa = a.get(ruta);
+    if (!pa) continue;
+    const ca = campos(pa), cb = campos(pb);
+    const det = {
+      ruta,
+      campos_nuevos: [...cb.keys()].filter((k) => !ca.has(k)),
+      campos_quitados: [...ca.keys()].filter((k) => !cb.has(k)),
+      campos_cambiados: [...cb.keys()].filter((k) => ca.has(k) && regla(ca.get(k)) !== regla(cb.get(k))),
+      botones_nuevos: (pb.botones || []).filter((x) => !(pa.botones || []).includes(x)),
+      botones_quitados: (pa.botones || []).filter((x) => !(pb.botones || []).includes(x)),
+      titulo: pa.titulo !== pb.titulo ? [pa.titulo, pb.titulo] : null,
+    };
+    if (Object.entries(det).some(([k, v]) => k !== 'ruta' && (Array.isArray(v) ? v.length : v))) cambios.paginas.push(det);
+  }
+  cambios.hay = Boolean(cambios.nuevas.length || cambios.quitadas.length || cambios.paginas.length);
+  return cambios;
+}
+
 // Los menús que aparecen en la mayoría de las páginas son la navegación global: van una sola vez.
 function separarMenusGlobales(paginas) {
   const clave = (m) => `${m.nombre}|${m.items.join('|')}`;
@@ -108,9 +204,30 @@ function aMarkdown(mapa) {
   const l = [];
   l.push('---', 'titulo: Mapa funcional del sitio', 'tipo: web', `fuentes: ${mapa.url}`, `actualizado: ${mapa.fecha.slice(0, 10)}`,
     'generado_por: npm run mapa-funcional', '---', '', `# Mapa funcional de ${mapa.host}`, '');
-  l.push(`Recorrido automático (solo GET, sin login, sin enviar formularios) de ${mapa.paginas.length} página(s) a partir de ${mapa.url}.`,
-    'Describe lo que la aplicación muestra hoy: sirve como contexto, **no** como fuente de requisitos.', '');
+  l.push(`Recorrido automático (solo GET, ${mapa.con_sesion ? `**con la sesión iniciada** (${mapa.con_sesion})` : 'sin login'}, sin enviar formularios) de ${mapa.paginas.length} página(s) a partir de ${mapa.url}.`,
+    'Describe lo que la aplicación muestra hoy: sirve como contexto, **no** como fuente de requisitos. Los **locators sugeridos** de cada página sirven de punto de partida para automatizar (se verifican antes de usarlos).', '');
+  if (!mapa.con_sesion) l.push('> Sin sesión: las pantallas detrás del login no se recorrieron. Guardá la sesión con `npm run login`, poné `SESION=si` en el .env y volvé a correrlo.', '');
   if (mapa.sin_recorrer) l.push(`> Quedaron páginas sin recorrer (límite de ${mapa.max_paginas}): subí --max-paginas para cubrirlas.`, '');
+  const c = mapa.cambios;
+  if (c && c.hay) {
+    l.push(`## Cambios desde el recorrido anterior (${(c.desde || '').slice(0, 10)})`, '',
+      'La aplicación cambió: revisá la documentación (manuales, dossiers) y los casos de estas pantallas.', '');
+    if (c.nuevas.length) l.push(`- Pantallas nuevas: ${c.nuevas.join(' · ')}`);
+    if (c.quitadas.length) l.push(`- Pantallas que ya no se encontraron: ${c.quitadas.join(' · ')}`);
+    for (const p of c.paginas) {
+      const partes = [];
+      if (p.titulo) partes.push(`título "${p.titulo[0]}" → "${p.titulo[1]}"`);
+      if (p.campos_nuevos.length) partes.push(`campos nuevos: ${p.campos_nuevos.join(', ')}`);
+      if (p.campos_quitados.length) partes.push(`campos quitados: ${p.campos_quitados.join(', ')}`);
+      if (p.campos_cambiados.length) partes.push(`campos con otra regla: ${p.campos_cambiados.join(', ')}`);
+      if (p.botones_nuevos.length) partes.push(`botones nuevos: ${p.botones_nuevos.join(', ')}`);
+      if (p.botones_quitados.length) partes.push(`botones quitados: ${p.botones_quitados.join(', ')}`);
+      l.push(`- ${p.ruta}: ${partes.join('; ')}`);
+    }
+    l.push('');
+  } else if (c) {
+    l.push(`> Sin cambios desde el recorrido anterior (${(c.desde || '').slice(0, 10)}).`, '');
+  }
   if (mapa.navegacion_global.length) {
     l.push('## Navegación global', '');
     for (const m of mapa.navegacion_global) l.push(`- **${m.nombre}**: ${m.items.join(' · ')}`);
@@ -138,6 +255,12 @@ function aMarkdown(mapa) {
       }
       l.push('', f.boton ? '' : '> Sin botón de envío visible.', '');
     }
+    if ((p.locators || []).length) {
+      l.push('### Locators sugeridos', '', '| Elemento | Rol | Locator | Único |', '|---|---|---|---|');
+      for (const x of p.locators.slice(0, 40)) l.push(`| ${celda(x.elemento)} | ${celda(x.rol)} | \`${celda(x.locator)}\` | ${x.unico ? 'Sí' : 'No'} |`);
+      if (p.locators.length > 40) l.push('', `> ${p.locators.length - 40} locator(s) más en mapa-funcional.json.`);
+      l.push('');
+    }
   });
   return l.filter((x, i, xs) => !(x === '' && xs[i - 1] === '')).join('\n') + '\n';
 }
@@ -164,7 +287,10 @@ async function main() {
 
   const { chromium } = require('playwright'); // acá y no arriba: los tests usan las funciones sin instalar k0lmena
   const browser = await chromium.launch({ headless: !a.headed });
-  const ctx = await browser.newContext({ viewport: { width: 1366, height: 900 }, locale: process.env.LOCALE || 'es-AR' });
+  const sesion = a.sinSesion ? null : sesionActiva(process.env.SESION, (m) => console.log(m));
+  const ctx = await browser.newContext({ viewport: { width: 1366, height: 900 }, locale: process.env.LOCALE || 'es-AR',
+    ...(sesion ? { storageState: sesion } : {}) });
+  if (sesion) console.log(`Con la sesión guardada (${path.relative(RAIZ, sesion)}).`);
   const page = await ctx.newPage();
   // Nunca se envía nada: cualquier navegación que no sea GET se corta.
   await page.route('**/*', (route) => {
@@ -184,6 +310,7 @@ async function main() {
       await recorrerScroll(page);
       Object.assign(reg, await page.evaluate(_contenido));
       reg.formularios = (await page.evaluate(extraerFormularios)).map(({ indice, ...f }) => f);
+      reg.locators = await page.evaluate(_locators);
       console.log(`· ${reg.formularios.length} formulario(s)`);
     } catch (e) {
       reg.error = String(e.message || e).split('\n')[0];
@@ -196,19 +323,34 @@ async function main() {
 
   const navegacion_global = separarMenusGlobales(paginas.filter((p) => !p.error));
   const mapa = { url: inicio, host, fecha: new Date().toISOString(), max_paginas: a.maxPaginas,
-    sin_recorrer: !a.paginas && urls.length >= a.maxPaginas, navegacion_global, paginas };
+    sin_recorrer: !a.paginas && urls.length >= a.maxPaginas, con_sesion: sesion ? path.basename(sesion) : null,
+    navegacion_global, paginas };
   const json = path.join(carpeta, 'mapa-funcional.json');
   const md = path.join(carpeta, 'mapa-funcional.md');
+  // Con un recorrido anterior del mismo sitio (y no uno parcial con --paginas), se comparan: qué cambió en la app.
+  if (fs.existsSync(json) && !a.paginas) {
+    try {
+      const anterior = JSON.parse(fs.readFileSync(json, 'utf8'));
+      if (anterior.host === host) {
+        mapa.cambios = { desde: anterior.fecha, ...compararMapas(anterior, mapa) };
+        fs.copyFileSync(json, path.join(carpeta, '_mapa-funcional.anterior.json'));
+      }
+    } catch (e) { console.log(`No pude comparar con el recorrido anterior: ${e.message}`); }
+  }
   fs.writeFileSync(json, JSON.stringify(mapa, null, 2));
   fs.writeFileSync(md, aMarkdown(mapa));
   formatearTablas(md);
   const rel = (p) => path.relative(RAIZ, p).split(path.sep).join('/');
   console.log(`\n${paginas.length} página(s), ${paginas.reduce((s, p) => s + (p.formularios || []).length, 0)} formulario(s).`);
   console.log(`Mapa: ${rel(md)} (datos: ${rel(json)})`);
+  if (mapa.cambios && mapa.cambios.hay) {
+    console.log(`Cambios desde ${mapa.cambios.desde.slice(0, 10)}: ${mapa.cambios.nuevas.length} pantalla(s) nueva(s), ` +
+      `${mapa.cambios.quitadas.length} quitada(s), ${mapa.cambios.paginas.length} con cambios (ver el .md).`);
+  }
 }
 
 if (require.main === module) {
   main().catch((e) => { console.error(`Error: ${e.message}`); process.exit(1); });
 }
 
-module.exports = { argumentos, separarMenusGlobales, restricciones, aMarkdown };
+module.exports = { argumentos, separarMenusGlobales, restricciones, aMarkdown, compararMapas, extraerLocators: _locators };
