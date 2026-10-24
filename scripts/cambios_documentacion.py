@@ -89,10 +89,28 @@ def registrar_documento(estado, documento, fuentes, repo="", historias=(), modul
     return estado
 
 
-def registrar_historia(estado, key, hu="", cambio_historia="", cambio_prs="", modulos=(), archivos=(), fecha=None):
+def registrar_historia(estado, key, hu="", cambio_historia="", cambio_prs="", modulos=(), archivos=(), fecha=None, huella=""):
     estado["historias"][key] = {"hu": hu, "cambio_historia": cambio_historia, "cambio_prs": cambio_prs,
-                                "modulos": list(modulos), "archivos": list(archivos), "documentado": fecha or _hoy()}
+                                "modulos": list(modulos), "archivos": list(archivos), "documentado": fecha or _hoy(),
+                                **({"huella": huella} if huella else {})}
     return estado
+
+
+# Campos que definen el requerimiento: si no cambian, la historia no se vuelve a documentar aunque cambie su
+# fecha (en Jira, `updated` cambia también al moverla de columna, reasignarla o etiquetarla).
+CAMPOS_HUELLA = ("titulo", "descripcion", "criterios", "comentarios", "ultimo_comentario", "subtareas", "vinculos", "adjuntos")
+
+
+def huella(contenido):
+    """Huella corta del contenido que define el requerimiento (no incluye estado, responsable ni etiquetas)."""
+    if not contenido:
+        return ""
+    import hashlib
+    norm = {k: contenido.get(k) for k in CAMPOS_HUELLA if contenido.get(k) not in (None, "", [], {})}
+    if not norm:
+        return ""
+    texto = json.dumps(norm, ensure_ascii=False, sort_keys=True, default=str)
+    return hashlib.sha256(" ".join(texto.split()).encode("utf-8")).hexdigest()[:16]
 
 
 # ------------------------------------------------------------------ coincidencias
@@ -230,9 +248,10 @@ def _fecha_iso(v):
 
 def comparar_historias(estado, actuales, raiz=RAIZ):
     """Compara las historias del alcance (con su fecha de cambio actual) con las documentadas.
-    actuales: [{key, hu?, titulo?, actualizado, prs?}]. Devuelve nuevas, cambiadas (con qué cambió),
-    sin_cambios y los casos existentes de las cambiadas para revisar."""
-    nuevas, cambiadas, iguales = [], [], []
+    actuales: [{key, hu?, titulo?, actualizado, prs?, contenido?}]. Devuelve nuevas, cambiadas (con qué cambió),
+    solo_metadatos (cambió la fecha pero no el contenido del requerimiento: no se rehace), sin_cambios y los casos
+    existentes de las cambiadas para revisar."""
+    nuevas, cambiadas, iguales, metadatos = [], [], [], []
     for h in actuales:
         key = h.get("key")
         if not key:
@@ -246,6 +265,10 @@ def comparar_historias(estado, actuales, raiz=RAIZ):
             que.append("historia")
         if h.get("prs") and _fecha_iso(h.get("prs")) > _fecha_iso(previo.get("cambio_prs")):
             que.append("PRs")
+        nueva_huella = huella(h.get("contenido"))
+        if que == ["historia"] and nueva_huella and previo.get("huella") == nueva_huella:
+            metadatos.append({"key": key, "actualizado": h.get("actualizado", "")})
+            continue
         if que:
             cambiadas.append({"key": key, "hu": previo.get("hu") or h.get("hu", ""), "titulo": h.get("titulo", ""),
                               "cambio": " y ".join(que), "antes": previo.get("cambio_historia", ""), "ahora": h.get("actualizado", "")})
@@ -254,14 +277,24 @@ def comparar_historias(estado, actuales, raiz=RAIZ):
     claves = [c["key"] for c in cambiadas]
     modulos = sorted({m for k in claves for m in estado["historias"].get(k, {}).get("modulos", [])})
     casos = casos_afectados(estado, claves, [], inventario_casos(raiz)) if claves else []
-    return {"nuevas": nuevas, "cambiadas": cambiadas, "sin_cambios": iguales, "modulos": modulos, "casos": casos}
+    return {"nuevas": nuevas, "cambiadas": cambiadas, "solo_metadatos": metadatos, "sin_cambios": iguales,
+            "modulos": modulos, "casos": casos}
+
+
+def registrar_metadatos(estado, r):
+    """Las historias que solo cambiaron de estado o metadatos quedan con su fecha nueva (no se rehacen)."""
+    for m in r.get("solo_metadatos") or []:
+        if m["key"] in estado["historias"] and m.get("actualizado"):
+            estado["historias"][m["key"]]["cambio_historia"] = m["actualizado"]
+    return estado
 
 
 def armar_cambios_historias_md(r, desde):
     l = ["---", "titulo: Historias nuevas o que cambiaron", "tipo: cambios", f"fuentes: gestión del proyecto (desde {desde or 'el inicio'})",
          f"actualizado: {_hoy()}", "---", "", "# Historias nuevas o que cambiaron", "",
          f"Revisión del {_hoy()} contra la documentación (desde {desde or 'el inicio'}): {len(r['nuevas'])} nueva(s), "
-         f"{len(r['cambiadas'])} con cambios, {len(r['sin_cambios'])} sin cambios.", ""]
+         f"{len(r['cambiadas'])} con cambios en el requerimiento, {len(r.get('solo_metadatos') or [])} que solo cambiaron "
+         f"de estado o metadatos (no se rehacen), {len(r['sin_cambios'])} sin cambios.", ""]
     l += ["## Historias que cambiaron (rehacer el dossier y revisar sus casos)", ""]
     if r["cambiadas"]:
         l += ["| Historia | HU | Título | Qué cambió | Documentada | Ahora |", "|---|---|---|---|---|---|"]
@@ -315,6 +348,7 @@ def main(argv=None):
     p.add_argument("--cambio-prs", default="")
     p.add_argument("--modulos", default="")
     p.add_argument("--archivos", default="")
+    p.add_argument("--huella-desde", help="el _alcance.json: toma de ahí la fecha y la huella del contenido de esta historia")
     p = sub.add_parser("cambios")
     p.add_argument("--repo", default="")
     p.add_argument("--git", help="ruta del clon local (REPO_RUTA_LOCAL)")
@@ -337,8 +371,16 @@ def main(argv=None):
         guardar_estado(registrar_documento(estado, a.documento, _lista(a.fuentes), a.repo, _lista(a.historias), _lista(a.modulos)), carpeta)
         print(f"Documento {a.documento}: {len(_lista(a.fuentes))} fuente(s)")
     elif a.comando == "historia":
-        guardar_estado(registrar_historia(estado, a.key, a.hu, a.cambio_historia, a.cambio_prs, _lista(a.modulos), _lista(a.archivos)), carpeta)
-        print(f"Historia {a.key} registrada")
+        cambio, firma = a.cambio_historia, ""
+        if a.huella_desde:
+            datos = json.loads(Path(a.huella_desde).read_text(encoding="utf-8"))
+            lista = datos.get("historias", []) if isinstance(datos, dict) else datos
+            item = next((h for h in lista if h.get("key") == a.key), {})
+            cambio = cambio or item.get("actualizado", "")
+            firma = huella(item.get("contenido"))
+        guardar_estado(registrar_historia(estado, a.key, a.hu, cambio, a.cambio_prs, _lista(a.modulos), _lista(a.archivos),
+                                          huella=firma), carpeta)
+        print(f"Historia {a.key} registrada" + (f" (huella {firma})" if firma else ""))
     elif a.comando == "historias":
         actuales = json.loads(Path(a.actual).read_text(encoding="utf-8"))
         desde = estado.get("revision_historias", "")
@@ -348,7 +390,7 @@ def main(argv=None):
         _formatear(md)
         if a.registrar_revision:
             estado["revision_historias"] = dt.datetime.now().isoformat(timespec="seconds")
-            guardar_estado(estado, carpeta)
+            guardar_estado(registrar_metadatos(estado, r), carpeta)
         print(json.dumps(r | {"revision_anterior": desde}, ensure_ascii=False, indent=2))
     else:
         repos = estado["repositorios"]

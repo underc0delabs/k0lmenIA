@@ -66,6 +66,8 @@ def test_conteos_coherentes():
     n = len(AGENTES)
     assert f"{n} agentes" in (RAIZ / "README.md").read_text(encoding="utf-8")
     assert f"{n} agentes" in (RAIZ / "AGENTES.md").read_text(encoding="utf-8")
+    arquitectura = (RAIZ / "ARQUITECTURA.md").read_text(encoding="utf-8")
+    assert f"{n} agentes" in arquitectura and f"{len(SKILLS)} skills" in arquitectura
     assert f"{n} agentes" in (RAIZ / "docs/index.html").read_text(encoding="utf-8")
     assert f"{n} agents" in (RAIZ / "docs/en/index.html").read_text(encoding="utf-8")
 

@@ -884,6 +884,7 @@ Los skills se cargan solo cuando hacen falta.
 | scripts/generar_informe_investigacion.py                                         | Informe HTML del relevamiento de un proyecto (resumen, ambigüedades, preguntas)                            | investigador-proyecto                                                                                                                                                                                                                                                                                      |
 | herramientas/manual/manual.py (npm run manual)                                   | Manual de usuario: carpetas y versiones, capturas, HTML y Word, checklist, plan de la plataforma y conocimiento a input/documentacion/ | redactor-manual |
 | herramientas/scalar/scalar.py (npm run scalar)                                   | Scalar: descarga del Registry, colección de casos con tests pm, OpenAPI con x-post-response, validación y publicación | probador-scalar |
+| scripts/actualizar_conocimiento.py (npm run actualizar-conocimiento)            | Actualización programada de input/documentacion/: app y código sin tokens, historias con el documentador (tope de gasto), aviso | documentador-proyecto |
 
 ## Conectores: qué agentes los aprovechan
 

@@ -146,3 +146,33 @@ def test_comando_historias_registra_la_revision(tmp_path, capsys):
     assert salida["sin_cambios"] == ["PROJ-12"] and salida["revision_anterior"] == ""
     assert cd.leer_estado(tmp_path)["revision_historias"][:4] == str(dt.date.today().year)
     assert (tmp_path / "cambios-historias.md").exists()
+
+
+def test_huella_evita_rehacer_historias_que_solo_cambiaron_de_estado(tmp_path, capsys):
+    contenido = {"titulo": "Pago con tarjeta", "descripcion": "Como comprador…", "criterios": ["CA1 cuotas hasta 12"],
+                 "comentarios": 3, "ultimo_comentario": "2026-10-01", "estado": "To Do", "responsable": "Ana"}
+    # El estado y el responsable no cuentan para la huella; los espacios tampoco.
+    assert cd.huella(contenido) == cd.huella({**contenido, "estado": "In Progress", "responsable": "Beto",
+                                              "descripcion": "Como   comprador…"})
+    assert cd.huella(contenido) != cd.huella({**contenido, "criterios": ["CA1 cuotas hasta 6"]})
+    assert cd.huella({}) == "" and cd.huella({"estado": "x"}) == ""
+    alcance = tmp_path / "_alcance.json"
+    alcance.write_text(json.dumps({"historias": [{"key": "PROJ-12", "actualizado": "2026-10-01T10:00", "contenido": contenido}]}),
+                       encoding="utf-8")
+    assert cd.main(["--carpeta", str(tmp_path), "historia", "--key", "PROJ-12", "--hu", "HU-001", "--huella-desde", str(alcance)]) == 0
+    guardado = cd.leer_estado(tmp_path)["historias"]["PROJ-12"]
+    assert guardado["cambio_historia"] == "2026-10-01T10:00" and guardado["huella"] == cd.huella(contenido)
+    # Se movió de columna (cambia la fecha, no el contenido) y otra cambió su criterio.
+    cd.registrar_historia(e := cd.leer_estado(tmp_path), "PROJ-20", cambio_historia="2026-10-01T10:00",
+                          huella=cd.huella({"titulo": "Cupones", "criterios": ["CA1 un cupón por compra"]}))
+    cd.guardar_estado(e, tmp_path)
+    alcance.write_text(json.dumps({"historias": [
+        {"key": "PROJ-12", "actualizado": "2026-10-15T09:00", "contenido": {**contenido, "estado": "Done"}},
+        {"key": "PROJ-20", "actualizado": "2026-10-15T09:00", "contenido": {"titulo": "Cupones", "criterios": ["CA1 dos cupones"]}}]}),
+        encoding="utf-8")
+    capsys.readouterr()
+    assert cd.main(["--carpeta", str(tmp_path), "historias", "--actual", str(alcance), "--registrar-revision"]) == 0
+    r = json.loads(capsys.readouterr().out)
+    assert [m["key"] for m in r["solo_metadatos"]] == ["PROJ-12"] and [c["key"] for c in r["cambiadas"]] == ["PROJ-20"]
+    assert cd.leer_estado(tmp_path)["historias"]["PROJ-12"]["cambio_historia"] == "2026-10-15T09:00"  # no vuelve a salir
+    assert "1 que solo cambiaron de estado o metadatos (no se rehacen)" in (tmp_path / "cambios-historias.md").read_text(encoding="utf-8")

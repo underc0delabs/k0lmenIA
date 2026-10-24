@@ -101,6 +101,26 @@ const PASOS = [
       { nombre: 'Sí', conectores: ['figma'], nota: OAUTH },
     ],
   },
+  {
+    id: 'scalar',
+    titulo: '¿Las APIs del equipo están en Scalar (scalar.com)?',
+    opciones: [
+      { nombre: 'No' },
+      { nombre: 'Sí', conectores: ['scalar'], datos: [
+        { clave: 'SCALAR_MCP_URL', texto: 'URL del server MCP de la API', ayuda: 'Dashboard de Scalar > MCP, ej. https://mcp.scalar.com/@mi-equipo/pagos (agregá ?env=staging para elegir el ambiente)' },
+        { clave: 'SCALAR_API_KEY', texto: 'Token personal de Scalar', secreto: true, opcional: true, ayuda: 'https://dashboard.scalar.com/account (sin token, Claude te pide iniciar sesión)' },
+        { clave: 'SCALAR_NAMESPACE', texto: 'Namespace del equipo en el Registry', opcional: true, ayuda: 'el de registry.scalar.com/@<namespace>' }],
+        nota: 'Los servers MCP de Scalar son de los planes pagos; cada llamada que ejecuta consume créditos.' },
+    ],
+  },
+  {
+    id: 'documentos',
+    titulo: '¿Querés que los documentos Word (manuales de usuario) salgan firmados por tu equipo?',
+    opciones: [
+      { nombre: 'No (salen firmados por k0lmenIA)' },
+      { nombre: 'Sí', datos: [{ clave: 'MANUAL_EQUIPO', texto: 'Nombre del equipo', ayuda: 'ej. Equipo de QA de Pagos' }] },
+    ],
+  },
 ];
 
 const APP = [

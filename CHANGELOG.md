@@ -2,6 +2,12 @@
 
 Los cambios más relevantes, del más nuevo al más viejo. El detalle de cada uno está en el historial de git.
 
+## 2026-10-24 — Actualización programada, huella de historias y asistente al día
+- **`npm run actualizar-conocimiento`** (`scripts/actualizar_conocimiento.py`): actualiza la base de conocimiento sola. App (mapa funcional y sus cambios) y código (`git fetch` + `cambios`) sin tokens; con `--con-agente`, las historias con el `documentador-proyecto` por `claude -p` con tope de gasto; resumen en `output/conocimiento/` y aviso a Slack/Teams si algo cambió. `--programar lunes|diario` la deja en el Programador de tareas de Windows (o da la línea de cron).
+- **Huella de las historias** (`cambios_documentacion.py`): además de la fecha, se guarda una huella del contenido que define el requerimiento (título, descripción, criterios, comentarios, subtareas, vínculos). Una historia que solo cambió de estado, responsable o etiquetas queda como *solo metadatos* y **no se vuelve a documentar**; lo ya documentado no se relee. `historia --huella-desde _alcance.json` la registra.
+- **`npm run configurar`** pregunta por Scalar (`SCALAR_MCP_URL`, `SCALAR_API_KEY`, `SCALAR_NAMESPACE`) y por la firma de los Word (`MANUAL_EQUIPO`).
+- **`ARQUITECTURA.md`** al día (79 agentes, 48 skills, la base de conocimiento como pieza) y cubierto por `test_integridad.py` para que no vuelva a quedar desfasado.
+
 ## 2026-10-23 — Base de conocimiento de todo el proyecto y APIs en Scalar
 - **Skill `base-conocimiento`** (conversación principal): flujo para investigar **todo** el proyecto, explorar la plataforma de punta a punta, dejarlo en `input/documentacion/`, escribir los casos con ese contexto y automatizarlos; y la rutina para proyectos ágiles cuando cambian los requerimientos.
 - **`investigador-proyecto`**: profundidad **`total`** (todos los ítems, paginando, sin ventana de tiempo; árbol completo de épicas, historias y tareas).

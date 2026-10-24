@@ -40,7 +40,11 @@ Por historia o por módulo: `generador-casos-manuales`, `generador-casos-bdd` o 
 
 ## 5. Mantenerla al día (proyectos ágiles)
 
-Los requerimientos cambian en el medio del sprint. Rutina recomendada: **al empezar cada sprint, antes de escribir casos de una historia que se tocó, y antes de una regresión**:
+Los requerimientos cambian en el medio del sprint. La base **no se vuelve a armar**: se actualiza de forma incremental. `.estado.json` guarda qué historias están documentadas, con su fecha y una **huella** de su contenido (título, descripción, criterios, comentarios, subtareas y vínculos); la actualización le pide a la herramienta **solo** lo modificado desde la última revisión, lee en detalle las historias **nuevas** y las que **cambiaron de contenido**, e ignora las que solo se movieron de columna o se reasignaron.
+
+**Programada** (recomendado): `npm run actualizar-conocimiento -- --programar lunes --con-agente` la deja corriendo cada lunes a las 08:00 en esta máquina (Programador de tareas en Windows; en Mac/Linux da la línea de cron). Cada corrida vuelve a recorrer la app y compara (sin tokens), revisa el código nuevo si hay `REPO_RUTA_LOCAL` (sin tokens), corre el documentador en modo actualizar para las historias (con tope de gasto, `--presupuesto-usd`, 5 por defecto), deja el resumen en `output/conocimiento/` y avisa a Slack/Teams si algo cambió. Sin `--con-agente` no gasta tokens (solo app y código). `--desprogramar` la saca.
+
+**A mano**, la misma rutina: **al empezar cada sprint, antes de escribir casos de una historia que se tocó, y antes de una regresión**:
 
 1. `documentador-proyecto` en **modo actualizar**. Revisa tres cosas y rehace solo lo afectado:
    - **Historias** cambiadas desde la última revisión (y las nuevas) → `cambios-historias.md`, con sus **casos para revisar**.
