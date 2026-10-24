@@ -29,6 +29,7 @@ import json
 import re
 import sys
 
+from _i18n import escribir_bilingue, localizar, idioma_actual  # noqa: E402
 from _estilos_reporte import (falta_informacion, e, page, meta, section, kpi_tiles, banner, doc_list, table, bar_chart, nivel_badge,
                               CRITICO, SERIO, AVISO, NEUTRO)
 
@@ -128,18 +129,20 @@ def build_html(zap, analisis, url, historia, modo="pasivo"):
     ])
     body.append(f'<div style="margin-top:20px">{kpis}</div>')
 
-    metodo = (f'''
-      <p><strong style="color:var(--ink)">Escaneo activo</strong> con OWASP ZAP (full scan) sobre una URL autorizada: además de recorrer el sitio,
-      se enviaron payloads de ataque (inyección, XSS, etc.) y se analizaron las respuestas. Es intrusivo y pudo crear o modificar datos
-      en el ambiente de prueba. No cubre lógica de negocio ni control de acceso por rol más allá de lo que ZAP prueba.</p>'''
-      if activo else '''
-      <p><strong style="color:var(--ink)">Escaneo pasivo</strong> con OWASP ZAP (baseline): se recorrió el sitio con el spider y se analizaron
-      las respuestas sin enviar ataques ni modificar datos. Detecta configuraciones y exposiciones visibles desde el cliente
-      (encabezados de seguridad, cookies, información expuesta, contenido mixto…); <strong style="color:var(--ink)">no reemplaza</strong>
-      un escaneo activo autorizado ni una prueba de penetración.</p>''')
-    body.append(section("Alcance y método", f'''<div class="cardbody">{metodo}
-      <p>Sitio: <span class="mono">{e(url or ", ".join(sorted({a["_sitio"] for a in alertas})) or "—")}</span> ·
-      Versión de ZAP: {e(zap.get("@version", "—"))} · Generado por ZAP: {e(zap.get("@generated", "—"))}</p></div>'''))
+    # Cada frase en una sola línea: la versión en inglés traduce cada texto entero.
+    if activo:
+        metodo = ('<p><strong style="color:var(--ink)">Escaneo activo</strong> con OWASP ZAP (full scan) sobre una URL autorizada: '
+                  'además de recorrer el sitio, se enviaron payloads de ataque (inyección, XSS, etc.) y se analizaron las respuestas. '
+                  'Es intrusivo y pudo crear o modificar datos en el ambiente de prueba. No cubre lógica de negocio ni control de acceso '
+                  'por rol más allá de lo que ZAP prueba.</p>')
+    else:
+        metodo = ('<p><strong style="color:var(--ink)">Escaneo pasivo</strong> con OWASP ZAP (baseline): se recorrió el sitio con el spider '
+                  'y se analizaron las respuestas sin enviar ataques ni modificar datos. Detecta configuraciones y exposiciones visibles '
+                  'desde el cliente (encabezados de seguridad, cookies, información expuesta, contenido mixto…); '
+                  '<strong style="color:var(--ink)">no reemplaza</strong> un escaneo activo autorizado ni una prueba de penetración.</p>')
+    sitio = url or ", ".join(sorted({a["_sitio"] for a in alertas})) or "—"
+    body.append(section("Alcance y método", f'<div class="cardbody">{metodo}<p>Sitio: <span class="mono">{e(sitio)}</span> · '
+                        f'Versión de ZAP: {e(zap.get("@version", "—"))} · Generado por ZAP: {e(zap.get("@generated", "—"))}</p></div>'))
 
     if analisis.get("resumen"):
         body.append(section("Resumen ejecutivo", f'<div class="cardbody"><p class="lead">{e(analisis["resumen"])}</p></div>'))
@@ -208,8 +211,8 @@ def main():
     if a.analisis:
         with open(a.analisis, encoding="utf-8") as f:
             analisis = json.load(f)
-    with open(a.salida, "w", encoding="utf-8") as f:
-        f.write(build_html(zap, analisis, a.url, a.historia, a.modo))
+    # ES y EN: el inglés del agente va en el bloque "en" del analisis.json.
+    escribir_bilingue(a.salida, lambda: build_html(zap, localizar(analisis), a.url, a.historia, a.modo))
     print(f"OK: {a.salida}")
 
 

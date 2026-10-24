@@ -27,6 +27,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _i18n import escribir_bilingue, localizar  # noqa: E402
 from _estilos_reporte import (page, meta, section, kpi_tiles, banner, table, two_col, doc_list,
                               nivel_badge, falta_informacion, e, OK, AVISO, CRITICO)
 
@@ -71,8 +72,14 @@ def _tarjeta_fuente(reg):
 
 
 def generar(streaming_json, salida, analisis_json=None):
+    """Escribe salida (ES) y su .en.html (EN); el inglés del agente va en el bloque "en" del analisis.json."""
     datos = json.loads(Path(streaming_json).read_text(encoding="utf-8"))
     analisis = json.loads(Path(analisis_json).read_text(encoding="utf-8")) if analisis_json and Path(analisis_json).exists() else {}
+    escribir_bilingue(salida, lambda: _html(datos, localizar(analisis), salida, streaming_json))
+    return salida
+
+
+def _html(datos, analisis, salida, streaming_json):
     fuentes = datos.get("fuentes", [])
     r = datos.get("resumen", {})
 
@@ -118,9 +125,7 @@ def generar(streaming_json, salida, analisis_json=None):
 
     meta_html = meta([("Generado", datos.get("generado")), ("Historia", datos.get("historia")),
                       ("Captura", f'{datos.get("segundos_captura")} s'), ("Transporte", datos.get("transporte"))])
-    html = page("Streaming y playback", "Verificación de streaming", meta_html, cuerpo)
-    Path(salida).write_text(html, encoding="utf-8")
-    return salida
+    return page("Streaming y playback", "Verificación de streaming", meta_html, cuerpo)
 
 
 def main():

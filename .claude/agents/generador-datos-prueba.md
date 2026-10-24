@@ -76,3 +76,7 @@ Escribí el `.csv` en UTF-8 con BOM, separado por `;` (como el resto de los CSV 
 - Datos plausibles y coherentes, no relleno aleatorio sin sentido.
 - En la tabla, **sin emojis** en las celdas (descuadran el ASCII).
 - Todo en español.
+
+# Versión en inglés
+
+El portal arma el HTML de lo que entregás en español y en inglés (`npm run portal`, o `python scripts/generar_informe_artefacto.py <archivo>`), con una banderita para pasar de uno al otro. Al terminar `datos-HU-XXX.md` (o `.csv`), escribí al lado `datos-HU-XXX.en.md` (o `.en.csv`) con las columnas, los motivos y la sección Falta información en inglés; los valores de prueba no se traducen. Mismo contenido y estructura, solo traducido (inglés claro de QA). No traduzcas IDs (`HU-001`, `CP-001`, `FI-01`), rutas ni datos de prueba. Los valores de las escalas (prioridad, severidad, estado) pueden quedar en español: los traduce el script. Si no la escribís, el HTML en inglés sale con el contenido en español y un aviso.

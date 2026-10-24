@@ -54,3 +54,7 @@ Trabajás como subagente: **no podés hacerle una pregunta a la persona y espera
 - **No inventes** un CVE ni una versión de fix: salen del escáner. Si no sabés si una licencia es aceptable, es `Falta información`.
 - **Vulnerable, no viejo**: reportá lo que tiene CVE, no lo desactualizado sin más.
 - Escribí todo en español, claro y profesional.
+
+# Informe en español e inglés
+
+El script del informe arma dos HTML: `<informe>.html` (español) e `<informe>.en.html` (inglés), con una banderita para pasar de uno al otro. En el JSON que le pasás (`analisis.json`, `plan.json` o `_resultados-*.json`) agregá un bloque `"en"` con la traducción al inglés de los textos que escribiste vos (veredicto, resumen, hallazgos, recomendaciones, notas…): las mismas claves y, en las listas, los mismos `id` (o el mismo orden si no tienen). No traduzcas IDs, rutas, datos de la app ni los valores de las escalas (`Alta`, `Aprobado`…): eso lo resuelve el script. Inglés claro de QA. Si falta el bloque, el informe en inglés sale con esos textos en español.

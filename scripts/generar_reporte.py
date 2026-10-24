@@ -37,6 +37,7 @@ import sys
 import json
 import os
 
+from _i18n import escribir_bilingue, idioma_actual, localizar  # noqa: E402,F401
 from _estilos_reporte import (miniatura, resolver_evidencia, e, page, meta, section, kpi_tiles, donut, legend, banner, table,
                               stacked_bars, bar_chart, nivel_badge, estado_pill, ESTADO_COLOR, SERIES)
 
@@ -147,8 +148,7 @@ def main():
         sys.exit(1)
     with open(entrada, encoding="utf-8") as f:
         data = json.load(f)
-    with open(salida, "w", encoding="utf-8") as f:
-        f.write(build_html(data, os.path.dirname(os.path.abspath(salida))))
+    escribir_bilingue(salida, lambda: build_html(localizar(data), os.path.dirname(os.path.abspath(salida))))
     print(f"OK: {salida}")
 
 

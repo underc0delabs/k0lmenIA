@@ -39,6 +39,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _estilos_reporte import (page, meta, section, kpi_tiles, banner, table, doc_list, stacked_bars,  # noqa: E402
                               nivel_badge, falta_informacion, e, NIVEL_COLOR)
+from _i18n import escribir_bilingue, localizar  # noqa: E402
 
 ORDEN_SEV = {"Crítica": 0, "Alta": 1, "Media": 2, "Baja": 3}
 SEVERIDADES = ["Crítica", "Alta", "Media", "Baja"]
@@ -65,16 +66,31 @@ def link(origen, archivo, linea):
     return f'<span class="ubic mono">{e(txt)}</span>'
 
 
+def _ordenar(d):
+    return sorted(d.get("hallazgos") or [], key=lambda x: (ORDEN_SEV.get(x.get("severidad"), 9),
+                                                          CATEGORIAS.index(x["categoria"]) if x.get("categoria") in CATEGORIAS else 9))
+
+
 def generar(analisis_json, salida, markdown=None):
-    d = json.loads(Path(analisis_json).read_text(encoding="utf-8"))
+    """Escribe salida (ES) y su .en.html (EN); el inglés del agente va en el bloque "en" del analisis.json.
+    Los comentarios para el PR (--markdown) quedan en español."""
+    datos = json.loads(Path(analisis_json).read_text(encoding="utf-8"))
+    for h in _ordenar(datos):
+        if h.get("severidad") not in ORDEN_SEV:
+            print(f"[aviso] analisis.json · {h.get('id')}: severidad {h.get('severidad')!r} fuera de la escala", file=sys.stderr)
+    Path(salida).parent.mkdir(parents=True, exist_ok=True)
+    escribir_bilingue(salida, lambda: _html(localizar(datos)))
+    if markdown:
+        es = localizar(datos, "es")
+        Path(markdown).write_text(comentarios_md(es, _ordenar(es)), encoding="utf-8")
+    return salida
+
+
+def _html(d):
     origen = d.get("origen") or {}
     pr = origen.get("pr") or {}
     m = d.get("metricas") or {}
-    hall = sorted(d.get("hallazgos") or [], key=lambda x: (ORDEN_SEV.get(x.get("severidad"), 9),
-                                                          CATEGORIAS.index(x["categoria"]) if x.get("categoria") in CATEGORIAS else 9))
-    for h in hall:
-        if h.get("severidad") not in ORDEN_SEV:
-            print(f"[aviso] analisis.json · {h.get('id')}: severidad {h.get('severidad')!r} fuera de la escala", file=sys.stderr)
+    hall = _ordenar(d)
     graves = sum(1 for h in hall if h.get("severidad") in ("Crítica", "Alta"))
     seg = sum(1 for h in hall if h.get("categoria") == "Seguridad")
     perf = sum(1 for h in hall if h.get("categoria") == "Performance")
@@ -147,16 +163,11 @@ def generar(analisis_json, salida, markdown=None):
     destino = origen.get("repo") or origen.get("ruta")
     if pr.get("numero"):
         destino = f"{destino} · PR #{pr['numero']}"
-    html = page(d.get("titulo") or "Revisión de código", "Revisión estática de código",
+    return page(d.get("titulo") or "Revisión de código", "Revisión estática de código",
                 meta([("Generado", d.get("generado")), ("Repositorio", destino),
                       ("Rama", f"{origen.get('rama')} → {origen.get('base')}" if origen.get("base") else origen.get("rama")),
                       ("Commit", (origen.get("commit") or "")[:10] or None),
                       ("Escáneres", ", ".join(d.get("escaneres") or []) or None)]), cuerpo)
-    Path(salida).parent.mkdir(parents=True, exist_ok=True)
-    Path(salida).write_text(html, encoding="utf-8")
-    if markdown:
-        Path(markdown).write_text(comentarios_md(d, hall), encoding="utf-8")
-    return salida
 
 
 def comentarios_md(d, hall):

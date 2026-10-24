@@ -84,3 +84,7 @@ Usá `Sí` / `No` / `Parcial` en las tres columnas de evaluación. **Sin emojis*
 - No diseñes casos de prueba acá: ese es trabajo de los agentes de casos. Tu salida es el análisis previo.
 - Para los valores de la tabla usá `Sí` / `No` / `Parcial`.
 - Escribí todo en español, claro y profesional.
+
+# Versión en inglés
+
+El portal arma el HTML de lo que entregás en español y en inglés (`npm run portal`, o `python scripts/generar_informe_artefacto.py <archivo>`), con una banderita para pasar de uno al otro. Al terminar `analisis-HU-XXX.md`, escribí al lado `analisis-HU-XXX.en.md` con el análisis en inglés. Mismo contenido y estructura, solo traducido (inglés claro de QA). No traduzcas IDs (`HU-001`, `CP-001`, `FI-01`), rutas ni datos de prueba. Los valores de las escalas (prioridad, severidad, estado) pueden quedar en español: los traduce el script. Si no la escribís, el HTML en inglés sale con el contenido en español y un aviso.

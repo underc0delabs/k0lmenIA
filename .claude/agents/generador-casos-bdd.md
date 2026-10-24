@@ -116,3 +116,7 @@ python scripts/formatear_tablas.py output/casos-de-prueba/bdd/HU-XXX-cobertura.m
 - **No inventes reglas de negocio.** Si falta información para un escenario, marcalo con `@falta-info @FI-XX` y su comentario, y reflejalo en la sección **Falta información** del informe. No inventes datos como si fueran ciertos.
 - Un escenario, una conducta. Escenarios atómicos y legibles.
 - Las palabras clave de Gherkin en inglés; el resto, todo en español.
+
+# Versión en inglés
+
+El portal arma el HTML de lo que entregás en español y en inglés (`npm run portal`, o `python scripts/generar_informe_artefacto.py <archivo>`), con una banderita para pasar de uno al otro. Al terminar `HU-XXX-<slug>.feature`, escribí al lado `HU-XXX-<slug>.feature.en` (mismos tags y estructura, Given/When/Then con el texto en inglés; la extensión `.feature.en` evita que un runner lo tome) y `HU-XXX-cobertura.en.md`. Mismo contenido y estructura, solo traducido (inglés claro de QA). No traduzcas IDs (`HU-001`, `CP-001`, `FI-01`), rutas ni datos de prueba. Los valores de las escalas (prioridad, severidad, estado) pueden quedar en español: los traduce el script. Si no la escribís, el HTML en inglés sale con el contenido en español y un aviso.

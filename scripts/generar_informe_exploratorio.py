@@ -44,6 +44,7 @@ from pathlib import Path
 import sys
 
 import _historial
+from _i18n import escribir_bilingue, idioma_actual, localizar  # noqa: E402,F401
 from _estilos_reporte import miniatura  # noqa: F401 (la importan los otros informes)
 from _estilos_reporte import (falta_informacion, avisar_analisis, e, page, meta, section, kpi_tiles, banner, doc_list, table, bar_chart, stacked_bars,
                               donut_panel, two_col, nivel_badge, _pastilla, CRITICO, SERIO, AVISO, NEUTRO, OK, SERIES)
@@ -197,20 +198,42 @@ def build_html(datos, analisis, hist_html=""):
                             section("Hallazgos por tipo", bar_chart(cats, ancho_etiqueta=150))))
 
     # ---- Alcance
-    mision = f'<p><strong style="color:var(--ink)">Misión:</strong> {e(analisis["mision"])}</p>' if analisis.get("mision") else ""
-    timebox = f' · exploración manual de {e(analisis["duracion_min"])} min' if analisis.get("duracion_min") else ""
-    sin_recorrer = (f'<p class="muted">Quedaron {r["paginas_sin_recorrer"]} página(s) del sitio sin recorrer por el límite '
-                    f'configurado (subí --max-paginas o --profundidad).</p>') if r.get("paginas_sin_recorrer") else ""
-    areas = ('<p><strong style="color:var(--ink)">Áreas exploradas a mano:</strong> ' + e(", ".join(analisis["areas_exploradas"])) + "</p>"
-             if analisis.get("areas_exploradas") else "")
-    body.append(section("Alcance y método", f'''<div class="cardbody">{mision}
-      <p><strong style="color:var(--ink)">Recorrido automático</strong> con Playwright desde <span class="mono">{e(datos.get("url"))}</span>:
-      hasta {e(cfg.get("max_paginas"))} páginas del mismo sitio, {e(cfg.get("profundidad"))} niveles de profundidad, links
-      {"internos y externos" if cfg.get("externos", True) else "internos"}; responsive en {e(", ".join(cfg.get("resoluciones") or []))}
-      ({e(cfg.get("responsive"))} página(s)); página lenta desde {seg(cfg.get("lenta_ms", 3000))}{timebox}. Duración del recorrido: {e(datos.get("duracion_s"))} s.</p>
-      <p>Solo se navegó con GET: no se completaron ni enviaron formularios en el recorrido automático y no se siguieron links de cierre de sesión.
-      En las capturas, los elementos con problemas (imágenes rotas, elementos que se salen de la pantalla, objetivos táctiles chicos) están marcados en rojo.</p>
-      {areas}{sin_recorrer}</div>'''))
+    # Párrafos con datos intercalados: una versión por idioma (el diccionario traduce frases enteras, no estas).
+    en = idioma_actual() == "en"
+    fuerte = '<strong style="color:var(--ink)">{}</strong>'
+    mision = (f'<p>{fuerte.format("Mission:" if en else "Misión:")} {e(analisis["mision"])}</p>' if analisis.get("mision") else "")
+    if analisis.get("duracion_min"):
+        timebox = (f' · {e(analisis["duracion_min"])} min of manual exploration' if en
+                   else f' · exploración manual de {e(analisis["duracion_min"])} min')
+    else:
+        timebox = ""
+    if r.get("paginas_sin_recorrer"):
+        sin_recorrer = (f'<p class="muted">{r["paginas_sin_recorrer"]} page(s) of the site were not visited because of the configured '
+                        f'limit (raise --max-paginas or --profundidad).</p>' if en else
+                        f'<p class="muted">Quedaron {r["paginas_sin_recorrer"]} página(s) del sitio sin recorrer por el límite '
+                        f'configurado (subí --max-paginas o --profundidad).</p>')
+    else:
+        sin_recorrer = ""
+    areas = (f'<p>{fuerte.format("Areas explored by hand:" if en else "Áreas exploradas a mano:")} '
+             + e(", ".join(analisis["areas_exploradas"])) + "</p>" if analisis.get("areas_exploradas") else "")
+    resoluciones = e(", ".join(cfg.get("resoluciones") or []))
+    if en:
+        recorrido = (f'<p>{fuerte.format("Automated crawl")} with Playwright from <span class="mono">{e(datos.get("url"))}</span>: '
+                     f'up to {e(cfg.get("max_paginas"))} pages of the same site, {e(cfg.get("profundidad"))} levels deep, '
+                     f'{"internal and external" if cfg.get("externos", True) else "internal"} links; responsive at {resoluciones} '
+                     f'({e(cfg.get("responsive"))} page(s)); slow page from {seg(cfg.get("lenta_ms", 3000))}{timebox}. '
+                     f'Crawl duration: {e(datos.get("duracion_s"))} s.</p>'
+                     '<p>Only GET navigation: no forms were filled in or submitted during the automated crawl and no log-out links were followed. '
+                     'In the screenshots, elements with problems (broken images, elements that overflow the screen, small touch targets) are marked in red.</p>')
+    else:
+        recorrido = (f'<p>{fuerte.format("Recorrido automático")} con Playwright desde <span class="mono">{e(datos.get("url"))}</span>: '
+                     f'hasta {e(cfg.get("max_paginas"))} páginas del mismo sitio, {e(cfg.get("profundidad"))} niveles de profundidad, links '
+                     f'{"internos y externos" if cfg.get("externos", True) else "internos"}; responsive en {resoluciones} '
+                     f'({e(cfg.get("responsive"))} página(s)); página lenta desde {seg(cfg.get("lenta_ms", 3000))}{timebox}. '
+                     f'Duración del recorrido: {e(datos.get("duracion_s"))} s.</p>'
+                     '<p>Solo se navegó con GET: no se completaron ni enviaron formularios en el recorrido automático y no se siguieron links de cierre de sesión. '
+                     'En las capturas, los elementos con problemas (imágenes rotas, elementos que se salen de la pantalla, objetivos táctiles chicos) están marcados en rojo.</p>')
+    body.append(section("Alcance y método", f'<div class="cardbody">{mision}{recorrido}{areas}{sin_recorrer}</div>'))
 
     # ---- Hallazgos
     if todos:
@@ -259,7 +282,7 @@ def build_html(datos, analisis, hist_html=""):
         nombres = {f["resolucion"]: f.get("nombre", "") for f in resp}
         filas_sb = [(f'{nombres[x]} {x}', [sum(1 for f in resp if f["resolucion"] == x and f.get(k)) for k in
                                            ("desborde_horizontal", "texto_chico", "objetivos_tactiles_chicos")]) for x in resoluciones]
-        series = [("Scroll horizontal", CRITICO), ("Texto < 12px", AVISO), ("Táctiles < 24px", SERIES[1])]
+        series = [("Scroll horizontal", CRITICO), ("Texto < 12 px", AVISO), ("Táctiles < 24 px", SERIES[1])]
         if any(sum(v) for _, v in filas_sb):
             body.append(section("Problemas de responsive por resolución", stacked_bars(filas_sb, series), "páginas afectadas"))
         paginas_r = list(dict.fromkeys(f["url"] for f in resp))
@@ -280,7 +303,7 @@ def build_html(datos, analisis, hist_html=""):
             filas.append(celdas)
         tabla = table(["Página"] + [f"{nombres[x]} {x}" for x in resoluciones], filas).replace("<table>", '<table class="matriz">', 1)
         body.append(section("Responsive: página por resolución", tabla,
-                            "scroll horizontal, texto < 12px y objetivos táctiles < 24px (WCAG 2.5.8)"))
+                            "scroll horizontal, texto < 12 px y objetivos táctiles < 24 px (WCAG 2.5.8)"))
 
     # ---- Videos
     if videos:
@@ -393,8 +416,7 @@ def main():
             analisis = json.load(f)
         avisar_analisis(analisis, [h.get("id") for h in datos.get("hallazgos") or []] + [x.get("id") for x in analisis.get("exploratorios") or []])
     hist_html = _historial.seccion("exploratorio", Path(a.exploracion_json).resolve().parent, datos)
-    with open(a.salida, "w", encoding="utf-8") as f:
-        f.write(build_html(datos, analisis, hist_html=hist_html))
+    escribir_bilingue(a.salida, lambda: build_html(datos, localizar(analisis), hist_html=hist_html))
     print(f"OK: {a.salida}")
 
 

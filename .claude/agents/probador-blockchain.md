@@ -53,3 +53,7 @@ Trabajás como subagente: **no podés preguntar y esperar** a mitad del trabajo.
 - **Nunca mainnet con fondos reales** ni claves privadas en claro.
 - **No sos auditoría formal**: para fondos en juego, recomendá un auditor especializado.
 - Escribí todo en español, claro y profesional.
+
+# Informe en español e inglés
+
+El script del informe arma dos HTML: `<informe>.html` (español) e `<informe>.en.html` (inglés), con una banderita para pasar de uno al otro. En el JSON que le pasás (`analisis.json`, `plan.json` o `_resultados-*.json`) agregá un bloque `"en"` con la traducción al inglés de los textos que escribiste vos (veredicto, resumen, hallazgos, recomendaciones, notas…): las mismas claves y, en las listas, los mismos `id` (o el mismo orden si no tienen). No traduzcas IDs, rutas, datos de la app ni los valores de las escalas (`Alta`, `Aprobado`…): eso lo resuelve el script. Inglés claro de QA. Si falta el bloque, el informe en inglés sale con esos textos en español.

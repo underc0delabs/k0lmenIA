@@ -35,6 +35,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _i18n import escribir_bilingue, localizar  # noqa: E402
 from _estilos_reporte import (page, meta, section, kpi_tiles, banner, table, doc_list, two_col, bar_chart,
                               nivel_badge, estado_pill, falta_informacion, miniatura, resolver_evidencia, e,
                               CRITICO, SERIO, AVISO, NEUTRO, OK, SERIES, _num)
@@ -49,7 +50,13 @@ def _moneda(v):
 
 
 def generar(analisis_json, salida):
-    d = json.loads(Path(analisis_json).read_text(encoding="utf-8"))
+    """Escribe salida (ES) y su .en.html (EN); el inglés del agente va en el bloque "en" del analisis.json."""
+    datos = json.loads(Path(analisis_json).read_text(encoding="utf-8"))
+    escribir_bilingue(salida, lambda: _html(localizar(datos), salida))
+    return salida
+
+
+def _html(d, salida):
     base = Path(salida).resolve().parent
 
     hall = sorted(d.get("hallazgos") or [], key=lambda x: ORDEN_SEV.get(x.get("severidad"), 9))
@@ -132,11 +139,9 @@ def generar(analisis_json, salida):
         cuerpo += section("Próximos pasos", doc_list(d["proximos_pasos"]))
     cuerpo += falta_informacion(d.get("falta_informacion"))
 
-    html = page(d.get("titulo") or "Billetera y pagos", "Billeteras virtuales · pagos",
+    return page(d.get("titulo") or "Billetera y pagos", "Billeteras virtuales · pagos",
                 meta([("Generado", d.get("generado")), ("Historia", d.get("historia")), ("Ambiente", d.get("ambiente")),
                       ("Proveedor", d.get("proveedor_pagos"))]), cuerpo)
-    Path(salida).write_text(html, encoding="utf-8")
-    return salida
 
 
 def main():

@@ -28,6 +28,12 @@ Formato del JSON de entrada:
 
 "tiempo_min" (opcional, por caso): minutos de ejecución manual. Si falta, se calcula con la fórmula de
 scripts/estimacion.py (columna "Tiempo estimado (min)" del .xlsx, con el total al pie).
+"en" (opcional, por caso y general): la versión en inglés de los textos, con las mismas claves
+(ej. {"titulo": "...", "pasos": "...", "resultado": "..."} dentro de cada caso; {"modulo": "...",
+"falta_informacion": [...]} en el general). Con eso se escribe <salida>.en.json al lado de la planilla y el
+informe HTML sale completo en inglés. Prioridad y estado no se traducen (los traduce el informe).
+Al terminar se arma el informe HTML de los casos en los dos idiomas (<salida>.html y <salida>.en.html,
+scripts/generar_informe_artefacto.py).
 "falta_info" (opcional, por caso): IDs de "Falta información" de los que depende el caso.
 Esos casos se resaltan en la planilla, suman la etiqueta @falta-info y el detalle en
 Comentarios. "falta_informacion" (opcional) arma la hoja "Falta información" del .xlsx
@@ -294,6 +300,38 @@ def to_md(data, out):
         f.write("\n".join(partes) + "\n")
 
 
+def _tiene_ingles(data):
+    return isinstance(data.get("en"), dict) or any(isinstance(c.get("en"), dict) for c in data.get("casos", []))
+
+
+def escribir_ingles(data, salida_xlsx):
+    """Si el JSON trae bloques "en", deja <salida>.en.json con los textos en inglés (para el informe HTML)."""
+    if not _tiene_ingles(data):
+        return None
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from generar_informe_artefacto import localizar_profundo, ruta_en_de
+    en = localizar_profundo(data, "en")
+    destino = ruta_en_de(salida_xlsx)
+    claves = ("id", "titulo", "descripcion", "precondiciones", "datos", "pasos", "resultado", "comentarios")
+    salida = {"modulo": en.get("modulo", ""),
+              "casos": [{k: c.get(k, "") for k in claves} for c in en.get("casos", [])],
+              "falta_informacion": en.get("falta_informacion", [])}
+    with open(destino, "w", encoding="utf-8") as f:
+        json.dump(salida, f, ensure_ascii=False, indent=2, default=str)
+    print(f"OK: {destino}")
+    return destino
+
+
+def informe_html(salida_xlsx):
+    """Informe HTML de los casos (ES + EN). Si falla, la planilla ya quedó: solo se avisa."""
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from generar_informe_artefacto import generar
+        print(f"OK: {generar(salida_xlsx)} (y su versión .en.html)")
+    except Exception as ex:  # noqa: BLE001
+        print(f"[aviso] No se pudo armar el informe HTML de los casos: {type(ex).__name__}: {ex}", file=sys.stderr)
+
+
 def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     flags = [a for a in sys.argv[1:] if a.startswith("--")]
@@ -318,6 +356,8 @@ def main():
     md = re.sub(r"\.xlsx$", ".md", salida, flags=re.IGNORECASE)
     to_md(data, md)
     print(f"OK: {md}")
+    escribir_ingles(data, salida)
+    informe_html(salida)
     # Con --limpiar, borra el JSON de entrada (cross-platform, sin depender de 'rm').
     if "--limpiar" in flags:
         try:

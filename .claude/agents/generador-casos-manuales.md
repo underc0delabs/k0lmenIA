@@ -124,3 +124,7 @@ Es prosa en Markdown (no la tabla de casos). Seguí `plantillas/plantilla-cobert
 - Cada caso prueba una sola cosa y es independiente.
 - Los casos quedan ordenados por prioridad (los más críticos primero, los de prioridad baja al final): el script los reordena así en la planilla y en el `.md`.
 - Todo en español, claro y profesional.
+
+# Versión en inglés
+
+El portal arma el HTML de lo que entregás en español y en inglés (`npm run portal`, o `python scripts/generar_informe_artefacto.py <archivo>`), con una banderita para pasar de uno al otro. En el JSON que le pasás a `scripts/generar_casos.py`, cada caso lleva un bloque `"en"` con `titulo`, `descripcion`, `precondiciones`, `datos`, `pasos` y `resultado` en inglés, y el JSON uno general con `modulo` y `falta_informacion`: el script arma la planilla en español, `casos-HU-XXX.en.json` y el HTML bilingüe. El informe de cobertura (`casos-HU-XXX-cobertura.md`) va también en inglés al lado: `casos-HU-XXX-cobertura.en.md`. Mismo contenido y estructura, solo traducido (inglés claro de QA). No traduzcas IDs (`HU-001`, `CP-001`, `FI-01`), rutas ni datos de prueba. Los valores de las escalas (prioridad, severidad, estado) pueden quedar en español: los traduce el script. Si no la escribís, el HTML en inglés sale con el contenido en español y un aviso.

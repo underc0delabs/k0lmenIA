@@ -74,6 +74,8 @@ def test_cli_e_informe_y_candidatos(tmp_path, capsys):
     assert any(o["tipo"] == "Candidato a automatizar" and o["agente"] == "ejecutor-e2e" for o in d["oportunidades"])
     html = (salida / "informe-metricas.html").read_text(encoding="utf-8")
     assert "Costo por agente" in html and "secreto" not in html
+    en = (salida / "informe-metricas.en.html").read_text(encoding="utf-8")
+    assert "Cost per agent" in en and "Automation candidate" in en and "secreto" not in en
 
 
 def test_sin_transcripciones_lo_dice(tmp_path, capsys):

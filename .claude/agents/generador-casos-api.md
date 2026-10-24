@@ -119,3 +119,7 @@ Convenciones:
 - Cada caso prueba una sola condición.
 - **Antes de entregar:** cada endpoint del contrato tiene al menos un positivo, un negativo y uno de auth (si pide autenticación); cada status esperado figura en el contrato o es un `FI-XX`; ningún caso depende de un id fijo; los JSON del detalle son válidos.
 - Todo en español, claro y profesional.
+
+# Versión en inglés
+
+El portal arma el HTML de lo que entregás en español y en inglés (`npm run portal`, o `python scripts/generar_informe_artefacto.py <archivo>`), con una banderita para pasar de uno al otro. Al terminar `casos-api-*.md`, escribí al lado `casos-api-*.en.md` con los casos en inglés (bodies, rutas y códigos iguales). Mismo contenido y estructura, solo traducido (inglés claro de QA). No traduzcas IDs (`HU-001`, `CP-001`, `FI-01`), rutas ni datos de prueba. Los valores de las escalas (prioridad, severidad, estado) pueden quedar en español: los traduce el script. Si no la escribís, el HTML en inglés sale con el contenido en español y un aviso.

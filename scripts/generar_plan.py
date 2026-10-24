@@ -29,6 +29,7 @@ El HTML es autocontenido (CSS y SVG inline), no usa internet.
 import sys
 import json
 
+from _i18n import escribir_bilingue, localizar, idioma_actual  # noqa: E402
 from _estilos_reporte import (e, page, meta, section, section_group, kpi_tiles, bar_chart,
                               doc_list, two_col, table, nivel_badge, NIVEL_COLOR)
 
@@ -133,8 +134,8 @@ def main():
         sys.exit(1)
     with open(entrada, encoding="utf-8") as f:
         data = json.load(f)
-    with open(salida, "w", encoding="utf-8") as f:
-        f.write(build_html(data))
+    # ES y EN: el inglés del agente va en el bloque "en" del plan.json.
+    escribir_bilingue(salida, lambda: build_html(localizar(data)))
     print(f"OK: {salida}")
 
 

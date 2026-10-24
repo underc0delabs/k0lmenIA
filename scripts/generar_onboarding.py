@@ -38,6 +38,7 @@ from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ / "scripts"))
+from _i18n import escribir_bilingue, localizar, idioma_actual  # noqa: E402
 
 TONO = {"ok": "ok", "aviso": "warn", "falta": "bad"}
 TEXTO_ESTADO = {"ok": "Listo", "aviso": "Revisar", "falta": "Falta"}
@@ -85,7 +86,7 @@ def build_html(d):
     faltan = sum(1 for x in entorno if x.get("estado") == "falta")
     body = [kpi_tiles([
         ("Módulos del producto", len(prod.get("modulos") or []), "", f'{len(prod.get("flujos") or [])} flujo(s) clave', "grid"),
-        ("Agentes recomendados", len(d.get("agentes") or []), "", f'para el rol {d.get("rol", "")}', "persona"),
+        ("Agentes recomendados", len(d.get("agentes") or []), "", f'rol · {d.get("rol", "")}', "persona"),
         ("Tareas del plan", len(d.get("plan") or []), "", "con su criterio de hecho", "lista"),
         ("Entorno", "Listo" if entorno and not faltan else f"{faltan} pendiente(s)" if entorno else "—",
          "ok" if entorno and not faltan else "warn" if entorno else "", "según npm run doctor", "ok" if entorno and not faltan else "warn"),
@@ -115,7 +116,7 @@ def build_html(d):
                                                                                       icono.get(x.get("estado"), "●")),
                                                   e(x.get("detalle")), f'<span class="mono">{e(x.get("accion", ""))}</span>'] for x in entorno])))
     if d.get("agentes"):
-        body.append(section(f'k0lmenIA para tu rol: {d.get("rol", "")}', table(["Agente", "Para qué", "Pedido de ejemplo para este proyecto"],
+        body.append(section(f'k0lmenIA para tu rol · {d.get("rol", "")}', table(["Agente", "Para qué", "Pedido de ejemplo para este proyecto"],
                                                                               [[f'<b>{e(a.get("agente"))}</b>', e(a.get("para_que")),
                                                                                 f'<span class="pedido-ej">{e(a.get("pedido"))}</span>'] for a in d["agentes"]])))
     if d.get("plan"):
@@ -134,9 +135,10 @@ def build_html(d):
         items = "".join(f'<li><label><input type="checkbox" id="c{i}"><span>{e(c)}</span></label></li>' for i, c in enumerate(d["checklist"]))
         body.append(section("Checklist", f'<div class="progreso"><span class="t"></span><span class="b"><span></span></span></div><ul class="check">{items}</ul>',
                             "se guarda en este navegador"))
-    titulo = f'Onboarding de {d.get("persona", "")}'.strip()
+    titulo = f'Onboarding · {d.get("persona", "")}'.strip(" ·")
     html = page(titulo, "Onboarding", meta([("Rol", d.get("rol")), ("Proyecto", d.get("proyecto")), ("Fecha", d.get("fecha"))]), "".join(body))
-    return html.replace("</style>", CSS_ONB + "</style>", 1).replace("</body>", f"<script>{JS_ONB}</script></body>", 1)
+    js = JS_ONB.replace("' de '+cajas.length+' hechos'", "' of '+cajas.length+' done'") if idioma_actual() == "en" else JS_ONB
+    return html.replace("</style>", CSS_ONB + "</style>", 1).replace("</body>", f"<script>{js}</script></body>", 1)
 
 
 def build_md(d):
@@ -184,7 +186,8 @@ def main(argv=None):
         ap.error('el JSON necesita "persona" o "rol"')
     carpeta = Path(a.salida) if a.salida else RAIZ / "output" / "onboarding" / slug(d.get("persona") or d.get("rol"))
     carpeta.mkdir(parents=True, exist_ok=True)
-    (carpeta / "plan-onboarding.html").write_text(build_html(d), encoding="utf-8")
+    # ES y EN (el .md queda en español): el inglés del agente va en el bloque "en" del plan.
+    escribir_bilingue(carpeta / "plan-onboarding.html", lambda: build_html(localizar(d)))
     md = carpeta / "plan-onboarding.md"
     md.write_text(build_md(d), encoding="utf-8")
     subprocess.run([sys.executable, str(RAIZ / "scripts" / "formatear_tablas.py"), str(md)], capture_output=True, text=True)

@@ -53,7 +53,7 @@ _P = {  # modelo: (entrada, salida, lectura de caché o None)
 }
 PRECIOS = {m: {"entrada": e, "salida": s, "cache_5m": e * 1.25, "cache_1h": e * 2.0, "cache_lectura": r if r is not None else e * 0.1}
            for m, (e, s, r) in _P.items()}
-GENERADOS = ["metricas.json", "informe-metricas.html"]
+GENERADOS = ["metricas.json", "informe-metricas.html", "informe-metricas.en.html"]
 PRINCIPAL = "conversación principal"
 # Un agente usado esta cantidad de veces o más en el período es candidato a automatizar.
 UMBRAL_REPETIDO = 5
@@ -241,19 +241,19 @@ def oportunidades(agentes, resumen):
     if subs and total:
         top = subs[0]
         salida.append({"tipo": "Mayor gasto", "agente": top["agente"],
-                       "detalle": f'{top["agente"]} es el agente que más gasta: ${top["costo_usd"]:.2f} '
+                       "detalle": f'Es el agente que más gasta: ${top["costo_usd"]:.2f} '
                                   f'({100 * top["costo_usd"] / total:.0f} % del total) en {top["invocaciones"]} uso(s).'})
     for a in agentes:
         if a["agente"] in (PRINCIPAL, "fork", "subagente", "general-purpose", "Explore", "Plan"):
             continue
         if a["invocaciones"] >= UMBRAL_REPETIDO:
             salida.append({"tipo": "Candidato a automatizar", "agente": a["agente"],
-                           "detalle": f'{a["agente"]} se usó {a["invocaciones"]} veces. Si es para correr las mismas pruebas, '
+                           "detalle": f'Se usó {a["invocaciones"]} veces. Si es para correr las mismas pruebas, '
                                       f'automatizalas en k0lmena: después corren con npm test, sin tokens.'})
     for a in agentes:
         if a["llamadas"] >= 20 and a["pct_cache"] < 50:
             salida.append({"tipo": "Caché baja", "agente": a["agente"],
-                           "detalle": f'{a["agente"]} reutiliza solo el {a["pct_cache"]:.0f} % de la entrada desde caché: '
+                           "detalle": f'Reutiliza solo el {a["pct_cache"]:.0f} % de la entrada desde caché: '
                                       f'conversaciones cortas o contexto que cambia en cada llamada.'})
     if resumen.get("sin_precio"):
         salida.append({"tipo": "Sin precio", "agente": "—",
@@ -299,18 +299,22 @@ def build_html(datos, carpeta=None):
                                                      "Costo", "Herramientas más usadas"], filas)))
     filas_m = [[e(m["modelo"]), m["llamadas"], _k(m["salida"]), e(_usd(m["costo_usd"])) if m["con_precio"] else '<span class="muted">sin precio</span>']
                for m in datos["modelos"]]
-    op = [f'{o["tipo"]}: {o["detalle"]}' for o in datos["oportunidades"]]
+    # El agente va aparte (" · "): la frase fija se traduce sola en la versión en inglés.
+    op = [" · ".join(x for x in (o["tipo"], o.get("agente") if o.get("agente") not in (None, "", "—") else "", o["detalle"]) if x)
+          for o in datos["oportunidades"]]
     body.append(two_col(section("Por modelo", table(["Modelo", "Respuestas", "Tokens generados", "Costo"], filas_m)),
                         section("Oportunidades", doc_list(op or ["Sin oportunidades claras en este período."]))))
     if datos.get("evals"):
         body.append(section("Evals de los agentes", table(["Corrida", "Fecha", "Casos", "Costo"],
                                                           [[e(x["corrida"]), e(x["fecha"]), x["casos"], e(_usd(x["costo_usd"]))] for x in datos["evals"]]),
                             f'{_usd(r["costo_evals_usd"])} en total'))
-    body.append(section("Cómo se calcula", f'''<div class="cardbody"><p>Se leen las transcripciones de Claude Code de este proyecto
-(<span class="mono">{e(datos.get("fuente", ""))}</span>): cada respuesta del modelo trae los tokens de entrada, salida y caché. Los
-subagentes se identifican por su tipo; lo demás es la conversación principal. El costo es una <b>estimación</b> con los precios por
-millón de tokens del {e(datos.get("precios_fecha", PRECIOS_FECHA))} (tabla <span class="mono">PRECIOS</span> del script); no
-reemplaza la facturación real. No se lee el texto de los mensajes.</p></div>'''))
+    # Sin saltos de línea dentro de cada frase: la versión en inglés traduce cada texto entero.
+    body.append(section("Cómo se calcula", (
+        '<div class="cardbody"><p>Se leen las transcripciones de Claude Code de este proyecto ('
+        f'<span class="mono">{e(datos.get("fuente", ""))}</span>): cada respuesta del modelo trae los tokens de entrada, salida y caché. '
+        'Los subagentes se identifican por su tipo; lo demás es la conversación principal. El costo es una <b>estimación</b> '
+        f'con los precios por millón de tokens del {e(datos.get("precios_fecha", PRECIOS_FECHA))} (tabla <span class="mono">PRECIOS</span> '
+        'del script); no reemplaza la facturación real. No se lee el texto de los mensajes.</p></div>')))
     if carpeta:
         body.append(_historial.seccion("tokens", carpeta, datos))
     return page("Uso de tokens", "Métricas de tokens", meta([("Período", datos.get("periodo")), ("Generado", datos.get("fecha", "")[:16].replace("T", " "))]),
@@ -319,6 +323,7 @@ reemplaza la facturación real. No se lee el texto de los mensajes.</p></div>'''
 
 # ------------------------------------------------------------------ historial
 import _historial  # noqa: E402
+from _i18n import escribir_bilingue, localizar, idioma_actual  # noqa: E402
 
 _historial.TIPOS.setdefault("tokens", {
     "archivo": "metricas.json", "items": lambda d: d.get("oportunidades") or [],
@@ -356,7 +361,7 @@ def main(argv=None):
         print(datos["aviso"])
     _historial.archivar(carpeta, GENERADOS, "metricas.json")
     (carpeta / "metricas.json").write_text(json.dumps(datos, ensure_ascii=False, indent=2), encoding="utf-8")
-    (carpeta / "informe-metricas.html").write_text(build_html(datos, carpeta), encoding="utf-8")
+    escribir_bilingue(carpeta / "informe-metricas.html", lambda: build_html(datos, carpeta))
     r = datos["resumen"]
     print(f'{r["llamadas"]} respuesta(s) · {r["agentes"]} agente(s) · costo estimado ${r["costo_usd"]:.2f} · caché {r["pct_cache"]:.0f} %')
     print(f"Informe: {carpeta / 'informe-metricas.html'}")

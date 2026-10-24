@@ -268,7 +268,7 @@ def main():
     if not a.agregar_reintento and not a.solo_informe:
         # Corrida nueva: el análisis anterior pasa a historial/<fecha>/ (se guardan los últimos 5).
         _historial.archivar(carpeta, ["corridas", "evidencia", "corridas.json", "fallos.json", "analisis.json", "informe-fallos.html"], "fallos.json")
-        for nombre in ("corridas", "evidencia", "corridas.json", "fallos.json", "analisis.json", "informe-fallos.html"):
+        for nombre in ("corridas", "evidencia", "corridas.json", "fallos.json", "analisis.json", "informe-fallos.html", "informe-fallos.en.html"):
             p = carpeta / nombre
             shutil.rmtree(p, ignore_errors=True) if p.is_dir() else p.unlink(missing_ok=True)
         carpeta.mkdir(parents=True, exist_ok=True)

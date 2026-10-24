@@ -308,7 +308,7 @@ def main():
     carpeta.mkdir(parents=True, exist_ok=True)
     datos_arch = carpeta / "cobertura.json"
     if not a.solo_informe:
-        _historial.archivar(carpeta, ["cobertura.json", "analisis.json", "informe-cobertura.html"], "cobertura.json")
+        _historial.archivar(carpeta, ["cobertura.json", "analisis.json", "informe-cobertura.html", "informe-cobertura.en.html"], "cobertura.json")
         extra = json.loads(Path(a.criterios).read_text(encoding="utf-8")) if a.criterios else {}
         historias = [hu] if hu else historias_presentes()
         if not historias:

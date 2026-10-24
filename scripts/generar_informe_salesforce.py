@@ -25,6 +25,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _i18n import escribir_bilingue, localizar, t  # noqa: E402
 from _estilos_reporte import (page, meta, section, kpi_tiles, banner, table, doc_list, two_col, bar_chart,
                               nivel_badge, estado_pill, falta_informacion, miniatura, resolver_evidencia, e,
                               CRITICO, SERIO, AVISO, SERIES)
@@ -39,8 +40,14 @@ def _rel(r, rel, campo="Name"):
 
 
 def generar(sf_json, salida, analisis_json=None):
+    """Escribe salida (ES) y su .en.html (EN); el inglés del agente va en el bloque "en" del analisis.json."""
     datos = json.loads(Path(sf_json).read_text(encoding="utf-8"))
     analisis = json.loads(Path(analisis_json).read_text(encoding="utf-8")) if analisis_json and Path(analisis_json).exists() else {}
+    escribir_bilingue(salida, lambda: _html(datos, localizar(analisis), salida, sf_json))
+    return salida
+
+
+def _html(datos, analisis, salida, sf_json):
     inv = datos.get("inventario") or {}
     org = datos.get("org") or {}
 
@@ -115,7 +122,7 @@ def generar(sf_json, salida, analisis_json=None):
     if inv.get("apex"):
         ax = inv["apex"]
         if ax.get("error"):
-            cuerpo += section("Tests de Apex", banner(f'No se pudieron correr: {ax["error"]}', "warn"))
+            cuerpo += section("Tests de Apex", banner(f'{t("No se pudieron correr:")} {ax["error"]}', "warn"))
         else:
             filas = [["Resultado", e(ax.get("resultado"))], ["Corridos", e(ax.get("corridos"))], ["Aprobados", e(ax.get("aprobados"))],
                      ["Fallidos", e(ax.get("fallidos_n"))], ["Cobertura de la org", e(ax.get("cobertura_org"))]]
@@ -174,11 +181,9 @@ def generar(sf_json, salida, analisis_json=None):
                                                                       [[e(k), f'<span class="mono">{e(v)}</span>'] for k, v in inv["errores"].items()]),
                           "puede faltar permiso (View Setup, API Enabled) o el objeto no existe en esta edición")
 
-    html = page("Salesforce", "Salesforce · inventario y pruebas",
+    return page("Salesforce", "Salesforce · inventario y pruebas",
                 meta([("Generado", datos.get("generado")), ("Historia", datos.get("historia")), ("Org", org.get("alias")),
                       ("Tipo", "Sandbox" if org.get("sandbox") else "Producción")]), cuerpo)
-    Path(salida).write_text(html, encoding="utf-8")
-    return salida
 
 
 def main():

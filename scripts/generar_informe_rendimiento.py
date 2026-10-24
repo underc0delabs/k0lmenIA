@@ -34,6 +34,7 @@ import math
 import sys
 
 import _historial
+from _i18n import escribir_bilingue, idioma_actual, localizar  # noqa: E402,F401
 from _estilos_reporte import (falta_informacion, avisar_analisis, e, page, meta, section, kpi_tiles, banner, doc_list, table, bar_chart, stacked_bars,
                               grouped_columns, two_col, nivel_badge, _pastilla, CRITICO, AVISO, NEUTRO, OK, SERIES, SERIO,
                               SUPERFICIE)
@@ -227,8 +228,7 @@ def build_html(datos, analisis, hist_html=""):
             ahorro = " · ".join(x for x in [f'hasta {o["ahorro_ms_max"] / 1000:.1f} s'.replace(".", ",") if o.get("ahorro_ms_max") else "",
                                             f'hasta {kb(o["ahorro_bytes_max"])}' if o.get("ahorro_bytes_max") else ""] if x)
             det.append(f'''<div class="hallazgo"><h3>{e(o["titulo"])} {_pastilla(ahorro or "mejora", SERIES[0], "↓")}</h3>
-              <p class="muted">{e(len(o.get("paginas") or []))} página(s) · {e(", ".join(DISP.get(d, d) for d in o.get("dispositivos") or []))}
-                {(" · afecta " + e(", ".join(o["metricas"]))) if o.get("metricas") else ""}</p>
+              <p class="muted">{e(len(o.get("paginas") or []))} página(s) · {e(", ".join(DISP.get(d, d) for d in o.get("dispositivos") or []))}{((" · affects " if idioma_actual() == "en" else " · afecta ") + e(", ".join(o["metricas"]))) if o.get("metricas") else ""}</p>
               <div class="lbl">Qué es y cómo se corrige</div><p>{e(o.get("descripcion"))}</p>
               {f'<div class="lbl">Recursos que lo causan</div><ul>{items}</ul>' if items else ""}
               {f'<p><a href="{e(o["mas_info"])}" target="_blank" rel="noopener" style="color:var(--ink)">Más información</a></p>' if o.get("mas_info") else ""}</div>''')
@@ -280,13 +280,24 @@ def build_html(datos, analisis, hist_html=""):
     um = cfg.get("umbrales") or {}
     filas_u = [[e(v.get("nombre")), e(v.get("titulo")), e(f'≤ {v["bueno"] / 1000:g} s' if v.get("unidad") == "ms" else f'≤ {v["bueno"]}'),
                 e(f'> {v["malo"] / 1000:g} s' if v.get("unidad") == "ms" else f'> {v["malo"]}')] for v in um.values()]
-    body.append(section("Alcance y método", f'''<div class="cardbody">
-      <p><strong style="color:var(--ink)">{e(datos.get("herramienta", "Lighthouse"))}</strong> sobre {len(paginas)} página(s) desde
-      <span class="mono">{e(datos.get("url"))}</span>, en {e(" y ".join(DISP[d].lower() for d in dispositivos))}
-      (mobile: Moto G con 4G lenta, el estándar de Google), {e(cfg.get("repeticiones", 1))} repetición(es) por página (se toma la mediana).
-      Duración: {e(datos.get("duracion_s"))} s.</p>
-      <p><strong style="color:var(--ink)">Datos de laboratorio:</strong> una carga simulada en condiciones fijas, útil para encontrar
-      y comparar problemas. No reemplaza los datos de usuarios reales (Chrome UX Report): el rendimiento real depende del dispositivo y la red de cada persona.</p></div>'''
+    # Párrafos con datos intercalados: una versión por idioma.
+    en = idioma_actual() == "en"
+    fuerte = '<strong style="color:var(--ink)">{}</strong>'
+    herr, url = e(datos.get("herramienta", "Lighthouse")), e(datos.get("url"))
+    disp_txt = {"mobile": "mobile", "desktop": "desktop"}
+    if en:
+        alcance = (f'<p>{fuerte.format(herr)} on {len(paginas)} page(s) from <span class="mono">{url}</span>, on '
+                   f'{e(" and ".join(disp_txt.get(d, d) for d in dispositivos))} (mobile: Moto G on slow 4G, Google’s standard), '
+                   f'{e(cfg.get("repeticiones", 1))} run(s) per page (the median is used). Duration: {e(datos.get("duracion_s"))} s.</p>'
+                   f'<p>{fuerte.format("Lab data:")} a simulated load under fixed conditions, useful to find and compare problems. '
+                   'It does not replace real-user data (Chrome UX Report): real performance depends on each person’s device and network.</p>')
+    else:
+        alcance = (f'<p>{fuerte.format(herr)} sobre {len(paginas)} página(s) desde <span class="mono">{url}</span>, en '
+                   f'{e(" y ".join(DISP[d].lower() for d in dispositivos))} (mobile: Moto G con 4G lenta, el estándar de Google), '
+                   f'{e(cfg.get("repeticiones", 1))} repetición(es) por página (se toma la mediana). Duración: {e(datos.get("duracion_s"))} s.</p>'
+                   f'<p>{fuerte.format("Datos de laboratorio:")} una carga simulada en condiciones fijas, útil para encontrar y comparar problemas. '
+                   'No reemplaza los datos de usuarios reales (Chrome UX Report): el rendimiento real depende del dispositivo y la red de cada persona.</p>')
+    body.append(section("Alcance y método", f'<div class="cardbody">{alcance}</div>'
                         + (table(["Métrica", "Nombre", "Bueno", "Malo"], filas_u) if filas_u else "")))
 
     if descartados:
@@ -332,8 +343,7 @@ def main():
             analisis = json.load(f)
         avisar_analisis(analisis, [h.get("id") for h in datos.get("hallazgos") or []])
     hist_html = _historial.seccion("rendimiento", Path(a.rendimiento_json).resolve().parent, datos)
-    with open(a.salida, "w", encoding="utf-8") as f:
-        f.write(build_html(datos, analisis, hist_html=hist_html))
+    escribir_bilingue(a.salida, lambda: build_html(datos, localizar(analisis), hist_html=hist_html))
     print(f"OK: {a.salida}")
 
 

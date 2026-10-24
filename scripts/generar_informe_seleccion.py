@@ -30,6 +30,7 @@ import sys
 from collections import Counter
 
 import _historial
+from _i18n import escribir_bilingue, localizar, idioma_actual  # noqa: E402
 from _estilos_reporte import (e, page, meta, section, kpi_tiles, banner, doc_list, table, stacked_bars, donut_panel, two_col,
                               nivel_badge, estado_pill, _pastilla, NEUTRO, SERIES, AVISO, CRITICO, OK, SERIO)
 from generar_informe_exploratorio import CSS_EXTRA
@@ -69,6 +70,11 @@ document.querySelectorAll('.cmdbox button').forEach(function(b){b.addEventListen
     setTimeout(function(){b.textContent='Copiar';b.classList.remove('ok')},1600)}).catch(function(){b.textContent='Seleccioná y copiá'});});});
 </script>
 """
+JS_SEL_EN = JS_SEL.replace("'Copiado'", "'Copied'").replace("'Copiar'", "'Copy'").replace("'Seleccioná y copiá'", "'Select and copy'")
+
+
+def js_sel():
+    return JS_SEL_EN if idioma_actual() == "en" else JS_SEL
 
 
 def grupo_pill(g):
@@ -205,7 +211,7 @@ def build_html(datos, analisis, hist_html=""):
     meta_html = meta([("Selección", datos.get("nombre")), ("Fecha", (datos.get("fecha") or "")[:16].replace("T", " ")),
                       ("Presupuesto", f'{datos["presupuesto_min"]} min' if datos.get("presupuesto_min") else None),
                       ("Riesgo", riesgo)])
-    return page("Selección de casos", "Qué probar en este cambio", meta_html, CSS_EXTRA + CSS_SEL + "".join(body) + JS_SEL)
+    return page("Selección de casos", "Qué probar en este cambio", meta_html, CSS_EXTRA + CSS_SEL + "".join(body) + js_sel())
 
 
 def main():
@@ -225,8 +231,8 @@ def main():
         with open(a.analisis, encoding="utf-8") as f:
             analisis = json.load(f)
     hist_html = _historial.seccion("seleccion", Path(a.datos_json).resolve().parent, datos)
-    with open(a.salida, "w", encoding="utf-8") as f:
-        f.write(build_html(datos, analisis, hist_html=hist_html))
+    # ES y EN: el inglés del agente va en el bloque "en" del analisis.json.
+    escribir_bilingue(a.salida, lambda: build_html(datos, localizar(analisis), hist_html=hist_html))
     print(f"OK: {a.salida}")
 
 

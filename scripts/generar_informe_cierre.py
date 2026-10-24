@@ -40,6 +40,7 @@ import sys
 import json
 from pathlib import Path
 
+from _i18n import escribir_bilingue, localizar, idioma_actual  # noqa: E402
 from _estilos_reporte import (e, page, meta, section, kpi_tiles, donut, bar_chart, legend,
                               banner, doc_list, table, nivel_badge, estado_pill, NIVEL_COLOR, ESTADO_COLOR)
 
@@ -135,7 +136,7 @@ def build_html(data):
                  + (f' (impacto: {f["impacto"]})' if f.get("impacto") else "")
                  + (f' · Pregunta: {f["pregunta"]}' if f.get("pregunta") else "")
                  + f' · {f.get("estado", "Abierto")}' for f in faltantes]
-        titulo = f"Falta información ({len(abiertos)} abierto{'s' if len(abiertos) != 1 else ''})"
+        titulo = f"Falta información ({len(abiertos)} abierto(s))"
         body.append(section(titulo, doc_list(items)))
 
     # Lo que viene de recolectar_resultados.py (fuentes, performance, seguridad, casos)
@@ -192,8 +193,8 @@ def main():
         data["resultados"] = datos["resultados"]
         data["bugs"] = {"por_severidad": datos["bugs"]["por_severidad"], "criticos_abiertos": datos["bugs"]["criticos_abiertos"]}
         data["_datos"] = datos
-    with open(salida, "w", encoding="utf-8") as f:
-        f.write(build_html(data))
+    # ES y EN: el inglés del agente va en el bloque "en" del cierre.json.
+    escribir_bilingue(salida, lambda: build_html(localizar(data)))
     print(f"OK: {salida}")
 
 

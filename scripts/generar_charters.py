@@ -47,6 +47,7 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ / "scripts"))
 import _historial  # noqa: E402
+from _i18n import escribir_bilingue, localizar, idioma_actual  # noqa: E402
 from _estilos_reporte import (e, page, meta, section, kpi_tiles, banner, doc_list, table, bar_chart, stacked_bars, two_col,  # noqa: E402
                               nivel_badge, _pastilla, CRITICO, AVISO, NEUTRO, OK, SERIES)
 
@@ -223,7 +224,8 @@ def main():
     dir_ses = carpeta / "sesiones"
     if not a.informe:
         datos.setdefault("fecha", datetime.datetime.now().isoformat(timespec="seconds"))
-        (carpeta / "charters.html").write_text(hojas_html(datos), encoding="utf-8")
+        # ES y EN (el .md queda en español): el inglés del agente va en el bloque "en" del charters.json.
+        escribir_bilingue(carpeta / "charters.html", lambda: hojas_html(localizar(datos)))
         (carpeta / "charters.md").write_text(hojas_md(datos), encoding="utf-8")
         dir_ses.mkdir(exist_ok=True)
         for c in datos.get("charters") or []:
@@ -239,10 +241,10 @@ def main():
                "preguntas": sum(len(s["preguntas"]) for s in sesiones), "minutos": sum(s.get("duracion") or 0 for s in sesiones)}
     resultado = {"historia": datos.get("historia"), "fecha": ahora.isoformat(timespec="seconds"), "marca": ahora.strftime("%Y%m%d-%H%M%S"),
                  "resumen": resumen, "sesiones": sesiones, "hallazgos": [dict(b, charter=s["charter"]) for s in sesiones for b in s["bugs"]]}
-    _historial.archivar(carpeta, ["sesiones.json", "informe-sesiones.html"], "sesiones.json")
+    _historial.archivar(carpeta, ["sesiones.json", "informe-sesiones.html", "informe-sesiones.en.html"], "sesiones.json")
     (carpeta / "sesiones.json").write_text(json.dumps(resultado, ensure_ascii=False, indent=2), encoding="utf-8")
     hist = _historial.seccion("charters", carpeta, resultado)
-    (carpeta / "informe-sesiones.html").write_text(informe_html(datos, sesiones, hist), encoding="utf-8")
+    escribir_bilingue(carpeta / "informe-sesiones.html", lambda: informe_html(localizar(datos), sesiones, hist))
     print(f'Sesiones: {resumen["sesiones"]}/{resumen["charters"]} · bugs: {resumen["bugs"]} · preguntas: {resumen["preguntas"]} · {resumen["minutos"]} min')
     print(f'OK: {carpeta / "informe-sesiones.html"}')
 

@@ -32,6 +32,7 @@ import sys
 from collections import Counter
 
 import _historial
+from _i18n import escribir_bilingue, idioma_actual, localizar  # noqa: E402,F401
 from _estilos_reporte import (falta_informacion, avisar_analisis, e, page, meta, section, kpi_tiles, banner, doc_list, table, bar_chart, column_chart, donut_panel,
                               two_col, nivel_badge, _pastilla, miniatura, NIVEL_COLOR, CRITICO, AVISO, NEUTRO, OK, SERIO, SERIES)
 from generar_informe_exploratorio import CSS_EXTRA
@@ -332,8 +333,7 @@ def main():
             analisis = json.load(f)
         avisar_analisis(analisis, [h.get("id") for h in datos.get("hallazgos") or []])
     hist_html = _historial.seccion("pixel-perfect", Path(a.datos_json).resolve().parent, datos)
-    with open(a.salida, "w", encoding="utf-8") as f:
-        f.write(build_html(datos, analisis, hist_html=hist_html))
+    escribir_bilingue(a.salida, lambda: build_html(datos, localizar(analisis), hist_html=hist_html))
     print(f"OK: {a.salida}")
 
 

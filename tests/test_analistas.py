@@ -55,6 +55,8 @@ def test_fallos_detecta_inestables(tmp_path):
     assert datos["resumen"]["aprobados"] == 1 and datos["suites"] == ["web"]
     html = (salida / "informe-fallos.html").read_text(encoding="utf-8")
     assert "Inestable (flaky)" in html and "F-01" in html
+    en = (salida / "informe-fallos.en.html").read_text(encoding="utf-8")  # y su versión en inglés
+    assert 'lang="en"' in en and "Flaky" in en and "Failure analysis" in en
 
 
 

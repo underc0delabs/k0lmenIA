@@ -34,6 +34,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import _historial
+from _i18n import escribir_bilingue, idioma_actual, localizar  # noqa: E402,F401
 from _estilos_reporte import (falta_informacion, avisar_analisis, e, page, meta, section, kpi_tiles, banner, doc_list, table, bar_chart, two_col,
                               nivel_badge, _pastilla, miniatura, CRITICO, AVISO, NEUTRO, OK, SERIES)
 from generar_informe_exploratorio import CSS_EXTRA
@@ -89,14 +90,26 @@ def diferencias(datos, esperado):
         if not esp or c.get("acceso") in ("error", "no-encontrada"):
             continue
         real = c.get("acceso")
+        en = idioma_actual() == "en"  # el texto del hallazgo lo arma el script: va en el idioma del informe
         if esp == "permitido" and real in NEGADO:
+            if en:
+                titulo = f'The "{c["rol"]}" role cannot open something it should'
+                detalle = f'{ruta_de(c["url"])}: expected allowed, but it {"asks for login" if real == "pide-login" else "denies access"}.'
+            else:
+                titulo = f'El rol "{c["rol"]}" no puede entrar a algo que debería'
+                detalle = f'{ruta_de(c["url"])}: se esperaba permitido y {"pide login" if real == "pide-login" else "niega el acceso"}.'
             out.append({"severidad": "Alta", "tipo": "Distinto de lo esperado", "rol": c["rol"], "url": c["url"],
-                        "titulo": f'El rol "{c["rol"]}" no puede entrar a algo que debería',
-                        "detalle": f'{ruta_de(c["url"])}: se esperaba permitido y {"pide login" if real == "pide-login" else "niega el acceso"}.'})
+                        "titulo": titulo, "detalle": detalle})
         elif esp in NEGADO and real == "permitido":
+            if en:
+                esperado_en = {"denegado": "denied", "pide-login": "login required"}.get(esp, esp)
+                titulo = f'The "{c["rol"]}" role opens something it should not'
+                detalle = f'{ruta_de(c["url"])}: expected {esperado_en}, but it opens (status {c.get("status")}).'
+            else:
+                titulo = f'El rol "{c["rol"]}" entra a algo que no debería'
+                detalle = f'{ruta_de(c["url"])}: se esperaba {esp} y se abre (status {c.get("status")}).'
             out.append({"severidad": "Crítica", "tipo": "Distinto de lo esperado", "rol": c["rol"], "url": c["url"],
-                        "titulo": f'El rol "{c["rol"]}" entra a algo que no debería',
-                        "detalle": f'{ruta_de(c["url"])}: se esperaba {esp} y se abre (status {c.get("status")}).'})
+                        "titulo": titulo, "detalle": detalle})
     out.sort(key=lambda h: SEV.index(h["severidad"]))
     for i, h in enumerate(out, 1):
         h["id"] = f"E-{i:02d}"
@@ -164,7 +177,8 @@ def build_html(datos, analisis, hist_html=""):
         filas = []
         for ru in rutas:
             celdas = [f'<span class="mono">{e(ru.get("ruta") or ruta_de(ru["url"]))}</span>'
-                      + (f'<div class="muted">en la navegación de: {e(", ".join(ru.get("descubierta_por") or []) or "—")}</div>')]
+                      + (f'<div class="muted">{"in the navigation of" if idioma_actual() == "en" else "en la navegación de"}: '
+                         f'{e(", ".join(ru.get("descubierta_por") or []) or "—")}</div>')]
             for x in activos:
                 c = matriz.get((x["id"], ru["url"]))
                 if not c:
@@ -211,7 +225,7 @@ def build_html(datos, analisis, hist_html=""):
     # Qué ve cada rol
     bloques = []
     for x in roles:
-        estado = ("sin sesión" if not x.get("autenticado") else "sesión iniciada" if x.get("login_ok") else f'no pudo iniciar sesión: {x.get("login_error") or ""}')
+        estado = ("sin sesión" if not x.get("autenticado") else "sesión iniciada" if x.get("login_ok") else f'{"could not log in" if idioma_actual() == "en" else "no pudo iniciar sesión"}: {x.get("login_error") or ""}')
         celdas = [c for (rol, _), c in matriz.items() if rol == x["id"] and c.get("acceso") == "permitido"]
         menus = sorted({m for c in celdas for m in c.get("menus") or []})
         botones = sorted({b for c in celdas for b in c.get("botones") or []})
@@ -257,8 +271,7 @@ def main():
             analisis = json.load(f)
         avisar_analisis(analisis, [h.get("id") for h in datos.get("hallazgos") or []])
     hist_html = _historial.seccion("permisos", Path(a.datos_json).resolve().parent, datos)
-    with open(a.salida, "w", encoding="utf-8") as f:
-        f.write(build_html(datos, analisis, hist_html=hist_html))
+    escribir_bilingue(a.salida, lambda: build_html(datos, localizar(analisis), hist_html=hist_html))
     print(f"OK: {a.salida}")
 
 

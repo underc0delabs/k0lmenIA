@@ -32,6 +32,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _i18n import escribir_bilingue, localizar  # noqa: E402
 from _estilos_reporte import (page, meta, section, kpi_tiles, banner, table, doc_list, bar_chart,  # noqa: E402
                               nivel_badge, estado_pill, falta_informacion, miniatura, resolver_evidencia, e, SERIES)
 
@@ -41,7 +42,13 @@ TONO = {"ok": "ok", "warn": "warn", "bad": "bad"}
 
 
 def generar(analisis_json, salida):
-    d = json.loads(Path(analisis_json).read_text(encoding="utf-8"))
+    """Escribe salida (ES) y su .en.html (EN); el inglés del agente va en el bloque "en" del analisis.json."""
+    datos = json.loads(Path(analisis_json).read_text(encoding="utf-8"))
+    escribir_bilingue(salida, lambda: _html(localizar(datos), salida))
+    return salida
+
+
+def _html(d, salida):
     base = Path(salida).resolve().parent
     app = d.get("app") or {}
 
@@ -101,13 +108,11 @@ def generar(analisis_json, salida):
         cuerpo += section("Próximos pasos", doc_list(d["proximos_pasos"]))
     cuerpo += falta_informacion(d.get("falta_informacion"))
 
-    html = page(d.get("titulo") or "Aplicación móvil", "Aplicaciones móviles · Android / iOS",
+    return page(d.get("titulo") or "Aplicación móvil", "Aplicaciones móviles · Android / iOS",
                 meta([("Generado", d.get("generado")), ("Historia", d.get("historia")), ("Ambiente", d.get("ambiente")),
                       ("App", f'{app.get("nombre", "—")} {app.get("version", "")}'.strip() if app else None),
                       ("Plataforma", f'{app.get("plataforma", "")} {app.get("tipo", "")}'.strip() or None),
                       ("OS / dispositivo", f'{app.get("os", "")} · {app.get("dispositivo", "")}'.strip(" ·") or None)]), cuerpo)
-    Path(salida).write_text(html, encoding="utf-8")
-    return salida
 
 
 def main():

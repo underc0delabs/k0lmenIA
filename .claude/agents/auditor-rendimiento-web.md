@@ -73,3 +73,7 @@ Revisá tu trabajo antes de responder (es la definición de terminado):
 - **Compará solo lo comparable**: misma página, mismo dispositivo y, para conclusiones, varias repeticiones.
 - **Sin efectos**: solo carga las páginas (GET), como una visita. Para sitios con login, las páginas internas requieren otra herramienta; decilo si el pedido las incluye.
 - **Comparar corridas**: las últimas 5 quedan en `historial/` y el informe compara contra la anterior (ojo: Lighthouse varía; para conclusiones, `--repeticiones 3`).
+
+# Informe en español e inglés
+
+El script del informe arma dos HTML: `<informe>.html` (español) e `<informe>.en.html` (inglés), con una banderita para pasar de uno al otro. En el JSON que le pasás (`analisis.json`, `plan.json` o `_resultados-*.json`) agregá un bloque `"en"` con la traducción al inglés de los textos que escribiste vos (veredicto, resumen, hallazgos, recomendaciones, notas…): las mismas claves y, en las listas, los mismos `id` (o el mismo orden si no tienen). No traduzcas IDs, rutas, datos de la app ni los valores de las escalas (`Alta`, `Aprobado`…): eso lo resuelve el script. Inglés claro de QA. Si falta el bloque, el informe en inglés sale con esos textos en español.

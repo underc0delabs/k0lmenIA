@@ -170,5 +170,6 @@ def test_seleccion_completa_por_linea_de_comandos(tmp_path, monkeypatch):
         return  # repo sin inventario de casos (CI): el resto lo cubren los tests de arriba
     assert r.returncode == 0, r.stderr
     assert (salida / "seleccion.json").exists() and (salida / "seleccion.csv").exists() and (salida / "informe-seleccion.html").exists()
+    assert (salida / "informe-seleccion.en.html").exists()
     datos = json.loads((salida / "seleccion.json").read_text(encoding="utf-8"))
     assert datos["historias_afectadas"] == ["HU-999"]

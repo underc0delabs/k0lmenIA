@@ -280,7 +280,7 @@ def main():
                              "escenarios": len(escenarios), "escenarios_con_tiempo": len(con_t), "fallidos": len(fallidos),
                              "fallidos_con_errores": sum(1 for c in fallidos if c["errores"]), "sin_fecha": sum(1 for x in ents if x["ts"] is None)},
                  "firmas": firmas, "linea_tiempo": tiempo, "escenarios": cruces}
-        _historial.archivar(carpeta, ["logs.json", "analisis.json", "informe-logs.html"], "logs.json")
+        _historial.archivar(carpeta, ["logs.json", "analisis.json", "informe-logs.html", "informe-logs.en.html"], "logs.json")
         carpeta.mkdir(parents=True, exist_ok=True)
         datos_arch.write_text(json.dumps(datos, ensure_ascii=False, indent=2), encoding="utf-8")
         r = datos["resumen"]

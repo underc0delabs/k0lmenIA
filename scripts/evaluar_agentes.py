@@ -529,7 +529,9 @@ def guardar(datos, destino):
     datos["por_agente"] = resumen_por_agente(datos["casos"])
     datos["comparacion"] = comparar(datos, corrida_anterior(destino))
     (destino / "resultados.json").write_text(json.dumps(datos, ensure_ascii=False, indent=2), encoding="utf-8")
-    (destino / "informe-evals.html").write_text(informe_html(datos), encoding="utf-8")
+    sys.path.insert(0, str(RAIZ / "scripts"))
+    from _i18n import escribir_bilingue
+    escribir_bilingue(destino / "informe-evals.html", lambda: informe_html(datos))
     return destino
 
 

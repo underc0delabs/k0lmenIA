@@ -41,7 +41,9 @@ function archivar(carpeta, nombres, archivoDatos, maxCorridas = MAX_CORRIDAS) {
   let destino = base;
   for (let n = 2; fs.existsSync(destino); n++) destino = `${base}-${n}`;
   fs.mkdirSync(destino, { recursive: true });
-  for (const nombre of nombres) {
+  // Cada informe HTML va con su versión en inglés (informe.en.html, scripts/_i18n.py) aunque la lista no la nombre.
+  const todos = [...new Set(nombres.flatMap((n) => (/\.html$/i.test(n) && !/\.en\.html$/i.test(n) ? [n, n.replace(/\.html$/i, '.en.html')] : [n])))];
+  for (const nombre of todos) {
     const src = path.join(carpeta, nombre);
     if (fs.existsSync(src)) mover(src, path.join(destino, nombre));
   }

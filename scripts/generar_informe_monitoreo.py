@@ -16,6 +16,7 @@ import json
 import sys
 from pathlib import Path
 
+from _i18n import escribir_bilingue, localizar, idioma_actual  # noqa: E402
 from _estilos_reporte import (e, page, meta, section, kpi_tiles, banner, table, bar_chart, line_chart, _pastilla,
                               CRITICO, AVISO, OK, NEUTRO, SERIES)
 
@@ -144,7 +145,7 @@ def main():
         sys.exit("La salida debe terminar en .html")
     datos = json.loads(Path(a.datos_json).read_text(encoding="utf-8"))
     lista = corridas(Path(a.datos_json).resolve().parent, datos)
-    Path(a.salida).write_text(build_html(datos, lista), encoding="utf-8")
+    escribir_bilingue(a.salida, lambda: build_html(datos, lista))
     print(f"OK: {a.salida}")
 
 

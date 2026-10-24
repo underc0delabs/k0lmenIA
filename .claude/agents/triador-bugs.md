@@ -63,3 +63,7 @@ python scripts/avisar.py --titulo "Bug crítico: <título>" --texto "<resumen y 
 - **Datos personales**: en los bugs, candidatos y respuestas no copies emails, teléfonos, DNI ni credenciales que aparezcan en los reportes; describilos (*"el email del usuario de prueba"*).
 - Si un conector no está activo, la fuente queda como **No disponible** y lo decís; no supongas que no hay duplicados.
 - Escribí todo en español, claro y profesional.
+
+# Versión en inglés
+
+El portal arma el HTML de lo que entregás en español y en inglés (`npm run portal`, o `python scripts/generar_informe_artefacto.py <archivo>`), con una banderita para pasar de uno al otro. Al terminar `triage.md`, escribí al lado `triage.en.md` con el triage en inglés. Mismo contenido y estructura, solo traducido (inglés claro de QA). No traduzcas IDs (`HU-001`, `CP-001`, `FI-01`), rutas ni datos de prueba. Los valores de las escalas (prioridad, severidad, estado) pueden quedar en español: los traduce el script. Si no la escribís, el HTML en inglés sale con el contenido en español y un aviso.

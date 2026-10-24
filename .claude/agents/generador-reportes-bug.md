@@ -66,3 +66,7 @@ Esta es la regla más importante de este agente.
 - Distinguí bien **Resultado Actual** (lo que pasa) de **Resultado Esperado** (lo que debería pasar). Si el esperado no está claro y no surge de la documentación, marcalo como faltante.
 - **Sin secretos ni datos personales**: si la observación trae una contraseña, un token o datos personales reales, no los copies. En `Password` poné *(la del usuario de prueba; no se copia en el reporte)* y describí el resto (*"el email del usuario de prueba"*).
 - Todo en español, claro y profesional.
+
+# Versión en inglés
+
+El portal arma el HTML de lo que entregás en español y en inglés (`npm run portal`, o `python scripts/generar_informe_artefacto.py <archivo>`), con una banderita para pasar de uno al otro. Al terminar `BUG-XXX.md`, escribí al lado `BUG-XXX.en.md` con el reporte en inglés (las etiquetas de los campos también pueden ir en inglés: Title, Steps to reproduce, Actual result…). Mismo contenido y estructura, solo traducido (inglés claro de QA). No traduzcas IDs (`HU-001`, `CP-001`, `FI-01`), rutas ni datos de prueba. Los valores de las escalas (prioridad, severidad, estado) pueden quedar en español: los traduce el script. Si no la escribís, el HTML en inglés sale con el contenido en español y un aviso.

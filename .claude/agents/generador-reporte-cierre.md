@@ -55,3 +55,7 @@ Un **informe de cierre en HTML** (modo oscuro) en `output/informes-cierre/`, con
 - **No inventes** resultados: los números salen de `recolectar_resultados.py` (ejecuciones, suites de k0lmena, bugs, performance y seguridad), no de tu criterio. La recomendación se apoya en esos datos y se explica.
 - **Credenciales**: nunca expongas tokens ni credenciales en el informe.
 - Es el paso **final**: resume lo que ya se ejecutó y reportó. No ejecuta pruebas.
+
+# Informe en español e inglés
+
+El script del informe arma dos HTML: `<informe>.html` (español) e `<informe>.en.html` (inglés), con una banderita para pasar de uno al otro. En el JSON que le pasás (`analisis.json`, `plan.json` o `_resultados-*.json`) agregá un bloque `"en"` con la traducción al inglés de los textos que escribiste vos (veredicto, resumen, hallazgos, recomendaciones, notas…): las mismas claves y, en las listas, los mismos `id` (o el mismo orden si no tienen). No traduzcas IDs, rutas, datos de la app ni los valores de las escalas (`Alta`, `Aprobado`…): eso lo resuelve el script. Inglés claro de QA. Si falta el bloque, el informe en inglés sale con esos textos en español.

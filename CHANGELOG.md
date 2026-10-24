@@ -2,6 +2,12 @@
 
 Los cambios más relevantes, del más nuevo al más viejo. El detalle de cada uno está en el historial de git.
 
+## 2026-10-24 (4) — Informes en español e inglés y portal nuevo
+- **Todos los informes en dos idiomas**: cada HTML sale como `informe.html` e `informe.en.html`, con una banderita ES/EN para pasar de uno al otro. Son los 47 generadores, el portal y los artefactos. Lo que escribe el agente va traducido en un bloque `"en"` del JSON (los 65 agentes que entregan informes o artefactos ya lo saben hacer). La interfaz la traduce el script con un diccionario de unas 2.300 entradas (`scripts/i18n/en/`), con números e IDs como comodines y una auditoría (`K0LMENIA_I18N_AUDITORIA`) para encontrar lo que falte. Las herramientas de k0lmena guardan también el `.en.html` en el historial.
+- **HTML para los artefactos de los agentes** (`scripts/generar_informe_artefacto.py`): bugs, casos manuales (también desde `generar_casos.py`), BDD legible con sus Examples, análisis de historias, datos, casos de API, contexto, triage, consultas, mapeos y verificaciones. Las tablas ASCII vuelven a ser tablas HTML con buscador y filtros.
+- **Portal nuevo**: menú por categoría, el historial completo de corridas (no solo la última), filtros por texto, herramienta, historia, estado y rango de fechas, opción de ocultar el historial, de a 100 filas y en los dos idiomas. Antes de indexar actualiza el HTML de los artefactos.
+- **Permisos del proyecto** (`.claude/settings.json`, versionado para todos): los comandos de solo lectura y los generadores de informes ya no piden aprobación.
+
 ## 2026-10-24 (3) — Apps con protección anti-bots
 - **Navegador común** (`herramientas/k0lmena/tools/navegador/`): `npm test`, las herramientas de k0lmena y el conector Playwright de los agentes lanzan el navegador del mismo modo. `NAVEGADOR_CANAL=chrome|msedge` usa el navegador instalado, `RITMO_HUMANO` agrega pausas, y `QA_BYPASS_HEADER` + `QA_BYPASS_TOKEN` mandan el header de excepción acordado con el equipo de la app **solo a sus hosts**, nunca a terceros (`QA_BYPASS_HOSTS`). Probado con navegador real y con el server MCP.
 - **Detección de bloqueos**: los desafíos y bloqueos de Cloudflare, DataDome, HUMAN, Akamai, Imperva y AWS WAF, y los captchas, ya no se reportan como fallos. El escenario queda **Bloqueado: anti-bots** (también al publicar en la herramienta de gestión), el análisis de fallos tiene la categoría *Bloqueo anti-bots*, las herramientas avisan al terminar y los agentes frenan y lo reportan, sin intentar resolver el captcha.

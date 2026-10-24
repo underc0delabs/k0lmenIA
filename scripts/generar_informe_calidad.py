@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _i18n import escribir_bilingue, localizar  # noqa: E402
 from _estilos_reporte import (page, meta, section, kpi_tiles, banner, table, doc_list,
                               nivel_badge, falta_informacion, e)
 
@@ -42,14 +43,20 @@ def _tarjeta(reg):
         hall = sorted(reg["hallazgos"], key=lambda x: ORDEN_SEV.get(x.get("severidad"), 9))
         cuerpo += table(["Severidad", "Detalle"], [[nivel_badge(x.get("severidad", "Media")), e(x.get("texto", ""))] for x in hall])
     if reg.get("revisar_con_vision"):
-        cuerpo += ('<div class="cardbody"><p class="muted">Revisar con criterio (visión): '
+        cuerpo += ('<div class="cardbody"><p class="muted"><span>Revisar con criterio (visión):</span> '
                    + e(", ".join(reg["revisar_con_vision"])) + "</p></div>")
     return section(reg.get("fuente", "Cámara"), cuerpo)
 
 
 def generar(calidad_json, salida, analisis_json=None):
+    """Escribe salida (ES) y su .en.html (EN); el inglés del agente va en el bloque "en" del analisis.json."""
     datos = json.loads(Path(calidad_json).read_text(encoding="utf-8"))
     analisis = json.loads(Path(analisis_json).read_text(encoding="utf-8")) if analisis_json and Path(analisis_json).exists() else {}
+    escribir_bilingue(salida, lambda: _html(datos, localizar(analisis), salida, calidad_json))
+    return salida
+
+
+def _html(datos, analisis, salida, calidad_json):
     fuentes = datos.get("fuentes", [])
     r = datos.get("resumen", {})
 
@@ -72,9 +79,7 @@ def generar(calidad_json, salida, analisis_json=None):
     cuerpo += falta_informacion(analisis.get("falta_informacion"))
 
     meta_html = meta([("Generado", datos.get("generado")), ("Historia", datos.get("historia"))])
-    html = page("Calidad de imagen", "Cámaras · visión + OpenCV", meta_html, cuerpo)
-    Path(salida).write_text(html, encoding="utf-8")
-    return salida
+    return page("Calidad de imagen", "Cámaras · visión + OpenCV", meta_html, cuerpo)
 
 
 def main():

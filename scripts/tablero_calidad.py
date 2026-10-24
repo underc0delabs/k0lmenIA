@@ -48,10 +48,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import _historial  # noqa: E402
+from _i18n import escribir_bilingue, localizar, idioma_actual  # noqa: E402
 import recolectar_resultados as rec  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parents[1]
-GENERADOS = ["tablero.json", "analisis.json", "informe-tablero.html"]
+GENERADOS = ["tablero.json", "analisis.json", "informe-tablero.html", "informe-tablero.en.html"]
 SEVERIDADES = rec.SEVERIDADES
 SUITES = ("web", "api", "mobile")
 
@@ -329,7 +330,7 @@ def recolectar(desde=None, hasta=None):
     for b in bg["criticos_abiertos"]:
         alertas.append({"tipo": "Bug abierto", "nivel": b["severidad"], "titulo": f'{b["id"]} ({b["historia"]}): {b["titulo"]}'})
     for i in inestables:
-        alertas.append({"tipo": "Inestable", "nivel": "Media", "titulo": f"{i} falla de forma intermitente"})
+        alertas.append({"tipo": "Inestable", "nivel": "Media", "titulo": f"{i} · falla de forma intermitente"})
     for h in historias.values():
         if h["fallidos"]:
             alertas.append({"tipo": "Fallidos", "nivel": "Alta", "titulo": f'{h["historia"]}: {h["fallidos"]} caso(s) fallidos en la última ejecución'})
@@ -339,7 +340,7 @@ def recolectar(desde=None, hasta=None):
             alertas.append({"tipo": "Cobertura", "nivel": "Media", "titulo": f'{h["historia"]}: {h["cobertura"]} % de criterios cubiertos'})
     for a in ex["accesibilidad"]:
         if a.get("criticos"):
-            alertas.append({"tipo": "Accesibilidad", "nivel": "Alta", "titulo": f'{a["sitio"]}: {a["criticos"]} problema(s) crítico(s)'})
+            alertas.append({"tipo": "Accesibilidad", "nivel": "Alta", "titulo": f'{a["sitio"]} · {a["criticos"]} problema(s) crítico(s)'})
 
     return {
         "fecha": datetime.now().isoformat(timespec="seconds"),
@@ -480,7 +481,8 @@ def build_html(datos, analisis=None, hist_html=""):
 
 def escribir_informe(carpeta, datos, analisis=None):
     hist = _historial.seccion("tablero", carpeta, datos)
-    (carpeta / "informe-tablero.html").write_text(build_html(datos, analisis, hist), encoding="utf-8")
+    # ES y EN: el inglés del agente va en el bloque "en" del analisis.json.
+    escribir_bilingue(carpeta / "informe-tablero.html", lambda: build_html(datos, localizar(analisis) if analisis else analisis, hist))
 
 
 def main(argv=None):

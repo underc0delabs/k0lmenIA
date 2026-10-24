@@ -55,3 +55,7 @@ El **output de cada ejecución es su propio reporte HTML** `output/ejecuciones/r
 - **Credenciales**: el token sale de `API_TOKEN` en el `.env` (lo pasa `correr_newman.py`; no hace falta leerlo vos). **Nunca** lo escribas en la colección, el environment, el reporte ni los nombres de archivo, y **nunca** lo commitees. Usá un entorno de prueba, no producción. Si falta, pedilo.
 - **No generes basura**: el output son el reporte `.html` y el `_resultados-<HU o API>-<fecha-hora>.json`. El JSON crudo de Newman es intermedio: borralo o dejalo solo si sirve.
 - El reporte es **por corrida** y cubre solo lo de esa corrida. Si querés regenerarlo desde un `_resultados-*.json` existente, está el agente `generador-reporte-html`.
+
+# Informe en español e inglés
+
+El script del informe arma dos HTML: `<informe>.html` (español) e `<informe>.en.html` (inglés), con una banderita para pasar de uno al otro. En el JSON que le pasás (`analisis.json`, `plan.json` o `_resultados-*.json`) agregá un bloque `"en"` con la traducción al inglés de los textos que escribiste vos (veredicto, resumen, hallazgos, recomendaciones, notas…): las mismas claves y, en las listas, los mismos `id` (o el mismo orden si no tienen). No traduzcas IDs, rutas, datos de la app ni los valores de las escalas (`Alta`, `Aprobado`…): eso lo resuelve el script. Inglés claro de QA. Si falta el bloque, el informe en inglés sale con esos textos en español.

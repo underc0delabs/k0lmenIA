@@ -759,7 +759,15 @@ Cada herramienta guarda sus **últimas 5 corridas** con su evidencia en `histori
 ## 📊 Tablero de calidad y portal de informes
 
 - **Tablero de calidad**: *"Armá el tablero del sprint 12"* junta lo que ya dejaron las herramientas (corridas, casos, cobertura, bugs, inestables) y arma un dashboard con la tendencia y un resumen para gerencia en `output/tablero/<nombre>/` (`npm run tablero -- --nombre sprint-12 --desde 2026-10-01 --hasta 2026-10-14`).
-- **Portal de informes**: `output/index.html` muestra el último informe de cada herramienta, con su fecha, veredicto y la corrida anterior, un buscador, filtros por herramienta, historia, estado y fecha, y una vista por historia (todos los informes de una HU juntos). Se actualiza solo cada vez que se arma un informe y se abre con doble clic (`npm run portal -- --abrir`).
+- **Portal de informes**: `output/index.html` junta **todos** los informes, también los artefactos de los agentes (casos de prueba, BDD, bugs, análisis de historias, datos, casos de API, triage…), que se pasan a HTML solos. Tiene un menú por categoría (Pruebas automatizadas, Ejecuciones, Diseño de pruebas, Bugs, Calidad y cierre, Web, Seguridad, Plataformas, Documentación). Cada categoría muestra el historial completo de corridas, con filtros por texto, herramienta, historia, estado y rango de fechas (24 h, 7 días, 30 días o desde/hasta) y la opción de ocultar las corridas anteriores. Se actualiza solo y se abre con doble clic (`npm run portal -- --abrir`).
+
+### 🌐 Informes en español e inglés
+
+Cada informe HTML sale en dos archivos: `informe.html` (español) e `informe.en.html` (inglés). Arriba a la derecha tiene una banderita para pasar de uno al otro, así elegís cuál mandar. El portal también tiene las dos versiones (`index.html` e `index.en.html`).
+
+- **Lo que escribe el agente** (veredicto, resumen, hallazgos, recomendaciones) lo traduce el mismo agente al armar el informe: lo pone en un bloque `"en"` del JSON. En los artefactos en Markdown escribe la versión al lado: `BUG-001.en.md`, `analisis-HU-001.en.md`; en las `.feature`, `HU-001-x.feature.en`, que ningún runner toma.
+- **La interfaz** (títulos, columnas, estados, gráficos) la traduce el script con un diccionario (`scripts/i18n/en/`), sin gastar tokens.
+- Si al agente le faltó la traducción, el informe en inglés sale igual: la interfaz en inglés, el contenido en español y un aviso.
 
 ---
 

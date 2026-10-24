@@ -211,6 +211,12 @@ h1{font-family:var(--display);font-size:44px;font-weight:700;letter-spacing:-.01
 .buscar:focus-within{border-color:var(--linea-amarilla);box-shadow:var(--glow-k0)}
 .buscar input{all:unset;flex:1;color:var(--ink);font-size:13px}
 .buscar kbd{font-family:var(--mono);font-size:10.5px;border:1px solid var(--line-2);border-radius:5px;padding:1px 5px;color:var(--muted)}
+.acciones{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.idioma{display:inline-flex;border:1px solid var(--line-2);border-radius:12px;overflow:hidden;font-family:var(--mono);font-size:11.5px}
+.idioma a,.idioma span{display:inline-flex;align-items:center;gap:6px;padding:8px 11px;color:var(--muted);text-decoration:none}
+.idioma .on{background:var(--tile);color:var(--ink)}
+.idioma a:hover{color:var(--ink)}
+.idioma svg{width:18px;height:12px;border-radius:2px;display:block}
 
 /* grilla bento */
 .grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--gap)}
@@ -476,7 +482,8 @@ if(nav.scrollWidth>nav.clientWidth)secs[i]._a.scrollIntoView({block:'nearest',in
 secs.forEach(function(s){io.observe(s);});}}
 
 // Tablas: buscador, filtros y orden
-var FILTRAR=['grupo','severidad','estado','diagnóstico','tipo','causa probable','categoría','resultado','riesgo','prioridad','dispositivo','nivel','cobertura','navegador'];
+var FILTRAR=['grupo','severidad','estado','diagnóstico','tipo','causa probable','categoría','resultado','riesgo','prioridad','dispositivo','nivel','cobertura','navegador',
+  'group','severity','status','diagnosis','type','probable cause','category','result','risk','priority','device','level','coverage','browser'];
 var tablas=[].slice.call(document.querySelectorAll('.tablecard table'));
 function texto(c){return (c.innerText||c.textContent||'').trim();}
 tablas.forEach(function(tb){
@@ -487,7 +494,7 @@ tablas.forEach(function(tb){
     fs.sort(function(a,b){var x=texto(a.cells[i]||a),y=texto(b.cells[i]||b),nx=parseFloat(x.replace(/[^\d,.-]/g,'').replace(',','.')),ny=parseFloat(y.replace(/[^\d,.-]/g,'').replace(',','.'));
       var r=(!isNaN(nx)&&!isNaN(ny)&&/^\s*[\d.,-]/.test(x)&&/^\s*[\d.,-]/.test(y))?nx-ny:x.localeCompare(y,'es',{numeric:true});return asc?r:-r;});
     fs.forEach(function(f){cuerpo.appendChild(f);});});});
-  if(filas.length<6)return;
+  if(filas.length<6||tb.closest('[data-sin-filtro]'))return;  // tablas con filtros propios (el portal)
   var col=-1;ths.forEach(function(th,i){if(col<0&&FILTRAR.indexOf(texto(th).toLowerCase())>=0)col=i;});
   var barra=document.createElement('div');barra.className='tabla-barra';
   barra.innerHTML='<label class="bq"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg><input type="search" placeholder="Buscar en la tabla…"></label>';
@@ -533,14 +540,57 @@ def _id_unico(titulo):
     return base if n == 0 else f"{base}-{n + 1}"
 
 
+# Banderas chicas en SVG (los emoji de banderas no se ven en Windows).
+_BANDERA = {
+    "es": '<svg viewBox="0 0 18 12" aria-hidden="true"><rect width="18" height="12" fill="#AA151B"/><rect y="3" width="18" height="6" fill="#F1BF00"/></svg>',
+    "en": ('<svg viewBox="0 0 60 40" aria-hidden="true"><rect width="60" height="40" fill="#012169"/>'
+           '<path d="M0 0L60 40M60 0L0 40" stroke="#fff" stroke-width="8"/><path d="M0 0L60 40M60 0L0 40" stroke="#C8102E" stroke-width="3"/>'
+           '<path d="M30 0V40M0 20H60" stroke="#fff" stroke-width="12"/><path d="M30 0V40M0 20H60" stroke="#C8102E" stroke-width="7"/></svg>'),
+}
+
+# Textos del JavaScript del informe (buscador, filtros, visor de evidencia) en inglés.
+_JS_EN = [
+    ("'Evidencia ampliada'", "'Enlarged evidence'"), ("Abrir en otra pestaña", "Open in a new tab"), ("Esc para cerrar", "Esc to close"),
+    ("'No se encontró la evidencia en '+ruta+'. Verificá que el archivo exista y que la ruta sea relativa al reporte "
+     "(el HTML tiene que quedar en la misma carpeta que su carpeta de evidencia).'",
+     "'Evidence not found at '+ruta+'. Check that the file exists and that the path is relative to the report "
+     "(the HTML has to sit next to its evidence folder).'"),
+    ("'Evidencia no encontrada'", "'Evidence not found'"), ("'En este reporte'", "'In this report'"),
+    ('placeholder="Buscar en la tabla…"', 'placeholder="Search the table…"'), ("'Todos<b>'", "'All<b>'"),
+    ("n+' de '+filas.length+' filas'", "n+' of '+filas.length+' rows'"), ("localeCompare(y,'es'", "localeCompare(y,'en'"),
+]
+
+
+def _selector_idioma(actual):
+    """ES / EN: cada informe sale en dos archivos (informe.html e informe.en.html) y este selector lleva al otro."""
+    nombres = {"es": "Español", "en": "English"}
+    partes = []
+    for cod in ("es", "en"):
+        contenido = f'{_BANDERA[cod]}{cod.upper()}'
+        if cod == actual:
+            partes.append(f'<span class="on" aria-current="true" title="{nombres[cod]}">{contenido}</span>')
+        else:
+            partes.append(f'<a href="#" data-idioma="{cod}" title="{nombres[cod]}" lang="{cod}">{contenido}</a>')
+    script = (r"<script>(function(){var a=document.querySelector('.idioma a[data-idioma]');if(!a)return;"
+              r"var f=decodeURIComponent(location.pathname.split('/').pop()||'');"
+              r"a.href=encodeURIComponent(a.getAttribute('data-idioma')==='en'?f.replace(/\.html$/i,'.en.html'):f.replace(/\.en\.html$/i,'.html'));})();</script>")
+    return f'<nav class="idioma" aria-label="Idioma">{"".join(partes)}</nav>{script}'
+
+
 def page(titulo, eyebrow, meta_html, body):
+    from _i18n import idioma_actual, traducir_html
+    lang = idioma_actual()
     _IDS.clear()
     try:  # al terminar el proceso, el portal de informes (output/index.html) suma este informe
         import portal_informes
         portal_informes.programar()
     except Exception:
         pass
-    return (f'<!doctype html>\n<html lang="es"><head><meta charset="utf-8">'
+    js = JS
+    if lang == "en":
+        for es_txt, en_txt in _JS_EN:
+            js = js.replace(es_txt, en_txt)
+    documento = (f'<!doctype html>\n<html lang="{lang}"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width, initial-scale=1">'
             f'<meta name="color-scheme" content="dark">'
             f'<title>{e(titulo)} — k0lmenIA</title><style>{FUENTES}{CSS}</style></head>'
@@ -555,7 +605,11 @@ def page(titulo, eyebrow, meta_html, body):
             f'<input id="buscar" type="search" placeholder="Buscar en las tablas…" aria-label="Buscar en las tablas"><kbd>Ctrl K</kbd></label>'
             f'</header><div class="grid">{body}</div>'
             f'<footer><span>Generado por k0lmenIA</span></footer></div></main></div>'
-            f'<script>{JS}</script></body></html>\n')
+            f'<script>{js}</script></body></html>\n')
+    # En inglés se traducen los textos visibles; el selector de idioma se suma después (sus nombres no se tocan).
+    documento = traducir_html(documento, lang)
+    return (documento.replace('<label class="buscar">', f'<div class="acciones">{_selector_idioma(lang)}<label class="buscar">', 1)
+            .replace('<kbd>Ctrl K</kbd></label>', '<kbd>Ctrl K</kbd></label></div>', 1))
 
 
 def meta(items):
@@ -724,7 +778,7 @@ def miniatura(ruta, titulo="", clase="", existe=True):
     if not ruta:
         return '<span class="muted">—</span>'
     if not existe:
-        return (f'<span class="falta-ev" data-tip="No se encontró la evidencia en {e(ruta)}" tabindex="0">'
+        return (f'<span class="falta-ev" data-tip="Evidencia no encontrada: {e(ruta)}" tabindex="0">'
                 f'! Evidencia no encontrada</span>')
     return (f'<a class="lb thumb {clase}" href="{e(ruta)}" title="{e(titulo)}">'
             f'<img src="{e(ruta)}" loading="lazy" alt="{e(titulo or "Evidencia")}"></a>')
@@ -802,6 +856,14 @@ def _grilla_y(W, izq, der, y_de, maxv, paso, fmt):
     return out
 
 
+def _porciento(pct, label):
+    """Etiqueta accesible de la dona ("80 por ciento aprobados" / "80 percent passed")."""
+    from _i18n import idioma_actual, t as traducir
+    if idioma_actual() == "en":
+        return f"{pct} percent {e(traducir(label))}"
+    return f"{pct} por ciento {e(label)}"
+
+
 def donut(segments, pct, label="aprobados"):
     """segments: [(valor, color[, nombre])]. El centro muestra pct + label."""
     r, cx, cy, w = 74, 100, 100, 18
@@ -824,7 +886,7 @@ def donut(segments, pct, label="aprobados"):
                  f'transform="rotate(-90 {cx} {cy})" data-tip="{e(tip)}" tabindex="0"/>')
         acc += frac
     return (f'<svg viewBox="0 0 200 200" width="200" height="200" role="img" '
-            f'aria-label="{pct} por ciento {e(label)}">{track}{segs}'
+            f'aria-label="{_porciento(pct, label)}">{track}{segs}'
             f'<text x="{cx}" y="{cy + 7}" text-anchor="middle" class="donut-num">{pct}%</text>'
             f'<text x="{cx}" y="{cy + 29}" text-anchor="middle" class="donut-lbl">{e(label)}</text></svg>')
 

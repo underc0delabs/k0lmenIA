@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _i18n import escribir_bilingue, localizar  # noqa: E402
 from _estilos_reporte import (page, meta, section, kpi_tiles, banner, table, doc_list,
                               nivel_badge, falta_informacion, e)
 
@@ -20,8 +21,14 @@ TONO = {"ok": "ok", "warn": "warn", "bad": "bad"}
 
 
 def generar(grab_json, salida, analisis_json=None):
+    """Escribe salida (ES) y su .en.html (EN); el inglés del agente va en el bloque "en" del analisis.json."""
     datos = json.loads(Path(grab_json).read_text(encoding="utf-8"))
     analisis = json.loads(Path(analisis_json).read_text(encoding="utf-8")) if analisis_json and Path(analisis_json).exists() else {}
+    escribir_bilingue(salida, lambda: _html(datos, localizar(analisis), salida, grab_json))
+    return salida
+
+
+def _html(datos, analisis, salida, grab_json):
     res = datos.get("resultado", {})
     resumen = res.get("resumen", {})
 
@@ -68,9 +75,7 @@ def generar(grab_json, salida, analisis_json=None):
 
     meta_html = meta([("Generado", datos.get("generado")), ("Historia", datos.get("historia")),
                       ("Host", f'{res.get("host")}:{res.get("puerto")}')])
-    html = page("Grabaciones", "NVR · ONVIF Recording", meta_html, cuerpo)
-    Path(salida).write_text(html, encoding="utf-8")
-    return salida
+    return page("Grabaciones", "NVR · ONVIF Recording", meta_html, cuerpo)
 
 
 def main():

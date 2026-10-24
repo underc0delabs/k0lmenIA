@@ -127,6 +127,8 @@ def test_tablero_cli_informe_historial_y_analisis(proyecto, capsys):
     html = (carpeta / "informe-tablero.html").read_text(encoding="utf-8")
     assert "Apto con observaciones" in html and "Automatizar HU-002" in html and "en curso" in html
     assert "Evolución de las corridas" in html  # la corrida anterior quedó en historial/
+    en = (carpeta / "informe-tablero.en.html").read_text(encoding="utf-8")
+    assert 'lang="en"' in en and "Quality dashboard" in en and "Pass with observations" in en
     assert len(list((carpeta / "historial").iterdir())) == 1
     assert tablero.main(["--nombre", "sprint 12", "--solo-informe"]) == 0
     assert "Tablero sprint-12" in capsys.readouterr().out
@@ -199,7 +201,7 @@ def test_portal_html_con_links_relativos(tmp_path):
 
 def test_portal_sin_output_y_tonos(tmp_path):
     destino, h = portal.generar(tmp_path / "output", tmp_path / "reports")
-    assert "Sin informes todavía" in destino.read_text(encoding="utf-8")
+    assert "Cuando los agentes generen informes" in destino.read_text(encoding="utf-8")
     assert portal._tono("No apto") == "bad" and portal._tono("Apto con observaciones") == "warn"
     assert portal._tono("Apto") == "ok" and portal._tono("10/10 aprobados") == "ok" and portal._tono("5/10 aprobados") == "bad"
 
@@ -227,9 +229,37 @@ def test_portal_historia_y_filtros(tmp_path):
     (d / "analisis.json").write_text('{"veredicto": "Hay accesos indebidos: crítico"}', encoding="utf-8")
     destino, _ = portal.generar(tmp_path / "output", tmp_path / "reports")
     html = destino.read_text(encoding="utf-8")
-    assert 'id="filtros"' in html and 'data-vista="hist"' in html
-    assert 'data-herr="permisos" data-hist="HU-002" data-tono="bad"' in html
-    assert html.count('data-nav="HU-002"') == 0  # la vista por historia no duplica el índice
+    assert 'id="filtros"' in html and 'name="desde"' in html and 'name="conhist"' in html
+    assert 'data-herr="permisos"' in html and 'data-hist="HU-002" data-tono="bad"' in html
+    assert 'id="cat-web"' in html and 'data-nav="Web"' in html  # permisos cae en la categoría Web
+    assert html.count('data-nav="HU-002"') == 0
+
+
+def test_portal_categorias_historial_e_ingles(tmp_path):
+    o = tmp_path / "output"
+    _escribir(o / "accesibilidad" / "app.com" / "informe-accesibilidad.html", "x")
+    _escribir(o / "accesibilidad" / "app.com" / "informe-accesibilidad.en.html", "x")
+    _escribir(o / "accesibilidad" / "app.com" / "historial" / "2026-10-01T10-00-00" / "informe-accesibilidad.html", "viejo")
+    _escribir(o / "accesibilidad" / "app.com" / "historial" / "2026-09-20T08-30-00" / "informe-accesibilidad.html", "más viejo")
+    _escribir(o / "reportes-bug" / "BUG-001.html", "x")
+    k0 = tmp_path / "reports"
+    _escribir(k0 / "web" / "index.html", "x")
+    _escribir(k0 / "web" / "cucumber-report.json", [{"elements": [_escenario("a", [], "passed")]}])
+
+    h = portal.descubrir(o, k0)
+    assert [u["html"].name for u in h["accesibilidad"]] == ["informe-accesibilidad.html"]  # el .en.html no es otro informe
+    todas = portal.entradas(h)
+    acc = [x for x in todas if x["herramienta"] == "accesibilidad"]
+    assert [x["anterior"] for x in acc] == [False, True, True]
+    assert acc[1]["fecha"].strftime("%Y-%m-%d %H:%M") == "2026-10-01 10:00"
+    assert acc[0]["html_en"].name == "informe-accesibilidad.en.html" and acc[1]["html_en"] is None
+    assert {x["categoria"] for x in todas} == {"web", "bugs", "automatizadas"}
+
+    destino, _ = portal.generar(o, k0)
+    es, en = destino.read_text(encoding="utf-8"), (o / "index.en.html").read_text(encoding="utf-8")
+    assert 'id="cat-automatizadas"' in es and 'id="cat-bugs"' in es and 'data-anterior="1"' in es
+    assert 'lang="en"' in en and 'href="accesibilidad/app.com/informe-accesibilidad.en.html"' in en
+    assert "Automated tests" in en and "Report portal" in en
 
 
 def test_tablero_calcula_el_ahorro_al_automatizar(monkeypatch):

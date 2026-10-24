@@ -237,7 +237,7 @@ def main():
         if not archivos:
             sys.exit("No encontré casos para revisar: pasá --origen o generá primero los casos de la historia.")
         casos, por_historia = revisar(archivos)
-        _historial.archivar(carpeta, ["revision.json", "analisis.json", "informe-revision.html"], "revision.json")
+        _historial.archivar(carpeta, ["revision.json", "analisis.json", "informe-revision.html", "informe-revision.en.html"], "revision.json")
         carpeta.mkdir(parents=True, exist_ok=True)
         casos.sort(key=lambda c: (c["puntaje"], c["historia"], c["id"]))
         ahora = datetime.datetime.now()

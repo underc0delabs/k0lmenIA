@@ -46,6 +46,7 @@ import os
 import sys
 from pathlib import Path
 
+from _i18n import escribir_bilingue, localizar, idioma_actual  # noqa: E402
 from _estilos_reporte import (e, page, meta, section, kpi_tiles, banner, doc_list, table,
                               nivel_badge, two_col, grouped_columns, line_chart, SERIES, CRITICO)
 
@@ -263,10 +264,10 @@ def build_html(data, corridas):
         body.append(section("Recomendaciones", table(["Acción", "Por qué", "Prioridad"], filas)))
 
     faltantes = data.get("falta_informacion") or []
-    if faltantes:
-        items = [f'{f.get("id", "")} — {f.get("que_falta", "")}' + (f' (impacto: {f["impacto"]})' if f.get("impacto") else "")
-                 + (f' · Pregunta: {f["pregunta"]}' if f.get("pregunta") else "") + f' · {f.get("estado", "Abierto")}' for f in faltantes]
-        body.append(section("Falta información", doc_list(items)))
+    if faltantes:  # en tabla: cada dato en su celda, así la versión en inglés traduce los encabezados y el estado
+        filas = [[f'<span class="id">{e(f.get("id", ""))}</span>', e(f.get("que_falta", "")), e(f.get("impacto") or "—"),
+                  e(f.get("pregunta") or "—"), e(f.get("estado", "Abierto"))] for f in faltantes]
+        body.append(section("Falta información", table(["ID", "Qué falta", "Impacto", "Pregunta para el PO", "Estado"], filas)))
     if data.get("proximos_pasos"):
         body.append(section("Próximos pasos", doc_list(data["proximos_pasos"])))
 
@@ -289,8 +290,8 @@ def main():
         sys.exit("[!] El informe necesita al menos una corrida en \"corridas\" (resumen JSON de npm run perf).")
     corridas = cargar_corridas(data["corridas"], os.path.dirname(os.path.abspath(salida)))
     os.makedirs(os.path.dirname(os.path.abspath(salida)), exist_ok=True)
-    with open(salida, "w", encoding="utf-8") as f:
-        f.write(build_html(data, corridas))
+    # ES y EN: el inglés del agente va en el bloque "en" del informe.json.
+    escribir_bilingue(salida, lambda: build_html(localizar(data), corridas))
     print(f"OK: {salida}")
 
 

@@ -60,3 +60,7 @@ Trabajás como subagente: **no podés hacerle una pregunta a la persona y espera
 - **Sin efectos**: no reintentes, no cargues bugs en herramientas compartidas ni cambies datos sin confirmación explícita.
 - **No toques la automatización** en este agente: proponé el arreglo; los cambios los hacen los mappers.
 - **Ahorro de tokens**: el script ya extrae el paso, el error y la evidencia de cada fallo; mirá las capturas solo de los que necesitan criterio.
+
+# Informe en español e inglés
+
+El script del informe arma dos HTML: `<informe>.html` (español) e `<informe>.en.html` (inglés), con una banderita para pasar de uno al otro. En el JSON que le pasás (`analisis.json`, `plan.json` o `_resultados-*.json`) agregá un bloque `"en"` con la traducción al inglés de los textos que escribiste vos (veredicto, resumen, hallazgos, recomendaciones, notas…): las mismas claves y, en las listas, los mismos `id` (o el mismo orden si no tienen). No traduzcas IDs, rutas, datos de la app ni los valores de las escalas (`Alta`, `Aprobado`…): eso lo resuelve el script. Inglés claro de QA. Si falta el bloque, el informe en inglés sale con esos textos en español.

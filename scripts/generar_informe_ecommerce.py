@@ -26,6 +26,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _i18n import escribir_bilingue, localizar  # noqa: E402
 import _historial  # noqa: E402
 from _estilos_reporte import (page, meta, section, kpi_tiles, banner, table, doc_list, bar_chart, nivel_badge,  # noqa: E402
                               estado_pill, falta_informacion, miniatura, resolver_evidencia, _pastilla, e,
@@ -44,8 +45,14 @@ for _p in NOMBRE:
 
 
 def generar(datos_json, salida, analisis_json=None):
+    """Escribe salida (ES) y su .en.html (EN); el inglés del agente va en el bloque "en" del analisis.json."""
     datos = json.loads(Path(datos_json).read_text(encoding="utf-8"))
     analisis = json.loads(Path(analisis_json).read_text(encoding="utf-8")) if analisis_json and Path(analisis_json).exists() else {}
+    escribir_bilingue(salida, lambda: _html(datos, localizar(analisis), salida, datos_json))
+    return salida
+
+
+def _html(datos, analisis, salida, datos_json):
     plataforma = datos.get("plataforma") or "shopify"
     nombre = NOMBRE.get(plataforma, plataforma.capitalize())
     tienda = datos.get("tienda") or {}
@@ -123,10 +130,8 @@ def generar(datos_json, salida, analisis_json=None):
                                                                       [[e(k), f'<span class="mono">{e(v)}</span>'] for k, v in datos["errores"].items()]),
                           "puede faltar la clave o el permiso de lectura, o la versión de la API no lo tiene")
 
-    html = page(nombre, f"{nombre} · relevamiento y pruebas",
+    return page(nombre, f"{nombre} · relevamiento y pruebas",
                 meta([("Generado", datos.get("generado")), ("Historia", datos.get("historia")), ("Tienda", tienda.get("url"))]), cuerpo)
-    Path(salida).write_text(html, encoding="utf-8")
-    return salida
 
 
 def main():

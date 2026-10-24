@@ -37,6 +37,7 @@ from pathlib import Path
 import sys
 
 import _historial
+from _i18n import escribir_bilingue, idioma_actual, localizar  # noqa: E402,F401
 from _estilos_reporte import (falta_informacion, avisar_analisis, e, page, meta, section, kpi_tiles, banner, doc_list, table, bar_chart, donut_panel,
                               two_col, nivel_badge, _pastilla, CRITICO, SERIO, AVISO, NEUTRO, OK, SERIES)
 from generar_informe_exploratorio import CSS_EXTRA, JS_EXTRA, miniatura, corto, origen
@@ -177,15 +178,27 @@ def build_html(datos, analisis, hist_html=""):
                             section("Hallazgos por página", bar_chart([(u, n, SERIES[0]) for u, n in por_pagina[:12] if n], ancho_etiqueta=200))))
 
     # ---- Alcance
-    areas = ('<p><strong style="color:var(--ink)">Revisión manual:</strong> ' + e(", ".join(analisis["areas_revisadas"])) + "</p>"
+    # Párrafos con datos intercalados: una versión por idioma.
+    en = idioma_actual() == "en"
+    fuerte = '<strong style="color:var(--ink)">{}</strong>'
+    areas = (f'<p>{fuerte.format("Manual review:" if en else "Revisión manual:")} ' + e(", ".join(analisis["areas_revisadas"])) + "</p>"
              if analisis.get("areas_revisadas") else "")
-    body.append(section("Alcance y método", f'''<div class="cardbody">
-      <p><strong style="color:var(--ink)">Auditoría automática</strong> de {e(r.get("paginas", len(pags)))} página(s) desde <span class="mono">{e(datos.get("url"))}</span>
-      contra <strong style="color:var(--ink)">WCAG 2.2 nivel {e(nivel)}</strong>{" y buenas prácticas" if cfg.get("buenas_practicas") else ""} con {e(datos.get("herramienta", "axe-core"))};
-      navegación con teclado (hasta {e(cfg.get("tabs"))} Tab por página) y reajuste del contenido a 320px. Duración: {e(datos.get("duracion_s"))} s.</p>
-      <p><strong style="color:var(--ink)">Importante:</strong> una auditoría automática detecta entre un 30 y un 50 % de los problemas de accesibilidad.
-      Que no aparezca un criterio no significa que se cumpla: la calidad de los textos alternativos, el orden de lectura, los mensajes
-      de error, el uso con lector de pantalla o con zoom requieren revisión manual.</p>{areas}</div>'''))
+    n_pag, url, herr = e(r.get("paginas", len(pags))), e(datos.get("url")), e(datos.get("herramienta", "axe-core"))
+    if en:
+        alcance = (f'<p>{fuerte.format("Automated audit")} of {n_pag} page(s) from <span class="mono">{url}</span> '
+                   f'against {fuerte.format(f"WCAG 2.2 level {e(nivel)}")}{" and best practices" if cfg.get("buenas_practicas") else ""} with {herr}; '
+                   f'keyboard navigation (up to {e(cfg.get("tabs"))} Tab presses per page) and content reflow at 320px. Duration: {e(datos.get("duracion_s"))} s.</p>'
+                   f'<p>{fuerte.format("Important:")} an automated audit finds between 30 and 50 % of accessibility problems. '
+                   'A criterion that does not show up is not necessarily met: the quality of text alternatives, the reading order, error messages '
+                   'and use with a screen reader or zoom need a manual review.</p>')
+    else:
+        alcance = (f'<p>{fuerte.format("Auditoría automática")} de {n_pag} página(s) desde <span class="mono">{url}</span> '
+                   f'contra {fuerte.format(f"WCAG 2.2 nivel {e(nivel)}")}{" y buenas prácticas" if cfg.get("buenas_practicas") else ""} con {herr}; '
+                   f'navegación con teclado (hasta {e(cfg.get("tabs"))} Tab por página) y reajuste del contenido a 320px. Duración: {e(datos.get("duracion_s"))} s.</p>'
+                   f'<p>{fuerte.format("Importante:")} una auditoría automática detecta entre un 30 y un 50 % de los problemas de accesibilidad. '
+                   'Que no aparezca un criterio no significa que se cumpla: la calidad de los textos alternativos, el orden de lectura, los mensajes '
+                   'de error, el uso con lector de pantalla o con zoom requieren revisión manual.</p>')
+    body.append(section("Alcance y método", f'<div class="cardbody">{alcance}{areas}</div>'))
 
     # ---- Criterios incumplidos
     if criterios:
@@ -346,8 +359,7 @@ def main():
             analisis = json.load(f)
         avisar_analisis(analisis, [h.get("id") for h in (datos.get("hallazgos") or []) + (datos.get("revisar") or [])] + [x.get("id") for x in analisis.get("manuales") or []])
     hist_html = _historial.seccion("accesibilidad", Path(a.auditoria_json).resolve().parent, datos)
-    with open(a.salida, "w", encoding="utf-8") as f:
-        f.write(build_html(datos, analisis, hist_html=hist_html))
+    escribir_bilingue(a.salida, lambda: build_html(datos, localizar(analisis), hist_html=hist_html))
     print(f"OK: {a.salida}")
 
 

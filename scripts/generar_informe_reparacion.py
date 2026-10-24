@@ -31,6 +31,7 @@ from collections import Counter
 from pathlib import Path
 
 import _historial
+from _i18n import escribir_bilingue, idioma_actual, localizar  # noqa: E402,F401
 from _estilos_reporte import (e, page, meta, section, kpi_tiles, banner, doc_list, table, bar_chart, donut_panel, two_col,
                               nivel_badge, _pastilla, miniatura, CRITICO, AVISO, NEUTRO, OK, SERIO, SERIES)
 from generar_informe_exploratorio import CSS_EXTRA
@@ -287,8 +288,7 @@ def main():
         with open(a.analisis, encoding="utf-8") as f:
             analisis = json.load(f)
     hist_html = _historial.seccion("reparacion", Path(a.datos_json).resolve().parent, datos)
-    with open(a.salida, "w", encoding="utf-8") as f:
-        f.write(build_html(datos, analisis, Path(a.datos_json).parent, hist_html=hist_html))
+    escribir_bilingue(a.salida, lambda: build_html(datos, localizar(analisis), Path(a.datos_json).parent, hist_html=hist_html))
     print(f"OK: {a.salida}")
 
 

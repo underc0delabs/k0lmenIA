@@ -28,6 +28,7 @@ from pathlib import Path
 import sys
 
 import _historial
+from _i18n import escribir_bilingue, localizar, idioma_actual  # noqa: E402
 from _estilos_reporte import (e, page, meta, section, kpi_tiles, banner, doc_list, table, bar_chart, column_chart, two_col,
                               nivel_badge, _pastilla, CRITICO, AVISO, NEUTRO, OK, SERIES)
 from generar_informe_exploratorio import CSS_EXTRA, JS_EXTRA
@@ -192,8 +193,8 @@ def main():
         with open(a.analisis, encoding="utf-8") as f:
             analisis = json.load(f)
     hist_html = _historial.seccion("cobertura", Path(a.cobertura_json).resolve().parent, datos)
-    with open(a.salida, "w", encoding="utf-8") as f:
-        f.write(build_html(datos, analisis, hist_html=hist_html))
+    # ES y EN: el inglés del agente va en el bloque "en" del analisis.json.
+    escribir_bilingue(a.salida, lambda: build_html(datos, localizar(analisis), hist_html=hist_html))
     print(f"OK: {a.salida}")
 
 

@@ -115,6 +115,18 @@ CSS_INV = """
 """
 
 
+def _tr(es, en):
+    """Frase armada con datos del relevamiento: cada idioma la arma entera (el diccionario no traduce datos)."""
+    from _i18n import idioma_actual
+    return en if idioma_actual() == "en" else es
+
+
+def _t(texto):
+    """Un valor fijo del generador (tipo de ambigüedad, prioridad…) en el idioma actual."""
+    from _i18n import t
+    return t(texto)
+
+
 def slug(texto):
     s = re.sub(r"[^a-z0-9]+", "-", (texto or "").lower().translate(str.maketrans("áéíóúñü", "aeiounu"))).strip("-")
     return s or "proyecto"
@@ -363,17 +375,19 @@ def build_html(d, cambios=None):
     ]
     body = [kpi_tiles(tiles)]
     if d.get("tablero"):
-        body.append(banner(f'Relevado desde el tablero: {d["tablero"]}', "ok"))
+        body.append(banner(_tr(f'Relevado desde el tablero: {d["tablero"]}', f'Surveyed from the board: {d["tablero"]}'), "ok"))
     for f in d.get("faltantes") or []:
         body.append(banner(f, "warn"))
     if d.get("resumen"):
         body.append(section("De qué se trata", f'<div class="cardbody"><p class="lead">{e(d["resumen"])}</p></div>'))
     if cob:
-        texto = f'Hay {total} ítems en total; se leyeron {leidos} en detalle.' if total else ""
+        texto = _tr(f'Hay {total} ítems en total; se leyeron {leidos} en detalle.',
+                    f'There are {total} items in total; {leidos} were read in detail.') if total else ""
         if n_epicas or n_hist or n_tareas:
-            texto += f' Se bajó por el tablero a {n_epicas or 0} épica(s), {n_hist or 0} historia(s) y {n_tareas or 0} tarea(s), con sus comentarios y links.'
+            texto += _tr(f' Se bajó por el tablero a {n_epicas or 0} épica(s), {n_hist or 0} historia(s) y {n_tareas or 0} tarea(s), con sus comentarios y links.',
+                         f' The board was walked down to {n_epicas or 0} epic(s), {n_hist or 0} story(ies) and {n_tareas or 0} task(s), with their comments and links.')
         if cob.get("criterio"):
-            texto += f' Criterio de la muestra: {cob["criterio"]}.'
+            texto += _tr(f' Criterio de la muestra: {cob["criterio"]}.', f' Sample criteria: {cob["criterio"]}.')
         if texto.strip():
             body.append(section("Qué tan representativo es", f'<div class="cardbody"><p>{e(texto.strip())}</p></div>',
                                 "el resto se resume por conteos"))
@@ -532,7 +546,7 @@ def build_html(d, cambios=None):
                                                                      [[e(x.get("paso")), f'<b>{e(x.get("agente", "—"))}</b>',
                                                                        f'<span class="mono">{e(x.get("pedido", ""))}</span>'] for x in d["proximos_pasos"]])))
 
-    titulo = f'Relevamiento de {d.get("proyecto", "")}'.strip()
+    titulo = _tr(f'Relevamiento de {d.get("proyecto", "")}', f'Project survey: {d.get("proyecto", "")}').strip()
     html = page(titulo, "Investigación del proyecto",
                 meta([("Proyecto", d.get("clave")), ("Fecha", d.get("fecha")), ("Profundidad", d.get("profundidad")),
                       ("Foco", d.get("foco")), ("Para", d.get("para"))]), "".join(body))
@@ -723,16 +737,16 @@ def build_presentacion(d):
                       f'<div><h3>Integraciones</h3>{izq}</div><div><h3>Ambientes</h3>{der}</div></div></section>')
     # Ambigüedades
     if amb:
-        items = [f'<b>{e(a.get("id"))}</b> ({e(a.get("tipo", ""))}): {e(a.get("que", ""))}' for a in amb]
+        items = [f'<b>{e(a.get("id"))}</b> ({e(_t(a.get("tipo", "")))}): {e(a.get("que", ""))}' for a in amb]
         slides.append(f'<section class="s"><h2>Ambigüedades y contradicciones</h2>{ul(items, 7)}</section>')
     # Preguntas
     if preg:
-        items = [f'<b>[{e(p.get("prioridad", ""))}]</b> {e(p.get("pregunta", ""))}'
+        items = [f'<b>[{e(_t(p.get("prioridad", "")))}]</b> {e(p.get("pregunta", ""))}'
                  + (f' — <i>{e(p["a_quien"])}</i>' if p.get("a_quien") else "") for p in preg]
         slides.append(f'<section class="s"><h2>Preguntas para el equipo</h2>{ul(items, 7)}</section>')
     # Riesgos + próximos pasos
     if riesgos or d.get("proximos_pasos"):
-        r = ul([f'<b>[{e(x.get("nivel", ""))}]</b> {e(x.get("riesgo", ""))}' for x in riesgos])
+        r = ul([f'<b>[{e(_t(x.get("nivel", "")))}]</b> {e(x.get("riesgo", ""))}' for x in riesgos])
         n = ul([e(x if isinstance(x, str) else x.get("paso", "")) for x in d.get("proximos_pasos") or []])
         slides.append(f'<section class="s"><h2>Riesgos y próximos pasos</h2><div class="dos">'
                       f'<div><h3>Riesgos para QA</h3>{r}</div><div><h3>Próximos pasos</h3>{n}</div></div></section>')
@@ -769,11 +783,22 @@ ul{margin:.2em 0;padding-left:1.1em}li{margin:.35em 0}.muted{color:var(--muted)}
           "document.addEventListener('keydown',function(ev){var i=s.findIndex(function(el){return el.getBoundingClientRect().top>=-2;});"
           "if(ev.key==='ArrowRight'||ev.key===' '||ev.key==='PageDown'){ev.preventDefault();(s[Math.min(i+1,s.length-1)]||s[0]).scrollIntoView({behavior:'smooth'});}"
           "if(ev.key==='ArrowLeft'||ev.key==='PageUp'){ev.preventDefault();(s[Math.max((i<0?s.length:i)-1,0)]).scrollIntoView({behavior:'smooth'});}});upd();})();")
-    return (f'<!doctype html><html lang="es"><head><meta charset="utf-8">'
-            f'<meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="dark">'
-            f'<title>{e(d.get("proyecto", "Proyecto"))} — presentación</title><style>{css}</style></head>'
-            f'<body><div class="deck">{cuerpo}</div><div class="nav"><b>1</b> / {total} · ←/→ · imprimí a PDF</div>'
-            f'<script>{js}</script></body></html>\n')
+    from _i18n import idioma_actual, traducir_html
+    lang = idioma_actual()
+    otro = "en" if lang == "es" else "es"
+    # Link al otro idioma (presentacion-investigacion.html <-> presentacion-investigacion.en.html).
+    css += ".nav a{color:var(--accent);text-decoration:none;margin-left:8px}"
+    js += (r"(function(){var a=document.querySelector('.nav a[data-idioma]');if(!a)return;"
+           r"var f=decodeURIComponent(location.pathname.split('/').pop()||'');"
+           r"a.href=encodeURIComponent(a.getAttribute('data-idioma')==='en'?f.replace(/\.html$/i,'.en.html'):f.replace(/\.en\.html$/i,'.html'));})();")
+    documento = (f'<!doctype html><html lang="{lang}"><head><meta charset="utf-8">'
+                 f'<meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="dark">'
+                 f'<title>{e(d.get("proyecto", "Proyecto"))} — {_tr("presentación", "presentation")}</title><style>{css}</style></head>'
+                 f'<body><div class="deck">{cuerpo}</div><div class="nav"><b>1</b> / {total} · ←/→ · imprimí a PDF</div>'
+                 f'<script>{js}</script></body></html>\n')
+    documento = traducir_html(documento, lang)
+    enlace = f'<a href="#" data-idioma="{otro}" lang="{otro}">{"English" if otro == "en" else "Español"}</a>'
+    return documento.replace('</div><script>', f'{enlace}</div><script>', 1)
 
 
 def anterior(carpeta):
@@ -931,8 +956,9 @@ def main(argv=None):
     carpeta = Path(a.salida) if a.salida else origen.resolve().parent
     carpeta.mkdir(parents=True, exist_ok=True)
     cambios = None if a.sin_historial else comparar(d, anterior(carpeta))
+    from _i18n import escribir_bilingue, localizar, ruta_en
     html = carpeta / "informe-investigacion.html"
-    html.write_text(build_html(d, cambios), encoding="utf-8")
+    escribir_bilingue(html, lambda: build_html(localizar(d), cambios))
     md = carpeta / "informe-investigacion.md"
     md.write_text(build_md(d, cambios), encoding="utf-8")
     subprocess.run([sys.executable, str(RAIZ / "scripts" / "formatear_tablas.py"), str(md)], capture_output=True, text=True)
@@ -940,9 +966,9 @@ def main(argv=None):
     resumen.write_text(build_resumen_md(d), encoding="utf-8")
     subprocess.run([sys.executable, str(RAIZ / "scripts" / "formatear_tablas.py"), str(resumen)], capture_output=True, text=True)
     presentacion = carpeta / "presentacion-investigacion.html"
-    presentacion.write_text(build_presentacion(d), encoding="utf-8")
+    escribir_bilingue(presentacion, lambda: build_presentacion(localizar(d)))
     if not a.sin_historial:
-        guardar_historial(carpeta, [origen, html, md, resumen, presentacion])
+        guardar_historial(carpeta, [origen, html, ruta_en(html), md, resumen, presentacion, ruta_en(presentacion)])
     print(f"Relevamiento: {html}")
     print(f"  resumen breve: {resumen}")
     print(f"  presentación (imprime a PDF): {presentacion}")

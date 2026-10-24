@@ -24,7 +24,9 @@ def test_html_y_md(tmp_path):
     archivo.write_text(json.dumps(PLAN, ensure_ascii=False), encoding="utf-8")
     assert onb.main([str(archivo), "--salida", str(tmp_path / "o")]) == 0
     html = (tmp_path / "o" / "plan-onboarding.html").read_text(encoding="utf-8")
-    assert "Onboarding de Ana Pérez" in html and "Generá los casos de PROJ-12" in html and "FI-01" in html
+    assert "Onboarding · Ana Pérez" in html and "Generá los casos de PROJ-12" in html and "FI-01" in html
+    en = (tmp_path / "o" / "plan-onboarding.en.html").read_text(encoding="utf-8")
+    assert 'lang="en"' in en and "Plan for the first weeks" in en and "' of '+cajas.length" in en
     assert html.count('type="checkbox"') == 2 and "localStorage" in html and "1 pendiente(s)" in html
     md = (tmp_path / "o" / "plan-onboarding.md").read_text(encoding="utf-8")
     assert "- [ ] Correr npm test" in md and "Checkout" in md and "> No hay mapa funcional." in md

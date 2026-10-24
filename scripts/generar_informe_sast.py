@@ -27,6 +27,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _i18n import escribir_bilingue, localizar  # noqa: E402
 from _estilos_reporte import (page, meta, section, kpi_tiles, banner, table, doc_list, bar_chart,  # noqa: E402
                               nivel_badge, falta_informacion, e, SERIES)
 
@@ -35,7 +36,13 @@ TONO = {"ok": "ok", "warn": "warn", "bad": "bad"}
 
 
 def generar(analisis_json, salida):
-    d = json.loads(Path(analisis_json).read_text(encoding="utf-8"))
+    """Escribe salida (ES) y su .en.html (EN); el inglés del agente va en el bloque "en" del analisis.json."""
+    datos = json.loads(Path(analisis_json).read_text(encoding="utf-8"))
+    escribir_bilingue(salida, lambda: _html(localizar(datos), salida))
+    return salida
+
+
+def _html(d, salida):
     proy = d.get("proyecto") or {}
     hall = sorted(d.get("hallazgos") or [], key=lambda x: ORDEN_SEV.get(x.get("severidad"), 9))
     crit = sum(1 for h in hall if h.get("severidad") in ("Crítica", "Alta"))
@@ -80,11 +87,9 @@ def generar(analisis_json, salida):
         cuerpo += section("Próximos pasos", doc_list(d["proximos_pasos"]))
     cuerpo += falta_informacion(d.get("falta_informacion"))
 
-    html = page(d.get("titulo") or "Análisis estático de seguridad (SAST)", "Seguridad · código estático (SAST) y secretos",
+    return page(d.get("titulo") or "Análisis estático de seguridad (SAST)", "Seguridad · código estático (SAST) y secretos",
                 meta([("Generado", d.get("generado")), ("Proyecto", proy.get("ruta")),
                       ("Escáneres", ", ".join(d.get("escaneres") or []) or None)]), cuerpo)
-    Path(salida).write_text(html, encoding="utf-8")
-    return salida
 
 
 def main():

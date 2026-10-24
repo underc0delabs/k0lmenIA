@@ -32,6 +32,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _estilos_reporte import (page, meta, section, kpi_tiles, banner, table, doc_list, bar_chart,  # noqa: E402
                               nivel_badge, estado_pill, falta_informacion, miniatura, resolver_evidencia, e, SERIES)
+from _i18n import escribir_bilingue, localizar  # noqa: E402
 
 ORDEN_SEV = {"Crítica": 0, "Alta": 1, "Media": 2, "Baja": 3}
 ORDEN_RES = {"Fallido": 0, "Bloqueado": 1, "Pendiente": 2, "Aprobado": 3, "N/A": 4}
@@ -39,8 +40,14 @@ TONO = {"ok": "ok", "warn": "warn", "bad": "bad"}
 
 
 def generar(analisis_json, salida):
-    d = json.loads(Path(analisis_json).read_text(encoding="utf-8"))
+    """Escribe salida (ES) y su .en.html (EN). El inglés del agente va en el bloque "en" del analisis.json."""
+    datos = json.loads(Path(analisis_json).read_text(encoding="utf-8"))
     base = Path(salida).resolve().parent
+    escribir_bilingue(salida, lambda: _html(localizar(datos), base))
+    return salida
+
+
+def _html(d, base):
 
     hall = sorted(d.get("hallazgos") or [], key=lambda x: ORDEN_SEV.get(x.get("severidad"), 9))
     criticos = sum(1 for h in hall if h.get("severidad") in ("Crítica", "Alta"))
@@ -107,9 +114,7 @@ def generar(analisis_json, salida):
     for par in d.get("meta") or []:
         if isinstance(par, (list, tuple)) and len(par) == 2:
             filas_meta.append((par[0], par[1]))
-    html = page(d.get("titulo") or "Informe", d.get("eyebrow") or "k0lmenIA", meta(filas_meta), cuerpo)
-    Path(salida).write_text(html, encoding="utf-8")
-    return salida
+    return page(d.get("titulo") or "Informe", d.get("eyebrow") or "k0lmenIA", meta(filas_meta), cuerpo)
 
 
 def main():

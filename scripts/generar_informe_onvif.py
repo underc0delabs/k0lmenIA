@@ -19,6 +19,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _i18n import escribir_bilingue, localizar, t  # noqa: E402
 from _estilos_reporte import (page, meta, section, kpi_tiles, banner, table, doc_list,
                               nivel_badge, estado_pill, falta_informacion, e)
 
@@ -34,8 +35,14 @@ PRUEBA_TONO = {"ok": "ok", "fallo": "bad", "n/a": "blk"}
 
 
 def generar(onvif_json, salida, analisis_json=None):
+    """Escribe salida (ES) y su .en.html (EN); el inglés del agente va en el bloque "en" del analisis.json."""
     datos = json.loads(Path(onvif_json).read_text(encoding="utf-8"))
     analisis = json.loads(Path(analisis_json).read_text(encoding="utf-8")) if analisis_json and Path(analisis_json).exists() else {}
+    escribir_bilingue(salida, lambda: _html(datos, localizar(analisis), salida, onvif_json))
+    return salida
+
+
+def _html(datos, analisis, salida, onvif_json):
     res = datos.get("resultado", {})
     dev = res.get("dispositivo", {})
     pruebas = res.get("pruebas", {})
@@ -97,11 +104,11 @@ def generar(onvif_json, salida, analisis_json=None):
     ev = (res.get("eventos") or {}).get("en_vivo")
     if ev:
         if ev.get("suscripcion") != "ok":
-            cuerpo += section("Eventos en vivo", banner(f"No se pudo suscribir al pull-point: {e(ev.get('error', 'sin detalle'))}", "bad"))
+            cuerpo += section("Eventos en vivo", banner(f"{t('No se pudo suscribir al pull-point:')} {ev.get('error') or t('sin detalle')}", "bad"))
         else:
             tono = "ok" if ev.get("movimiento") else "warn"
             txt = ("Se detectó movimiento en vivo." if ev.get("movimiento")
-                   else f"No llegó ningún evento de movimiento en {ev.get('pedido_s')}s.")
+                   else f"No llegó ningún evento de movimiento en {ev.get('pedido_s')} s.")
             filas = [["Suscripción", "OK (pull-point)"],
                      ["Espera", f"{ev.get('pedido_s')} s"],
                      ["Mensajes recibidos", e(ev.get("mensajes", 0))],
@@ -135,9 +142,7 @@ def generar(onvif_json, salida, analisis_json=None):
     meta_html = meta([("Generado", datos.get("generado")), ("Historia", datos.get("historia")),
                       ("Host", f'{res.get("host")}:{res.get("puerto")}'),
                       ("PTZ ejecutado", "Sí" if datos.get("ptz_ejecutado") else "No")])
-    html = page("Control ONVIF", "Cámara IP · ONVIF", meta_html, cuerpo)
-    Path(salida).write_text(html, encoding="utf-8")
-    return salida
+    return page("Control ONVIF", "Cámara IP · ONVIF", meta_html, cuerpo)
 
 
 def main():
