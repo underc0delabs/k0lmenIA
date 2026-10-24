@@ -23,13 +23,22 @@ const SESION = JSON.stringify(path.join(RAIZ, 'herramientas', 'k0lmena', 'tools'
 const ENVJS = JSON.stringify(path.join(RAIZ, 'herramientas', 'k0lmena', 'env.js'));
 const LEERENV = JSON.stringify(path.join(RAIZ, 'scripts', 'mcp', 'leer-env.js'));
 
+// env.js usa dotenv, una dependencia de k0lmena: en el job básico del CI k0lmena no se instala y esa prueba se
+// saltea (el job "Pruebas con navegador real" la corre con k0lmena instalada).
+let hayDotenv = true;
+try {
+  require.resolve('dotenv', { paths: [path.join(RAIZ, 'herramientas', 'k0lmena')] });
+} catch {
+  hayDotenv = false;
+}
+
 test('sin variables: proyecto y código son el repo', () => {
   const r = enProceso(`const r = require(${RUTAS}); console.log(JSON.stringify({ p: r.PROYECTO, c: r.CODIGO }))`);
   assert.strictEqual(r.p, RAIZ);
   assert.strictEqual(r.c, RAIZ);
 });
 
-test('con K0LMENIA_PROYECTO: .env, sesión y variables del proyecto', () => {
+test('con K0LMENIA_PROYECTO: .env, sesión y variables del proyecto', { skip: !hayDotenv && 'k0lmena no instalada' }, () => {
   const proy = fs.mkdtempSync(path.join(os.tmpdir(), 'k0-proyecto-'));
   fs.writeFileSync(path.join(proy, '.env'), 'APP_URL=https://app.proyecto.test\nSESION=si\n');
   fs.mkdirSync(path.join(proy, '.auth'));
