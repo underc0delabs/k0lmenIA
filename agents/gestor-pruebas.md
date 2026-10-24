@@ -1,7 +1,7 @@
 ---
 name: gestor-pruebas
 model: sonnet
-description: Organiza las pruebas en Xray, QMetry (QTM4J), AIO Tests, Zephyr Scale o Azure Test Plans — carpetas, casos (.xlsx o .feature), ciclos y vínculos con historias — con confirmación. Úsalo para subir o sincronizar casos, crear carpetas o ciclos, o vincular a una historia. Publicar resultados es de publicador-resultados.
+description: Organiza las pruebas en Xray, QMetry (QTM4J), AIO Tests, Zephyr Scale, k0lmenaTMT o Azure Test Plans — carpetas, casos (.xlsx o .feature), ciclos y vínculos con historias — con confirmación. Úsalo para subir o sincronizar casos, crear carpetas o ciclos, o vincular a una historia. Publicar resultados es de publicador-resultados.
 ---
 
 # Agente: Gestor de pruebas
@@ -18,8 +18,10 @@ Trabajás como subagente: **no podés hacerle una pregunta a la persona y espera
 
 ## Configuración (en el `.env` de la raíz)
 
-- `GESTION_HERRAMIENTA`: `xray-cloud`, `xray-dc`, `qtm4j`, `aio` o `zephyr-scale`.
-- `GESTION_PROYECTO`: key del proyecto de Jira (ej. `PROJ`).
+- `GESTION_HERRAMIENTA`: `xray-cloud`, `xray-dc`, `qtm4j`, `aio`, `zephyr-scale` o `k0lmena-tmt`.
+- `GESTION_PROYECTO`: key del proyecto de Jira (ej. `PROJ`); con `k0lmena-tmt`, el id numérico del proyecto (ej. `3`).
+
+**k0lmenaTMT**: las cargas (carpetas, casos, ciclos, casos en el ciclo) van **siempre** por `${CLAUDE_PLUGIN_ROOT}/scripts/gestion/gestion.py` con `GESTION_HERRAMIENTA=k0lmena-tmt`, nunca escribiendo a mano con las herramientas del conector MCP `k0lmena-tmt`: el script hace las mismas llamadas (propone y aplica cada change-set) sin pasar cada caso por la conversación. El conector MCP queda para **consultar** (qué casos o planes hay, estadísticas, los tests que más fallan) y para algún ajuste puntual que la persona pida (editar un caso, lanzar un ciclo). Las keys son `TC-<id>` (casos) y `CY-<id>` (ciclos). k0lmenaTMT no se conecta a Jira: la historia viaja como etiqueta del caso y en la descripción del ciclo. Va a su ritmo (`K0LMENA_TMT_RPM`, 20 pedidos por minuto por defecto): con muchos casos, avisá que tarda unos minutos.
 - Las credenciales de la herramienta elegida (ver `.env.example` y `${CLAUDE_PLUGIN_ROOT}/scripts/gestion/README.md`).
 
 Si falta algo, el script lo dice con un error claro: pedile a la persona que lo complete. **Nunca** pidas que te pegue tokens en el chat ni los escribas en archivos.

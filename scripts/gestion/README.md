@@ -22,6 +22,9 @@ Integración propia de k0lmenIA con las herramientas de gestión de pruebas, sob
 +---------------------------+-----------------------+-----------------------------------------+
 | Zephyr Scale (Jira Cloud) | zephyr-scale          | REST v2 + Jira Cloud REST (vínculos)    |
 +---------------------------+-----------------------+-----------------------------------------+
+| k0lmenaTMT                | k0lmena-tmt           | Server MCP con token personal (el       |
+|                           |                       | script es el cliente, sin el modelo)    |
++---------------------------+-----------------------+-----------------------------------------+
 ```
 
 La usan dos agentes, que aportan el contexto mientras el script hace el trabajo mecánico (barato en tokens):
@@ -52,6 +55,10 @@ Todo va en el `.env` de la raíz (ver `.env.example`, sección *Gestión de prue
 +---------------+------------------------------------------+
 | aio           | AIO_API_TOKEN                            |
 +---------------+------------------------------------------+
+| k0lmena-tmt   | K0LMENA_TMT_TOKEN (y K0LMENA_TMT_URL si  |
+|               | no es http://localhost:4000/api/v1/mcp); |
+|               | GESTION_PROYECTO es el id numérico       |
++---------------+------------------------------------------+
 | zephyr-scale  | ZEPHYR_API_TOKEN, JIRA_BASE_URL,         |
 |               | JIRA_EMAIL, JIRA_API_TOKEN (y            |
 |               | ZEPHYR_API_URL si no es la región US)    |
@@ -59,6 +66,32 @@ Todo va en el `.env` de la raíz (ver `.env.example`, sección *Gestión de prue
 ```
 
 Dependencia: `requests` (está en `requirements.txt`; el script la instala si falta).
+
+## k0lmenaTMT
+
+Con el token personal (`kolm_pat_...`), k0lmenaTMT expone solo su **server MCP** (su API REST pide el login de la interfaz). En vez de que el agente escriba caso por caso con las herramientas del conector (cientos de llamadas del modelo y las evidencias en base64 por la conversación), **el script es el cliente MCP**: hace las mismas llamadas sin modelo, a su ritmo, y sube las evidencias directo desde el disco.
+
+- **Cómo escribe**: cada herramienta de escritura de k0lmenaTMT devuelve una propuesta (change-set); el script la aplica con `apply_change_set` y toma el id creado. Todo queda registrado en k0lmenaTMT y se puede deshacer desde ahí.
+- **Mapeo**:
+  - **carpeta** → `create_directory`, una por nivel;
+  - **caso** → `create_test_case` con pasos (acción, datos, resultado), etiquetas (las del caso, la historia y `k0lmenIA`), tiempo estimado y prioridad (`K0LMENA_TMT_PRIORIDADES`); un BDD lleva sus pasos Given/When/Then y `automated`;
+  - **ciclo** → `create_test_cycle`, y agregar casos → `add_case_to_cycle` (cada uno es un *cycle suite*);
+  - **resultado** → `record_execution` (estado, conteo y tiempo) más `attach_evidence` con las capturas, el GIF, el video si falló y un `resultado.txt` con el detalle, porque la ejecución no tiene campo de comentario.
+- **Keys**: `TC-<id>` (casos) y `CY-<id>` (ciclos), así los comandos se usan igual que con Xray o Zephyr (`--ciclo CY-45`, tags `@TC-123`).
+- **Historia**: k0lmenaTMT no se conecta a Jira: la historia va como etiqueta del caso y en la descripción del ciclo.
+- **Idempotencia**: el MCP no lista carpetas ni los casos de un ciclo, así que el script recuerda esos ids en `output/gestion/k0lmena-tmt.json` (además de la trazabilidad de siempre). Los casos ya subidos no se duplican.
+- **Ritmo**: k0lmenaTMT acepta `ASSISTANT_RATE_LIMIT` pedidos por minuto por usuario (20 por defecto) y cada escritura son dos. Con 20, una historia de 30 casos más su ciclo y resultados con evidencia tarda unos 12 minutos. `K0LMENA_TMT_RPM` ajusta el script si tu instancia acepta más.
+- **Evidencias**: hasta 10 archivos y 10 MB por archivo en cada llamada (límites de k0lmenaTMT); las más grandes se avisan y quedan en el informe local.
+
+### Lo que conviene sumar en k0lmenaTMT
+
+Del lado de k0lmenaTMT hay cinco mejoras que harían la integración mucho más rápida y completa:
+
+1. **Límite de pedidos para tokens personales**: hoy el token comparte el límite del chat del asistente (20 por minuto). Para automatización conviene un límite propio y más alto (por ejemplo, 300 por minuto para los `kolm_pat_`).
+2. **Escritura en lote**: una herramienta que reciba varias acciones en un solo change-set (o que aplique varias propuestas juntas), o un endpoint con el token personal para importar resultados de Cucumber o JUnit. Pasa de cientos de pedidos a unos pocos.
+3. **Comentario en la ejecución**: un campo `comment` (o `errorMessage`) en `record_execution`, para no tener que mandar el detalle como `resultado.txt`.
+4. **Consultas que faltan**: `query_directories`, `query_test_cycles` y los *cycle suites* de un ciclo, así la idempotencia no depende de un archivo local, y los agentes pueden retomar ciclos creados desde la interfaz.
+5. **Referencia externa del caso**: un campo para el ID de k0lmenIA (`CP-001`) y la historia (`PROJ-12`), con búsqueda, para deduplicar y trazar sin depender del título ni de las etiquetas.
 
 ## Comandos
 

@@ -287,7 +287,9 @@ La entrada ejecuta `scripts/mcp/aio-tests.js`, que toma las dos variables del `.
 
 ## k0lmenaTMT
 
-Conecta los agentes con **k0lmenaTMT** por su server MCP, para cargar y consultar casos de prueba desde el chat. Se autentica con un **token personal** (`kolm_pat_...`) que se genera en k0lmenaTMT.
+Conecta los agentes con **k0lmenaTMT** por su server MCP, para consultar desde el chat (casos, planes, ejecuciones, estadísticas, los tests que más fallan) y hacer ajustes puntuales. Se autentica con un **token personal** (`kolm_pat_...`) que se genera en k0lmenaTMT.
+
+> **Las cargas no van por el conector**: subir casos, crear ciclos y publicar resultados con evidencias lo hace `scripts/gestion` con `GESTION_HERRAMIENTA=k0lmena-tmt` (lo usan `gestor-pruebas` y `publicador-resultados`). Usa el mismo server MCP y el mismo token, pero sin pasar cada caso ni cada evidencia por la conversación. Ver `scripts/gestion/README.md`.
 
 ```
 +-------------------+-------------+------------------------------------------+
@@ -315,7 +317,7 @@ Para activarlo:
 
 Ejemplos de uso:
 
-> *"Cargá en k0lmenaTMT los casos de `output/casos-de-prueba/manuales/casos-HU-001.xlsx`."* · *"¿Qué casos de HU-001 hay en k0lmenaTMT?"*
+> *"Subí a k0lmenaTMT los casos de `casos-HU-001.xlsx` y creá el ciclo Sprint 5"* (gestor-pruebas, por `gestion.py`) · *"Publicá en k0lmenaTMT los resultados de la última corrida en el ciclo CY-45"* (publicador-resultados) · *"¿Cuáles son los tests que más fallan en k0lmenaTMT?"* (conector MCP)
 
 ---
 

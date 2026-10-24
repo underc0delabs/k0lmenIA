@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gestión de pruebas en Xray (Cloud o Server/DC), QMetry para Jira (QTM4J), AIO Tests y Zephyr Scale.
+"""Gestión de pruebas en Xray (Cloud o Server/DC), QMetry para Jira (QTM4J), AIO Tests, Zephyr Scale y k0lmenaTMT.
 
 Mismos comandos para todas las herramientas; cuál se usa sale de GESTION_HERRAMIENTA
 (.env de la raíz) o de --herramienta. Todo comando imprime un JSON con el resultado.
@@ -19,7 +19,7 @@ Comandos:
   publicar-resultados  --ciclo PROJ-60 --resultados <resultados.json> [--traza HU-001]
                        [--sin-video]
 
-Herramientas: xray-cloud | xray-dc | qtm4j | aio | zephyr-scale
+Herramientas: xray-cloud | xray-dc | qtm4j | aio | zephyr-scale | k0lmena-tmt
 --traza <nombre>: archivo de trazabilidad output/gestion/<nombre>-<herramienta>.json
 (qué CP-XXX es qué key). Por defecto, el valor de --historia.
 --dry-run: muestra los requests sin enviarlos (para revisar antes de tocar la herramienta real).
@@ -38,7 +38,7 @@ from comun import (DIR_GESTION, RAIZ, ErrorGestion, Trazabilidad, cargar_env, en
                    salida)
 import lectores  # noqa: E402
 
-HERRAMIENTAS = ("xray-cloud", "xray-dc", "qtm4j", "aio", "zephyr-scale")
+HERRAMIENTAS = ("xray-cloud", "xray-dc", "qtm4j", "aio", "zephyr-scale", "k0lmena-tmt")
 
 
 def crear_adaptador(nombre, dry_run):
@@ -53,6 +53,8 @@ def crear_adaptador(nombre, dry_run):
         from adaptadores.aio import AIO as Clase
     elif nombre == "zephyr-scale":
         from adaptadores.zephyr_scale import ZephyrScale as Clase
+    elif nombre == "k0lmena-tmt":
+        from adaptadores.k0lmena_tmt import K0lmenaTMT as Clase
     else:
         raise ErrorGestion(f"Herramienta desconocida '{nombre}'. Opciones: {', '.join(HERRAMIENTAS)}.")
     return Clase(proyecto, dry_run=dry_run)
@@ -117,6 +119,8 @@ def cmd_subir_casos(args, ad):
         traza.datos["hu"] = args.traza.upper()
     if args.historia:
         traza.datos["historia"] = args.historia
+    if hasattr(ad, "historia"):
+        ad.historia = args.historia  # k0lmenaTMT: la historia va como etiqueta del caso (no se conecta a Jira)
     carpeta_id = ad.crear_carpeta(args.carpeta)
     traza.datos["carpeta"] = {"ruta": args.carpeta, "id": carpeta_id}
 
@@ -178,6 +182,8 @@ def _traza_opcional(args, ad):
 
 def cmd_crear_ciclo(args, ad):
     traza = _traza_opcional(args, ad)
+    if hasattr(ad, "historia"):
+        ad.historia = args.historia  # k0lmenaTMT: va en la descripción del ciclo
     ciclo = ad.crear_ciclo(args.nombre, args.descripcion or "",
                            (traza.datos.get("carpeta") or {}).get("ruta") if traza else None)
     if args.historia:
@@ -252,7 +258,7 @@ def _key_del_resultado(resultado, traza, patron_key):
 def cmd_publicar_resultados(args, ad):
     traza = _traza_opcional(args, ad)
     resultados = json.loads(Path(args.resultados).read_text(encoding="utf-8"))
-    patron_key = rf"^{re.escape(ad.proyecto)}-(TC-|T)?\d+$"
+    patron_key = getattr(ad, "patron_key", None) or rf"^{re.escape(ad.proyecto)}-(TC-|T)?\d+$"
     ciclo = {"key": args.ciclo, "id": None}
     publicados, sin_caso, avisos = [], [], []
     for r in resultados:

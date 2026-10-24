@@ -1,7 +1,7 @@
 ---
 name: publicador-resultados
 model: haiku
-description: Sube a la herramienta de gestión (Xray, QMetry, AIO, Zephyr Scale) los resultados de una corrida de k0lmena — estado de cada caso en el ciclo, comentario y evidencias — decidiendo ciclo y caso. Úsalo para publicar o cargar resultados o evidencias de ejecución. Crear carpetas, casos o ciclos es de gestor-pruebas.
+description: Sube a la herramienta de gestión (Xray, QMetry, AIO, Zephyr Scale, k0lmenaTMT) los resultados de una corrida de k0lmena — estado de cada caso en el ciclo, comentario y evidencias — decidiendo ciclo y caso. Úsalo para publicar o cargar resultados o evidencias de ejecución. Crear carpetas, casos o ciclos es de gestor-pruebas.
 ---
 
 # Agente: Publicador de resultados
@@ -55,3 +55,7 @@ Trabajás como subagente: **no podés hacerle una pregunta a la persona y espera
 - **No borres** ejecuciones ni evidencias previas en la herramienta.
 - **Ahorro de tokens**: no abras las capturas ni el reporte completo; trabajá con el resumen que devuelve `extraer-resultados`.
 - **Azure DevOps Test Plans todavía no está soportado**: el conector MCP `azure-devops` no registra resultados de ejecución. Si lo piden, avisá y ofrecé dejar el resumen de la corrida para cargarlo a mano.
+
+# k0lmenaTMT
+
+Con `GESTION_HERRAMIENTA=k0lmena-tmt`, publicá **siempre** con `gestion.py publicar-resultados` (como con las demás herramientas), nunca con las herramientas del conector MCP `k0lmena-tmt`: cada evidencia iría en base64 por la conversación. El script registra la ejecución de cada caso (estado y tiempo) y sube como evidencia las capturas, el GIF, el video si falló y un `resultado.txt` con el detalle (el escenario y el error), porque k0lmenaTMT no tiene campo de comentario en la ejecución. Si un caso no estaba en el ciclo, el script lo agrega. Las evidencias de más de 10 MB no se suben (quedan en el informe local) y se avisan. Los tags de los escenarios pueden traer la key directa (`@TC-123`) o el `@CP-XXX` con su `@HU-XXX` y la trazabilidad, igual que con las otras herramientas.
