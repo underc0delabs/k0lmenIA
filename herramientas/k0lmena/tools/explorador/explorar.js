@@ -23,6 +23,7 @@
 // y videos/. La corrida anterior (con su analisis.json) pasa a historial/ (se guardan las últimas 5).
 const fs = require('fs');
 const path = require('path');
+const navegadorComun = require('../navegador/navegador');
 const { archivar } = require('../historial/historial.js');
 
 const RAIZ = path.resolve(__dirname, '..', '..', '..', '..');
@@ -414,7 +415,7 @@ async function main() {
   console.log(`Salida: ${path.relative(RAIZ, carpeta).split(path.sep).join('/')} (reemplaza la corrida anterior)`);
   const t0 = Date.now();
   const { chromium } = require('playwright'); // acá y no arriba: los tests usan las funciones sin instalar k0lmena
-  const browser = await chromium.launch({ headless: !a.headed });
+  const browser = await navegadorComun.lanzar(chromium, { headless: !a.headed });
   // Contexto con video: al cerrarlo, el video se guarda con un nombre legible.
   const nuevoContexto = (opciones) => browser.newContext({ ignoreHTTPSErrors: false, locale: process.env.LOCALE || 'es-AR', ...opciones,
     ...(a.video ? { recordVideo: { dir: path.join(dirVideos, 'tmp'), size: opciones.viewport } } : {}) });

@@ -27,6 +27,7 @@
 // capturas/, respaldo/, cambios.diff y verificacion/. Analizar de nuevo REEMPLAZA la carpeta.
 const fs = require('fs');
 const path = require('path');
+const navegadorComun = require('../navegador/navegador');
 const { archivar } = require('../historial/historial.js');
 const { spawnSync } = require('child_process');
 
@@ -607,7 +608,7 @@ async function main() {
   const rel = (p) => path.relative(carpeta, p).split(path.sep).join('/');
   console.log(`Reparador · ${fallas.length} escenario(s) web con fallas${a.historia ? ` de ${a.historia}` : ''} · origen: ${relRaiz(origen)}`);
   const { chromium } = require('playwright');
-  const browser = await chromium.launch();
+  const browser = await navegadorComun.lanzar(chromium);
   const reparaciones = [];
   for (const [i, f] of fallas.entries()) {
     process.stdout.write(`[${i + 1}/${fallas.length}] ${f.caso || ''} ${f.escenario} `);

@@ -67,7 +67,7 @@ Esta skill la usa **la conversación principal** (no un subagente: los subagente
 | Cobertura / trazabilidad     | analista-cobertura                                          |
 | Reportar un bug              | generador-reportes-bug · triador-bugs (duplicados)          |
 | Cierre de ronda / tablero    | generador-reporte-cierre · tablero-calidad                 |
-| Gestión (Xray/QMetry/AIO/ADO)| gestor-pruebas · publicador-resultados                     |
+| Gestión (Xray, Zephyr, etc.) | gestor-pruebas · publicador-resultados                     |
 +------------------------------+--------------------------------------------------------------+
 ```
 

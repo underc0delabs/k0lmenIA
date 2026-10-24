@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gestión de pruebas en Xray (Cloud o Server/DC), QMetry para Jira (QTM4J) y AIO Tests.
+"""Gestión de pruebas en Xray (Cloud o Server/DC), QMetry para Jira (QTM4J), AIO Tests y Zephyr Scale.
 
 Mismos comandos para todas las herramientas; cuál se usa sale de GESTION_HERRAMIENTA
 (.env de la raíz) o de --herramienta. Todo comando imprime un JSON con el resultado.
@@ -19,7 +19,7 @@ Comandos:
   publicar-resultados  --ciclo PROJ-60 --resultados <resultados.json> [--traza HU-001]
                        [--sin-video]
 
-Herramientas: xray-cloud | xray-dc | qtm4j | aio
+Herramientas: xray-cloud | xray-dc | qtm4j | aio | zephyr-scale
 --traza <nombre>: archivo de trazabilidad output/gestion/<nombre>-<herramienta>.json
 (qué CP-XXX es qué key). Por defecto, el valor de --historia.
 --dry-run: muestra los requests sin enviarlos (para revisar antes de tocar la herramienta real).
@@ -38,7 +38,7 @@ from comun import (DIR_GESTION, RAIZ, ErrorGestion, Trazabilidad, cargar_env, en
                    salida)
 import lectores  # noqa: E402
 
-HERRAMIENTAS = ("xray-cloud", "xray-dc", "qtm4j", "aio")
+HERRAMIENTAS = ("xray-cloud", "xray-dc", "qtm4j", "aio", "zephyr-scale")
 
 
 def crear_adaptador(nombre, dry_run):
@@ -51,6 +51,8 @@ def crear_adaptador(nombre, dry_run):
         from adaptadores.qtm4j import QTM4J as Clase
     elif nombre == "aio":
         from adaptadores.aio import AIO as Clase
+    elif nombre == "zephyr-scale":
+        from adaptadores.zephyr_scale import ZephyrScale as Clase
     else:
         raise ErrorGestion(f"Herramienta desconocida '{nombre}'. Opciones: {', '.join(HERRAMIENTAS)}.")
     return Clase(proyecto, dry_run=dry_run)
@@ -86,14 +88,18 @@ def casos_desde_args(args, traza, adaptador):
 
 
 def validar_keys(args):
-    """Las keys de historia, ciclo y casos van a JQL y a rutas de la API: solo el formato de una key."""
+    """Las keys de historia, ciclo y casos van a JQL y a rutas de la API: solo el formato de una key.
+    Los casos y ciclos de Zephyr Scale llevan una letra antes del número (PROJ-T12, PROJ-R5)."""
     patron = re.compile(r"^[A-Za-z][A-Za-z0-9_]*-\d+$")
-    for campo in ("historia", "ciclo"):
-        valor = getattr(args, campo, None)
-        if valor and not patron.match(valor):
-            raise ErrorGestion(f"--{campo} tiene que ser una key como PROJ-12 (recibí {valor!r}).")
+    patron_zephyr = re.compile(r"^[A-Za-z][A-Za-z0-9_]*-[TR]?\d+$")
+    historia = getattr(args, "historia", None)
+    if historia and not patron.match(historia):
+        raise ErrorGestion(f"--historia tiene que ser una key como PROJ-12 (recibí {historia!r}).")
+    ciclo = getattr(args, "ciclo", None)
+    if ciclo and not patron_zephyr.match(ciclo):
+        raise ErrorGestion(f"--ciclo tiene que ser una key como PROJ-12 (recibí {ciclo!r}).")
     for valor in lista(getattr(args, "casos", None)):
-        if not patron.match(valor):
+        if not patron_zephyr.match(valor):
             raise ErrorGestion(f"--casos: {valor!r} no es una key válida (ej. PROJ-45).")
 
 
@@ -246,7 +252,7 @@ def _key_del_resultado(resultado, traza, patron_key):
 def cmd_publicar_resultados(args, ad):
     traza = _traza_opcional(args, ad)
     resultados = json.loads(Path(args.resultados).read_text(encoding="utf-8"))
-    patron_key = rf"^{re.escape(ad.proyecto)}-(TC-)?\d+$"
+    patron_key = rf"^{re.escape(ad.proyecto)}-(TC-|T)?\d+$"
     ciclo = {"key": args.ciclo, "id": None}
     publicados, sin_caso, avisos = [], [], []
     for r in resultados:

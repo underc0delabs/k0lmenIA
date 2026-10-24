@@ -13,11 +13,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>k0lmenIA · Documentation</title>
-  <meta name="description" content="QA agents for Claude Code: test design, automation with k0lmena (web, API, mobile and performance) and integration with Xray, QMetry, AIO Tests and Azure DevOps.">
+  <meta name="description" content="QA agents for Claude Code: test design, automation with k0lmena (web, API, mobile and performance) and integration with Xray, QMetry, AIO Tests, Zephyr and Azure DevOps.">
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#0E0C09">
   <meta property="og:title" content="k0lmenIA · QA agents for Claude Code">
-  <meta property="og:description" content="Test design, automation with k0lmena and integration with Xray, QMetry, AIO Tests and Azure DevOps.">
+  <meta property="og:description" content="Test design, automation with k0lmena and integration with Xray, QMetry, AIO Tests, Zephyr and Azure DevOps.">
   <meta property="og:image" content="../assets/img/en/arquitectura.png">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23FFD60A'/%3E%3Cstop offset='1' stop-color='%23FF8A00'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon points='16,3 48,3 63,32 48,61 16,61 1,32' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='Saira,Segoe UI,Arial' font-size='26' font-weight='800' fill='%230E0C09' text-anchor='middle'%3Ek0%3C/text%3E%3C/svg%3E">
   <link rel="preload" href="../assets/fuentes/saira.woff2" as="font" type="font/woff2" crossorigin>
@@ -71,7 +71,7 @@
   <a href="#guia">Design and execution</a>
   <a href="#k0lmena">Automation with k0lmena</a>
   <a href="#performance">Performance</a>
-  <a href="#gestion">Xray, QMetry, AIO Tests and Azure DevOps</a>
+  <a href="#gestion">Xray, QMetry, AIO Tests, Zephyr and Azure DevOps</a>
   <a href="#base-de-datos">Database checks</a>
   <a href="#exploratorias">Exploratory testing</a>
   <a href="#accesibilidad">Accessibility</a>
@@ -115,15 +115,15 @@
   <div>
     <div class="k">Project documentation</div>
     <h1><span>k0lmenIA</span></h1>
-    <div class="l">QA agents for Claude Code: test design, automation with k0lmena and integration with Xray, QMetry, AIO Tests and Azure DevOps. The agents work in Spanish.</div>
-    <div class="chips"><span>79 agents</span><span>Web · API · Mobile · Performance</span><span>Playwright · Cucumber · Appium · k6 · Artillery · JMeter</span><span>Xray · QMetry · AIO Tests · Azure DevOps</span><span>Jira · Confluence · Figma</span><span>GitHub · GitLab · Bitbucket</span><span>Linear · ClickUp · monday · Asana · Trello · Notion</span><span>Slack · Teams</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Token-free suites</span></div>
+    <div class="l">QA agents for Claude Code: test design, automation with k0lmena and integration with Xray, QMetry, AIO Tests, Zephyr and Azure DevOps. The agents work in Spanish.</div>
+    <div class="chips"><span>79 agents</span><span>Web · API · Mobile · Performance</span><span>Playwright · Cucumber · Appium · k6 · Artillery · JMeter</span><span>Xray · QMetry · AIO Tests · Zephyr · Azure DevOps</span><span>Jira · Confluence · Figma</span><span>GitHub · GitLab · Bitbucket</span><span>Linear · ClickUp · monday · Asana · Trello · Notion</span><span>Slack · Teams</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Token-free suites</span></div>
   </div>
   <div class="p"><span>QARMY · Underc0de</span><span>github.com/underc0delabs/k0lmenIA</span><span>MIT License</span></div>
 </section>
 <section class="solo-impresion indice">
   <h2>Contents</h2>
   <ol>
-    <li><span>1</span>What is k0lmenIA</li><li><span>2</span>Architecture</li><li><span>3</span>How to use it</li><li><span>4</span>Agents</li><li><span>5</span>Requirements</li><li><span>6</span>Installation</li><li><span>7</span>Configuration: the .env file</li><li><span>8</span>Project documentation</li><li><span>9</span>Context research and missing information</li><li><span>10</span>Task guide: design and execution</li><li><span>11</span>Automation with k0lmena</li><li><span>12</span>Performance testing</li><li><span>13</span>Test management: Xray, QMetry, AIO Tests and Azure DevOps</li><li><span>14</span>Database checks</li><li><span>15</span>Exploratory testing</li><li><span>16</span>Accessibility</li><li><span>17</span>Web performance</li><li><span>18</span>Failure analysis</li><li><span>19</span>Server logs</li><li><span>20</span>Coverage and traceability</li><li><span>21</span>Visual regression (pixel perfect)</li><li><span>22</span>Cross-browser</li><li><span>23</span>Repairing the automation</li><li><span>24</span>Selecting cases for a change</li><li><span>25</span>Case review and estimated time</li><li><span>26</span>Charters and exploratory sessions</li><li><span>27</span>Emails</li><li><span>28</span>Translations and languages</li><li><span>29</span>Usability</li><li><span>30</span>Forms</li><li><span>31</span>Role permissions</li><li><span>32</span>Resilience</li><li><span>33</span>Bug triage and questions</li><li><span>34</span>Run history</li><li><span>35</span>Quality dashboard and report portal</li><li><span>36</span>Notifications and synthetic monitoring</li><li><span>37</span>Agent evals</li><li><span>38</span>Token usage</li><li><span>39</span>Onboarding</li><li><span>40</span>Web security</li><li><span>41</span>Streaming and cameras</li><li><span>42</span>MCP connectors</li><li><span>43</span>Conventions</li><li><span>44</span>Repository structure</li><li><span>45</span>Troubleshooting</li><li><span>46</span>Extending the project</li>
+    <li><span>1</span>What is k0lmenIA</li><li><span>2</span>Architecture</li><li><span>3</span>How to use it</li><li><span>4</span>Agents</li><li><span>5</span>Requirements</li><li><span>6</span>Installation</li><li><span>7</span>Configuration: the .env file</li><li><span>8</span>Project documentation</li><li><span>9</span>Context research and missing information</li><li><span>10</span>Task guide: design and execution</li><li><span>11</span>Automation with k0lmena</li><li><span>12</span>Performance testing</li><li><span>13</span>Test management: Xray, QMetry, AIO Tests, Zephyr and Azure DevOps</li><li><span>14</span>Database checks</li><li><span>15</span>Exploratory testing</li><li><span>16</span>Accessibility</li><li><span>17</span>Web performance</li><li><span>18</span>Failure analysis</li><li><span>19</span>Server logs</li><li><span>20</span>Coverage and traceability</li><li><span>21</span>Visual regression (pixel perfect)</li><li><span>22</span>Cross-browser</li><li><span>23</span>Repairing the automation</li><li><span>24</span>Selecting cases for a change</li><li><span>25</span>Case review and estimated time</li><li><span>26</span>Charters and exploratory sessions</li><li><span>27</span>Emails</li><li><span>28</span>Translations and languages</li><li><span>29</span>Usability</li><li><span>30</span>Forms</li><li><span>31</span>Role permissions</li><li><span>32</span>Resilience</li><li><span>33</span>Bug triage and questions</li><li><span>34</span>Run history</li><li><span>35</span>Quality dashboard and report portal</li><li><span>36</span>Notifications and synthetic monitoring</li><li><span>37</span>Agent evals</li><li><span>38</span>Token usage</li><li><span>39</span>Onboarding</li><li><span>40</span>Web security</li><li><span>41</span>Streaming and cameras</li><li><span>42</span>MCP connectors</li><li><span>43</span>Conventions</li><li><span>44</span>Repository structure</li><li><span>45</span>Troubleshooting</li><li><span>46</span>Extending the project</li>
   </ol>
 </section>
 
@@ -158,7 +158,7 @@
     <span class="tec"><i style="background:#5e6ad2"></i>Linear · ClickUp · monday · Asana · Trello · Notion · YouTrack · Shortcut</span>
     <span class="tec"><i style="background:#e01e5a"></i>Slack · Teams</span>
     <span class="tec"><i style="background:#e10098"></i>GraphQL · Bruno · Insomnia</span>
-    <span class="tec"><i style="background:#00c7b1"></i>Xray · QMetry · AIO Tests · Azure DevOps</span>
+    <span class="tec"><i style="background:#00c7b1"></i>Xray · QMetry · AIO Tests · Zephyr · Azure DevOps</span>
     <span class="tec"><i style="background:#4169e1"></i>PostgreSQL</span>
     <span class="tec"><i style="background:#4479a1"></i>MySQL · MariaDB</span>
     <span class="tec"><i style="background:#cc2927"></i>SQL Server</span>
@@ -183,7 +183,7 @@
   <div class="tarjetas">
     <div class="tarjeta c-violeta"><div class="ico">◆</div><h4>1 · Design</h4><p>Analyze stories, plan, write and review manual, BDD and API test cases (with their estimated time), generate data and charters, and write bug reports.</p><div class="salida">Saved in <code>output/</code></div></div>
     <div class="tarjeta c-verde"><div class="ico">▶</div><h4>2 · Automation</h4><p>The <i>mapper</i> agents write the automation once; after that it runs with <code>npm</code>, with no tokens.</p><div class="salida">Saved in <code>herramientas/k0lmena/</code></div></div>
-    <div class="tarjeta c-cian"><div class="ico">⇄</div><h4>3 · Management</h4><p>Test cases, cycles and results with evidence in Xray, QMetry or AIO Tests (test cases also in Azure DevOps), and the closing report.</p><div class="salida">Your tool + <code>output/</code></div></div>
+    <div class="tarjeta c-cian"><div class="ico">⇄</div><h4>3 · Management</h4><p>Test cases, cycles and results with evidence in Xray, QMetry, AIO Tests or Zephyr (test cases also in Azure DevOps), and the closing report.</p><div class="salida">Your tool + <code>output/</code></div></div>
   </div>
 
   <h3>Principles</h3>
@@ -219,7 +219,7 @@
     <tr><td>Agents</td><td>The "who": one specialist per task.</td><td><code>.claude/agents/</code></td></tr>
     <tr><td>Skills</td><td>The "how": knowledge loaded only when needed (design techniques, E2E and API execution, k0lmena conventions).</td><td><code>.claude/skills/</code></td></tr>
     <tr><td>Templates and scripts</td><td>Output format (test case spreadsheet, coverage, bug report) and deterministic HTML reports.</td><td><code>plantillas/</code> · <code>scripts/</code></td></tr>
-    <tr><td>Test management integration</td><td><code>gestion.py</code> with one adapter per tool: Xray Cloud, Xray Server/DC, QTM4J and AIO Tests. Azure DevOps goes through its MCP connector.</td><td><code>scripts/gestion/</code></td></tr>
+    <tr><td>Test management integration</td><td><code>gestion.py</code> with one adapter per tool: Xray Cloud, Xray Server/DC, QTM4J, AIO Tests and Zephyr Scale. Azure DevOps goes through its MCP connector.</td><td><code>scripts/gestion/</code></td></tr>
     <tr><td>MCP connectors</td><td>Playwright and Atlassian (Jira and Confluence) active; Azure DevOps, Figma, GitHub, GitLab, Linear, ClickUp, monday.com, Asana, Trello, Notion, YouTrack, Shortcut, Appium, QMetry, AIO Tests and k0lmenaTMT ready to enable. Pinned versions, no secrets in the file.</td><td><code>.mcp.json</code></td></tr>
     <tr><td>Tools</td><td>Newman for Postman collections and k0lmena for web, API, mobile and performance.</td><td><code>herramientas/</code></td></tr>
     <tr><td>Input and output</td><td>User inputs and generated artifacts, organized by type.</td><td><code>input/</code> · <code>output/</code></td></tr>
@@ -363,7 +363,7 @@
 
   <div class="subtitulo-grupo"><h3>Test management</h3></div>
   <div class="tarjetas">
-    <div class="tarjeta c-cian"><h4>gestor-pruebas</h4><p>Folders, test cases, links to the story and cycles in Xray, QMetry (QTM4J), AIO Tests or Azure DevOps Test Plans.</p><div class="usa"><b>Uses</b> scripts/gestion/gestion.py<br><b>Connectors</b> azure-devops (Azure Test Plans)</div><div class="salida">The tool + <code>output/gestion/</code></div></div>
+    <div class="tarjeta c-cian"><h4>gestor-pruebas</h4><p>Folders, test cases, links to the story and cycles in Xray, QMetry (QTM4J), AIO Tests, Zephyr Scale or Azure DevOps Test Plans.</p><div class="usa"><b>Uses</b> scripts/gestion/gestion.py<br><b>Connectors</b> azure-devops (Azure Test Plans)</div><div class="salida">The tool + <code>output/gestion/</code></div></div>
     <div class="tarjeta c-cian"><h4>publicador-resultados</h4><p>Uploads the <code>npm test</code> results to the cycle: status, error and evidence.</p><div class="usa"><b>Uses</b> scripts/gestion/gestion.py</div><div class="salida">The tool</div></div>
   </div>
   <div class="subtitulo-grupo"><h3>Skills: the "how" the agents use</h3></div>
@@ -490,7 +490,7 @@ npm run bootstrap:jmeter                           <span class="c"># performance
     <tr><td>Mobile</td><td><code>MOBILE_TARGET</code> <code>MOBILE_PLATFORM</code> <code>MOBILE_DEVICE_NAME</code> <code>MOBILE_APP</code> <code>MOBILE_UDID</code> <code>BROWSERSTACK_*</code></td><td>Where the mobile suite runs</td></tr>
     <tr><td>Performance</td><td><code>PERF_VUS</code> <code>PERF_DURACION</code></td><td>Override the load of the k6 scripts</td></tr>
     <tr><td>Databases</td><td><code>DB_CONEXIONES</code> + <code>DB_&lt;NAME&gt;_MOTOR</code> <code>_HOST</code> <code>_PUERTO</code> <code>_BASE</code> <code>_USUARIO</code> <code>_CLAVE</code> (or <code>_URL</code>) <code>_ESCRITURA</code> <code>_PRODUCCION</code></td><td>Database checks</td></tr>
-    <tr><td>Test management</td><td><code>GESTION_HERRAMIENTA</code> <code>GESTION_PROYECTO</code> + the tool's credentials</td><td>Xray, QMetry and AIO Tests</td></tr>
+    <tr><td>Test management</td><td><code>GESTION_HERRAMIENTA</code> <code>GESTION_PROYECTO</code> + the tool's credentials</td><td>Xray, QMetry, AIO Tests and Zephyr Scale</td></tr>
     <tr><td>Azure DevOps (MCP)</td><td><code>ADO_ORGANIZACION</code> <code>ADO_PAT</code> <code>ADO_PROYECTO</code></td><td>Boards, Wiki, Repos and Test Plans</td></tr>
     <tr><td>Role permissions</td><td><code>PERMISOS_ROLES</code> <code>PERMISOS_&lt;ROLE&gt;_USUARIO</code> <code>_CLAVE</code> <code>_TOKEN</code> <code>PERMISOS_LOGIN_URL</code></td><td>Roles tested by probador-permisos</td></tr>
     <tr><td>Notifications</td><td><code>SLACK_WEBHOOK_URL</code> <code>TEAMS_WEBHOOK_URL</code></td><td>Notifications to Slack and Teams (scripts/avisar.py)</td></tr>
@@ -579,7 +579,7 @@ npm run bootstrap:jmeter                           <span class="c"># performance
     <tr><td>Mapping report</td><td>Status <code>Falta información</code>. The mapper doesn't use the app to fill in the fact: what the app shows is recorded as an observation.</td></tr>
     <tr><td>k0lmena and execution reports</td><td>Visible note on the scenario and a warning in the summary.</td></tr>
     <tr><td>Closing report</td><td><b>Falta información</b> section; open items count as risk for the go/no-go.</td></tr>
-    <tr><td>Xray · QMetry · AIO</td><td>The result comment clarifies that the test case depends on missing information.</td></tr>
+    <tr><td>Xray · QMetry · AIO · Zephyr</td><td>The result comment clarifies that the test case depends on missing information.</td></tr>
   </table></div>
 </section>
 
@@ -730,23 +730,23 @@ npm run perf -- &lt;script&gt; load --vus 20 --duracion 2m   <span class="c"># k
 <!-- ======================================================= 11 MANAGEMENT -->
 <section class="seccion" id="gestion">
   <div class="kicker">Guides</div>
-  <h2>Xray, QMetry, AIO Tests and Azure DevOps</h2>
-  <p class="bajada"><b>gestor-pruebas</b> and <b>publicador-resultados</b> work with Xray Cloud, Xray Server/Data Center, QMetry for Jira (QTM4J) and AIO Tests, with the same commands for all of them.</p>
-  <p>It's configured in the <code>.env</code>: <code>GESTION_HERRAMIENTA</code> (<code>xray-cloud</code>, <code>xray-dc</code>, <code>qtm4j</code> or <code>aio</code>), <code>GESTION_PROYECTO</code> (the Jira project key) and your tool's credentials, explained in <code>.env.example</code>.</p>
+  <h2>Xray, QMetry, AIO Tests, Zephyr and Azure DevOps</h2>
+  <p class="bajada"><b>gestor-pruebas</b> and <b>publicador-resultados</b> work with Xray Cloud, Xray Server/Data Center, QMetry for Jira (QTM4J), AIO Tests and Zephyr Scale, with the same commands for all of them.</p>
+  <p>It's configured in the <code>.env</code>: <code>GESTION_HERRAMIENTA</code> (<code>xray-cloud</code>, <code>xray-dc</code>, <code>qtm4j</code>, <code>aio</code> or <code>zephyr-scale</code>), <code>GESTION_PROYECTO</code> (the Jira project key) and your tool's credentials, explained in <code>.env.example</code>.</p>
   <div class="guia"><h4>gestor-pruebas</h4>
     <div class="pedido">Subí los casos de HU-001 a Xray en la carpeta 'HU-001 Registro', vinculados a PROJ-12, y creá el ciclo Sprint 5.</div>
     <p><i>Upload the HU-001 test cases to Xray in the 'HU-001 Registro' folder, linked to PROJ-12, and create the Sprint 5 cycle.</i> Creates the folder, uploads the test cases (manual ones from the <code>.xlsx</code> or BDD ones from the <code>.feature</code>), links them to the story, creates cycles and adds test cases to them. The first time it does a dry run (<code>--dry-run</code>). It saves traceability in <code>output/gestion/HU-001-&lt;tool&gt;.json</code>: a test case is never uploaded twice.</p></div>
-  <div class="aviso info"><span class="ico">i</span><p><b>Estimated time.</b> Each test case is uploaded with its manual execution time: in the description and in the tool's time field — Jira's <i>Original Estimate</i> in Xray (if the project has time tracking), <code>estimatedTime</code> in QTM4J and <code>estimatedEffort</code> in AIO Tests. In Azure DevOps it travels in the JSON from <code>para_azure_devops.py</code> and as the tag <code>tiempo-estimado-Xmin</code>. If the tool rejects the field, the test case is still created with the time in the description (<code>GESTION_TIEMPO_NATIVO=0</code> turns it off). See <a href="#revision">the formula</a>.</p></div>
+  <div class="aviso info"><span class="ico">i</span><p><b>Estimated time.</b> Each test case is uploaded with its manual execution time: in the description and in the tool's time field — Jira's <i>Original Estimate</i> in Xray (if the project has time tracking), <code>estimatedTime</code> in QTM4J and Zephyr Scale and <code>estimatedEffort</code> in AIO Tests. In Azure DevOps it travels in the JSON from <code>para_azure_devops.py</code> and as the tag <code>tiempo-estimado-Xmin</code>. If the tool rejects the field, the test case is still created with the time in the description (<code>GESTION_TIEMPO_NATIVO=0</code> turns it off). See <a href="#revision">the formula</a>.</p></div>
   <div class="guia"><h4>publicador-resultados</h4>
     <div class="pedido">Subí los resultados de la última corrida web al ciclo PROJ-60.</div>
     <p><i>Upload the results of the last web run to cycle PROJ-60.</i> Matches each scenario to its test case by the <code>@CP-XXX</code> tag and loads the status, a comment with the error and the evidence: always a screenshot, a GIF if one was generated and video only if it failed. It never assigns a result by approximation.</p></div>
   <h3>Equivalences</h3>
   <div class="tabla"><table>
-    <tr><th style="width:18%">Concept</th><th>Xray</th><th>QTM4J</th><th>AIO Tests</th></tr>
-    <tr><td>Test case</td><td>Test issue (Manual or Cucumber)</td><td>Test case</td><td>Case (Classic or BDD)</td></tr>
-    <tr><td>Cycle</td><td>Test Execution</td><td>Test cycle</td><td>Test cycle</td></tr>
-    <tr><td>Case ↔ story</td><td>"Test" link (coverage)</td><td>Requirement link</td><td>jiraRequirementIDs</td></tr>
-    <tr><td>Cycle ↔ story</td><td>"Relates" link</td><td>Requirement link</td><td>jiraTaskIDs</td></tr>
+    <tr><th style="width:18%">Concept</th><th>Xray</th><th>QTM4J</th><th>AIO Tests</th><th>Zephyr Scale</th></tr>
+    <tr><td>Test case</td><td>Test issue (Manual or Cucumber)</td><td>Test case</td><td>Case (Classic or BDD)</td><td>Test case (steps or BDD script)</td></tr>
+    <tr><td>Cycle</td><td>Test Execution</td><td>Test cycle</td><td>Test cycle</td><td>Test cycle</td></tr>
+    <tr><td>Case ↔ story</td><td>"Test" link (coverage)</td><td>Requirement link</td><td>jiraRequirementIDs</td><td>links/issues</td></tr>
+    <tr><td>Cycle ↔ story</td><td>"Relates" link</td><td>Requirement link</td><td>jiraTaskIDs</td><td>links/issues</td></tr>
   </table></div>
   <h3>Manual commands</h3>
   <div class="codigo"><pre>python scripts/gestion/gestion.py --dry-run carpeta --ruta "HU-001 Registro"
@@ -755,6 +755,8 @@ python scripts/gestion/gestion.py crear-ciclo --nombre "Sprint 5" --historia PRO
 python scripts/gestion/gestion.py extraer-resultados --reporte &lt;cucumber-report.json&gt;
 python scripts/gestion/gestion.py publicar-resultados --ciclo PROJ-60 --resultados &lt;resultados.json&gt; --traza HU-001</pre></div>
   <p>Folders go without a leading slash (in Git Bash, <code>/HU-001</code> becomes a Windows path). Full reference in <code>scripts/gestion/README.md</code>.</p>
+  <h3>In the pipeline (CI)</h3>
+  <p>The k0lmena suites run on their own in the team's pipeline, with no agents and no tokens. <code>npm run ci -- generar --plataforma github|gitlab|jenkins|azure [--suite web|api|all]</code> puts the pipeline file in place (it never overwrites an existing one unless you pass <code>--forzar</code>): it installs k0lmena and Chromium, runs the suites, keeps the reports as an artifact and, if there is a <code>GESTION_CICLO</code>, publishes the results to the test management tool. The template holds no values: the whole <code>.env</code> goes in as a pipeline secret and arrives through <code>K0LMENA_ENV_FILE</code>. Details in <code>herramientas/ci/README.md</code>.</p>
   <h3>Azure DevOps (Test Plans)</h3>
   <p>Azure DevOps doesn't go through <code>gestion.py</code>: it's integrated through its official MCP connector (<code>azure-devops</code>), with <code>ADO_ORGANIZACION</code>, <code>ADO_PAT</code> and <code>ADO_PROYECTO</code> in the <code>.env</code>. The agents read the stories (with comments, tasks, parent and links) and the Wiki, and <b>gestor-pruebas</b> creates the <i>Test Cases</i> with their steps (built by <code>scripts/gestion/para_azure_devops.py</code>), links them to the story and adds them to a suite. Execution results aren't published to Azure DevOps yet.</p>
   <div class="pedido">Subí los casos de casos-HU-001.xlsx a Azure Test Plans, plan 'Sprint 5', suite 'HU-001 Registro', vinculados a la historia 1234.</div>
@@ -1395,6 +1397,7 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># one 
   <h2>Repository structure</h2>
   <div class="codigo arbol"><pre>k0lmenIA/
 ├── CLAUDE.md               <span class="c">Context and standards (Claude Code always reads it)</span>
+├── REFERENCIA.md           <span class="c">Each agent's output, scripts and file names (read on demand)</span>
 ├── ARQUITECTURA.md         <span class="c">How the repo grows</span>
 ├── CONECTORES.md           <span class="c">How to enable the MCP connectors</span>
 ├── CHANGELOG.md            <span class="c">Changes in each version</span>
@@ -1414,7 +1417,7 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># one 
 ├── output/                 <span class="c">What the agents generate</span>
 ├── plantillas/             <span class="c">Bug, test case spreadsheet, coverage, estimated time</span>
 ├── scripts/                <span class="c">Test cases, estimated time, review, charters, logs, documentation index, reports and doctor</span>
-│   ├── gestion/            <span class="c">Xray, QMetry (QTM4J), AIO Tests and test cases for Azure DevOps</span>
+│   ├── gestion/            <span class="c">Xray, QMetry (QTM4J), AIO Tests, Zephyr Scale and test cases for Azure DevOps</span>
 │   └── mcp/                <span class="c">MCP connector launchers (they read the .env)</span>
 └── herramientas/
     ├── newman/             <span class="c">Postman collections</span>
@@ -1436,6 +1439,7 @@ npm run metricas -- --nombre octubre --desde 2026-10-01   <span class="c"># one 
   <h2>Troubleshooting</h2>
   <details class="faq"><summary>What happens if the story is missing information?</summary><div>The agents first look for it in the comments, subtasks, epic, linked issues, Confluence and Figma. Whatever they don't find is recorded as <b>Missing information</b> (<code>FI-01</code>) with the question for the PO, and it's marked in the test cases, the <code>.feature</code> files and every report. It's never filled in with what the app does.</div></details>
   <details class="faq"><summary>I don't know what I'm missing to install or configure</summary><div>Run <code>npm run doctor</code>: it checks, section by section, Python, Node, k0lmena, Playwright, Newman, Java, Docker, the fonts, the <code>.env</code> (including that each integration is complete and consistent, without showing secrets), the enabled connectors, git and what the portal, the monitoring and the evals need, and tells you how to fix what's missing. With <code>--seccion</code> it checks only one part and with <code>--rapido</code> it skips the slow checks.</div></details>
+  <details class="faq"><summary>The app detects bots and blocks Playwright or the agents</summary><div>k0lmenIA doesn't try to get around the protection (Cloudflare, Akamai, DataDome, captcha…). When the app blocks the browser, the scenario is marked <b>Blocked: anti-bot</b> instead of Failed, also in the test management tool, and the agents stop and report it. The reliable fix is a QA exception from the app team: with <code>QA_BYPASS_HEADER</code> and <code>QA_BYPASS_TOKEN</code> in the <code>.env</code>, the header is sent only to the app's hosts. An IP allowlist or the captcha test keys also work. Meanwhile, <code>npm run login</code> opens your Chrome so you can solve it by hand, and <code>NAVEGADOR_CANAL=chrome</code> uses your installed Chrome. Guide for the app team: <code>herramientas/k0lmena/tools/navegador/README.md</code>.</div></details>
   <details class="faq"><summary>An agent returns "Necesito que confirmes" (I need you to confirm)</summary><div>That's on purpose: the agents run as subagents and can't ask you mid-task. Answer the questions and Claude resumes the same agent with your answers.</div></details>
   <details class="faq"><summary>A new agent doesn't show up</summary><div>Restart Claude Code: agents are loaded when the session starts.</div></details>
   <details class="faq"><summary>The web suite fails without a URL or clicks say "outside of the viewport"</summary><div>No URL: the root <code>.env</code> is missing (<code>cp .env.example .env</code>) or <code>BASEURL</code>/<code>APP_URL</code> is. The viewport issue is already fixed: if <code>VIEWPORT_WIDTH</code> and <code>VIEWPORT_HEIGHT</code> are empty, the window uses 1366x768. If a test fails because a locator changed, ask <b>reparador-automatizacion</b> to fix it.</div></details>

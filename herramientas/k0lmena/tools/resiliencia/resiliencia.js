@@ -27,6 +27,7 @@
 // corrida anterior pasa a historial/ (se guardan las últimas 5).
 const fs = require('fs');
 const path = require('path');
+const navegadorComun = require('../navegador/navegador');
 const { normalizar, slug, sello, cargar } = require('../explorador/explorar.js');
 const { descubrir } = require('../pixel-perfect/pixel-perfect.js');
 const { archivar } = require('../historial/historial.js');
@@ -347,7 +348,7 @@ async function main() {
   fs.mkdirSync(dirCap, { recursive: true });
   const relRaiz = (p) => path.relative(RAIZ, p).split(path.sep).join('/');
   const { chromium } = require('playwright'); // acá y no arriba: los tests usan las funciones sin instalar k0lmena
-  const browser = await chromium.launch({ headless: !a.headed });
+  const browser = await navegadorComun.lanzar(chromium, { headless: !a.headed });
   const t0 = Date.now();
   const ctx0 = await browser.newContext();
   const p0 = await ctx0.newPage();

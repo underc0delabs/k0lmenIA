@@ -41,6 +41,10 @@ SUITES = ["web", "api", "mobile"]
 
 # (categoría, patrón, sugerencia). El orden importa: gana la primera que coincide.
 REGLAS = [
+    ("Bloqueo anti-bots", r"BLOQUEO ANTI-BOTS",
+     "La protección anti-bots de la app (Cloudflare, Akamai, DataDome, captcha…) frenó al navegador: no es un bug de la app ni del test. "
+     "Pedí una excepción para QA (QA_BYPASS_HEADER / QA_BYPASS_TOKEN, IP o claves de prueba del captcha) o usá npm run login con SESION. "
+     "Guía: herramientas/k0lmena/tools/navegador/README.md"),
     ("Ambiente", r"ECONNREFUSED|ENOTFOUND|EAI_AGAIN|ECONNRESET|ECONNABORTED|ERR_NAME_NOT_RESOLVED|ERR_CONNECTION|ERR_INTERNET|"
                  r"net::ERR_|socket hang up|\b50[234]\b|Service Unavailable|Bad Gateway|Gateway Time-?out|ERR_CERT|certificate|"
                  r"browserType\.launch|Executable doesn't exist|session not created|Could not start a new session|Appium.*(not running|ECONN)",
@@ -64,7 +68,7 @@ SUGERENCIA.update({
     "Inestable (flaky)": "Falló y después pasó sin cambios: el test depende del tiempo, del orden o de datos compartidos. Hay que estabilizarlo (esperas, aislamiento de datos) antes de confiar en él.",
     "Sin clasificar": "El error no coincide con un patrón conocido: revisalo a mano con la evidencia.",
 })
-CATEGORIAS = ["Posible bug", "Inestable (flaky)", "Locator o espera", "Ambiente", "Datos de prueba",
+CATEGORIAS = ["Posible bug", "Inestable (flaky)", "Locator o espera", "Ambiente", "Bloqueo anti-bots", "Datos de prueba",
               "Error en la automatización", "Paso sin definir", "Sin clasificar"]
 
 
@@ -135,6 +139,9 @@ def leer_reporte(archivo, suite, historia=None):
             # Si el error vino en un hook (After), el detalle queda en los adjuntos de texto.
             if estado == "Fallido" and not error:
                 error = next((t for t in textos if t.startswith("ERROR") or "Error" in t[:80]), "")
+            bloqueo = next((t for t in textos if t.startswith("BLOQUEO ANTI-BOTS")), "")
+            if estado == "Fallido" and bloqueo:  # lo marca el hook de k0lmena (tools/navegador)
+                error = f"{bloqueo}\n\n{error}".strip()
             clave = f'{suite}:{f.get("uri", "")}:{esc.get("line")}:{esc.get("name")}'
             salida[clave] = {
                 "clave": clave, "suite": suite, "feature": f.get("name", ""), "uri": f.get("uri", ""), "linea": esc.get("line"),

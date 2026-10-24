@@ -1,0 +1,33 @@
+{
+  "agente": "generador-datos-prueba",
+  "descripcion": "Datos de prueba para el registro (HU-901). Trampas: la edad mínima se contradice (18/16), la contraseña 'segura' no tiene reglas y el nombre admite apóstrofe. Se esperan valores límite del usuario, FI-XX en lugar de reglas inventadas y 'A confirmar' en las filas afectadas.",
+  "pedido": "Usá el agente generador-datos-prueba para armar los datos de prueba del formulario de registro de la historia input/historias/HU-901-registro.md, en Markdown.",
+  "requiere": [".claude/agents/generador-datos-prueba.md"],
+  "insumos": [
+    {"desde": "insumos/HU-901-registro.md", "hacia": "input/historias/HU-901-registro.md"}
+  ],
+  "presupuesto_usd": 1.5,
+  "umbral": 80,
+  "chequeos": [
+    {"id": "archivo", "tipo": "existe", "descripcion": "Deja los datos en output/datos-de-prueba/datos-HU-901.md",
+     "archivos": ["output/datos-de-prueba/datos-HU-901*.md"], "peso": 2},
+    {"id": "limites", "tipo": "contiene", "descripcion": "Aplica valores límite (mín−1 y máx+1) a los campos con longitud",
+     "archivos": ["output/datos-de-prueba/datos-HU-901*.md"], "patrones": ["m[íi]n(imo)?\\s*[−-]\\s*1", "m[áa]x(imo)?\\s*\\+\\s*1"], "peso": 2},
+    {"id": "apostrofe", "tipo": "contiene", "descripcion": "Incluye un nombre con apóstrofe como válido (confirmado por la PO)",
+     "archivos": ["output/datos-de-prueba/datos-HU-901*.md"], "patrones": ["[A-Za-zÁÉÍÓÚáéíóúñ]['’][A-Za-zÁÉÍÓÚáéíóúñ]"]},
+    {"id": "falta-info", "tipo": "conteo", "descripcion": "Registra al menos 2 ítems de Falta información (edad y contraseña)",
+     "archivos": ["output/datos-de-prueba/datos-HU-901*.md"], "patron": "FI-\\d{2}", "min": 2, "distintos": true, "peso": 2},
+    {"id": "a-confirmar", "tipo": "contiene", "descripcion": "Las filas que dependen de una regla sin definir quedan como A confirmar (FI-XX)",
+     "archivos": ["output/datos-de-prueba/datos-HU-901*.md"], "patrones": ["A confirmar \\(FI-\\d{2}\\)", "^#+\\s*Falta informaci[óo]n"], "peso": 2},
+    {"id": "no-inventa-password", "tipo": "no_contiene", "descripcion": "No inventa reglas de contraseña (la historia solo dice 'segura')",
+     "archivos": ["output/datos-de-prueba/datos-HU-901*.md"],
+     "patrones": ["Rechazado:[^|\\n]{0,80}(may[úu]scula|s[íi]mbolo|car[áa]cter especial|sin n[úu]mero|8 caracteres|menos de 8)"], "peso": 2},
+    {"id": "tablas", "tipo": "tablas_normalizadas", "descripcion": "Pasa las tablas por formatear_tablas.py",
+     "archivos": ["output/datos-de-prueba/datos-HU-901*.md"]}
+  ],
+  "rubrica": [
+    "Los datos son plausibles para Latinoamérica y no relleno aleatorio.",
+    "Cada fila inválida rompe una sola regla, así se sabe qué se está probando.",
+    "No elige entre 16 y 18 años: lo deja a confirmar."
+  ]
+}

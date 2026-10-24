@@ -3,7 +3,7 @@
 Cada caso de prueba (manual o BDD) lleva un **tiempo estimado de ejecución manual**: cuánto tarda una persona que conoce la aplicación en ejecutarlo de punta a punta, con el ambiente listo. Lo calcula `scripts/estimacion.py` y aparece en:
 
 - la planilla de casos (`generar_casos.py`): columna **Tiempo estimado (min)**, con el total al pie, y en el `.md`;
-- la herramienta de gestión al subir los casos (`gestion.py subir-casos`): en la descripción de cada caso y, si la herramienta lo tiene, en su campo de tiempo —**Original Estimate** de Jira en Xray Cloud y Server/DC, **estimatedTime** en QTM4J, **estimatedEffort** en AIO Tests—; para Azure DevOps viaja en el JSON de `para_azure_devops.py` y como etiqueta;
+- la herramienta de gestión al subir los casos (`gestion.py subir-casos`): en la descripción de cada caso y, si la herramienta lo tiene, en su campo de tiempo —**Original Estimate** de Jira en Xray Cloud y Server/DC, **estimatedTime** en QTM4J y Zephyr Scale, **estimatedEffort** en AIO Tests—; para Azure DevOps viaja en el JSON de `para_azure_devops.py` y como etiqueta;
 - la selección de casos (`seleccionar_casos.py`) y el revisor de casos (`revisor-casos`).
 
 ## La fórmula

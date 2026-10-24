@@ -24,6 +24,7 @@
 // anterior pasa a historial/ (se guardan las últimas 5).
 const fs = require('fs');
 const path = require('path');
+const navegadorComun = require('../navegador/navegador');
 const { normalizar, slug, sello, recorrerScroll, cargar } = require('../explorador/explorar.js');
 const { parsearResoluciones, descubrir } = require('../pixel-perfect/pixel-perfect.js');
 const visual = require('../visual/comparar.js');
@@ -204,7 +205,7 @@ async function main() {
   const rel = (p) => path.relative(carpeta, p).split(path.sep).join('/');
   const relRaiz = (p) => path.relative(RAIZ, p).split(path.sep).join('/');
   const { chromium } = require('playwright');
-  const browser = await chromium.launch({ headless: !a.headed });
+  const browser = await navegadorComun.lanzar(chromium, { headless: !a.headed });
   const t0 = Date.now();
   const c0 = await browser.newContext();
   const paginas = await descubrir(await c0.newPage(), inicio, a);

@@ -22,6 +22,7 @@
 // la corrida anterior pasa a historial/ (se guardan las últimas 5). Solo navega con GET.
 const fs = require('fs');
 const path = require('path');
+const navegadorComun = require('../navegador/navegador');
 const { normalizar, slug, sello, recorrerScroll, cargar } = require('../explorador/explorar.js');
 const { parsearResoluciones, descubrir } = require('../pixel-perfect/pixel-perfect.js');
 const visual = require('../visual/comparar.js');
@@ -263,7 +264,7 @@ async function main() {
   const inicio = normalizar(url);
   const host = new URL(inicio).hostname;
   const { chromium } = require('playwright');
-  const browser = await chromium.launch({ headless: !a.headed });
+  const browser = await navegadorComun.lanzar(chromium, { headless: !a.headed });
   const ctx0 = await browser.newContext();
   const pag0 = await ctx0.newPage();
   await cargar(pag0, inicio).catch(() => {});

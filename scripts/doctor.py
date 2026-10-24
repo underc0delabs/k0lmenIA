@@ -57,6 +57,7 @@ VARIABLES_GESTION = {
     "xray-dc": ["GESTION_PROYECTO", "XRAY_DC_URL", "XRAY_DC_TOKEN|XRAY_DC_USER+XRAY_DC_PASSWORD"],
     "qtm4j": ["GESTION_PROYECTO", "QTM4J_API_KEY"],
     "aio": ["GESTION_PROYECTO", "AIO_API_TOKEN"],
+    "zephyr-scale": ["GESTION_PROYECTO", "ZEPHYR_API_TOKEN", "JIRA_BASE_URL", "JIRA_EMAIL", "JIRA_API_TOKEN"],
 }
 # Conector que necesita cada proveedor del repositorio de la app (documentador-proyecto).
 CONECTOR_REPO = {"github": "github", "gitlab": "gitlab", "azure-repos": "azure-devops", "bitbucket": "atlassian"}
@@ -290,7 +291,7 @@ def revisar_env(ctx):
     herramienta = env.get("GESTION_HERRAMIENTA", "")
     if herramienta:
         if herramienta not in VARIABLES_GESTION:
-            linea(FALTA, f"GESTION_HERRAMIENTA={herramienta} no es válida", "Usá xray-cloud, xray-dc, qtm4j o aio")
+            linea(FALTA, f"GESTION_HERRAMIENTA={herramienta} no es válida", "Usá xray-cloud, xray-dc, qtm4j, aio o zephyr-scale")
         else:
             faltan = faltantes(VARIABLES_GESTION[herramienta], env)
             if faltan:
@@ -315,6 +316,39 @@ def revisar_env(ctx):
         linea(FALTA, f"SEGURIDAD_URLS_AUTORIZADAS tiene {len(malas)} URL(s) inválida(s)", "Separadas por coma, con http:// o https://")
     elif autorizadas:
         linea(OK, f"Seguridad web: {len(autorizadas)} URL(s) autorizada(s)")
+    _revisar_navegador(env, archivo)
+
+
+def _revisar_navegador(env, archivo):
+    """Canal y bypass anti-bots (herramientas/k0lmena/tools/navegador): las mismas reglas que navegador.js."""
+    canal = (env.get("NAVEGADOR_CANAL") or "").strip().lower()
+    if canal:
+        if canal not in ("chrome", "chrome-beta", "msedge", "msedge-beta"):
+            linea(FALTA, f"NAVEGADOR_CANAL={canal} no es válido", "Usá chrome o msedge (o dejalo vacío)")
+        elif canal.startswith("chrome") and not _chrome_instalado():
+            linea(AVISO, "NAVEGADOR_CANAL=chrome, pero no encuentro Google Chrome instalado", "Instalalo o dejá la variable vacía")
+        else:
+            linea(OK, f"Navegador: {canal}")
+    nombre, token = (env.get("QA_BYPASS_HEADER") or "").strip(), (env.get("QA_BYPASS_TOKEN") or "").strip()
+    if nombre or token:
+        if not (nombre and token):
+            linea(FALTA, "Bypass anti-bots incompleto: hacen falta QA_BYPASS_HEADER y QA_BYPASS_TOKEN", f"Completá las dos en {archivo.name}")
+        elif not re.fullmatch(r"[A-Za-z0-9-]{1,64}", nombre):
+            linea(FALTA, f"QA_BYPASS_HEADER={nombre} no es un nombre de header válido", "Solo letras, números y guiones")
+        elif not (env.get("QA_BYPASS_HOSTS") or env.get("APP_URL") or env.get("BASEURL")):
+            linea(FALTA, "Bypass anti-bots sin hosts: falta APP_URL o QA_BYPASS_HOSTS", "El header se manda solo a esos hosts")
+        else:
+            linea(OK, f"Bypass anti-bots: header {nombre} (solo a los hosts de la app)")
+
+
+def _chrome_instalado():
+    if shutil.which("google-chrome") or shutil.which("google-chrome-stable") or shutil.which("chrome"):
+        return True
+    candidatos = [Path("/Applications/Google Chrome.app")]
+    for base in (os.environ.get("PROGRAMFILES"), os.environ.get("PROGRAMFILES(X86)"), os.environ.get("LOCALAPPDATA")):
+        if base:
+            candidatos.append(Path(base) / "Google" / "Chrome" / "Application" / "chrome.exe")
+    return any(c.exists() for c in candidatos)
 
 
 def revisar_integraciones(ctx):

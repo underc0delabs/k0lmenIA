@@ -30,6 +30,7 @@
 // Deja en input/documentacion/proyecto/ (o --salida) mapa-funcional.json y mapa-funcional.md.
 const fs = require('fs');
 const path = require('path');
+const navegadorComun = require('../navegador/navegador');
 const { normalizar, recorrerScroll, cargar } = require('../explorador/explorar.js');
 const { descubrir } = require('../pixel-perfect/pixel-perfect.js');
 const { extraerFormularios } = require('../formularios/formularios.js');
@@ -286,7 +287,7 @@ async function main() {
   fs.mkdirSync(carpeta, { recursive: true });
 
   const { chromium } = require('playwright'); // acá y no arriba: los tests usan las funciones sin instalar k0lmena
-  const browser = await chromium.launch({ headless: !a.headed });
+  const browser = await navegadorComun.lanzar(chromium, { headless: !a.headed });
   const sesion = a.sinSesion ? null : sesionActiva(process.env.SESION, (m) => console.log(m));
   const ctx = await browser.newContext({ viewport: { width: 1366, height: 900 }, locale: process.env.LOCALE || 'es-AR',
     ...(sesion ? { storageState: sesion } : {}) });

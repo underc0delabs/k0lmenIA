@@ -28,6 +28,7 @@
 // zonas ocultas con las que se creó la referencia. Solo navega con GET.
 const fs = require('fs');
 const path = require('path');
+const navegadorComun = require('../navegador/navegador');
 const { archivar } = require('../historial/historial.js');
 const { normalizar, slug, sello, NO_RECORRER, ARCHIVO, recorrerScroll, cargar } = require('../explorador/explorar.js');
 const visual = require('../visual/comparar.js');
@@ -282,7 +283,7 @@ async function main() {
   const rel = (p) => path.relative(carpeta, p).split(path.sep).join('/');
 
   const pw = require('playwright');
-  const browser = await pw[a.navegador].launch({ headless: !a.headed });
+  const browser = await navegadorComun.lanzar(pw[a.navegador], { headless: !a.headed, channel: undefined }); // siempre el mismo motor: las referencias no cambian con NAVEGADOR_CANAL
   const t0 = Date.now();
   const resoluciones = parsearResoluciones(a.resoluciones || (ref && ref.config && ref.config.resoluciones) || '390x844,1366x768');
   let paginas;

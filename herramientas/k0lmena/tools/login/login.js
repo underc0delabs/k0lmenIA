@@ -11,9 +11,13 @@
 //   npm run login -- --url https://mi-app.com/ingresar
 //
 // Cuando termines de loguearte, volvé a la terminal y apretá Enter (o cerrá el navegador).
+//
+// Si la app tiene protección anti-bots (Cloudflare, DataDome, captcha…), este es el plan B: abre tu Google
+// Chrome instalado (o el de NAVEGADOR_CANAL), resolvés el desafío o el captcha a mano y la sesión queda guardada.
 // El archivo de sesión equivale a una contraseña: está en .gitignore y no se comparte.
 const fs = require('fs');
 const path = require('path');
+const navegadorComun = require('../navegador/navegador');
 const readline = require('readline');
 const { archivoSesion, RAIZ } = require('./sesion');
 
@@ -66,7 +70,17 @@ async function main() {
   const relativo = path.relative(RAIZ, archivo).split(path.sep).join('/');
 
   const { chromium } = require('playwright');
-  const browser = await chromium.launch({ headless: false });
+  // Con ventana y, si no se pidió otro canal, el Google Chrome instalado: es el navegador con el que una persona
+  // resuelve el desafío o el captcha. Si no está, el Chromium de Playwright.
+  const canalPedido = (process.env.NAVEGADOR_CANAL || '').trim();
+  let browser;
+  try {
+    browser = await navegadorComun.lanzar(chromium, canalPedido ? { headless: false } : { headless: false, channel: 'chrome' });
+  } catch (e) {
+    if (canalPedido) throw e;
+    browser = await navegadorComun.lanzar(chromium, { headless: false });
+    console.log('No encontré Google Chrome instalado: uso el Chromium de Playwright.');
+  }
   const enter = esperarEnter();
   try {
     const context = await browser.newContext({
@@ -96,6 +110,12 @@ async function main() {
     if (cookies === 0 && origenes === 0) {
       console.log('Ojo: no se guardó ninguna cookie ni dato local. ¿Llegaste a iniciar sesión?');
     }
+    const antibots = cookiesAntibots(estado.cookies);
+    if (antibots.length) {
+      console.log(`La sesión incluye cookies de la protección anti-bots (${antibots.join(', ')}). Suelen durar poco y`);
+      console.log('valen solo para el mismo navegador e IP: corré las pruebas con el mismo NAVEGADOR_CANAL (chrome) y desde');
+      console.log(`la misma red. Si igual las frena, pedí la excepción para QA (${navegadorComun.GUIA}).`);
+    }
     const valor = opts.nombre || 'si';
     console.log(`Para usarla en npm test y en el navegador de los agentes: SESION=${valor} en el .env`);
     console.log('(el navegador de los agentes toma el cambio al reiniciar Claude Code).');
@@ -113,4 +133,11 @@ if (require.main === module) {
   });
 }
 
-module.exports = { argumentos };
+// Cookies que dejan los desafíos anti-bots al resolverse (Cloudflare, DataDome, HUMAN, Akamai, Imperva, AWS WAF).
+const COOKIES_ANTIBOTS = [/^cf_clearance$/, /^__cf_bm$/, /^datadome$/, /^_px(3|hd|vid)$/, /^_abck$/, /^bm_sv$/, /^ak_bmsc$/,
+  /^incap_ses_/, /^reese84$/, /^aws-waf-token$/];
+function cookiesAntibots(cookies) {
+  return [...new Set((cookies || []).map((c) => c.name).filter((n) => COOKIES_ANTIBOTS.some((re) => re.test(n))))];
+}
+
+module.exports = { argumentos, cookiesAntibots };

@@ -24,6 +24,11 @@ import * as path from "path";
 import { consumeHealingEvents, flushHealingHistory } from "../utils/autoHealing";
 import { crearGif, htmlGif, modoEvidencia } from "../../tools/evidencia/gif";
 const { sesionActiva } = require("../../tools/login/sesion");
+// Canal (Chrome/Edge), ritmo humano, header de bypass para la app y detección de bloqueos anti-bots.
+const navegadorComun = require("../../tools/navegador/navegador");
+
+// Marca que lee scripts/gestion (y el análisis de fallos) para tratar el escenario como Bloqueado, no Fallido.
+const MARCA_BLOQUEO = "BLOQUEO ANTI-BOTS";
 
 setDefaultTimeout(60 * 1000);
 
@@ -177,7 +182,7 @@ BeforeAll(async function () {
   const slowMo = intFromEnv("SLOWMO", 0);
 
   for (const browserType of browserTypes) {
-    const b = await browserType.launch({ headless, slowMo });
+    const b = await navegadorComun.lanzar(browserType, { headless, slowMo });
     browsers.push(b);
   }
 });
@@ -256,6 +261,25 @@ AfterStep(async function ({ result, pickle }) {
   }
 
   if (!result || result.status !== Status.FAILED) return;
+
+  // ¿Falló porque la app frenó al navegador (desafío, captcha, acceso denegado)? Entonces no es un bug.
+  for (const page of pages) {
+    const bloqueo =
+      (await navegadorComun.detectarEnPagina(page)) ??
+      navegadorComun.bloqueos.find((b: { url: string }) => b.url === page.url()) ??
+      null;
+    if (bloqueo) {
+      await this.attach(
+        `${MARCA_BLOQUEO}: ${bloqueo.proveedor} (${bloqueo.tipo}) en ${page.url()}
+` +
+          `El paso falló porque la protección anti-bots de la app frenó al navegador automatizado; no es un bug de la app.
+` +
+          `Qué hacer: pedí una excepción para QA (QA_BYPASS_HEADER / QA_BYPASS_TOKEN, IP o claves de prueba del captcha) ` +
+          `o usá npm run login con SESION en el .env. Guía: ${navegadorComun.GUIA}`,
+        "text/plain"
+      );
+    }
+  }
 
   const reportRoot = getReportRootAbs();
   const screenshotsDir = await ensureDirAbs(path.join(reportRoot, "screenshots"));

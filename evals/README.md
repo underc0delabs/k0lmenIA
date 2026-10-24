@@ -42,6 +42,19 @@ Cada caso le da a un agente un insumo con **trampas deliberadas** (una ambigüed
 |                                |                            | i18n, encabezado para el índice y **no   |
 |                                |                            | copia secretos**                         |
 +--------------------------------+----------------------------+------------------------------------------+
+| `datos-hu-registro`            | `generador-datos-prueba`   | Valores límite (mín−1, máx+1), nombre    |
+|                                |                            | con apóstrofe, FI-XX y `A confirmar` en  |
+|                                |                            | edad y contraseña; no inventa reglas de  |
+|                                |                            | contraseña                               |
++--------------------------------+----------------------------+------------------------------------------+
+| `revision-codigo-repo-demo`    | `revisor-codigo`           | Detecta que `EDAD_MINIMA` no se valida,  |
+|                                |                            | señala las credenciales versionadas,     |
+|                                |                            | `RC-XX` y **no copia secretos**          |
++--------------------------------+----------------------------+------------------------------------------+
+| `triage-cupon-regresion`       | `triador-bugs`             | Marca la posible regresión del bug       |
+|                                |                            | cerrado, no confunde el bug de login,    |
+|                                |                            | Conclusión del triador con severidad     |
++--------------------------------+----------------------------+------------------------------------------+
 ```
 
 ## Cómo se corren
@@ -55,7 +68,7 @@ python scripts/evaluar_agentes.py --correr --caso analista-hu-registro --modelo 
 
 `--correr` hace tres cosas por caso:
 
-1. **Prepara un workspace aislado**, fuera del repo (en la carpeta temporal del sistema, o en `--trabajo`): una copia de `CLAUDE.md`, `AGENTES.md`, `.claude/`, `plantillas/` y `scripts/`, con `input/` y `output/` vacíos, los insumos del caso y un `.env` propio. Tu `input/` y tu `output/` nunca se tocan.
+1. **Prepara un workspace aislado**, fuera del repo (en la carpeta temporal del sistema, o en `--trabajo`): una copia de `CLAUDE.md`, `AGENTES.md`, `REFERENCIA.md`, `.claude/`, `plantillas/` y `scripts/`, con `input/` y `output/` vacíos, los insumos del caso y un `.env` propio. Tu `input/` y tu `output/` nunca se tocan.
 2. **Corre el agente** con Claude Code en modo headless, dentro del workspace:
    `claude -p "<pedido>" --output-format json --permission-mode acceptEdits --allowedTools "Read,Write,Edit,Glob,Grep,Agent,…,Bash(python:*)" --max-budget-usd <tope> --strict-mcp-config --setting-sources project`.
    Solo puede leer y escribir archivos y correr los scripts de Python; no usa conectores MCP ni tu configuración personal, y cada caso tiene un tope de gasto (`presupuesto_usd` del caso, o `--presupuesto-usd`).

@@ -1,0 +1,32 @@
+{
+  "agente": "triador-bugs",
+  "descripcion": "Triage de la observación del cupón con dos bugs locales previos: BUG-004 (cerrado) es el mismo problema, así que tiene que salir como posible regresión; BUG-005 (login) no tiene nada que ver y no puede quedar como duplicado. Sin conectores: no se crea ni se vincula nada.",
+  "pedido": "Usá el agente triador-bugs para hacer el triage de la observación input/bugs/observacion-cupon.md antes de cargarla (nombre del triage: cupon). No hay conectores activos: compará solo contra los bugs locales y no crees ni vincules nada.",
+  "requiere": [".claude/agents/triador-bugs.md", "scripts/buscar_duplicados.py"],
+  "insumos": [
+    {"desde": "insumos/observacion-cupon.md", "hacia": "input/bugs/observacion-cupon.md"},
+    {"desde": "insumos/bugs-previos/BUG-004.md", "hacia": "output/reportes-bug/BUG-004.md"},
+    {"desde": "insumos/bugs-previos/BUG-005.md", "hacia": "output/reportes-bug/BUG-005.md"}
+  ],
+  "presupuesto_usd": 1.5,
+  "umbral": 80,
+  "chequeos": [
+    {"id": "archivo", "tipo": "existe", "descripcion": "Corre buscar_duplicados.py y deja triage.json y triage.md en output/triage/<nombre>/",
+     "archivos": ["output/triage/*/triage.json", "output/triage/*/triage.md"], "min": 2, "peso": 2},
+    {"id": "regresion", "tipo": "contiene", "descripcion": "Señala que es una posible regresión del BUG-004 (cerrado)",
+     "archivos": ["output/triage/*/triage.md"], "patrones": ["BUG-004", "regresi[óo]n"], "peso": 3},
+    {"id": "conclusion", "tipo": "contiene", "descripcion": "Agrega la sección Conclusión del triador con la tabla por bug",
+     "archivos": ["output/triage/*/triage.md"], "patrones": ["Conclusi[óo]n del triador", "Severidad", "Prioridad"], "peso": 2},
+    {"id": "severidad", "tipo": "contiene", "descripcion": "Sugiere severidad alta o crítica (descuento acumulable: se pierde plata)",
+     "archivos": ["output/triage/*/triage.md"], "patrones": ["Conclusi[óo]n del triador[\\s\\S]*(Alta|Cr[íi]tica)"]},
+    {"id": "login-distinto", "tipo": "no_contiene", "descripcion": "No marca el bug de login (BUG-005) como duplicado ni regresión",
+     "archivos": ["output/triage/*/triage.md"], "patrones": ["BUG-005[^\\n]{0,200}(Duplicado probable|regresi[óo]n)"], "peso": 2},
+    {"id": "tablas", "tipo": "tablas_normalizadas", "descripcion": "Pasa las tablas por formatear_tablas.py",
+     "archivos": ["output/triage/*/triage.md"]}
+  ],
+  "rubrica": [
+    "El veredicto explica por qué es una regresión (mismo síntoma, BUG-004 cerrado) y no solo cita el puntaje.",
+    "El criterio de severidad y prioridad está justificado con el impacto (descuento acumulable).",
+    "No afirma haber creado, vinculado ni comentado nada en una herramienta externa."
+  ]
+}

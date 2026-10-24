@@ -1,0 +1,74 @@
+// k0lmena en CI (Jenkins, pipeline declarativo). Generado con: npm run ci -- generar --plataforma jenkins
+//
+// Corre las suites de k0lmena sin agentes ni tokens, guarda los reportes como artefacto y, si hay
+// ciclo (GESTION_CICLO), publica los resultados en Xray, QMetry, AIO Tests o Zephyr.
+//
+// Configuración:
+//   - Credencial de tipo *Secret file* con id "k0lmenia-env": el contenido de tu .env (APP_URL,
+//     GESTION_HERRAMIENTA, GESTION_PROYECTO y los tokens de la herramienta de gestión).
+//   - El agente necesita Node.js 20+ y Python 3 (y permisos para instalar las dependencias de Playwright).
+//   - GESTION_CICLO (parámetro, opcional): key del ciclo donde publicar (ej. PROJ-60).
+// Nunca pongas valores en este archivo.
+
+pipeline {
+  agent any
+
+  options {
+    timeout(time: 60, unit: 'MINUTES')
+  }
+
+  parameters {
+    string(name: 'GESTION_CICLO', defaultValue: '', description: 'Ciclo donde publicar los resultados (vacío = no publica)')
+  }
+
+  environment {
+    K0LMENA_SUITES = '__SUITES__'
+    GESTION_CICLO = "${params.GESTION_CICLO}"
+  }
+
+  stages {
+    stage('Dependencias de k0lmena y navegador') {
+      steps {
+        sh 'npm ci --prefix herramientas/k0lmena'
+        sh 'cd herramientas/k0lmena && npx playwright install --with-deps chromium'
+      }
+    }
+
+    stage('Suites de k0lmena') {
+      steps {
+        withCredentials([file(credentialsId: 'k0lmenia-env', variable: 'K0LMENA_ENV_FILE')]) {
+          script {
+            def estado = sh(returnStatus: true, script: '''
+              estado=0
+              for suite in $K0LMENA_SUITES; do npm run test:$suite || estado=1; done
+              exit $estado
+            ''')
+            if (estado != 0) {
+              currentBuild.result = 'FAILURE'
+            }
+          }
+        }
+      }
+    }
+
+    stage('Publicar resultados en la herramienta de gestión') {
+      when {
+        expression { return env.GESTION_CICLO?.trim() }
+      }
+      steps {
+        withCredentials([file(credentialsId: 'k0lmenia-env', variable: 'K0LMENA_ENV_FILE')]) {
+          sh '''
+            python3 -m venv .venv-ci && .venv-ci/bin/pip install -q -r requirements.txt
+            .venv-ci/bin/python herramientas/ci/ci.py publicar --suites "$K0LMENA_SUITES"
+          '''
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      archiveArtifacts artifacts: 'herramientas/k0lmena/reports/**, output/gestion/**', allowEmptyArchive: true
+    }
+  }
+}

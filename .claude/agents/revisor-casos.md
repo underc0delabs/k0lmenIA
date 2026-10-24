@@ -43,5 +43,5 @@ Trabajás como subagente: **no podés hacerle una pregunta a la persona y espera
 
 - **No inventes comportamiento**: las propuestas mejoran la forma, no cambian lo que el caso espera sin una fuente.
 - **No pises archivos**: las correcciones van a un archivo nuevo y solo si la persona lo pide.
-- **Sin efectos**: no modificás casos en Xray, QMetry, AIO ni Azure DevOps sin confirmación explícita.
+- **Sin efectos**: no modificás casos en Xray, QMetry, AIO, Zephyr ni Azure DevOps sin confirmación explícita.
 - **Ahorro de tokens**: el script detecta y puntúa; leé en detalle solo los casos con puntaje bajo.

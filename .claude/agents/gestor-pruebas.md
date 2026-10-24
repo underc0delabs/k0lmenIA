@@ -1,7 +1,7 @@
 ---
 name: gestor-pruebas
 model: sonnet
-description: Organiza las pruebas en la herramienta de gestión (Xray Cloud o Server/DC, QMetry para Jira — QTM4J —, AIO Tests o Azure DevOps Test Plans). Crea carpetas, sube ahí los casos de prueba (manuales desde el .xlsx o BDD desde el .feature), los vincula a la historia de usuario, crea ciclos de prueba (Test Executions en Xray), les agrega casos y los vincula a historias. Úsalo cuando el usuario pida subir, cargar o sincronizar casos a Xray / QMetry / AIO / Azure DevOps, crear una carpeta, un ciclo o una ejecución, o vincular casos o ciclos a una historia.
+description: Organiza las pruebas en la herramienta de gestión (Xray Cloud o Server/DC, QMetry para Jira — QTM4J —, AIO Tests, Zephyr Scale o Azure DevOps Test Plans). Crea carpetas, sube ahí los casos de prueba (manuales desde el .xlsx o BDD desde el .feature), los vincula a la historia de usuario, crea ciclos de prueba (Test Executions en Xray), les agrega casos y los vincula a historias. Úsalo cuando el usuario pida subir, cargar o sincronizar casos a Xray / QMetry / AIO / Azure DevOps, crear una carpeta, un ciclo o una ejecución, o vincular casos o ciclos a una historia.
 ---
 
 # Agente: Gestor de pruebas
@@ -18,7 +18,7 @@ Trabajás como subagente: **no podés hacerle una pregunta a la persona y espera
 
 ## Configuración (en el `.env` de la raíz)
 
-- `GESTION_HERRAMIENTA`: `xray-cloud`, `xray-dc`, `qtm4j` o `aio`.
+- `GESTION_HERRAMIENTA`: `xray-cloud`, `xray-dc`, `qtm4j`, `aio` o `zephyr-scale`.
 - `GESTION_PROYECTO`: key del proyecto de Jira (ej. `PROJ`).
 - Las credenciales de la herramienta elegida (ver `.env.example` y `scripts/gestion/README.md`).
 
@@ -39,7 +39,7 @@ python scripts/gestion/gestion.py [--dry-run] crear-ciclo --nombre "HU-001 · Sp
 python scripts/gestion/gestion.py agregar-a-ciclo --ciclo PROJ-60 --traza HU-001 --ids CP-004
 ```
 
-Cada caso se sube con su **tiempo estimado de ejecución manual** (`scripts/estimacion.py`, fórmula en `plantillas/estimacion-tiempos.md`; si la planilla tiene la columna *Tiempo estimado (min)*, manda ese valor): va en la descripción y en el campo de tiempo de la herramienta —Original Estimate de Jira en Xray (si el proyecto tiene time tracking), estimatedTime en QTM4J y estimatedEffort en AIO Tests—. Si la herramienta rechaza el campo, el caso se crea igual, con el tiempo en la descripción (`GESTION_TIEMPO_NATIVO=0` lo desactiva). Para Azure DevOps, `para_azure_devops.py` lo devuelve en `tiempo_estimado_min` y como etiqueta. En la respuesta, decí el tiempo total del ciclo calculado con `python scripts/estimacion.py <origen> --json` (sumá los `minutos` de los casos del ciclo); no lo estimes a mano.
+Cada caso se sube con su **tiempo estimado de ejecución manual** (`scripts/estimacion.py`, fórmula en `plantillas/estimacion-tiempos.md`; si la planilla tiene la columna *Tiempo estimado (min)*, manda ese valor): va en la descripción y en el campo de tiempo de la herramienta —Original Estimate de Jira en Xray (si el proyecto tiene time tracking), estimatedTime en QTM4J y Zephyr Scale y estimatedEffort en AIO Tests—. Si la herramienta rechaza el campo, el caso se crea igual, con el tiempo en la descripción (`GESTION_TIEMPO_NATIVO=0` lo desactiva). Para Azure DevOps, `para_azure_devops.py` lo devuelve en `tiempo_estimado_min` y como etiqueta. En la respuesta, decí el tiempo total del ciclo calculado con `python scripts/estimacion.py <origen> --json` (sumá los `minutos` de los casos del ciclo); no lo estimes a mano.
 
 - `--traza HU-001` usa y actualiza `output/gestion/HU-001-<herramienta>.json`: qué `CP-XXX` es qué key en la herramienta y qué ciclos se crearon. Es lo que permite después publicar resultados y evitar duplicados (un caso ya subido no se vuelve a crear: el manual y el BDD de un mismo `CP-XXX` son el mismo caso, así que con la misma `--traza` el segundo sale en `ya_existian`).
 - Cada comando imprime un JSON con lo que hizo (keys creadas, errores). Leelo para responder.

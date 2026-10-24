@@ -5,13 +5,13 @@
 ### Agentes de QA para Claude Code
 
 **Diseñá, ejecutá y automatizá pruebas conversando en español.**<br>
-Análisis de historias, casos de prueba, automatización con k0lmena y gestión en Xray, QMetry, AIO Tests o Azure DevOps.
+Análisis de historias, casos de prueba, automatización con k0lmena y gestión en Xray, QMetry, AIO Tests, Zephyr Scale o Azure DevOps.
 
 <br>
 
 [![Licencia MIT](https://img.shields.io/badge/licencia-MIT-22c55e?style=flat-square)](#licencia)
 [![Idioma](https://img.shields.io/badge/idioma-español-0ea5e9?style=flat-square)](#)
-[![Agentes](https://img.shields.io/badge/agentes-51-8b5cf6?style=flat-square)](#-agentes)
+[![Agentes](https://img.shields.io/badge/agentes-79-8b5cf6?style=flat-square)](#-agentes)
 [![Suites sin tokens](https://img.shields.io/badge/suites-sin%20tokens-10b981?style=flat-square)](#️-automatización-con-k0lmena)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-D97757?style=flat-square&logo=anthropic&logoColor=white)](https://docs.claude.com/en/docs/claude-code/overview)
 
@@ -51,6 +51,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 ![Xray](https://img.shields.io/badge/Xray-Cloud%20·%20DC-00C7B1?style=flat-square)
 ![QMetry](https://img.shields.io/badge/QMetry-QTM4J-1E88E5?style=flat-square)
 ![AIO Tests](https://img.shields.io/badge/AIO%20Tests-Jira%20Cloud-F59E0B?style=flat-square)
+![Zephyr Scale](https://img.shields.io/badge/Zephyr%20Scale-Jira%20Cloud-6554C0?style=flat-square)
 ![Azure DevOps](https://img.shields.io/badge/Azure%20DevOps-Test%20Plans-0078D7?style=flat-square)
 
 <br>
@@ -71,7 +72,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 | 🤖 **Automatización sin tokens**      | Los agentes *mapper* recorren tu app **una sola vez** y escriben la automatización en k0lmena. Después corre con `npm test`, sin agentes.                                             |
 | 🌐 **Web, API, mobile y performance** | Playwright + Cucumber, axios + Cucumber (REST y GraphQL; colecciones de Postman, Bruno o Insomnia), WebdriverIO + Appium (dispositivo, emulador o BrowserStack), k6, Artillery y JMeter.                                                         |
 | 📸 **Evidencia completa**             | Captura (y GIF) de cada test que pasa; video, logs, trace y error de cada test que falla, en reportes HTML.                                                                           |
-| 🗂️ **Gestión de pruebas**             | Carpetas, casos, ciclos y resultados con evidencias en **Xray** (Cloud y Server/DC), **QMetry (QTM4J)** y **AIO Tests**; casos y suites en **Azure DevOps Test Plans**.               |
+| 🗂️ **Gestión de pruebas**             | Carpetas, casos, ciclos y resultados con evidencias en **Xray** (Cloud y Server/DC), **QMetry (QTM4J)**, **AIO Tests** y **Zephyr Scale**; casos y suites en **Azure DevOps Test Plans**. |
 | 🗄️ **Verificación en base de datos**  | Revisa lo que dejaron guardado tus pruebas en **PostgreSQL, MySQL/MariaDB, SQL Server o MongoDB**, a pedido o, si lo pedís, como steps dentro de los tests. Solo lectura por defecto. |
 | 🔌 **Conectado**                      | Lee historias de **Jira**, **Azure DevOps**, **Linear**, **ClickUp**, **monday.com**, **Asana**, **Trello**, **Notion**, **YouTrack** o **Shortcut**, el repositorio de **GitHub, GitLab, Azure Repos o Bitbucket**, documentación de **Confluence** o de la Wiki de Azure DevOps y diseños de **Figma** por MCP.                                            |
 | 🔎 **Investiga antes de suponer**     | Lee la historia de Jira con **todos sus comentarios, subtareas, épica e issues vinculados**, más Confluence y Figma, y arma una ficha de contexto.                                    |
@@ -102,7 +103,8 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 - [Documentación del proyecto](#-documentación-del-proyecto)
 - [Automatización con k0lmena](#️-automatización-con-k0lmena)
 - [Pruebas de performance](#-pruebas-de-performance)
-- [Gestión de pruebas: Xray, QMetry, AIO Tests y Azure DevOps](#️-gestión-de-pruebas-xray-qmetry-aio-tests-y-azure-devops)
+- [Gestión de pruebas: Xray, QMetry, AIO Tests, Zephyr y Azure DevOps](#️-gestión-de-pruebas-xray-qmetry-aio-tests-zephyr-y-azure-devops)
+- [k0lmena en el pipeline (CI)](#-k0lmena-en-el-pipeline-ci)
 - [Pruebas exploratorias](#-pruebas-exploratorias)
 - [Accesibilidad](#-accesibilidad)
 - [Rendimiento web](#-rendimiento-web)
@@ -128,6 +130,7 @@ Análisis de historias, casos de prueba, automatización con k0lmena y gestión 
 - [Evals de los agentes](#-evals-de-los-agentes)
 - [Uso de tokens](#-uso-de-tokens)
 - [Onboarding](#-onboarding)
+- [Apps con protección anti-bots](#-apps-con-protección-anti-bots)
 - [Seguridad web](#️-seguridad-web)
 - [Verificación en base de datos](#️-verificación-en-base-de-datos)
 - [Conectores MCP](#-conectores-mcp)
@@ -217,7 +220,7 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 <tr><td><code>analista-seguridad</code></td><td>Escaneo de seguridad web pasivo con OWASP ZAP e informe HTML con hallazgos, evidencia y cómo corregirlos</td></tr>
 <tr><td><code>pentester-web</code></td><td>Pentest web autorizado (ethical hacking): escaneo activo de OWASP ZAP más verificación manual del OWASP Top 10 con Playwright; confirma cada hallazgo y arma el informe con pasos para reproducir y cómo corregir. Solo URLs autorizadas y con permiso</td></tr>
 <tr><td rowspan="2"><b>🗂️ Gestión</b></td>
-  <td><code>gestor-pruebas</code></td><td>Carpetas, casos, vínculos con la historia y ciclos en Xray, QMetry, AIO Tests o Azure DevOps</td></tr>
+  <td><code>gestor-pruebas</code></td><td>Carpetas, casos, vínculos con la historia y ciclos en Xray, QMetry, AIO Tests, Zephyr Scale o Azure DevOps</td></tr>
 <tr><td><code>publicador-resultados</code></td><td>Sube los resultados de <code>npm test</code> al ciclo con sus evidencias</td></tr>
 </table>
 
@@ -295,7 +298,7 @@ Hay **un solo `.env`, en la raíz**. Lo usan los agentes, k0lmena y los scripts 
 | Mobile                 | `MOBILE_TARGET` (`device` · `emulator` · `browserstack`) `MOBILE_PLATFORM` `MOBILE_DEVICE_NAME` `MOBILE_APP` `MOBILE_UDID` `BROWSERSTACK_*` |
 | Performance            | `PERF_VUS` `PERF_DURACION` (opcionales)                                                                                                     |
 | Bases de datos         | `DB_CONEXIONES` + por conexión `DB_<NOMBRE>_MOTOR` `_HOST` `_PUERTO` `_BASE` `_USUARIO` `_CLAVE` (o `_URL`) `_ESCRITURA` `_PRODUCCION`      |
-| Gestión                | `GESTION_HERRAMIENTA` `GESTION_PROYECTO` + credenciales de Xray, QTM4J o AIO                                                                |
+| Gestión                | `GESTION_HERRAMIENTA` `GESTION_PROYECTO` + credenciales de Xray, QTM4J, AIO o Zephyr                                                        |
 | Azure DevOps (MCP)     | `ADO_ORGANIZACION` `ADO_PAT` `ADO_PROYECTO`                                                                                                 |
 
 > [!WARNING]
@@ -361,7 +364,7 @@ El resultado es una **ficha de contexto** reutilizable (`output/contexto/context
 | Reporte de mapeo                   | Estado `Falta información`: el mapper **no usa la app para completar el dato**                                                        |
 | Reportes de k0lmena y de ejecución | Nota visible en el escenario y aviso en el resumen                                                                                    |
 | Informe de cierre                  | Sección **Falta información** con los ítems abiertos como riesgo                                                                      |
-| Xray · QMetry · AIO                | El comentario del resultado aclara que el caso depende de información faltante                                                        |
+| Xray · QMetry · AIO · Zephyr       | El comentario del resultado aclara que el caso depende de información faltante                                                        |
 
 > *"Investigá el contexto de PROJ-12 y generá los casos"* → ficha de contexto + casos, con lo que falte marcado y las preguntas listas para el PO.
 
@@ -451,9 +454,9 @@ Cada corrida deja además su propio **reporte HTML** en `herramientas/k0lmena/re
 
 ---
 
-## 🗂️ Gestión de pruebas: Xray, QMetry, AIO Tests y Azure DevOps
+## 🗂️ Gestión de pruebas: Xray, QMetry, AIO Tests, Zephyr y Azure DevOps
 
-Configurá `GESTION_HERRAMIENTA` (`xray-cloud` · `xray-dc` · `qtm4j` · `aio`), `GESTION_PROYECTO` y las credenciales en el `.env`, y pedí:
+Configurá `GESTION_HERRAMIENTA` (`xray-cloud` · `xray-dc` · `qtm4j` · `aio` · `zephyr-scale`), `GESTION_PROYECTO` y las credenciales en el `.env`, y pedí:
 
 - *"Subí los casos de HU-001 a Xray en la carpeta 'HU-001 Registro', vinculados a PROJ-12"* → **gestor-pruebas** crea la carpeta, sube los casos y los vincula a la historia.
 - *"Creá el ciclo Sprint 5 con esos casos"* → crea el ciclo (Test Execution en Xray) vinculado a la historia.
@@ -469,6 +472,21 @@ Azure DevOps se integra por su conector MCP oficial (`azure-devops`), con `ADO_O
 - *"Subí los casos de `casos-HU-001.xlsx` a Azure Test Plans, plan 'Sprint 5', suite 'HU-001 Registro', vinculados a la historia 1234"* → **gestor-pruebas** convierte los pasos con `scripts/gestion/para_azure_devops.py`, crea los *Test Cases*, los vincula a la historia y los agrega a la suite.
 
 Por ahora el conector no registra resultados de ejecución: **publicador-resultados** todavía no publica en Azure DevOps.
+
+---
+
+## 🚦 k0lmena en el pipeline (CI)
+
+Las suites de k0lmena corren solas en el pipeline del equipo, sin agentes ni tokens. `npm run ci` deja el archivo listo para **GitHub Actions, GitLab CI, Jenkins o Azure Pipelines**:
+
+```bash
+npm run ci -- generar --plataforma github                # → .github/workflows/k0lmena.yml
+npm run ci -- generar --plataforma gitlab --suite all    # → .gitlab-ci.yml (web y api)
+npm run ci -- generar --plataforma jenkins               # → Jenkinsfile
+npm run ci -- generar --plataforma azure --suite api     # → azure-pipelines.yml
+```
+
+El pipeline instala k0lmena y Chromium, corre las suites y guarda los reportes como artefacto. Si hay `GESTION_CICLO`, además publica los resultados en Xray, QMetry, AIO Tests o Zephyr Scale. La plantilla no lleva ningún valor: el `.env` entero va como **secret del pipeline** y llega por `K0LMENA_ENV_FILE`. No pisa un pipeline existente salvo `--forzar`. Detalle por plataforma en [`herramientas/ci/README.md`](herramientas/ci/README.md).
 
 ---
 
@@ -783,6 +801,19 @@ El **guia-onboarding** arma el plan de incorporación de un QA nuevo: qué es el
 
 ---
 
+## 🤖 Apps con protección anti-bots
+
+Si la app tiene Cloudflare, Akamai, DataDome, Imperva, AWS WAF o un captcha, puede frenar al navegador automatizado. k0lmenIA no intenta esquivarlo. Lo trabaja así:
+
+- **No da falsos fallos.** Cuando la app responde con un desafío o un acceso denegado, el escenario queda **Bloqueado: anti-bots** (también en Xray, QMetry, AIO y Zephyr) y el análisis de fallos lo separa de los bugs. Las herramientas avisan al terminar y los agentes frenan y lo reportan.
+- **Header de bypass.** Si el equipo de la app crea una excepción para QA, ponés `QA_BYPASS_HEADER` y `QA_BYPASS_TOKEN` en el `.env`. `npm test`, las herramientas y el navegador de los agentes mandan el header **solo a los hosts de la app**, nunca a terceros.
+- **Chrome real y ritmo humano.** `NAVEGADOR_CANAL=chrome` usa el Chrome instalado y `RITMO_HUMANO=si` agrega pausas entre acciones.
+- **Plan B manual.** `npm run login` abre tu Chrome: resolvés el desafío o el captcha a mano y la sesión queda guardada (`SESION=si`).
+
+La guía para pasarle al equipo de la app (header en Cloudflare, AWS WAF, Akamai, DataDome e Imperva; lista blanca de IP; claves de prueba de reCAPTCHA, Turnstile y hCaptcha) está en [`herramientas/k0lmena/tools/navegador/README.md`](herramientas/k0lmena/tools/navegador/README.md). `npm run doctor` revisa la configuración.
+
+---
+
 ## 🛡️ Seguridad web
 
 El **analista-seguridad** revisa la seguridad de tu aplicación con **OWASP ZAP** (libre y gratuito) en modo **pasivo**: recorre el sitio y analiza las respuestas sin enviar ataques ni modificar datos. Encuentra encabezados de seguridad faltantes, cookies inseguras, información expuesta, contenido mixto y otras configuraciones débiles.
@@ -906,7 +937,8 @@ npm run conector -- activar azure-devops    # queda solo para vos; reiniciá Cla
 
 ```
 k0lmenIA/
-├── CLAUDE.md               Contexto y estándares (Claude Code lo lee siempre)
+├── CLAUDE.md               Contexto y estándares (Claude Code lo lee siempre; corto a propósito)
+├── REFERENCIA.md           Salida de cada agente, scripts y nombres de archivos (se lee a pedido)
 ├── AGENTES.md              Catálogo de agentes: skills, herramientas, conectores y salidas
 ├── ARQUITECTURA.md         Cómo crece el repo
 ├── CONECTORES.md           Cómo activar los conectores MCP
@@ -927,12 +959,13 @@ k0lmenIA/
 ├── output/                 Lo que generan los agentes (contexto/, casos, reportes, mapeos…)
 ├── plantillas/             Bug, planilla de casos, cobertura
 ├── scripts/                Casos, reportes HTML, informes, Newman, recolector y doctor
-│   ├── gestion/            Xray, QMetry (QTM4J), AIO Tests y casos para Azure DevOps
+│   ├── gestion/            Xray, QMetry (QTM4J), AIO Tests, Zephyr Scale y casos para Azure DevOps
 │   └── mcp/                Lanzadores de los conectores MCP (leen el .env)
 └── herramientas/
     ├── newman/             Colecciones de Postman
     ├── zap/                OWASP ZAP: seguridad web (escaneo pasivo)
     ├── mailpit/            Mailpit: buzón de prueba para los correos
+    ├── ci/                 Plantillas de pipeline (GitHub, GitLab, Jenkins, Azure) para k0lmena
     └── k0lmena/            web/ api/ mobile/ performance/ reports/
 ```
 </details>

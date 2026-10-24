@@ -34,6 +34,7 @@
 // cross-browser.json, informe-cross-browser.html, capturas/, diferencias/, recortes/ y suite/.
 const fs = require('fs');
 const path = require('path');
+const navegadorComun = require('../navegador/navegador');
 const { archivar } = require('../historial/historial.js');
 const { spawnSync } = require('child_process');
 const { normalizar, slug, sello, recorrerScroll, cargar } = require('../explorador/explorar.js');
@@ -435,7 +436,7 @@ async function recorrerPaginas(a, combos, paginas, carpeta, rel) {
   const dirCap = path.join(carpeta, 'capturas');
   const medidas = {}; // `${pagina}|${combo}` → datos
   for (const c of combos) {
-    const browser = await pw[c.navegador].launch({ headless: !a.headed });
+    const browser = await navegadorComun.lanzar(pw[c.navegador], { headless: !a.headed });
     try {
       for (const [i, u] of paginas.entries()) {
         const id = `${String(i + 1).padStart(2, '0')}-${slug(u)}`;
@@ -649,7 +650,7 @@ async function confirmarPaginas(a, combos, hallazgos) {
   const nuevas = {};
   const pw = require('playwright');
   for (const nav of [...new Set(combos.map((c) => c.navegador))]) {
-    const browser = await pw[nav].launch({ headless: !a.headed });
+    const browser = await navegadorComun.lanzar(pw[nav], { headless: !a.headed });
     try {
       for (const [clave, cs] of pantallas) {
         const url = clave.slice(0, clave.lastIndexOf('|'));
@@ -783,7 +784,7 @@ async function main() {
       repeticiones: repetidos, confirmados: hallazgos.filter((h) => h.confirmado).length } };
   } else {
     const pw = require('playwright');
-    const b = await pw[a.base].launch();
+    const b = await navegadorComun.lanzar(pw[a.base]);
     const ctx = await b.newContext();
     const paginas = await descubrir(await ctx.newPage(), inicio, a);
     await b.close();

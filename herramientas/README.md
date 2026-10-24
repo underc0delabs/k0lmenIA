@@ -32,6 +32,7 @@ Las integradas:
 
 - **manual** (en `manual/`): la herramienta del `redactor-manual` (`npm run manual`) — carpetas y versiones de cada manual, capturas, HTML autocontenido y Word con el diseño de k0lmena, checklist antes de la versión final, plan de la plataforma por módulos y exportación del conocimiento a `input/documentacion/manual-usuario/`.
 - **scalar** (en `scalar/`): la herramienta del `probador-scalar` (`npm run scalar`) — trae las APIs del Registry de Scalar, arma los casos como colección con tests `pm` (corre con Newman) y como OpenAPI con `x-post-response` para publicar en Scalar con la CLI oficial. Ver `herramientas/scalar/README.md`.
+- **ci** (en `ci/`): plantillas de pipeline para GitHub Actions, GitLab CI, Jenkins y Azure Pipelines (`npm run ci -- generar --plataforma <x>`) que corren las suites de k0lmena sin agentes ni tokens, guardan los reportes como artefacto y, si hay `GESTION_CICLO`, publican los resultados con `scripts/gestion` (`npm run ci -- publicar`). El `.env` va entero como secret del pipeline. Ver `herramientas/ci/README.md`.
 Las que vengan se suman con el mismo patrón: una subcarpeta + su README.
 
 > ¿En qué se diferencia de `scripts/` y de `.mcp.json`?

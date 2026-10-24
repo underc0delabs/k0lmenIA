@@ -71,6 +71,11 @@ const PASOS = [
       { nombre: 'AIO Tests', conectores: ['aio-tests'], fijos: { GESTION_HERRAMIENTA: 'aio' }, datos: [PROYECTO_JIRA,
         { clave: 'AIO_API_TOKEN', texto: 'API token de AIO Tests', secreto: true, ayuda: 'AIO Tests > My Settings > API Token' },
         { clave: 'AIO_MCP_URL', texto: 'URL del server MCP de AIO', ayuda: 'AIO Tests > My Settings > MCP Authorization' }] },
+      { nombre: 'Zephyr Scale (Jira Cloud)', fijos: { GESTION_HERRAMIENTA: 'zephyr-scale' }, datos: [PROYECTO_JIRA,
+        { clave: 'ZEPHYR_API_TOKEN', texto: 'API token de Zephyr', secreto: true, ayuda: 'Jira > tu foto (abajo a la izquierda) > Zephyr API keys' },
+        { clave: 'ZEPHYR_API_URL', texto: 'URL de la API de Zephyr', opcional: true, defecto: 'https://api.zephyrscale.smartbear.com/v2',
+          ayuda: 'EU: https://eu.api.zephyrscale.smartbear.com/v2 · AU: https://au.api.zephyrscale.smartbear.com/v2 · DE: https://de.api.zephyrscale.smartbear.com/v2' },
+        JIRA_URL, JIRA_EMAIL, JIRA_TOKEN] },
       { nombre: 'Azure Test Plans', conectores: ['azure-devops'], datos: ADO },
       { nombre: 'k0lmenaTMT', conectores: ['k0lmena-tmt'], datos: [
         { clave: 'K0LMENA_TMT_TOKEN', texto: 'Token personal de k0lmenaTMT (kolm_pat_...)', secreto: true },

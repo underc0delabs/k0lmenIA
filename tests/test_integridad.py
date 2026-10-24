@@ -64,7 +64,9 @@ def test_skill_name_coincide_carpeta(skill):
 
 def test_conteos_coherentes():
     n = len(AGENTES)
-    assert f"{n} agentes" in (RAIZ / "README.md").read_text(encoding="utf-8")
+    readme = (RAIZ / "README.md").read_text(encoding="utf-8")
+    assert f"{n} agentes" in readme
+    assert f"badge/agentes-{n}-" in readme, "el badge de agentes del README no coincide"
     assert f"{n} agentes" in (RAIZ / "AGENTES.md").read_text(encoding="utf-8")
     arquitectura = (RAIZ / "ARQUITECTURA.md").read_text(encoding="utf-8")
     assert f"{n} agentes" in arquitectura and f"{len(SKILLS)} skills" in arquitectura
@@ -76,3 +78,14 @@ def test_conteos_coherentes():
 def test_agente_tiene_tarjeta_en_web(agente):
     docs = (RAIZ / "docs/index.html").read_text(encoding="utf-8")
     assert f"<h4>{agente.stem}</h4>" in docs, f"{agente.stem} no tiene tarjeta en docs/index.html"
+
+
+def test_claude_md_corto_y_con_todos_los_agentes():
+    """CLAUDE.md se carga en cada conversación: índice corto con todos los agentes; el detalle va en REFERENCIA.md."""
+    claude = (RAIZ / "CLAUDE.md").read_text(encoding="utf-8")
+    referencia = (RAIZ / "REFERENCIA.md").read_text(encoding="utf-8")
+    assert len(claude.encode("utf-8")) < 30_000, "CLAUDE.md creció: mové el detalle a REFERENCIA.md o AGENTES.md"
+    faltan = [a.stem for a in AGENTES if f"`{a.stem}`" not in claude]
+    assert not faltan, f"agentes que faltan en el índice de CLAUDE.md: {faltan}"
+    faltan = [a.stem for a in AGENTES if f"`{a.stem}`" not in referencia]
+    assert not faltan, f"agentes que faltan en la tabla de REFERENCIA.md: {faltan}"

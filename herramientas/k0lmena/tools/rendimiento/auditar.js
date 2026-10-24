@@ -25,6 +25,7 @@
 // encontrar y comparar problemas, no para afirmar cómo lo vive cada persona.
 const fs = require('fs');
 const path = require('path');
+const navegadorComun = require('../navegador/navegador');
 const { archivar } = require('../historial/historial.js');
 const { normalizar, slug, sello, NO_RECORRER, ARCHIVO } = require('../explorador/explorar.js');
 
@@ -223,7 +224,7 @@ function generarInforme(carpeta) {
 async function descubrirPaginas(inicio, a, chromium) {
   if (a.paginas) return a.paginas.map(normalizar);
   const host = new URL(inicio).hostname;
-  const b = await chromium.launch();
+  const b = await navegadorComun.lanzar(chromium);
   const page = await b.newPage();
   const lista = [inicio];
   const cola = [{ url: inicio, nivel: 0 }];
@@ -282,6 +283,10 @@ async function main() {
   console.log(`Salida: ${path.relative(RAIZ, carpeta).split(path.sep).join('/')} (reemplaza la corrida anterior)`);
   const t0 = Date.now();
 
+  // Lighthouse no puede limitar un header a la app (lo mandaría también a terceros): mide sin el bypass.
+  if (navegadorComun.leerConfig().bypass) {
+    console.log('Aviso: Lighthouse no usa QA_BYPASS_* (mandaría el token a terceros). Si la app frena a Lighthouse, pedí que dejen pasar tu IP.');
+  }
   // Un Chrome propio para Lighthouse (el de Playwright, así no hace falta instalar otro).
   const chrome = await chromeLauncher.launch({ chromePath: chromium.executablePath(),
     chromeFlags: [...(a.headed ? [] : ['--headless=new']), '--no-first-run', '--disable-extensions'] });

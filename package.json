@@ -62,6 +62,7 @@
     "revision-codigo": "node -e \"const r=require('child_process').spawnSync(process.platform==='win32'?'python':'python3',['herramientas/codigo/revision.py',...process.argv.slice(1)],{stdio:'inherit'});process.exit(r.status===null?1:r.status)\" --",
     "manual": "node -e \"const r=require('child_process').spawnSync(process.platform==='win32'?'python':'python3',['herramientas/manual/manual.py',...process.argv.slice(1)],{stdio:'inherit'});process.exit(r.status===null?1:r.status)\" --",
     "scalar": "node -e \"const r=require('child_process').spawnSync(process.platform==='win32'?'python':'python3',['herramientas/scalar/scalar.py',...process.argv.slice(1)],{stdio:'inherit'});process.exit(r.status===null?1:r.status)\" --",
+    "ci": "node -e \"const r=require('child_process').spawnSync(process.platform==='win32'?'python':'python3',['herramientas/ci/ci.py',...process.argv.slice(1)],{stdio:'inherit'});process.exit(r.status===null?1:r.status)\" --",
     "actualizar-conocimiento": "node -e \"const r=require('child_process').spawnSync(process.platform==='win32'?'python':'python3',['scripts/actualizar_conocimiento.py',...process.argv.slice(1)],{stdio:'inherit'});process.exit(r.status===null?1:r.status)\" --",
     "monitorear": "npm --prefix herramientas/k0lmena run monitorear --",
     "portal": "node -e \"const r=require('child_process').spawnSync(process.platform==='win32'?'python':'python3',['scripts/portal_informes.py',...process.argv.slice(1)],{stdio:'inherit'});process.exit(r.status===null?1:r.status)\" --",

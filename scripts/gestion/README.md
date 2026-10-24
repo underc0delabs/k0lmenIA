@@ -1,4 +1,4 @@
-# Gestión de pruebas: Xray, QMetry (QTM4J) y AIO Tests
+# Gestión de pruebas: Xray, QMetry (QTM4J), AIO Tests y Zephyr Scale
 
 > **Azure DevOps Test Plans** no pasa por `gestion.py`: se integra por el conector MCP `azure-devops` (ver [`CONECTORES.md`](../../CONECTORES.md#azure-devops)). Desde acá solo se usa `para_azure_devops.py`, que convierte los casos al formato del conector:
 >
@@ -6,7 +6,7 @@
 > python scripts/gestion/para_azure_devops.py output/casos-de-prueba/manuales/casos-HU-001.xlsx [--ids CP-001,CP-003]
 > ```
 
-Integración propia de k0lmenIA con las herramientas de gestión de pruebas, sobre sus **APIs oficiales**. Los mismos comandos sirven para las cuatro variantes:
+Integración propia de k0lmenIA con las herramientas de gestión de pruebas, sobre sus **APIs oficiales**. Los mismos comandos sirven para las cinco variantes:
 
 ```
 +---------------------------+-----------------------+-----------------------------------------+
@@ -19,6 +19,8 @@ Integración propia de k0lmenIA con las herramientas de gestión de pruebas, sob
 | QMetry para Jira Cloud    | qtm4j                 | Open API (rest/api/latest)              |
 +---------------------------+-----------------------+-----------------------------------------+
 | AIO Tests (Jira Cloud)    | aio                   | REST pública v1                         |
++---------------------------+-----------------------+-----------------------------------------+
+| Zephyr Scale (Jira Cloud) | zephyr-scale          | REST v2 + Jira Cloud REST (vínculos)    |
 +---------------------------+-----------------------+-----------------------------------------+
 ```
 
@@ -49,6 +51,10 @@ Todo va en el `.env` de la raíz (ver `.env.example`, sección *Gestión de prue
 |               | la región US)                            |
 +---------------+------------------------------------------+
 | aio           | AIO_API_TOKEN                            |
++---------------+------------------------------------------+
+| zephyr-scale  | ZEPHYR_API_TOKEN, JIRA_BASE_URL,         |
+|               | JIRA_EMAIL, JIRA_API_TOKEN (y            |
+|               | ZEPHYR_API_URL si no es la región US)    |
 +---------------+------------------------------------------+
 ```
 
@@ -109,7 +115,9 @@ publicar-resultados ──► estado + comentario + captura (y video si falló) 
 +--------------------+------------------------------------------+-----------------------+---------------------------------+
 ```
 
-Estados: `aprobado` / `fallido` / `bloqueado` / `pendiente` se mapean a PASSED / FAILED / ABORTED / TODO (Xray Cloud), PASS / FAIL / ABORTED / TODO (Xray DC), Pass / Fail / Blocked / Not Executed (QTM4J) y Passed / Failed / Blocked / Not Run (AIO). Si tu instancia usa estados propios, mapealos con `XRAY_ESTADOS`, `QTM4J_ESTADOS` o `AIO_ESTADOS` (JSON).
+En **Zephyr Scale** la carpeta es una carpeta `TEST_CASE` (y `TEST_CYCLE` para el ciclo, con la misma ruta); el caso, un test case con pasos *inline* (acción, datos y resultado esperado) o, si es BDD, con un test script tipo `bdd`; el ciclo, un test cycle. Los vínculos con la historia usan `links/issues` con el **id numérico** del issue, que se resuelve con Jira REST (por eso pide también `JIRA_*`). Zephyr no tiene "agregar caso al ciclo": un caso está en el ciclo cuando tiene una ejecución ahí, así que `agregar-a-ciclo` crea una ejecución *Not Executed* por caso y `publicar-resultados` crea una ejecución nueva con el resultado (el historial queda completo). Las evidencias se suben a esa ejecución (hasta 1 GB por archivo). Las keys tienen una letra antes del número: casos `PROJ-T12`, ciclos `PROJ-R5`.
+
+Estados: `aprobado` / `fallido` / `bloqueado` / `pendiente` se mapean a PASSED / FAILED / ABORTED / TODO (Xray Cloud), PASS / FAIL / ABORTED / TODO (Xray DC), Pass / Fail / Blocked / Not Executed (QTM4J y Zephyr Scale) y Passed / Failed / Blocked / Not Run (AIO). Si tu instancia usa estados propios, mapealos con `XRAY_ESTADOS`, `QTM4J_ESTADOS`, `AIO_ESTADOS` o `ZEPHYR_ESTADOS` (JSON).
 
 ## Estado de validación
 
@@ -159,5 +167,14 @@ La integración se construyó con la documentación oficial y se probó con `--d
 +---------------+------------------------------------------+--------------------------------------+
 | aio           | Que guardar el caso completo al vincular | Avisar para adaptarlo                |
 |               | la historia no pise otros campos         |                                      |
++---------------+------------------------------------------+--------------------------------------+
+| zephyr-scale  | Las prioridades de tu proyecto (High,    | GESTION_PRIORIDADES o                |
+|               | Normal, Low por defecto)                 | GESTION_ENVIAR_PRIORIDAD=0           |
++---------------+------------------------------------------+--------------------------------------+
+| zephyr-scale  | Que existan los estados Pass, Fail,      | ZEPHYR_ESTADOS                       |
+|               | Blocked, Not Executed e In Progress      |                                      |
++---------------+------------------------------------------+--------------------------------------+
+| zephyr-scale  | Que el comentario con <br> se vea con    | Avisar para adaptarlo                |
+|               | saltos de línea                          |                                      |
 +---------------+------------------------------------------+--------------------------------------+
 ```

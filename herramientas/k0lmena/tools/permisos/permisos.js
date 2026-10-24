@@ -29,6 +29,7 @@
 // anterior pasa a historial/ (se guardan las últimas 5).
 const fs = require('fs');
 const path = require('path');
+const navegadorComun = require('../navegador/navegador');
 const { normalizar, slug, sello, cargar } = require('../explorador/explorar.js');
 const { descubrir } = require('../pixel-perfect/pixel-perfect.js');
 const { archivar } = require('../historial/historial.js');
@@ -280,7 +281,7 @@ async function main() {
   const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
 
   const { chromium } = require('playwright');
-  const browser = await chromium.launch({ headless: !a.headed });
+  const browser = await navegadorComun.lanzar(chromium, { headless: !a.headed });
   const t0 = Date.now();
   console.log(`Permisos de ${inicio} · roles: ${roles.map((r) => r.id).join(', ')} · salida ${relRaiz(carpeta)}`);
 

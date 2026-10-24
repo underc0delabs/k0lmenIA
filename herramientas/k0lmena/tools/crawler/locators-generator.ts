@@ -3,6 +3,8 @@ import { chromium } from "@playwright/test";
 import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const navegadorComun = require("../navegador/navegador");
 
 dotenv.config();
 
@@ -17,7 +19,7 @@ async function run() {
   if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
   const outputFile = path.join(outputDir, "locators-output.ts");
 
-  const browser = await chromium.launch();
+  const browser = await navegadorComun.lanzar(chromium);
   const page = await browser.newPage();
   await page.goto(inputUrl);
 

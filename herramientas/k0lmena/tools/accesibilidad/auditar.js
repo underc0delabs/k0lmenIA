@@ -24,6 +24,7 @@
 // el resto requiere revisión manual (la hace el agente).
 const fs = require('fs');
 const path = require('path');
+const navegadorComun = require('../navegador/navegador');
 const { archivar } = require('../historial/historial.js');
 const { normalizar, slug, sello, NO_RECORRER, ARCHIVO, recorrerScroll, cargar, capturar } = require('../explorador/explorar.js');
 
@@ -316,7 +317,7 @@ async function main() {
   console.log(`Salida: ${path.relative(RAIZ, carpeta).split(path.sep).join('/')} (reemplaza la corrida anterior)`);
   const t0 = Date.now();
   const { chromium } = require('playwright');
-  const browser = await chromium.launch({ headless: !a.headed });
+  const browser = await navegadorComun.lanzar(chromium, { headless: !a.headed });
   const viewport = { width: 1280, height: 720 };
   const context = await browser.newContext({ viewport, locale: process.env.LOCALE || 'es-AR',
     ...(a.video ? { recordVideo: { dir: path.join(dirVideos, 'tmp'), size: viewport } } : {}) });

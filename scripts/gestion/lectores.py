@@ -216,7 +216,13 @@ def leer_resultados(reporte_json, dir_evidencias):
                         gifs += re.findall(r'<img[^>]*src="([^"]+[.]gif)"', html)
                     elif mime == "text/plain":
                         textos.append(base64.b64decode(emb["data"]).decode("utf-8", "replace"))
-            if "failed" in estados or "ambiguous" in estados:
+            bloqueo_antibots = any(t.startswith("BLOQUEO ANTI-BOTS") for t in textos)
+            if ("failed" in estados or "ambiguous" in estados) and bloqueo_antibots:
+                # El hook de k0lmena (tools/navegador) detectó que la protección anti-bots frenó al navegador:
+                # no es un resultado de la app, así que va como bloqueado y con el motivo como error.
+                estado = "bloqueado"
+                error = next(t for t in textos if t.startswith("BLOQUEO ANTI-BOTS"))
+            elif "failed" in estados or "ambiguous" in estados:
                 estado = "fallido"
             elif all(e == "passed" for e in estados):
                 estado = "aprobado"

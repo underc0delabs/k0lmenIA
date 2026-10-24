@@ -14,7 +14,7 @@ Uso (desde la raíz del repo):
     python scripts/evaluar_agentes.py --verificar --trabajo DIR
     python scripts/evaluar_agentes.py --solo-verificar CARPETA --caso ID
 
---preparar   arma un workspace aislado por caso (una copia mínima del repo: CLAUDE.md, .claude/, plantillas/,
+--preparar   arma un workspace aislado por caso (una copia mínima del repo: CLAUDE.md, REFERENCIA.md, .claude/, plantillas/,
              scripts/, con input/ y output/ vacíos + los insumos del caso), fuera del repo (por defecto en la
              carpeta temporal del sistema), así el agente nunca toca tu input/ ni tu output/.
 --correr     prepara, corre el agente con Claude Code en modo headless (claude -p, permisos acotados al
@@ -48,7 +48,7 @@ RESULTADOS = EVALS / "resultados"
 EVAL_DIR = "_eval"  # dentro de cada workspace: la respuesta y los datos de la corrida de claude
 
 # Lo que se copia del repo al workspace (el resto, como herramientas/ o docs/, no hace falta para evaluar).
-COPIAR = ["CLAUDE.md", "AGENTES.md", ".claude", "plantillas", "scripts", "requirements.txt"]
+COPIAR = ["CLAUDE.md", "AGENTES.md", "REFERENCIA.md", ".claude", "plantillas", "scripts", "requirements.txt"]
 IGNORAR_COPIA = shutil.ignore_patterns("__pycache__", "*.pyc", "settings.local.json", "fuentes")
 # Herramientas que puede usar el agente en el workspace (claude -p niega todo lo demás).
 HERRAMIENTAS = ["Read", "Write", "Edit", "Glob", "Grep", "Agent", "Task", "TodoWrite",

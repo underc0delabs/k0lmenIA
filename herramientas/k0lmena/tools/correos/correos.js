@@ -22,6 +22,7 @@
 // buzón: borrarlo (--limpiar-buzon) se hace con confirmación.
 const fs = require('fs');
 const path = require('path');
+const navegadorComun = require('../navegador/navegador');
 const { archivar } = require('../historial/historial.js');
 
 const RAIZ = path.resolve(__dirname, '..', '..', '..', '..');
@@ -281,7 +282,7 @@ async function main() {
   console.log(`Mailpit ${info.Version || ''} en ${a.mailpit} · ${lista.length} correo(s)${consulta(a) ? ` para «${consulta(a)}»` : ''}`);
 
   const { chromium } = require('playwright');
-  const browser = await chromium.launch();
+  const browser = await navegadorComun.lanzar(chromium);
   const correos = [];
   try {
     for (const [i, resumen] of lista.entries()) {

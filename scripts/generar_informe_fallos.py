@@ -20,7 +20,7 @@ El análisis (opcional) aporta:
   "recomendaciones": [{"accion": "...", "motivo": "...", "prioridad": "Alta"}],
   "proximos_pasos": ["..."]
 }
-Categorías: Posible bug · Inestable (flaky) · Locator o espera · Ambiente · Datos de prueba ·
+Categorías: Posible bug · Inestable (flaky) · Locator o espera · Ambiente · Bloqueo anti-bots · Datos de prueba ·
 Error en la automatización · Paso sin definir · Sin clasificar
 """
 import argparse
@@ -33,10 +33,12 @@ from _estilos_reporte import (e, page, meta, section, kpi_tiles, banner, doc_lis
                               nivel_badge, _pastilla, CRITICO, AVISO, NEUTRO, OK, SERIES)
 from generar_informe_exploratorio import CSS_EXTRA, JS_EXTRA, miniatura
 
-CATEGORIAS = ["Posible bug", "Inestable (flaky)", "Locator o espera", "Ambiente", "Datos de prueba",
+CATEGORIAS = ["Posible bug", "Inestable (flaky)", "Locator o espera", "Ambiente", "Bloqueo anti-bots", "Datos de prueba",
               "Error en la automatización", "Paso sin definir", "Sin clasificar"]
 # Identidad de cada causa (categórica, orden fijo): nunca colores de estado, que son para aprobado/fallido.
-COLOR = {c: SERIES[i] for i, c in enumerate(CATEGORIAS)}
+_PROPIAS = [c for c in CATEGORIAS if c != "Bloqueo anti-bots"]
+COLOR = {c: SERIES[i] for i, c in enumerate(_PROPIAS)}
+COLOR["Bloqueo anti-bots"] = AVISO  # no entra en la paleta de 8: va con el color de aviso
 AUTOMATIZACION = {"Locator o espera", "Error en la automatización", "Paso sin definir", "Inestable (flaky)"}
 
 CSS_FALLOS = """
@@ -102,8 +104,9 @@ def build_html(datos, analisis, hist_html=""):
         ("Inestables", cuenta["Inestable (flaky)"], "warn" if cuenta["Inestable (flaky)"] else "ok", "fallaron y después pasaron", "warn"),
         ("Automatización", sum(cuenta[c] for c in AUTOMATIZACION - {"Inestable (flaky)"}),
          "warn" if any(cuenta[c] for c in AUTOMATIZACION) else "ok", "locators, esperas, código y pasos sin definir", "codigo"),
-        ("Ambiente y datos", cuenta["Ambiente"] + cuenta["Datos de prueba"], "warn" if cuenta["Ambiente"] + cuenta["Datos de prueba"] else "ok",
-         "infraestructura caída o datos de prueba", "pantalla"),
+        ("Ambiente y datos", cuenta["Ambiente"] + cuenta["Bloqueo anti-bots"] + cuenta["Datos de prueba"],
+         "warn" if cuenta["Ambiente"] + cuenta["Bloqueo anti-bots"] + cuenta["Datos de prueba"] else "ok",
+         "infraestructura caída, anti-bots o datos de prueba", "pantalla"),
         ("Sin clasificar", cuenta["Sin clasificar"], "warn" if cuenta["Sin clasificar"] else "", "revisar a mano", "lupa"),
     ]) + "</div>")
 
