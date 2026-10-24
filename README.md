@@ -17,8 +17,15 @@ pruebas automatizadas) y `k0lmenia doctor` (revisa que esté todo).
 
 ## Actualizar
 
-`/plugin marketplace update k0lmenia` (o activá la actualización automática en `/plugin` → Marketplaces). Tus datos
-(`input/`, `output/`, `.env`, tus pruebas en `herramientas/k0lmena/`) viven en tu proyecto y no se tocan.
+Cada cambio en el repo se publica solo en esta rama. Para recibirlo:
+
+- **Automático** (recomendado): `/plugin` → Marketplaces → `k0lmenia` → *Enable auto-update*. Una sola vez por persona.
+- **A mano**: `/plugin marketplace update k0lmenia`.
+
+Eso actualiza agentes, skills, scripts y herramientas. El framework de automatización (`herramientas/k0lmena/` de tu
+proyecto) se actualiza con `k0lmenia actualizar`; Claude te avisa al iniciar la sesión cuando hay una versión nueva.
+Tus pruebas (features, steps, locators) no se tocan, y si modificaste un archivo del framework, la versión nueva queda
+al lado como `.nuevo` para que la compares. Tus datos (`input/`, `output/`, `.env`) viven en tu proyecto y no se tocan.
 
 Para todo el equipo, en el `.claude/settings.json` del proyecto:
 
