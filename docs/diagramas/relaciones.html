@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>K0lmenIA Light · Cómo se relacionan las piezas</title>
+<link rel="stylesheet" href="diagramas.css">
+<style>
+  .lienzo { width: 1800px; }
+  .arriba { display: grid; grid-template-columns: 1fr 70px 1.5fr 70px 1fr; align-items: center; }
+  .rel { text-align: center; color: var(--muted); font-size: 13px; line-height: 1.25; }
+  .rel .fl { display: block; font-size: 28px; color: var(--amarillo); line-height: 1; }
+  .rel .fl.v { margin: 4px 0; }
+  .medio { display: grid; grid-template-columns: 1fr 150px 1.25fr 150px 1fr; align-items: center; margin-top: 6px; }
+  .col { display: flex; flex-direction: column; gap: 18px; }
+  .pieza { position: relative; }
+  .pieza .que { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px; }
+  .pieza h3 { font-size: 22px; }
+  .pieza .donde { font-family: var(--mono); font-size: 13px; color: var(--texto2); margin-top: 2px; }
+  .pieza .ej { margin-top: 8px; font-size: 13px; color: var(--muted); }
+  .pieza .ej b { color: var(--texto); font-weight: 600; }
+  .agente { border: 2px solid var(--amarillo); box-shadow: 0 0 0 1px rgba(249,176,6,.35), 0 0 48px -10px rgba(249,176,6,.45); border-radius: 22px; padding: 26px 28px; text-align: center;
+            background: radial-gradient(500px 260px at 50% 0%, rgba(249,176,6,0.16), var(--panel)); }
+  .agente h2 { margin: 6px 0 6px; font-size: 34px; }
+  .agente p { color: var(--muted); font-size: 16px; line-height: 1.45; margin: 6px 0; }
+  .agente .lista { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 12px; }
+  .agente .lista span { font-size: 12.5px; background: var(--panel2); border: 1px solid var(--linea); border-radius: 999px; padding: 3px 10px; color: var(--texto2); }
+  .relh { display: flex; flex-direction: column; gap: 18px; }
+  .relh .rel { min-height: 120px; display: flex; flex-direction: column; justify-content: center; }
+  .abajo { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; margin-top: 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chips span { font-size: 12.5px; background: var(--panel2); border: 1px solid var(--linea); border-radius: 8px; padding: 3px 8px; }
+  .ejemplo { margin-top: 30px; border: 1px dashed var(--linea-acento); border-radius: 16px; padding: 18px 20px; }
+  .ejemplo .tit { font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 12px; }
+  .pasos { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; align-items: stretch; }
+  .p { background: var(--panel); border: 1px solid var(--linea); border-top: 4px solid var(--gris); border-radius: 12px; padding: 10px 12px; font-size: 13.5px; line-height: 1.35; position: relative; }
+  .p .n { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
+  .p b { display: block; font-size: 14.5px; margin: 3px 0; }
+  .p:not(:last-child)::after { content: "›"; position: absolute; right: -10px; top: 40%; color: var(--amarillo); font-size: 22px; }
+  .t-azul { border-top-color: var(--azul); } .t-violeta { border-top-color: var(--violeta); } .t-verde { border-top-color: var(--verde); }
+  .t-naranja { border-top-color: var(--naranja); } .t-cian { border-top-color: var(--cian); } .t-gris { border-top-color: var(--gris); }
+  .c-azul { color: var(--azul); } .c-violeta { color: var(--violeta); } .c-verde { color: var(--verde); }
+  .c-naranja { color: var(--naranja); } .c-cian { color: var(--cian); } .c-gris { color: var(--texto2); }
+  .pie { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 26px; }
+  .pie .caja p { font-size: 14px; }
+</style></head>
+<body><div class="lienzo" id="captura">
+  <div class="titulo">
+    <div><h1>K0lmenIA Light <span class="tenue">· Cómo se relacionan las piezas</span></h1>
+      <p class="sub">El agente es el centro: cada pieza resuelve una parte distinta del trabajo</p></div>
+    <div class="marca">QARMY · Underc0de</div>
+  </div>
+
+  <!-- Persona → Claude Code → Agente -->
+  <div class="arriba">
+    <div class="caja acento-gris centrado"><div class="que c-gris" style="font-size:13px;font-weight:700;letter-spacing:.8px">PERSONA</div><h3>QA</h3>
+      <p>Pide en español, en lenguaje natural: <i style="white-space:nowrap">"Generá los casos de PROJ-12"</i></p></div>
+    <div class="rel"><span class="fl">→</span>pide</div>
+    <div class="caja acento-azul centrado grande"><div class="que c-azul" style="font-size:13px;font-weight:700;letter-spacing:.8px">ORQUESTADOR</div><h3>Claude Code</h3>
+      <p>Lee <code>CLAUDE.md</code> (estándares: no inventar, trazabilidad, formatos, IDs) y elige el agente por su <code>description</code>. Si al agente le falta un dato, te lo pregunta.</p></div>
+    <div class="rel"><span class="fl" style="font-size:20px">⋯</span>tokens<br>y URLs</div>
+    <div class="caja acento-gris centrado"><div class="que c-gris" style="font-size:13px;font-weight:700;letter-spacing:.8px">CONFIGURACIÓN</div><h3><code>.env</code></h3>
+      <p>URLs, credenciales y tokens en un solo archivo de la raíz. Nunca se versiona.</p></div>
+  </div>
+  <div class="rel" style="margin:6px 0 4px"><span class="fl v">↓</span>elige el agente y le delega la tarea</div>
+
+  <!-- Centro: el agente y lo que usa -->
+  <div class="medio">
+    <div class="col">
+      <div class="caja acento-violeta pieza">
+        <div class="que c-violeta">Skills · el CÓMO</div><h3>Conocimiento reutilizable</h3>
+        <div class="donde">.claude/skills/&lt;nombre&gt;/SKILL.md</div>
+        <p>Instrucciones que se cargan solo cuando hacen falta y comparten varios agentes, para no repetirlas.</p>
+        <div class="ej"><b>investigacion-contexto</b> · tecnicas-de-diseno · ejecucion-e2e · ejecucion-api · automatizacion-k0lmena · ejecucion-manual</div></div>
+      <div class="caja acento-gris pieza">
+        <div class="que c-gris">Plantillas · el FORMATO</div><h3>Cómo tiene que quedar</h3>
+        <div class="donde">plantillas/</div>
+        <p>Definen campos, orden y valores permitidos de cada entregable. Manda la plantilla, no el agente.</p>
+        <div class="ej"><b>plantilla-casos-prueba.xlsx</b> · plantilla-reporte-bug.md · plantilla-cobertura.md · plantilla-contexto.md</div></div>
+    </div>
+
+    <div class="relh">
+      <div class="rel"><span class="fl">←</span>carga<br>cuando la tarea<br>lo necesita</div>
+      <div class="rel"><span class="fl">←</span>respeta<br>el formato</div>
+    </div>
+
+    <div class="agente">
+      <div class="que c-azul" style="font-size:13px;font-weight:800;letter-spacing:1px">AGENTE · EL QUIÉN</div>
+      <h2>Un especialista por tarea</h2>
+      <p><code>.claude/agents/&lt;nombre&gt;.md</code>: su rol, su proceso paso a paso y sus reglas.</p>
+      <p>Decide qué hacer y con qué; delega lo mecánico en scripts y herramientas, y no inventa: lo que falta queda como <b>Falta información</b> (<code>FI-01</code>).</p>
+      <div class="lista"><span>documentador-proyecto</span><span>analista-historias</span><span>generador-casos-manuales</span><span>generador-casos-bdd</span><span>ejecutor-e2e</span><span>web-mapper</span><span>revisor-casos</span><span>asistente-ejecucion-manual</span><span>gestor-pruebas</span><span>… 13 en total</span></div>
+    </div>
+
+    <div class="relh">
+      <div class="rel"><span class="fl">→</span>ejecuta<br>lo determinístico</div>
+      <div class="rel"><span class="fl">→</span>corre por<br>terminal</div>
+    </div>
+
+    <div class="col">
+      <div class="caja acento-cian pieza">
+        <div class="que c-cian">Scripts · lo MECÁNICO</div><h3>Python propio del repo</h3>
+        <div class="donde">scripts/</div>
+        <p>Lo que conviene que haga código y no el modelo: formato exacto, cálculos e informes HTML. Siempre igual, sin gastar tokens.</p>
+        <div class="ej"><b>generar_casos.py</b> (planilla) · formatear_tablas.py · generar_informe_*.py · _i18n.py (informes ES/EN) · portal_informes.py · gestion/ (Xray, k0lmenaTMT) · construir_plugin.py</div></div>
+      <div class="caja acento-verde pieza">
+        <div class="que c-verde">Herramientas · EJECUCIÓN</div><h3>Herramientas de testing</h3>
+        <div class="donde">herramientas/</div>
+        <p>Se corren por línea de comandos. Lo que el agente automatiza una vez en k0lmena después corre <b>sin agentes ni tokens</b>.</p>
+        <div class="ej"><b>k0lmena</b> (npm test, login, mapa-funcional…) · Newman · ci (pipelines) · navegador común (anti-bots)</div></div>
+    </div>
+  </div>
+
+  <div class="rel" style="margin:8px 0 2px"><span class="fl v">↓</span>se conecta, lee y escribe</div>
+
+  <!-- Abajo: MCP, input, output -->
+  <div class="abajo">
+    <div class="caja acento-gris pieza">
+      <div class="que c-gris">Entrada · LO QUE LEE</div><h3><code>input/</code></h3>
+      <p>Historias, contratos de API, observaciones de bugs, logs y la <b>documentación del proyecto</b> que arma el documentador.</p>
+      <div class="chips"><span>historias/</span><span>documentacion/</span><span>api/</span><span>bugs/</span><span>correos/</span><span>logs/</span></div></div>
+    <div class="caja acento-azul pieza">
+      <div class="que c-azul">Conectores MCP · SISTEMAS EXTERNOS</div><h3><code>.mcp.json</code> + <code>scripts/mcp/</code></h3>
+      <p>Puentes para hablar con sistemas de afuera. Sin secretos en el archivo: los tokens se leen del <code>.env</code>. Activos por defecto Playwright y Atlassian; el resto con <code>npm run conector</code>.</p>
+      <div class="chips"><span>Playwright (navegador)</span><span>Jira</span><span>k0lmenaTMT</span></div></div>
+    <div class="caja acento-naranja pieza">
+      <div class="que c-naranja">Salida · LO QUE DEJA</div><h3><code>output/</code> y k0lmena</h3>
+      <p>Cada artefacto en su carpeta, con trazabilidad (<code>HU-001</code>, <code>CP-001</code>). Cada informe sale en español e inglés (<code>es/</code> · <code>en/</code>), guarda sus últimas 5 corridas y el portal <code>output/index.html</code> los reúne por categoría.</p>
+      <div class="chips"><span>casos-de-prueba/</span><span>contexto/</span><span>ejecuciones/</span><span>reportes-bug/</span><span>es/ · en/</span><span>index.html (portal)</span><span>herramientas/k0lmena/…/features</span></div></div>
+  </div>
+
+  <!-- Ejemplo -->
+  <div class="ejemplo">
+    <div class="tit">Ejemplo de punta a punta · "Generá los casos de prueba de PROJ-12"</div>
+    <div class="pasos">
+      <div class="p t-azul"><div class="n">1 · Claude Code</div><b>Elige el agente</b>generador-casos-manuales, por su <code>description</code></div>
+      <div class="p t-violeta"><div class="n">2 · Skill</div><b>investigacion-contexto</b>dice dónde buscar y cómo marcar lo que falta</div>
+      <div class="p t-azul"><div class="n">3 · MCP</div><b>atlassian</b>lee la historia, todos sus comentarios, la épica y los vínculos</div>
+      <div class="p t-gris"><div class="n">4 · input/</div><b>documentacion/</b>reglas del código y mapa de la web, si existen</div>
+      <div class="p t-violeta"><div class="n">5 · Skill</div><b>tecnicas-de-diseno</b>valores límite, equivalencias, estados</div>
+      <div class="p t-cian"><div class="n">6 · Plantilla + script</div><b>generar_casos.py</b>arma la planilla con el formato de la plantilla</div>
+      <div class="p t-naranja"><div class="n">7 · output/</div><b>casos-PROJ-12.xlsx</b>+ .md + cobertura, con los FI-XX marcados</div>
+    </div>
+  </div>
+
+  <div class="pie">
+    <div class="caja acento-violeta"><div class="et">Agente vs. skill</div><p>El agente es <b>quién</b> hace la tarea entera; el skill es <b>cómo</b> se hace una parte, y lo comparten varios agentes.</p></div>
+    <div class="caja acento-cian"><div class="et">Script vs. herramienta</div><p>Un script es código propio del repo para formato y cálculo; una herramienta es software de testing externo (k0lmena, Newman).</p></div>
+    <div class="caja acento-azul"><div class="et">MCP vs. herramienta</div><p>MCP conecta a Claude Code con un sistema externo para leerlo o escribirle; una herramienta se ejecuta por terminal.</p></div>
+    <div class="caja acento-gris"><div class="et">Para crecer</div><p>Sumar una capacidad es sumar una pieza: un agente, un skill, un conector, una herramienta o un script (ver <code>ARQUITECTURA.md</code>). El plugin <code>k0lmenia</code> se arma solo desde este repo.</p></div>
+  </div>
+</div></body></html>

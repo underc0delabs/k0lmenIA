@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>K0lmenIA Light · How to use it</title>
+<link rel="stylesheet" href="../diagramas.css">
+<style>
+  .lienzo { width: 1800px; }
+  .etapas { display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: 22px; }
+  .etapa { background: rgba(249,176,6,0.025); border: 1px solid var(--linea); border-radius: 18px; padding: 18px; }
+  .etapa > h2 { margin: 0 0 4px; font-size: 24px; display: flex; align-items: center; gap: 12px; }
+  .etapa > p { margin: 0 0 16px; color: var(--muted); font-size: 15px; }
+  .num-etapa { width: 38px; height: 38px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 20px; font-weight: 800; color: var(--noche); }
+  .paso { display: grid; grid-template-columns: 34px 1fr; gap: 12px; background: var(--panel); border: 1px solid var(--linea); border-radius: 12px; padding: 12px 14px; }
+  .paso + .paso { margin-top: 0; }
+  .n { width: 30px; height: 30px; border-radius: 50%; background: var(--panel2); border: 1px solid var(--linea); display: grid; place-items: center; font-weight: 800; font-size: 15px; }
+  .paso .pedido { font-size: 16px; font-style: italic; color: var(--texto); }
+  .paso .quien { font-size: 13px; color: var(--muted); margin-top: 3px; }
+  .paso .sale { font-size: 14px; margin-top: 6px; }
+  .paso .sale::before { content: "→ "; color: var(--muted); }
+  .bajada { text-align: center; color: var(--muted); font-size: 16px; line-height: 1; margin: 6px 0; }
+  .terminal { background: var(--terminal); border: 1px solid var(--linea); border-radius: 12px; padding: 12px 14px; font-family: var(--mono); font-size: 14.5px; line-height: 1.7; color: var(--verde); }
+  .terminal .c { color: var(--muted); }
+  .pie { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 24px; }
+  .bucle { margin-top: 14px; border: 1px dashed var(--verde); border-radius: 12px; padding: 10px 14px; color: var(--verde); font-size: 14px; text-align: center; }
+</style></head>
+<body><div class="lienzo" id="captura">
+  <div class="titulo">
+    <div><h1>K0lmenIA Light <span class="tenue">· How it is used</span></h1>
+      <p class="sub">You ask Claude Code for what you need in plain language; the right agent does the work and leaves the result</p></div>
+    <div class="marca">QARMY · Underc0de</div>
+  </div>
+
+  <div class="etapas">
+    <!-- 1 -->
+    <div class="etapa">
+      <h2><span class="num-etapa" style="background:var(--violeta)">1</span>Design</h2>
+      <p>From the story to the test cases</p>
+      <div class="paso"><div class="n">0</div><div><div class="pedido">"Document the project" · put the story in <code>input/historias/</code></div>
+        <div class="quien">or pass a Jira key: the agents research the project documentation (documentador-proyecto: repository and web), comments, subtasks and epic, build the context sheet and flag what is missing (FI-01)</div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">1</div><div><div class="pedido">"Analyze story HU-001"</div><div class="quien">analista-historias</div>
+        <div class="sale">ambiguities and questions for the PO</div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">2</div><div><div class="pedido">"Generate the test cases for HU-001" · "Turn it into BDD"</div><div class="quien">generador-casos-manuales · generador-casos-bdd</div>
+        <div class="sale">casos-HU-001.xlsx + .md + coverage · .feature, each case with its estimated manual execution time</div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">3</div><div><div class="pedido">"Review the HU-001 cases and tell me how long they take"</div><div class="quien">revisor-casos</div>
+        <div class="sale">score, duplicates, improvements and minutes</div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">4</div><div><div class="pedido">"Is this bug already filed in Jira?"</div><div class="quien">triador-bugs</div>
+        <div class="sale">duplicates, regressions and suggested severity</div></div></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="etapa">
+      <h2><span class="num-etapa" style="background:var(--verde)">2</span>Execution and automation</h2>
+      <p>Once with agents, then with no tokens</p>
+      <div class="paso"><div class="n">5</div><div><div class="pedido">"Automate the HU-001 cases in k0lmena against https://your-app.com"</div>
+        <div class="quien">web-mapper · api-mapper (Postman, Bruno, Insomnia, Swagger, GraphQL)</div>
+        <div class="sale">walks the app, adjusts the steps and writes .feature + steps + locators <span class="pill token">once</span></div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">6</div><div><div class="pedido">Run the suite whenever you want <span class="pill ok">no tokens</span></div>
+        <div class="terminal">npm test <span class="c">           # web + api (TAGS=@HU-001)</span><br>npm run report:web <span class="c"> # HTML with evidence</span></div>
+        <div class="sale">each run keeps the last 5 in historial/ and compares against the previous one</div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">7</div><div><div class="pedido">"Guide me through the HU-012 test cases"</div>
+        <div class="quien">ejecucion-manual skill · asistente-ejecucion-manual</div>
+        <div class="sale">case by case and step by step, with evidence and times · manual execution report</div></div></div>
+      <div class="bucle">A one-off test not worth automating? → "Run scenario X against https://…" (ejecutor-e2e / ejecutor-api, live)</div>
+    </div>
+
+    <!-- 3 -->
+    <div class="etapa">
+      <h2><span class="num-etapa" style="background:var(--cian)">3</span>Test management</h2>
+      <p>Xray (Cloud and Server/DC) · k0lmenaTMT</p>
+      <div class="paso"><div class="n">8</div><div><div class="pedido">"Upload the HU-001 cases to Xray in 'HU-001 Registro', linked to PROJ-12"</div>
+        <div class="quien">gestor-pruebas</div><div class="sale">folder + cases linked to the story, with their estimated time and labels</div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">9</div><div><div class="pedido">"Create the Sprint 5 cycle with those cases"</div>
+        <div class="quien">gestor-pruebas</div><div class="sale">cycle (Test Execution) linked to PROJ-12</div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">10</div><div><div class="pedido">"Upload the last run results to cycle PROJ-60"</div>
+        <div class="quien">publicador-resultados · also JUnit XML (Cypress, Playwright, pytest, Maven)</div><div class="sale">status + error + screenshot, GIF and video (if it failed) per case</div></div></div>
+      <div class="bajada">▼</div>
+      <div class="paso"><div class="n">11</div><div><div class="pedido">"Post the result to Slack"</div>
+        <div class="quien">avisar (Slack and Teams) · report portal</div><div class="sale">webhook alert · <code>output/index.html</code> portal by category, with history and filters · every report in Spanish and English</div></div></div>
+    </div>
+  </div>
+
+  <div class="pie">
+    <div class="caja acento-azul"><div class="et">One configuration</div><p>The root <code>.env</code>: URLs, credentials, k0lmena and test management. Never committed.</p></div>
+    <div class="caja acento-violeta"><div class="et">No invention</div><p>It searches Jira and the project documentation; what it doesn't find becomes <b>Missing information</b> (FI-01) in every report.</p></div>
+    <div class="caja acento-verde"><div class="et">Saves tokens</div><p>What repeats is automated once and runs with <code>npm</code>, without agents.</p></div>
+    <div class="caja acento-cian"><div class="et">Traceability</div><p>HU-001 → CP-001 → <code>@CP-001</code> → key in Xray or k0lmenaTMT → result.</p></div>
+    <div class="caja acento-azul"><div class="et">Task list</div><p>Write one task per line in <code>TAREAS.md</code> and ask <i>"Hacé las tareas de TAREAS.md"</i>: it does them in order and marks each one.</p></div>
+  </div>
+</div></body></html>

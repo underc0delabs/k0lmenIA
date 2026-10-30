@@ -1,0 +1,37 @@
+{
+  "agente": "generador-casos-bdd",
+  "descripcion": "Escenarios Gherkin de la HU-901: keywords en inglés y contenido en español, tags @HU/@CP, Scenario Outline para los límites y @falta-info en lo que depende de un dato faltante.",
+  "pedido": "Usá el agente generador-casos-bdd para pasar a BDD la historia input/historias/HU-901-registro.md. No hay conectores activos: los comentarios de Jira están copiados en la misma historia.",
+  "insumos": [
+    {"desde": "insumos/HU-901-registro.md", "hacia": "input/historias/HU-901-registro.md"}
+  ],
+  "presupuesto_usd": 2,
+  "umbral": 80,
+  "chequeos": [
+    {"id": "archivos", "tipo": "existe", "descripcion": "Entrega el .feature y su cobertura",
+     "archivos": ["output/casos-de-prueba/bdd/HU-901*.feature", "output/casos-de-prueba/bdd/HU-901*cobertura*.md"], "min": 2, "peso": 2},
+    {"id": "gherkin", "tipo": "gherkin", "descripcion": "Gherkin válido: Feature con @HU-901, cada escenario con su @CP-XXX único, Given/When/Then, Examples en los Outline, y al menos 2 escenarios con @falta-info @FI-XX y su comentario",
+     "archivos": ["output/casos-de-prueba/bdd/HU-901*.feature"],
+     "tag_feature": "@HU-901", "tag_escenario": "@CP-\\d{3}", "min_escenarios": 6, "falta_info_min": 2, "peso": 4},
+    {"id": "keywords-ingles", "tipo": "no_contiene", "descripcion": "Las keywords van en inglés (no Dado/Cuando/Entonces)",
+     "archivos": ["output/casos-de-prueba/bdd/HU-901*.feature"],
+     "patrones": ["^\\s*(Característica|Escenario|Esquema del escenario|Dado|Cuando|Entonces|Ejemplos)\\b", "^\\s*#\\s*language:\\s*es"]},
+    {"id": "contenido-espanol", "tipo": "contiene", "descripcion": "El contenido de los pasos está en español",
+     "archivos": ["output/casos-de-prueba/bdd/HU-901*.feature"],
+     "patrones": ["^\\s*(Given|When|Then|And)\\s+(el|la|que|un|una|se|ingresa|completa|hace|el usuario|la persona)\\b"]},
+    {"id": "outline-limites", "tipo": "contiene", "descripcion": "Usa un Scenario Outline con Examples para los límites del usuario",
+     "archivos": ["output/casos-de-prueba/bdd/HU-901*.feature"],
+     "patrones": ["Scenario (Outline|Template):", "Examples:"]},
+    {"id": "mensaje-definido", "tipo": "contiene", "descripcion": "Usa el texto exacto que define el CA5",
+     "archivos": ["output/casos-de-prueba/bdd/HU-901*.feature"], "patrones": ["El usuario debe tener entre 4 y 20 caracteres"]},
+    {"id": "cobertura", "tipo": "contiene", "descripcion": "La cobertura recorre los cinco criterios",
+     "archivos": ["output/casos-de-prueba/bdd/HU-901*cobertura*.md"], "patrones": ["CA1", "CA2", "CA3", "CA4", "CA5"]},
+    {"id": "tablas", "tipo": "tablas_normalizadas", "descripcion": "Pasa las tablas de la cobertura por formatear_tablas.py",
+     "archivos": ["output/casos-de-prueba/bdd/HU-901*cobertura*.md"]}
+  ],
+  "rubrica": [
+    "Los escenarios son declarativos (qué hace la persona, no clics en elementos).",
+    "Cada escenario prueba una sola regla.",
+    "Los Then son verificables."
+  ]
+}

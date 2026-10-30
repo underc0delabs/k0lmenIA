@@ -1,0 +1,60 @@
+{
+  "collection": {
+    "info": {
+      "name": "Auth API"
+    }
+  },
+  "run": {
+    "stats": {},
+    "executions": [
+      {
+        "item": {
+          "name": "API-001 — Login válido (Alta)"
+        },
+        "response": {
+          "code": 200,
+          "responseTime": 120
+        },
+        "assertions": [
+          {
+            "assertion": "status 200"
+          }
+        ]
+      },
+      {
+        "item": {
+          "name": "API-002 — Login con contraseña incorrecta (Alta)"
+        },
+        "response": {
+          "code": 200,
+          "responseTime": 95
+        },
+        "assertions": [
+          {
+            "assertion": "status 401",
+            "error": {
+              "message": "expected response to have status code 401 but got 200"
+            }
+          }
+        ]
+      },
+      {
+        "item": {
+          "name": "API-003 — Perfil del usuario (Media)"
+        },
+        "response": {
+          "code": 401,
+          "responseTime": 30
+        },
+        "assertions": [
+          {
+            "assertion": "status 200",
+            "error": {
+              "message": "expected response to have status code 200 but got 401"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+[
+  {"pagina": "https://qa.mi-sitio.com/contacto", "accion": "completar", "selector": "#email", "valor": "qa+lead@ejemplo.com"},
+  {"pagina": "https://qa.mi-sitio.com/contacto", "accion": "clic", "selector": "button[type=submit]"},
+  {"accion": "scroll", "valor": 90},
+  {"accion": "esperar", "valor": 1500}
+]

@@ -1,0 +1,689 @@
+<!doctype html>
+<!--
+  k0lmenIA documentation — English version.
+  This file is a translation of ../index.html (Spanish, the source of truth). To keep them in sync:
+    1. Edit ../index.html first; then apply the same change here (same section ids and order, so the
+       anchors, the search and the language switch keep matching between both versions).
+    2. Names of agents, commands, paths, environment variables and IDs stay exactly as in Spanish.
+    3. The diagrams have an English copy in ../diagramas/en/ (rendered to ../assets/img/en/).
+    4. Regenerate images and both PDFs with: node docs/generar.js
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>K0lmenIA Light · Documentation</title>
+  <meta name="description" content="QA agents for Claude Code: story analysis, test cases, web and API execution, automation with k0lmena and test management in Xray or k0lmenaTMT.">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0E0C09">
+  <meta property="og:title" content="K0lmenIA Light · Documentation">
+  <meta property="og:description" content="Test design, execution, automation with k0lmena and test management in Xray or k0lmenaTMT.">
+  <meta property="og:image" content="../assets/img/en/arquitectura.png">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23FFD60A'/%3E%3Cstop offset='1' stop-color='%23FF8A00'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon points='16,3 48,3 63,32 48,61 16,61 1,32' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='Saira,Segoe UI,Arial' font-size='26' font-weight='800' fill='%230E0C09' text-anchor='middle'%3Ek0%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="../assets/fuentes/saira.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../assets/fuentes/inter.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="alternate" hreflang="es" href="../index.html">
+  <link rel="alternate" hreflang="en" href="index.html">
+  <link rel="stylesheet" href="../assets/estilos.css">
+  <script src="../assets/sitio.js"></script>
+</head>
+<body>
+
+<!-- ======================================================= TOP BAR -->
+<header class="barra">
+  <button class="btn-icono" id="abrir-nav" type="button" aria-label="Open the menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <a class="marca" href="#inicio"><span class="logo">k0</span>K0lmenIA Light <span class="version">Docs</span></a>
+  <div class="espacio"></div>
+  <button class="buscar-btn" id="abrir-busqueda" type="button" aria-label="Search the documentation (Ctrl K)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <span class="txt">Search the documentation…</span><kbd>Ctrl K</kbd>
+  </button>
+  <nav class="acciones">
+    <a class="enlace-barra idioma" href="../index.html" hreflang="es" lang="es" title="Leer la documentación en español">ES</a>
+    <a class="enlace-barra" href="https://github.com/underc0delabs/k0lmenIA/releases/download/docs/k0lmenIA-documentation.pdf">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg><span>PDF</span></a>
+    <a class="enlace-barra acento" href="https://github.com/underc0delabs/k0lmenIA" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 00-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 015.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.7 5.38-5.27 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0012 .5z"/></svg><span>GitHub</span></a>
+    <button class="btn-icono" id="cambiar-tema" type="button" aria-label="Change theme">
+      <svg class="sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="luna" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </nav>
+</header>
+
+<div class="layout">
+<!-- ======================================================= SIDE MENU -->
+<aside class="lateral" aria-label="Contents">
+  <div class="grupo">Introduction</div>
+  <a href="#que-es">What K0lmenIA Light is</a>
+  <a href="#arquitectura">Architecture</a>
+  <a href="#flujo">How it is used</a>
+  <a href="#agentes">Agents</a>
+  <div class="grupo">Getting started</div>
+  <a href="#requisitos">Requirements</a>
+  <a href="#instalacion">Installation</a>
+  <a href="#plugin">As a Claude Code plugin</a>
+  <a href="#configuracion">Configuration (.env)</a>
+  <div class="grupo">Guides</div>
+  <a href="#documentacion">Project documentation</a>
+  <a href="#contexto">Context and missing information</a>
+  <a href="#guia">Design and execution</a>
+  <a href="#k0lmena">Automation with k0lmena</a>
+  <a href="#gestion">Xray and k0lmenaTMT</a>
+  <a href="#ci">k0lmena in the pipeline (CI)</a>
+  <a href="#anti-bots">Apps with anti-bot protection</a>
+  <a href="#base-de-datos">Database checks</a>
+  <a href="#triage">Bug triage</a>
+  <a href="#ejecucion-manual">Manual execution</a>
+  <a href="#historial">Run history</a>
+  <a href="#tablero">Report portal</a>
+  <a href="#idiomas">Reports in Spanish and English</a>
+  <a href="#avisos">Slack and Teams alerts</a>
+  <a href="#evals">Agent evals</a>
+  <a href="#tokens">Token usage</a>
+  <a href="#conectores">MCP connectors</a>
+  <a href="#planes">Need more?</a>
+  <div class="grupo">Reference</div>
+  <a href="#convenciones">Conventions</a>
+  <a href="#estructura">Repository structure</a>
+  <a href="#faq">FAQ</a>
+  <a href="#extender">Extending the project</a>
+</aside>
+
+<main class="contenido">
+
+<!-- ======================================================= COVER + INDEX (PDF only) -->
+<section class="solo-impresion portada">
+  <div>
+    <div class="k">Project documentation</div>
+    <h1><span>K0lmenIA Light</span></h1>
+    <div class="l">QA agents for Claude Code: story analysis, test cases, web and API execution, automation with k0lmena and test management in Xray or k0lmenaTMT.</div>
+    <div class="chips"><span>13 agents</span><span>Web · API</span><span>Playwright · Cucumber · Newman</span><span>Xray · k0lmenaTMT</span><span>Jira</span><span>Slack · Teams</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Token-free suites</span><span>Claude Code plugin</span><span>Reports ES · EN</span></div>
+  </div>
+  <div class="p"><span>QARMY · Underc0de</span><span>github.com/underc0delabs/k0lmenIA</span><span>MIT license</span></div>
+</section>
+<section class="solo-impresion indice">
+  <h2>Contents</h2>
+  <ol>
+  <li><span>1</span>What K0lmenIA Light is</li><li><span>2</span>Architecture</li><li><span>3</span>How it is used</li><li><span>4</span>Agents</li><li><span>5</span>Requirements</li><li><span>6</span>Installation</li><li><span>7</span>As a Claude Code plugin</li><li><span>8</span>Configuration: the .env file</li><li><span>9</span>Project documentation</li><li><span>10</span>Context research and "Missing information"</li><li><span>11</span>Design and execution</li><li><span>12</span>Automation with k0lmena</li><li><span>13</span>Test management: Xray and k0lmenaTMT</li><li><span>14</span>k0lmena in the pipeline (CI)</li><li><span>15</span>Apps with anti-bot protection</li><li><span>16</span>Database checks</li><li><span>17</span>Bug triage</li><li><span>18</span>Guided manual execution</li><li><span>19</span>Run history</li><li><span>20</span>Report portal</li><li><span>21</span>Reports in Spanish and English</li><li><span>22</span>Slack and Teams alerts</li><li><span>23</span>Agent evals</li><li><span>24</span>Token usage</li><li><span>25</span>MCP connectors</li><li><span>26</span>Need more?</li><li><span>27</span>Conventions</li><li><span>28</span>Repository structure</li><li><span>29</span>FAQ</li><li><span>30</span>Extending the project</li></ol>
+</section>
+
+<!-- ======================================================= HERO -->
+<section class="hero" id="inicio">
+  <div class="pildora">QA agents for Claude Code · token-free suites</div>
+  <h1><span class="grad">K0lmenIA Light</span></h1>
+  <p class="lema">Design, run and automate tests by talking to Claude Code. The agents analyze stories, write and review test cases, run web and API tests, guide you through manual execution, automate with <b>k0lmena</b> and take everything to <b>Xray or k0lmenaTMT</b>. Use it as a <b>Claude Code plugin</b> or by cloning the repo, and every report comes out in <b>Spanish and English</b>.</p>
+  <div class="ctas">
+    <a class="btn primario" href="#instalacion">Get started
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6l6 6-6 6"/></svg></a>
+    <a class="btn" href="https://github.com/underc0delabs/k0lmenIA" target="_blank" rel="noopener">View on GitHub</a>
+    <a class="btn" href="https://github.com/underc0delabs/k0lmenIA/releases/download/docs/k0lmenIA-documentation.pdf">Download PDF</a>
+  </div>
+  <div class="tecnologias">
+    <span class="tec"><i style="background:#d97757"></i>Claude Code</span>
+    <span class="tec"><i style="background:#2ead33"></i>Playwright</span>
+    <span class="tec"><i style="background:#23d96c"></i>Cucumber</span>
+    <span class="tec"><i style="background:#ff6c37"></i>Postman · Newman</span>
+    <span class="tec"><i style="background:#3178c6"></i>TypeScript</span>
+    <span class="tec"><i style="background:#5fa04e"></i>Node.js</span>
+    <span class="tec"><i style="background:#3776ab"></i>Python</span>
+    <span class="tec"><i style="background:#0052cc"></i>Jira</span>
+    <span class="tec"><i style="background:#e01e5a"></i>Slack · Teams</span>
+    <span class="tec"><i style="background:#e10098"></i>GraphQL · gRPC · Bruno · Insomnia</span>
+    <span class="tec"><i style="background:#00c7b1"></i>Xray · k0lmenaTMT</span>
+    <span class="tec"><i style="background:#4169e1"></i>PostgreSQL</span>
+    <span class="tec"><i style="background:#4479a1"></i>MySQL · MariaDB</span>
+    <span class="tec"><i style="background:#cc2927"></i>SQL Server</span>
+    <span class="tec"><i style="background:#47a248"></i>MongoDB</span>
+  </div>
+  <div class="metricas">
+    <div class="metrica"><div class="n">13</div><div class="t">specialized agents</div></div>
+    <div class="metrica"><div class="n">2</div><div class="t">automation types</div></div>
+    <div class="metrica"><div class="n">2</div><div class="t">test management tools</div></div>
+    <div class="metrica"><div class="n">0</div><div class="t">tokens to run the suites</div></div>
+  </div>
+</section>
+
+<!-- ======================================================= WHAT IT IS -->
+<section class="seccion" id="que-es">
+  <div class="kicker">Introduction</div>
+  <h2>What K0lmenIA Light is</h2>
+  <p class="bajada">A team of <b>QA-specialized agents</b> for Claude Code, built for manual testers: no coding needed, you work by talking to Claude inside VS Code. It is the free edition of K0lmenIA, under the MIT license.</p>
+  <p>You provide an input (a story, a bug observation, an API contract or just a Jira key), ask for what you need in plain language, and the right agent produces the result: analysis, test cases, runs with evidence or the k0lmena automation. The agents work in Spanish.</p>
+
+  <div class="tarjetas">
+    <div class="tarjeta c-violeta"><div class="ico">◆</div><h4>1 · Design</h4><p>Analyze stories, write and review manual and BDD test cases (with their estimated time) and triage bugs before filing them.</p><div class="salida">Saved in <code>output/</code></div></div>
+    <div class="tarjeta c-verde"><div class="ico">▶</div><h4>2 · Execution and automation</h4><p>Run in the browser or against an API, guide manual execution and automate once: then it runs with <code>npm test</code>, with no tokens.</p><div class="salida">Saved in <code>output/</code> and <code>herramientas/k0lmena/</code></div></div>
+    <div class="tarjeta c-cian"><div class="ico">⇄</div><h4>3 · Test management</h4><p>Test cases, cycles and results with evidence in Xray (Cloud or Server/DC) or k0lmenaTMT.</p><div class="salida">Saved in the tool and in <code>output/gestion/</code></div></div>
+  </div>
+
+  <h3>Principles</h3>
+  <div class="tabla"><table>
+    <tr><th style="width:24%">Principle</th><th>In practice</th></tr>
+    <tr><td>Don't make things up</td><td>If a step, a piece of data or a rule is missing, the agent flags it and asks. Better an artifact with marked gaps than a complete but invented one.</td></tr>
+    <tr><td>Respect the formats</td><td>Fields, their order and their values are defined by the templates and scripts, not by the agent.</td></tr>
+    <tr><td>Traceability</td><td>Everything references the story (<code>HU-XXX</code>); each automated scenario carries the case ID (<code>@CP-001</code>) and the test management key.</td></tr>
+    <tr><td>Thoughtful coverage</td><td>Positive, negative, edge cases and field validations, not just the happy path.</td></tr>
+    <tr><td>Research before assuming</td><td>Before working on a story, the agents review the project documentation (repository and web map), its comments, subtasks, epic and linked issues. Whatever is not found becomes <b>Missing information</b>.</td></tr>
+    <tr><td>Token savings</td><td>What repeats is automated once and then runs without agents.</td></tr>
+    <tr><td>Security</td><td>Secrets live in the root <code>.env</code>, which is never versioned; agents never ask for tokens in the chat.</td></tr>
+    <tr><td>Two languages</td><td>Every report comes out in Spanish and English, with a flag to choose which one to send.</td></tr>
+    <tr><td>Wherever you work</td><td>As a <b>Claude Code plugin</b> in any project folder or by cloning this repo: updates arrive without touching your work.</td></tr>
+  </table></div>
+</section>
+
+<!-- ======================================================= ARCHITECTURE -->
+<section class="seccion con-lamina" id="arquitectura">
+  <div class="lamina">
+    <div class="kicker">Introduction</div>
+    <h2>Architecture</h2>
+    <figure class="figura">
+      <a href="../assets/img/en/arquitectura.png" target="_blank" rel="noopener"><img src="../assets/img/en/arquitectura.png" alt="K0lmenIA Light architecture diagram: Claude Code, agents, support, MCP connectors, tools and external systems"></a>
+      <figcaption>K0lmenIA Light architecture · click to view full size</figcaption>
+    </figure>
+  </div>
+  <figure class="figura">
+    <a href="../assets/img/en/relaciones.png" target="_blank" rel="noopener"><img src="../assets/img/en/relaciones.png" alt="How the pieces relate: the agent at the center uses skills, templates, scripts, tools and MCP connectors, reads input and writes output"></a>
+    <figcaption>How the pieces relate · the agent is the center · click to view full size</figcaption>
+  </figure>
+  <div class="tabla"><table>
+    <tr><th style="width:22%">Piece</th><th>What it is</th><th style="width:26%">Where</th></tr>
+    <tr><td>Claude Code</td><td>Orchestrator: interprets the request, picks the agent and applies the project standards (short on purpose: details are read on demand).</td><td><code>CLAUDE.md</code> · <code>REFERENCIA.md</code></td></tr>
+    <tr><td>Agents</td><td>The "who": one specialist per task.</td><td><code>.claude/agents/</code></td></tr>
+    <tr><td>Skills</td><td>The "how": knowledge loaded when needed (design techniques, E2E and API execution, k0lmena conventions).</td><td><code>.claude/skills/</code></td></tr>
+    <tr><td>Templates and scripts</td><td>Output format (test case sheet, coverage, bug) and deterministic HTML reports.</td><td><code>plantillas/</code> · <code>scripts/</code></td></tr>
+    <tr><td>Test management integration</td><td><code>gestion.py</code> with one adapter per tool: Xray Cloud, Xray Server/DC and k0lmenaTMT (through its MCP server, without the model).</td><td><code>scripts/gestion/</code></td></tr>
+    <tr><td>MCP connectors</td><td>Playwright and Atlassian (Jira) enabled; k0lmenaTMT ready to enable.</td><td><code>.mcp.json</code> · <code>scripts/mcp/</code></td></tr>
+    <tr><td>Tools</td><td>Newman for Postman collections, k0lmena for web and API, and CI templates.</td><td><code>herramientas/</code></td></tr>
+    <tr><td>Reports and portal</td><td>Every report in Spanish and English (<code>es/</code> and <code>en/</code>) and the portal with categories and history.</td><td><code>scripts/_i18n.py</code> · <code>output/index.html</code></td></tr>
+    <tr><td>Plugin</td><td>The same K0lmenIA Light, installable in any project. The <code>k0lmenia</code> command replaces <code>npm run</code>; the code stays in the plugin and the data in the project.</td><td><code>bin/k0lmenia</code> · <code>scripts/construir_plugin.py</code></td></tr>
+    <tr><td>Input and output</td><td>User inputs and generated artifacts, organized by type.</td><td><code>input/</code> · <code>output/</code></td></tr>
+  </table></div>
+</section>
+
+<!-- ======================================================= HOW IT IS USED -->
+<section class="seccion con-lamina" id="flujo">
+  <div class="lamina">
+    <div class="kicker">Introduction</div>
+    <h2>How it is used</h2>
+    <figure class="figura">
+      <a href="../assets/img/en/uso.png" target="_blank" rel="noopener"><img src="../assets/img/en/uso.png" alt="K0lmenIA Light usage flow: design, execution and automation, test management"></a>
+      <figcaption>End-to-end flow · click to view full size</figcaption>
+    </figure>
+  </div>
+  <ol class="pasos">
+    <li><b>Provide your inputs</b>Ask <i>"Documentá el proyecto"</i> (document the project) to gather the context of the repository, the stories and the web in <code>input/documentacion/</code>; put everything else in <code>input/</code>, or pass a Jira key.</li>
+    <li><b>Ask in plain language</b>Claude Code picks the agent. You can also name it: <i>"use the web-mapper to…"</i>.</li>
+    <li><b>Review the result</b>In <code>output/</code> or in <code>herramientas/k0lmena/</code>.</li>
+    <li><b>Automate what repeats</b>And run it with <code>npm test</code> as many times as you want, with no tokens.</li>
+  </ol>
+  <div class="aviso info"><span class="ico">i</span><p><b>Task list.</b> To hand over several things at once, write one task per line in <code>TAREAS.md</code> (in the root), with its checkbox, and ask <i>"Hacé las tareas de TAREAS.md"</i>. Claude asks everything it needs up front, does them in order and marks each one.</p></div>
+  <div class="tabla"><table>
+    <tr><th style="width:7%">#</th><th>You ask</th><th style="width:32%">You get</th></tr>
+    <tr><td>0</td><td>"Document the project" · "Gather the context of PROJ-12"</td><td>Project base + story dossier in <code>input/documentacion/</code></td></tr>
+    <tr><td>1</td><td>"Research the context of PROJ-12"</td><td>Context sheet + Missing information</td></tr>
+    <tr><td>2</td><td>"Analyze story HU-001"</td><td>Ambiguities and questions for the PO</td></tr>
+    <tr><td>3</td><td>"Generate the test cases for HU-001"</td><td><code>casos-HU-001.xlsx</code> + coverage</td></tr>
+    <tr><td>4</td><td>"Review the test cases of HU-001"</td><td>Score, duplicates and execution time</td></tr>
+    <tr><td>5</td><td>"Upload the cases to Xray in 'HU-001 Registro', linked to PROJ-12, and create the Sprint 5 cycle"</td><td>Cases and cycle in Xray</td></tr>
+    <tr><td>6</td><td>"Automate the HU-001 cases in k0lmena against https://your-app.com"</td><td><code>.feature</code> + steps + locators</td></tr>
+    <tr><td>7</td><td><code>npm test</code> · <code>npm run report:web</code></td><td>HTML report with evidence</td></tr>
+    <tr><td>8</td><td>"Upload the results to the Sprint 5 cycle"</td><td>Statuses and evidence in Xray</td></tr>
+    <tr><td>9</td><td>"Guide me through the HU-012 test cases"</td><td>Guided session + manual execution report</td></tr>
+    <tr><td>10</td><td>"Is this bug already filed in Jira?"</td><td>Duplicates, regressions and suggested severity</td></tr>
+    <tr><td>11</td><td>"Post the last run result to Slack"</td><td>Alert in Slack or Teams</td></tr>
+  </table></div>
+</section>
+
+<!-- ======================================================= AGENTS -->
+<section class="seccion" id="agentes">
+  <div class="kicker">Introduction</div>
+  <h2>Agents</h2>
+  <p class="bajada">Claude Code picks the agent based on what you ask. There are 13 agents in <code>.claude/agents/</code>, grouped in four families. The full catalog (when to use each one, sample request, inputs, outputs and what it confirms) is in <a href="https://github.com/underc0delabs/k0lmenIA/blob/main/AGENTES.md">AGENTES.md</a>.</p>
+
+  <div class="subtitulo-grupo"><h3>Analysis and design</h3></div>
+  <div class="tarjetas">
+    <div class="tarjeta c-violeta"><h4>documentador-proyecto</h4><p>Builds the project documentation for the other agents: reads the local repository (read-only), the Jira stories with their comments and links, and maps the web app's features.</p><div class="usa"><b>Skills</b> documentacion-proyecto, investigacion-contexto, ejecucion-e2e<br><b>Uses</b> npm run mapa-funcional, indice_documentacion.py<br><b>Connectors</b> atlassian, playwright-headless</div><div class="salida"><code>input/documentacion/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>analista-historias</h4><p>Researches the story context and detects ambiguities, gaps, risks and Missing information.</p><div class="usa"><b>Skills</b> investigacion-contexto<br><b>Uses</b> formatear_tablas.py<br><b>Connectors</b> atlassian</div><div class="salida"><code>output/analisis-historias/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>generador-casos-manuales</h4><p>Test cases in Excel and Markdown + coverage report with questions for the PO.</p><div class="usa"><b>Skills</b> redaccion-casos-manuales, investigacion-contexto, tecnicas-de-diseno<br><b>Uses</b> generar_casos.py<br><b>Connectors</b> atlassian</div><div class="salida"><code>output/casos-de-prueba/manuales/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>generador-casos-bdd</h4><p>Gherkin scenarios (English keywords, Spanish content) + coverage.</p><div class="usa"><b>Skills</b> investigacion-contexto, tecnicas-de-diseno<br><b>Uses</b> formatear_tablas.py<br><b>Connectors</b> atlassian</div><div class="salida"><code>output/casos-de-prueba/bdd/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>revisor-casos</h4><p>Reviews existing test cases: ambiguous steps or missing expected results, duplicates, stories without negative cases, score per case and how long manual execution takes.</p><div class="usa"><b>Skills</b> investigacion-contexto, tecnicas-de-diseno<br><b>Uses</b> revisar_casos.py, estimacion.py</div><div class="salida"><code>output/revision-casos/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>triador-bugs</h4><p>Before filing a bug, looks for duplicates and possible regressions (Jira and local bugs) and suggests severity, component, owner and story.</p><div class="usa"><b>Uses</b> buscar_duplicados.py, avisar.py<br><b>Connectors</b> atlassian</div><div class="salida"><code>output/triage/</code></div></div>
+  </div>
+
+  <div class="subtitulo-grupo"><h3>Live execution</h3><span class="etiqueta tok">uses tokens on every run</span></div>
+  <div class="tarjetas">
+    <div class="tarjeta c-naranja"><h4>ejecutor-e2e</h4><p>Runs test cases in a real browser with Playwright MCP (headed or headless), with evidence.</p><div class="usa"><b>Skills</b> ejecucion-e2e<br><b>Uses</b> generar_reporte.py<br><b>Connectors</b> playwright, playwright-headless</div><div class="salida"><code>output/ejecuciones/</code></div></div>
+    <div class="tarjeta c-naranja"><h4>ejecutor-api</h4><p>Runs a Postman, Bruno or Insomnia collection with Newman (REST and GraphQL).</p><div class="usa"><b>Skills</b> ejecucion-api, pruebas-graphql, pruebas-grpc<br><b>Uses</b> Newman, correr_newman.py</div><div class="salida"><code>output/ejecuciones/</code></div></div>
+    <div class="tarjeta c-naranja"><h4>asistente-ejecucion-manual</h4><p>Closes the guided manual execution: report with results, evidence, actual vs. estimated time and inconsistencies, and publishing after confirmation.</p><div class="usa"><b>Skills</b> ejecucion-manual<br><b>Uses</b> ejecucion_manual.py, generar_informe_ejecucion_manual.py</div><div class="salida"><code>output/ejecucion-manual/</code></div></div>
+  </div>
+
+  <div class="subtitulo-grupo"><h3>Automation with k0lmena</h3><span class="etiqueta neutra">tokens only once</span></div>
+  <div class="tarjetas">
+    <div class="tarjeta c-verde"><h4>web-mapper</h4><p>Walks the web app following your test cases and generates <code>.feature</code> files, steps and locators.</p><div class="usa"><b>Skills</b> automatizacion-k0lmena, ejecucion-e2e, investigacion-contexto<br><b>Connectors</b> playwright, playwright-headless</div><div class="salida"><code>herramientas/k0lmena/web/</code></div></div>
+    <div class="tarjeta c-verde"><h4>api-mapper</h4><p>Reads Postman or Swagger/OpenAPI (REST, GraphQL or gRPC), checks the endpoints and generates the <code>.feature</code> files.</p><div class="usa"><b>Skills</b> automatizacion-k0lmena, investigacion-contexto, tecnicas-de-diseno, pruebas-graphql, pruebas-grpc<br><b>Uses</b> resumir_openapi.py, resumir_graphql.py</div><div class="salida"><code>herramientas/k0lmena/api/</code></div></div>
+  </div>
+
+  <div class="subtitulo-grupo"><h3>Test management</h3></div>
+  <div class="tarjetas">
+    <div class="tarjeta c-cian"><h4>gestor-pruebas</h4><p>Folders, test cases, story links and cycles in Xray (Cloud or Server/DC) or k0lmenaTMT.</p><div class="usa"><b>Uses</b> scripts/gestion/gestion.py<br><b>Connectors</b> k0lmena-tmt (queries)</div><div class="salida"><code>output/gestion/</code></div></div>
+    <div class="tarjeta c-cian"><h4>publicador-resultados</h4><p>Uploads the <code>npm test</code> results (or a JUnit XML) to the cycle, with their evidence.</p><div class="usa"><b>Uses</b> scripts/gestion/gestion.py</div><div class="salida">Xray or k0lmenaTMT</div></div>
+  </div>
+
+  <h3>Skills</h3>
+  <p>The "how" used by the agents and the main conversation; loaded only when needed. Details in <code>.claude/skills/README.md</code>.</p>
+  <div class="tabla"><table>
+    <tr><th style="width:26%">Skill</th><th>What it teaches</th></tr>
+    <tr><td><code>investigacion-contexto</code></td><td>Research the whole story and record Missing information (FI-XX).</td></tr>
+    <tr><td><code>tecnicas-de-diseno</code></td><td>Equivalence classes, boundary values, decision tables, state transitions and pairwise.</td></tr>
+    <tr><td><code>redaccion-casos-manuales</code></td><td>Columns, the JSON schema of <code>generar_casos.py</code>, field rules and the coverage report.</td></tr>
+    <tr><td><code>ejecucion-e2e</code></td><td>Run in the browser with Playwright MCP: modes, snapshots, waits and evidence.</td></tr>
+    <tr><td><code>ejecucion-api</code></td><td>Run collections with Newman: base_url, token, validations and results.</td></tr>
+    <tr><td><code>pruebas-graphql</code></td><td>Test GraphQL APIs: schema, partial errors, field-level authorization, depth and pagination.</td></tr>
+    <tr><td><code>pruebas-grpc</code></td><td>gRPC (Protobuf, RPC modes, status codes, deadlines) and WebSocket.</td></tr>
+    <tr><td><code>automatizacion-k0lmena</code></td><td>k0lmena conventions: features, steps, locators, tags and database steps.</td></tr>
+    <tr><td><code>documentacion-proyecto</code></td><td>Repository reading, feature map, dossier and the sweep and update modes.</td></tr>
+    <tr><td><code>base-conocimiento</code></td><td>Build and maintain the project knowledge base as requirements change.</td></tr>
+    <tr><td><code>ejecucion-manual</code></td><td>Guided manual execution, case by case and step by step (<code>/k0lmenia:ejecucion-manual</code>).</td></tr>
+    <tr><td><code>guia-pruebas</code></td><td>Assistant to choose what to test and with which agent or skill.</td></tr>
+    <tr><td><code>empezar</code></td><td>Welcome and setup (<code>/k0lmenia:empezar</code> in the plugin).</td></tr>
+  </table></div>
+</section>
+
+<!-- ======================================================= REQUIREMENTS -->
+<section class="seccion" id="requisitos">
+  <div class="kicker">Getting started</div>
+  <h2>Requirements</h2>
+  <div class="tabla"><table>
+    <tr><th style="width:32%">To…</th><th>You need</th></tr>
+    <tr><td>Use the agents</td><td><b>Claude Code</b> + a Claude account (Pro, Max, Team or Enterprise) or the Anthropic API. VS Code recommended.</td></tr>
+    <tr><td>Test cases, reports and management</td><td><b>Python 3.10+</b> (<code>pip install -r requirements.txt</code>; on Mac/Linux, <code>pip3</code>)</td></tr>
+    <tr><td>Run live E2E tests</td><td><b>Node.js 20+</b> (22 LTS recommended) and Playwright browsers</td></tr>
+    <tr><td>Postman collections</td><td><b>Newman</b></td></tr>
+    <tr><td>Automate with k0lmena</td><td><b>Node.js 20+</b> (22 LTS recommended)</td></tr>
+  </table></div>
+</section>
+
+<!-- ======================================================= INSTALLATION -->
+<section class="seccion" id="instalacion">
+  <div class="kicker">Getting started</div>
+  <h2>Installation</h2>
+  <p class="bajada">The easiest way is the plugin (see the next section). If you prefer to clone the repo:</p>
+  <div class="codigo"><pre><span class="c"># 1. Claude Code (macOS / Linux; on Windows follow the official guide)</span>
+curl -fsSL https://claude.ai/install.sh | bash
+
+<span class="c"># 2. The repository</span>
+git clone https://github.com/underc0delabs/k0lmenIA.git
+cd k0lmenIA
+pip install -r requirements.txt   <span class="c"># on Mac/Linux: pip3 install -r requirements.txt</span>
+npm install                       <span class="c"># k0lmena (installed in herramientas/k0lmena)</span>
+npm run configurar                <span class="c"># your app and your tools: creates the .env and enables the connectors</span>
+
+<span class="c"># 3. Check that everything is ready</span>
+npm run doctor
+
+<span class="c"># 4. Get to work</span>
+code .
+claude</pre></div>
+  <div class="aviso info"><span class="ico">i</span><p>On Windows the Python command is <code>python</code>; on Mac and Linux, <code>python3</code> and <code>pip3</code>. For live E2E runs: <code>npx playwright install</code>; for Postman collections: <code>npm install -g newman</code>.</p></div>
+</section>
+
+<!-- ======================================================= PLUGIN -->
+<section class="seccion" id="plugin">
+  <div class="kicker">Getting started</div>
+  <h2>As a Claude Code plugin</h2>
+  <p class="bajada">It installs as a <b>plugin</b> and works in any project folder, without cloning this repo. Updates arrive automatically and never touch your work.</p>
+  <div class="codigo"><pre>claude plugin marketplace add underc0delabs/k0lmenIA
+claude plugin install k0lmenia@k0lmenia</pre></div>
+  <ol class="pasos">
+    <li><b>Open Claude Code in your project folder</b>And type <code>/k0lmenia:empezar</code>: it prepares the project (folders, <code>.env</code> and k0lmena), checks that everything is installed, helps you connect Jira and suggests the first task.</li>
+    <li><b>Ask for what you need</b>In plain language: <i>"Write the test cases for PROJ-12"</i>, <i>"Test the login in the browser"</i>.</li>
+  </ol>
+  <div class="tabla"><table>
+    <tr><th style="width:26%">Topic</th><th>How it works</th></tr>
+    <tr><td>Commands</td><td>What is <code>npm run &lt;x&gt;</code> in the repo is <code>k0lmenia &lt;x&gt;</code> in the plugin (<code>k0lmenia ayuda</code> lists them). Agents are called <code>k0lmenia:&lt;agent&gt;</code>.</td></tr>
+    <tr><td>What it installs and where</td><td>The code stays in the Claude Code cache and updates itself. <code>k0lmenia init</code> leaves in your project <code>input/</code>, <code>output/</code>, the <code>.env</code>, <code>TAREAS.md</code>, your copy of k0lmena and the same permissions as the repo. It never overwrites an existing file.</td></tr>
+    <tr><td>Updating</td><td>Every push to <code>main</code> is published to the <code>plugin</code> branch. Turn on auto-update (<code>/plugin</code> → Marketplaces → <code>k0lmenia</code>) or run <code>/plugin marketplace update k0lmenia</code>.</td></tr>
+    <tr><td>What's new</td><td>After an update, Claude tells you at the start of the session what changed; on demand, <code>k0lmenia novedades</code> (with the repo, <code>npm run novedades</code>).</td></tr>
+    <tr><td>Updating k0lmena</td><td><code>k0lmenia actualizar</code>: your tests are not touched; if you changed a framework file, the new version is left next to it as <code>.nuevo</code>.</td></tr>
+  </table></div>
+</section>
+
+<!-- ======================================================= CONFIGURATION -->
+<section class="seccion" id="configuracion">
+  <div class="kicker">Getting started</div>
+  <h2>Configuration: the .env file</h2>
+  <p class="bajada">There is <b>a single <code>.env</code>, in the root</b>. The agents, k0lmena and the test management scripts use it. It is never committed; the commented template is <code>.env.example</code>. The easy way: <code>npm run configurar</code>.</p>
+  <div class="tabla"><table>
+    <tr><th style="width:26%">Group</th><th>Variables</th></tr>
+    <tr><td>App under test</td><td><code>APP_URL</code> <code>APP_USER</code> <code>APP_PASSWORD</code></td></tr>
+    <tr><td>API</td><td><code>API_TOKEN</code> <code>API_BASEURL</code></td></tr>
+    <tr><td>Web (k0lmena)</td><td><code>BROWSER</code> <code>HEADLESS</code> <code>VIEWPORT_WIDTH</code> <code>VIEWPORT_HEIGHT</code> <code>LOCALE</code> <code>TIMEZONE</code></td></tr>
+    <tr><td>Execution and evidence</td><td><code>TAGS</code> <code>PARALLEL</code> <code>EVIDENCE</code> <code>VIDEO</code> <code>TRACE</code> <code>K0LMENA_AUTO_HEALING</code></td></tr>
+    <tr><td>Databases</td><td><code>DB_CONEXIONES</code> + per connection <code>DB_&lt;NAME&gt;_MOTOR</code> <code>_HOST</code> <code>_PUERTO</code> <code>_BASE</code> <code>_USUARIO</code> <code>_CLAVE</code> <code>_ESCRITURA</code> <code>_PRODUCCION</code></td></tr>
+    <tr><td>App repository</td><td><code>REPO_RUTA_LOCAL</code></td></tr>
+    <tr><td>Test management</td><td><code>GESTION_HERRAMIENTA</code> <code>GESTION_PROYECTO</code> + Xray or k0lmenaTMT credentials</td></tr>
+  </table></div>
+  <div class="aviso warn"><span class="ico">!</span><p>Use credentials from a <b>test</b> environment. The agents read secrets from the <code>.env</code>: never paste a token in the chat.</p></div>
+</section>
+
+<!-- ======================================================= PROJECT DOCUMENTATION -->
+<section class="seccion" id="documentacion">
+  <div class="kicker">Guides</div>
+  <h2>Project documentation</h2>
+  <p class="bajada">The <b>documentador-proyecto</b> gathers the real project context in <code>input/documentacion/</code>, so the other agents work on what exists instead of assumptions.</p>
+  <div class="pedido">Document the project.</div>
+  <div class="pedido">Gather all the context of PROJ-12 before writing the test cases.</div>
+  <div class="tabla"><table>
+    <tr><th style="width:24%">Source</th><th>What it reads</th></tr>
+    <tr><td>App repository</td><td>The local clone (<code>REPO_RUTA_LOCAL</code>): README and docs, validations and limits, messages, states, roles and permissions, routes and API contracts (read-only).</td></tr>
+    <tr><td>Stories</td><td>Jira with all their comments, subtasks, epic, links and bugs.</td></tr>
+    <tr><td>The application</td><td><code>npm run mapa-funcional</code>: pages, menus, forms with each field, buttons and messages (GET only, nothing is submitted).</td></tr>
+  </table></div>
+  <p>It leaves a project base, one dossier per story and an index (<code>INDICE.md</code>), each fact with its source. It is <b>incremental</b>: asking to update the documentation redoes only what changed, and <code>npm run actualizar-conocimiento</code> can run it on a schedule.</p>
+</section>
+
+<!-- ======================================================= CONTEXT -->
+<section class="seccion" id="contexto">
+  <div class="kicker">Guides</div>
+  <h2>Context research and "Missing information"</h2>
+  <p class="bajada">Before analyzing, writing test cases or automating a story, the agents research its full context (skill <code>investigacion-contexto</code>) instead of assuming.</p>
+  <div class="tabla"><table>
+    <tr><th style="width:30%">Source</th><th>What they check</th></tr>
+    <tr><td>Project documentation</td><td>First: the index and the story dossier in <code>input/documentacion/</code>.</td></tr>
+    <tr><td>Jira story</td><td>Description, criteria, status, labels, components and attachments.</td></tr>
+    <tr><td>Comments</td><td><b>All of them</b>: decisions made later replace the description.</td></tr>
+    <tr><td>Subtasks, epic and linked issues</td><td>General rules, sibling stories and known bugs in the flow.</td></tr>
+    <tr><td>Contracts and <code>input/</code></td><td>Swagger, Postman and local documentation.</td></tr>
+  </table></div>
+  <p>Whatever is not found in any source is marked as <b>Missing information</b> with one ID per story (<code>FI-01</code>, <code>FI-02</code>, …) that travels to the test case sheet, the <code>.feature</code> files (<code>@falta-info @FI-01</code>), coverage reports, mappings, execution reports and what is published to Xray or k0lmenaTMT.</p>
+</section>
+
+<!-- ======================================================= DESIGN AND EXECUTION -->
+<section class="seccion" id="guia">
+  <div class="kicker">Guides</div>
+  <h2>Design and execution</h2>
+  <div class="guia"><h4>Analyze a story <span class="etiqueta neutra">analista-historias</span></h4>
+    <div class="pedido">Analyze story HU-001 and tell me its ambiguities.</div>
+    <p>Reviews each criterion and delivers <code>analisis-HU-001.md</code> with ambiguities, gaps, risks, uncovered cases and questions for the PO.</p></div>
+  <div class="guia"><h4>Write the test cases <span class="etiqueta neutra">generador-casos-manuales</span></h4>
+    <div class="pedido">Generate the test cases for HU-001.</div>
+    <p>Sheet <code>casos-HU-001.xlsx</code>, its <code>.md</code> and the coverage report, with positive, negative and edge cases and the estimated execution time of each case.</p></div>
+  <div class="guia"><h4>Turn it into BDD <span class="etiqueta neutra">generador-casos-bdd</span></h4>
+    <div class="pedido">Turn HU-001 into BDD.</div>
+    <p>Gherkin scenarios with <code>@HU-001</code> and <code>@CP-XXX</code>, ready to automate.</p></div>
+  <div class="guia"><h4>Review existing test cases <span class="etiqueta neutra">revisor-casos</span></h4>
+    <div class="pedido">Review the HU-001 test cases and tell me how long they take to run.</div>
+    <p>Score per case, problems with a suggestion, duplicates, stories without negative cases and manual execution time.</p></div>
+  <div class="guia"><h4>Run in the browser <span class="etiqueta neutra">ejecutor-e2e</span></h4>
+    <div class="pedido">Run CP-001 and CP-002 of HU-001 against https://your-app.com headless.</div>
+    <p>HTML report with screenshots of each step in <code>output/ejecuciones/</code>.</p></div>
+  <div class="guia"><h4>Run an API collection <span class="etiqueta neutra">ejecutor-api</span></h4>
+    <div class="pedido">Run the collection in input/api for HU-001.</div>
+    <p>Postman, Bruno or Insomnia with Newman, with the token and URL from the <code>.env</code>, and its HTML report.</p></div>
+</section>
+
+<!-- ======================================================= K0LMENA -->
+<section class="seccion" id="k0lmena">
+  <div class="kicker">Guides</div>
+  <h2>Automation with k0lmena</h2>
+  <p class="bajada"><a href="https://github.com/underc0delabs/k0lmena">k0lmena</a> lives in <code>herramientas/k0lmena/</code>. The <i>mapper</i> agents check your test cases against the real app and write the automation <b>only once</b>; after that the suite runs as many times as you want, <b>with no tokens</b>.</p>
+  <div class="codigo"><pre>npm test                          <span class="c"># web + API</span>
+npm run test:web                  <span class="c"># also: test:api · test:all</span>
+TAGS=@HU-001 npm test             <span class="c"># filter by tag</span>
+npm run report:web                <span class="c"># rebuilds the HTML report (also: report:api)</span></pre></div>
+  <div class="tabla"><table>
+    <tr><th style="width:16%">Suite</th><th>Passing test</th><th>Failing test</th></tr>
+    <tr><td>Web</td><td>Final screenshot (+ optional GIF)</td><td>Full video, screenshot, error, browser and Node logs, Playwright trace</td></tr>
+    <tr><td>API</td><td>Request and response (<code>Authorization</code> hidden)</td><td>The same + the failed validation</td></tr>
+  </table></div>
+  <p><code>npm run login</code> saves a session you log into by hand (captcha, 2FA, SSO) so <code>npm test</code> and the agents' browser start logged in. Also: <code>npm run mapa-funcional</code>, <code>npm run record</code>, <code>npm run record:generator</code>, <code>npm run debug</code> and locator auto-healing. Details in <code>herramientas/k0lmena/README.md</code>.</p>
+</section>
+
+<!-- ======================================================= TEST MANAGEMENT -->
+<section class="seccion" id="gestion">
+  <div class="kicker">Guides</div>
+  <h2>Test management: Xray and k0lmenaTMT</h2>
+  <p class="bajada">Set <code>GESTION_HERRAMIENTA</code> (<code>xray-cloud</code> · <code>xray-dc</code> · <code>k0lmena-tmt</code>), <code>GESTION_PROYECTO</code> and the credentials in the <code>.env</code>.</p>
+  <div class="pedido">Upload the HU-001 cases to Xray in the 'HU-001 Registro' folder, linked to PROJ-12, and create the Sprint 5 cycle.</div>
+  <div class="pedido">Upload the results of the last run to cycle PROJ-60.</div>
+  <p>The <b>gestor-pruebas</b> creates folders, test cases, links and cycles (and with <code>sincronizar-casos</code> updates the ones that changed); the <b>publicador-resultados</b> uploads status, error and evidence. It works for k0lmena and for any framework that produces <b>JUnit XML</b>. Traceability (<code>output/gestion/&lt;HU&gt;-&lt;tool&gt;.json</code>) prevents duplicates.</p>
+  <h3>k0lmenaTMT</h3>
+  <p>It integrates with the personal token (<code>K0LMENA_TMT_TOKEN</code>). Uploads are done by <code>scripts/gestion</code> through its MCP server, without passing each case through the conversation; the <code>k0lmena-tmt</code> connector is for queries from the chat. Keys: <code>TC-&lt;id&gt;</code> (cases) and <code>CY-&lt;id&gt;</code> (cycles).</p>
+</section>
+
+<!-- ======================================================= CI -->
+<section class="seccion" id="ci">
+  <div class="kicker">Guides</div>
+  <h2>k0lmena in the pipeline (CI)</h2>
+  <p class="bajada">The k0lmena suites run on their own in the team's pipeline, with no agents or tokens.</p>
+  <div class="codigo"><pre>npm run ci -- generar --plataforma github                <span class="c"># → .github/workflows/k0lmena.yml</span>
+npm run ci -- generar --plataforma gitlab --suite all    <span class="c"># → .gitlab-ci.yml</span>
+npm run ci -- generar --plataforma jenkins               <span class="c"># → Jenkinsfile</span>
+npm run ci -- generar --plataforma azure --suite api     <span class="c"># → azure-pipelines.yml</span></pre></div>
+  <p>The pipeline installs k0lmena and Chromium, runs the suites and keeps the reports as an artifact; with <code>GESTION_CICLO</code> it publishes the results to Xray or k0lmenaTMT. The whole <code>.env</code> goes in as a pipeline secret. Details in <code>herramientas/ci/README.md</code>.</p>
+</section>
+
+<!-- ======================================================= ANTI-BOTS -->
+<section class="seccion" id="anti-bots">
+  <div class="kicker">Guides</div>
+  <h2>Apps with anti-bot protection</h2>
+  <p class="bajada">If the app uses Cloudflare, Akamai, DataDome, Imperva, AWS WAF or a captcha, it may block the automated browser. K0lmenIA does not try to bypass it.</p>
+  <div class="tabla"><table>
+    <tr><th style="width:26%">What it does</th><th>How</th></tr>
+    <tr><td>No false failures</td><td>The scenario is marked <b>Blocked: anti-bot</b> (also in Xray and k0lmenaTMT) and the agents stop and report it.</td></tr>
+    <tr><td>Bypass header</td><td><code>QA_BYPASS_HEADER</code> and <code>QA_BYPASS_TOKEN</code> in the <code>.env</code>: sent only to the app's hosts.</td></tr>
+    <tr><td>Real Chrome and human pace</td><td><code>NAVEGADOR_CANAL=chrome</code> and <code>RITMO_HUMANO=si</code>.</td></tr>
+    <tr><td>Manual plan B</td><td><code>npm run login</code>: you solve the challenge by hand and the session is saved (<code>SESION=si</code>).</td></tr>
+  </table></div>
+</section>
+
+<!-- ======================================================= DATABASE -->
+<section class="seccion" id="base-de-datos">
+  <div class="kicker">Guides</div>
+  <h2>Database checks</h2>
+  <p class="bajada">k0lmena includes steps to check in <b>PostgreSQL, MySQL / MariaDB, SQL Server and MongoDB</b> what your tests saved. The mappers add them to a <code>.feature</code> only when you ask.</p>
+  <div class="pedido">Add the database check to the registration scenario.</div>
+  <div class="codigo"><pre>Then el registro de "usuarios" donde "id" es "{idUsuario}" tiene:
+  | campo  | valor  |
+  | estado | ACTIVO |</pre></div>
+  <div class="codigo"><pre>npm run bd -- conexiones
+npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" --param ana@test.com</pre></div>
+  <div class="aviso warn"><span class="ico">!</span><p><b>Read-only by default.</b> To prepare or clean data, the connection needs <code>DB_&lt;NAME&gt;_ESCRITURA=si</code>; with <code>DB_&lt;NAME&gt;_PRODUCCION=si</code> it never writes. Sensitive columns are masked.</p></div>
+</section>
+
+<!-- ======================================================= TRIAGE -->
+<section class="seccion" id="triage">
+  <div class="kicker">Guides</div>
+  <h2>Bug triage</h2>
+  <div class="pedido">Is BUG-008 already filed in Jira?</div>
+  <p>The <b>triador-bugs</b> checks whether the bug already exists in Jira or in the local bugs, detects <b>regressions</b> of closed bugs and suggests severity, priority, component, owner and story. Creating or linking in Jira only happens after you confirm.</p>
+</section>
+
+<!-- ======================================================= MANUAL EXECUTION -->
+<section class="seccion" id="ejecucion-manual">
+  <div class="kicker">Guides</div>
+  <h2>Guided manual execution</h2>
+  <p class="bajada">With the <code>ejecucion-manual</code> skill, the conversation guides you through the manual test cases: one case and one step at a time, the result, the evidence, actual vs. estimated time and the bug written on the spot if something fails.</p>
+  <div class="codigo"><pre>/k0lmenia:ejecucion-manual HU-012                <span class="c"># in Claude Code</span>
+npm run ejecucion-manual -- estado --sesion output/ejecucion-manual/HU-012</pre></div>
+  <p>The session is saved in <code>output/ejecucion-manual/&lt;HU&gt;/sesion.json</code>, so you can pause and resume another day. When closing, the <b>asistente-ejecucion-manual</b> builds the report (ES/EN) and flags inconsistencies; publishing to Xray or k0lmenaTMT only happens after confirmation.</p>
+</section>
+
+<!-- ======================================================= HISTORY -->
+<section class="seccion" id="historial">
+  <div class="kicker">Guides</div>
+  <h2>Run history</h2>
+  <p>Each <code>npm test</code> run keeps its <b>last 5 runs</b> with their evidence in <code>herramientas/k0lmena/reports/&lt;suite&gt;/historial/</code>, and each report includes a <b>Run evolution</b> section: what is new, what was fixed and how the indicators evolve.</p>
+</section>
+
+<!-- ======================================================= PORTAL -->
+<section class="seccion" id="tablero">
+  <div class="kicker">Guides</div>
+  <h2>Report portal</h2>
+  <p><code>output/index.html</code> opens with a <b>home dashboard</b>: global indicators (each <code>npm test</code> suite with its pass rate and trend, open bugs, today's and this week's reports), <b>alerts</b> with what needs attention and one card per category with each tool's latest report. Below, <b>All reports</b>, with filters by text, tool, story, status and dates. It builds itself (<code>npm run portal</code>) and opens with a double click.</p>
+</section>
+
+<!-- ======================================================= LANGUAGES -->
+<section class="seccion" id="idiomas">
+  <div class="kicker">Guides</div>
+  <h2>Reports in Spanish and English</h2>
+  <div class="codigo arbol"><pre>output/ejecucion-manual/HU-012/
+├── informe-ejecucion-manual.html      <span class="c">shortcut: opens the chosen language (Spanish by default)</span>
+├── es/informe-ejecucion-manual.html   <span class="c">Spanish</span>
+├── en/informe-ejecucion-manual.html   <span class="c">English</span>
+└── sesion.json analisis.json …        <span class="c">the evidence is shared by both</span></pre></div>
+  <p>The flag at the top right switches languages and remembers your choice. What the agent writes is translated by the agent itself (an <code>"en"</code> block in the JSON); the interface is translated by the script with a dictionary (<code>scripts/i18n/en/</code>), with no tokens.</p>
+</section>
+
+<!-- ======================================================= ALERTS -->
+<section class="seccion" id="avisos">
+  <div class="kicker">Guides</div>
+  <h2>Slack and Teams alerts</h2>
+  <div class="codigo"><pre>npm run avisar -- --titulo "Regression" --texto "3 scenarios failed" --nivel error
+npm run avisar -- --desde-cucumber herramientas/k0lmena/reports/web/cucumber-report.json</pre></div>
+  <p>Posts through a webhook (<code>SLACK_WEBHOOK_URL</code>, <code>TEAMS_WEBHOOK_URL</code> in the <code>.env</code>). The triager uses it when asked.</p>
+</section>
+
+<!-- ======================================================= EVALS -->
+<section class="seccion" id="evals">
+  <div class="kicker">Guides</div>
+  <h2>Agent evals</h2>
+  <p>The <b>evals</b> (<code>evals/</code>) measure the quality of what the agents produce: each case has <b>deliberate traps</b> (ambiguities, contradictions, limits, secrets) and deterministic checks. They run in an isolated workspace with <code>claude -p</code> and leave a report with regressions against the previous run.</p>
+  <div class="codigo"><pre>npm run evals -- --listar
+npm run evals -- --correr --agente generador-casos-manuales</pre></div>
+  <div class="aviso info"><span class="ico">i</span><p><b>They use tokens</b>: each case is a full conversation, with a cap per case. <code>--referencia</code> and <code>--solo-verificar</code> check without running the agent.</p></div>
+</section>
+
+<!-- ======================================================= TOKENS -->
+<section class="seccion" id="tokens">
+  <div class="kicker">Guides</div>
+  <h2>Token usage</h2>
+  <p><code>python scripts/metricas_tokens.py</code> reads the project's Claude Code transcripts (only the counts, <b>never the text</b>), attributes usage to each agent and builds a report with the estimated cost per agent, day and model.</p>
+</section>
+
+<!-- ======================================================= CONNECTORS -->
+<section class="seccion" id="conectores">
+  <div class="kicker">Guides</div>
+  <h2>MCP connectors</h2>
+  <div class="tabla"><table>
+    <tr><th style="width:26%">Connector</th><th>What for</th><th style="width:26%">Authentication</th></tr>
+    <tr><td><code>playwright</code> · <code>playwright-headless</code></td><td>Browser for the E2E runner, the web-mapper and the documenter</td><td>Enabled by default</td></tr>
+    <tr><td><code>atlassian</code></td><td><b>Jira</b>: stories, criteria, comments and links</td><td>Enabled by default: your account (OAuth) or API token</td></tr>
+    <tr><td><code>k0lmena-tmt</code></td><td>Queries in k0lmenaTMT (uploads go through <code>gestion.py</code>)</td><td>Personal token</td></tr>
+  </table></div>
+  <div class="codigo"><pre>npm run conector                            <span class="c"># lists the connectors and which ones you have enabled</span>
+npm run conector -- activar k0lmena-tmt     <span class="c"># only for you; restart Claude Code</span></pre></div>
+  <p>None of them contain secrets: credentials are read from the <code>.env</code>. <code>npm run doctor</code> tells you what each enabled connector is missing. Full guide in <code>CONECTORES.md</code>.</p>
+</section>
+
+<!-- ======================================================= PLANS -->
+<section class="seccion" id="planes">
+  <div class="kicker">Plans</div>
+  <h2>Need more?</h2>
+  <p class="bajada">K0lmenIA Light covers the day-to-day QA basics. When the team needs more, there are two paid plans.</p>
+  <div class="tarjetas">
+    <div class="tarjeta c-violeta"><h4>K0lmenIA Pro</h4><p>Every testing agent (101 in total): accessibility, web performance, security, load testing, mobile, visual regression, exploratory testing, failure analysis, root cause, e-commerce, AI and chatbots, analytics, data and more, with more connectors (Confluence, Figma, GitHub, GitLab, Linear, observability and others).</p><div class="salida">USD 29 per user per month</div></div>
+    <div class="tarjeta c-cian"><h4>K0lmenIA Empresa</h4><p>Everything in Pro plus metrics, quality dashboard, traceability, audit evidence, presentations, onboarding, SAP, Salesforce and Dynamics, daily summary, capacity planning and test management in QMetry, AIO Tests, Zephyr Scale and Azure DevOps.</p><div class="salida">USD 590 per month for up to 10 people</div></div>
+  </div>
+  <p>More information at <a href="https://k0lmena.com/k0lmenia/" target="_blank" rel="noopener">k0lmena.com/k0lmenia</a>.</p>
+</section>
+
+<!-- ======================================================= CONVENTIONS -->
+<section class="seccion" id="convenciones">
+  <div class="kicker">Reference</div>
+  <h2>Conventions</h2>
+  <div class="dos-col">
+    <div class="tabla"><table>
+      <tr><th>Item</th><th>Format</th></tr>
+      <tr><td>Stories</td><td><code>HU-001</code></td></tr>
+      <tr><td>Acceptance criteria</td><td><code>CA1</code> · <code>CA2</code></td></tr>
+      <tr><td>Manual test cases</td><td><code>CP-001</code></td></tr>
+      <tr><td>API test cases</td><td><code>CP-API-001</code></td></tr>
+      <tr><td>Bugs</td><td><code>BUG-001</code></td></tr>
+      <tr><td>Missing information</td><td><code>FI-01</code> · <code>@falta-info @FI-01</code></td></tr>
+    </table></div>
+    <div class="tabla"><table>
+      <tr><th>Scale</th><th>Values</th></tr>
+      <tr><td>Severity and priority</td><td>Crítica · Alta · Media · Baja (critical, high, medium, low)</td></tr>
+      <tr><td>Case status</td><td>N/A · Pendiente · En ejecución · Aprobado · Fallido · Bloqueado</td></tr>
+    </table></div>
+  </div>
+  <h3>Tags in k0lmena</h3>
+  <div class="tabla"><table>
+    <tr><th style="width:26%">Where</th><th>Tags</th></tr>
+    <tr><td>Feature</td><td><code>@HU-001 @web</code></td></tr>
+    <tr><td>Scenario</td><td><code>@CP-001</code> (<code>@smoke</code> if critical) · <code>@bloqueado</code> · <code>@falta-info @FI-01</code></td></tr>
+    <tr><td>Files</td><td><code>&lt;type&gt;/features/HU-001-&lt;slug&gt;.feature</code> · <code>steps/HU-001.steps.ts</code> · <code>locators/HU-001.locators.ts</code></td></tr>
+  </table></div>
+</section>
+
+<!-- ======================================================= STRUCTURE -->
+<section class="seccion" id="estructura">
+  <div class="kicker">Reference</div>
+  <h2>Repository structure</h2>
+  <div class="codigo arbol"><pre>k0lmenIA/
+├── CLAUDE.md               <span class="c">context and standards (short on purpose)</span>
+├── REFERENCIA.md           <span class="c">output of each agent, commands and scripts</span>
+├── AGENTES.md              <span class="c">agent catalog</span>
+├── ARQUITECTURA.md         <span class="c">how the repo grows</span>
+├── CONECTORES.md           <span class="c">how to enable the MCP connectors</span>
+├── CHANGELOG.md            <span class="c">changes in each version</span>
+├── .env.example            <span class="c">variables template</span>
+├── .mcp.json               <span class="c">MCP connectors (no secrets)</span>
+├── package.json            <span class="c">shortcuts (npm test…)</span>
+├── docs/                   <span class="c">this documentation, PDF and diagrams</span>
+├── tests/                  <span class="c">script tests</span>
+├── evals/                  <span class="c">agent evals</span>
+├── .claude/agents/         <span class="c">the 13 agents</span>
+├── .claude/skills/         <span class="c">the 13 skills</span>
+├── input/ · output/        <span class="c">inputs and results</span>
+├── plantillas/             <span class="c">bug, test case sheet, coverage</span>
+├── scripts/                <span class="c">cases, reports, test management (Xray and k0lmenaTMT), connectors, portal and doctor</span>
+└── herramientas/
+    ├── newman/             <span class="c">Postman, Bruno and Insomnia collections</span>
+    ├── ci/                 <span class="c">pipeline templates</span>
+    └── k0lmena/            <span class="c">automation framework (web and API)</span></pre></div>
+</section>
+
+<!-- ======================================================= FAQ -->
+<section class="seccion" id="faq">
+  <div class="kicker">Reference</div>
+  <h2>FAQ</h2>
+  <details class="faq"><summary>What happens if the story is missing information?</summary><div>The agents first look for it in the comments, subtasks, epic and linked issues. Whatever they don't find becomes <b>Missing information</b> (<code>FI-01</code>) with the question for the PO, and travels to every artifact.</div></details>
+  <details class="faq"><summary>I don't know what I'm missing to install or configure</summary><div>Run <code>npm run doctor</code>: it checks Python, Node, k0lmena, Playwright, Newman, the fonts, the <code>.env</code>, the integrations, the connectors and git, and tells you how to fix each one.</div></details>
+  <details class="faq"><summary>A new agent doesn't show up</summary><div>Restart Claude Code.</div></details>
+  <details class="faq"><summary><code>npm test</code> runs 0 scenarios</summary><div>You haven't automated anything yet or <code>TAGS</code> doesn't match.</div></details>
+  <details class="faq"><summary>A scenario never runs</summary><div>It has <code>@bloqueado</code>: the reason is in a comment above it.</div></details>
+  <details class="faq"><summary>An agent returns "Necesito que confirmes" (I need you to confirm)</summary><div>That's on purpose: agents can't ask questions mid-task. Answer and Claude continues.</div></details>
+  <details class="faq"><summary>An MCP connector doesn't connect</summary><div>Run <code>npm run doctor</code>: it tells you which variable is missing in the <code>.env</code>. Atlassian is authorized from <code>/mcp</code>.</div></details>
+</section>
+
+<!-- ======================================================= EXTENDING -->
+<section class="seccion" id="extender">
+  <div class="kicker">Reference</div>
+  <h2>Extending the project</h2>
+  <ol class="pasos">
+    <li><b>Create the file</b><code>.claude/agents/my-agent.md</code> with <code>name</code> and <code>description</code> frontmatter. The description is what Claude Code uses to decide when to invoke it.</li>
+    <li><b>Write the body</b>Role, inputs, process, output and rules.</li>
+    <li><b>Define the format</b>If it produces its own format, add its template in <code>plantillas/</code> or its script in <code>scripts/</code>, and its folder in <code>output/</code>.</li>
+    <li><b>Report in two languages</b>If it builds an HTML report, write it with <code>escribir_bilingue</code> and <code>localizar</code> (<code>scripts/_i18n.py</code>).</li>
+  </ol>
+  <h3>Rebuild this documentation</h3>
+  <div class="codigo"><pre>node docs/generar.js        <span class="c"># diagrams (PNG) and PDF in both languages</span></pre></div>
+  <p>The site is <code>docs/index.html</code> (published with GitHub Pages at <a href="https://underc0delabs.github.io/k0lmenIA/">underc0delabs.github.io/k0lmenIA</a>), with its English version in <code>docs/en/index.html</code>. The PDFs are published by the <code>documentacion.yml</code> workflow in the <code>docs</code> release.</p>
+  <h3>License</h3>
+  <p><b>MIT</b> license — © 2026 <b>QARMY</b>. k0lmena is an open source project by <b>Danilo Vezzoni</b>. Made by the <b>Underc0de</b> community.</p>
+</section>
+
+<footer class="pie">
+  <span>K0lmenIA Light · QARMY · Underc0de · MIT</span>
+  <span><a href="https://qarmy.ar" target="_blank" rel="noopener">qarmy.ar</a> · <a href="https://www.youtube.com/@QARMY-UC" target="_blank" rel="noopener">YouTube</a> · <a href="https://github.com/underc0delabs/k0lmenIA" target="_blank" rel="noopener">GitHub</a></span>
+</footer>
+
+</main>
+</div>
+</body>
+</html>

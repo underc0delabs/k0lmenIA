@@ -1,0 +1,1 @@
+Mapeé el contrato de pedidos: 7 escenarios en herramientas/k0lmena/api/features/pedidos.feature. CP-API-003 difiere de la spec (total como string), CP-API-005 queda con FI-01 y CP-API-006/007 (POST y DELETE) quedan bloqueados porque no hubo autorización para métodos con efecto. Reporte: output/mapeos/mapeo-pedidos-api.md.

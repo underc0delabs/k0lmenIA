@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>K0lmenIA Light · How the pieces relate</title>
+<link rel="stylesheet" href="../diagramas.css">
+<style>
+  .lienzo { width: 1800px; }
+  .arriba { display: grid; grid-template-columns: 1fr 70px 1.5fr 70px 1fr; align-items: center; }
+  .rel { text-align: center; color: var(--muted); font-size: 13px; line-height: 1.25; }
+  .rel .fl { display: block; font-size: 28px; color: var(--amarillo); line-height: 1; }
+  .rel .fl.v { margin: 4px 0; }
+  .medio { display: grid; grid-template-columns: 1fr 150px 1.25fr 150px 1fr; align-items: center; margin-top: 6px; }
+  .col { display: flex; flex-direction: column; gap: 18px; }
+  .pieza { position: relative; }
+  .pieza .que { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px; }
+  .pieza h3 { font-size: 22px; }
+  .pieza .donde { font-family: var(--mono); font-size: 13px; color: var(--texto2); margin-top: 2px; }
+  .pieza .ej { margin-top: 8px; font-size: 13px; color: var(--muted); }
+  .pieza .ej b { color: var(--texto); font-weight: 600; }
+  .agente { border: 2px solid var(--amarillo); box-shadow: 0 0 0 1px rgba(249,176,6,.35), 0 0 48px -10px rgba(249,176,6,.45); border-radius: 22px; padding: 26px 28px; text-align: center;
+            background: radial-gradient(500px 260px at 50% 0%, rgba(249,176,6,0.16), var(--panel)); }
+  .agente h2 { margin: 6px 0 6px; font-size: 34px; }
+  .agente p { color: var(--muted); font-size: 16px; line-height: 1.45; margin: 6px 0; }
+  .agente .lista { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 12px; }
+  .agente .lista span { font-size: 12.5px; background: var(--panel2); border: 1px solid var(--linea); border-radius: 999px; padding: 3px 10px; color: var(--texto2); }
+  .relh { display: flex; flex-direction: column; gap: 18px; }
+  .relh .rel { min-height: 120px; display: flex; flex-direction: column; justify-content: center; }
+  .abajo { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; margin-top: 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chips span { font-size: 12.5px; background: var(--panel2); border: 1px solid var(--linea); border-radius: 8px; padding: 3px 8px; }
+  .ejemplo { margin-top: 30px; border: 1px dashed var(--linea-acento); border-radius: 16px; padding: 18px 20px; }
+  .ejemplo .tit { font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 12px; }
+  .pasos { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; align-items: stretch; }
+  .p { background: var(--panel); border: 1px solid var(--linea); border-top: 4px solid var(--gris); border-radius: 12px; padding: 10px 12px; font-size: 13.5px; line-height: 1.35; position: relative; }
+  .p .n { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
+  .p b { display: block; font-size: 14.5px; margin: 3px 0; }
+  .p:not(:last-child)::after { content: "›"; position: absolute; right: -10px; top: 40%; color: var(--amarillo); font-size: 22px; }
+  .t-azul { border-top-color: var(--azul); } .t-violeta { border-top-color: var(--violeta); } .t-verde { border-top-color: var(--verde); }
+  .t-naranja { border-top-color: var(--naranja); } .t-cian { border-top-color: var(--cian); } .t-gris { border-top-color: var(--gris); }
+  .c-azul { color: var(--azul); } .c-violeta { color: var(--violeta); } .c-verde { color: var(--verde); }
+  .c-naranja { color: var(--naranja); } .c-cian { color: var(--cian); } .c-gris { color: var(--texto2); }
+  .pie { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 26px; }
+  .pie .caja p { font-size: 14px; }
+</style></head>
+<body><div class="lienzo" id="captura">
+  <div class="titulo">
+    <div><h1>K0lmenIA Light <span class="tenue">· How the pieces relate</span></h1>
+      <p class="sub">The agent is the center: each piece solves a different part of the work</p></div>
+    <div class="marca">QARMY · Underc0de</div>
+  </div>
+
+  <!-- Persona → Claude Code → Agente -->
+  <div class="arriba">
+    <div class="caja acento-gris centrado"><div class="que c-gris" style="font-size:13px;font-weight:700;letter-spacing:.8px">PERSON</div><h3>QA</h3>
+      <p>Asks in Spanish, in natural language: <i style="white-space:nowrap">"Generá los casos de PROJ-12"</i></p></div>
+    <div class="rel"><span class="fl">→</span>asks</div>
+    <div class="caja acento-azul centrado grande"><div class="que c-azul" style="font-size:13px;font-weight:700;letter-spacing:.8px">ORCHESTRATOR</div><h3>Claude Code</h3>
+      <p>Reads <code>CLAUDE.md</code> (standards: don't make things up, traceability, formats, IDs) and picks the agent by its <code>description</code>. If the agent is missing a fact, it asks you.</p></div>
+    <div class="rel"><span class="fl" style="font-size:20px">⋯</span>tokens<br>and URLs</div>
+    <div class="caja acento-gris centrado"><div class="que c-gris" style="font-size:13px;font-weight:700;letter-spacing:.8px">CONFIGURATION</div><h3><code>.env</code></h3>
+      <p>URLs, credentials and tokens in a single file at the root. Never versioned.</p></div>
+  </div>
+  <div class="rel" style="margin:6px 0 4px"><span class="fl v">↓</span>picks the agent and delegates the task</div>
+
+  <!-- Centro: el agente y lo que usa -->
+  <div class="medio">
+    <div class="col">
+      <div class="caja acento-violeta pieza">
+        <div class="que c-violeta">Skills · the HOW</div><h3>Reusable knowledge</h3>
+        <div class="donde">.claude/skills/&lt;name&gt;/SKILL.md</div>
+        <p>Instructions loaded only when needed and shared by several agents, so they aren't repeated.</p>
+        <div class="ej"><b>investigacion-contexto</b> · tecnicas-de-diseno · ejecucion-e2e · ejecucion-api · automatizacion-k0lmena · ejecucion-manual</div></div>
+      <div class="caja acento-gris pieza">
+        <div class="que c-gris">Templates · the FORMAT</div><h3>How it has to look</h3>
+        <div class="donde">plantillas/</div>
+        <p>They define the fields, order and allowed values of each deliverable. The template rules, not the agent.</p>
+        <div class="ej"><b>plantilla-casos-prueba.xlsx</b> · plantilla-reporte-bug.md · plantilla-cobertura.md · plantilla-contexto.md</div></div>
+    </div>
+
+    <div class="relh">
+      <div class="rel"><span class="fl">←</span>loads<br>when the task<br>needs it</div>
+      <div class="rel"><span class="fl">←</span>follows<br>the format</div>
+    </div>
+
+    <div class="agente">
+      <div class="que c-azul" style="font-size:13px;font-weight:800;letter-spacing:1px">AGENT · THE WHO</div>
+      <h2>One specialist per task</h2>
+      <p><code>.claude/agents/&lt;name&gt;.md</code>: its role, its step-by-step process and its rules.</p>
+      <p>Decides what to do and with what; delegates the mechanical parts to scripts and tools, and doesn't make things up: what's missing is recorded as <b>Missing information</b> (<code>FI-01</code>).</p>
+      <div class="lista"><span>documentador-proyecto</span><span>analista-historias</span><span>generador-casos-manuales</span><span>generador-casos-bdd</span><span>ejecutor-e2e</span><span>web-mapper</span><span>revisor-casos</span><span>asistente-ejecucion-manual</span><span>gestor-pruebas</span><span>… 13 in total</span></div>
+    </div>
+
+    <div class="relh">
+      <div class="rel"><span class="fl">→</span>runs<br>the deterministic parts</div>
+      <div class="rel"><span class="fl">→</span>runs from<br>the terminal</div>
+    </div>
+
+    <div class="col">
+      <div class="caja acento-cian pieza">
+        <div class="que c-cian">Scripts · the MECHANICAL</div><h3>The repo's own Python</h3>
+        <div class="donde">scripts/</div>
+        <p>What's better done by code than by the model: exact formats, calculations and HTML reports. Always the same, with no tokens spent.</p>
+        <div class="ej"><b>generar_casos.py</b> (spreadsheet) · formatear_tablas.py · generar_informe_*.py · _i18n.py (ES/EN reports) · portal_informes.py · gestion/ (Xray, k0lmenaTMT) · construir_plugin.py</div></div>
+      <div class="caja acento-verde pieza">
+        <div class="que c-verde">Tools · EXECUTION</div><h3>Testing tools</h3>
+        <div class="donde">herramientas/</div>
+        <p>They run from the command line. What the agent automates once in k0lmena then runs <b>with no agents and no tokens</b>.</p>
+        <div class="ej"><b>k0lmena</b> (npm test, login, mapa-funcional…) · Newman · ci (pipelines) · shared browser (bot protection)</div></div>
+    </div>
+  </div>
+
+  <div class="rel" style="margin:8px 0 2px"><span class="fl v">↓</span>connects, reads and writes</div>
+
+  <!-- Abajo: MCP, input, output -->
+  <div class="abajo">
+    <div class="caja acento-gris pieza">
+      <div class="que c-gris">Input · WHAT IT READS</div><h3><code>input/</code></h3>
+      <p>Stories, API contracts, bug observations, logs and the <b>project documentation</b> built by the documentador.</p>
+      <div class="chips"><span>historias/</span><span>documentacion/</span><span>api/</span><span>bugs/</span><span>correos/</span><span>logs/</span></div></div>
+    <div class="caja acento-azul pieza">
+      <div class="que c-azul">MCP connectors · EXTERNAL SYSTEMS</div><h3><code>.mcp.json</code> + <code>scripts/mcp/</code></h3>
+      <p>Bridges to talk to outside systems. No secrets in the file: tokens are read from the <code>.env</code>. Playwright and Atlassian are active by default; the rest with <code>npm run conector</code>.</p>
+      <div class="chips"><span>Playwright (browser)</span><span>Jira</span><span>k0lmenaTMT</span></div></div>
+    <div class="caja acento-naranja pieza">
+      <div class="que c-naranja">Output · WHAT IT LEAVES</div><h3><code>output/</code> and k0lmena</h3>
+      <p>Each artifact in its folder, with traceability (<code>HU-001</code>, <code>CP-001</code>). Every report comes in Spanish and English (<code>es/</code> · <code>en/</code>), keeps its last 5 runs, and the <code>output/index.html</code> portal brings them together by category.</p>
+      <div class="chips"><span>casos-de-prueba/</span><span>contexto/</span><span>ejecuciones/</span><span>reportes-bug/</span><span>es/ · en/</span><span>index.html (portal)</span><span>herramientas/k0lmena/…/features</span></div></div>
+  </div>
+
+  <!-- Ejemplo -->
+  <div class="ejemplo">
+    <div class="tit">End-to-end example · "Generá los casos de prueba de PROJ-12" (generate the test cases)</div>
+    <div class="pasos">
+      <div class="p t-azul"><div class="n">1 · Claude Code</div><b>Picks the agent</b>generador-casos-manuales, by its <code>description</code></div>
+      <div class="p t-violeta"><div class="n">2 · Skill</div><b>investigacion-contexto</b>says where to look and how to mark what's missing</div>
+      <div class="p t-azul"><div class="n">3 · MCP</div><b>atlassian</b>reads the story, all its comments, the epic and the links</div>
+      <div class="p t-gris"><div class="n">4 · input/</div><b>documentacion/</b>code rules and the web app map, if they exist</div>
+      <div class="p t-violeta"><div class="n">5 · Skill</div><b>tecnicas-de-diseno</b>boundary values, equivalence classes, states</div>
+      <div class="p t-cian"><div class="n">6 · Template + script</div><b>generar_casos.py</b>builds the spreadsheet in the template's format</div>
+      <div class="p t-naranja"><div class="n">7 · output/</div><b>casos-PROJ-12.xlsx</b>+ .md + coverage, with the FI-XX marked</div>
+    </div>
+  </div>
+
+  <div class="pie">
+    <div class="caja acento-violeta"><div class="et">Agent vs. skill</div><p>The agent is <b>who</b> does the whole task; the skill is <b>how</b> a part is done, and several agents share it.</p></div>
+    <div class="caja acento-cian"><div class="et">Script vs. tool</div><p>A script is the repo's own code for formatting and calculation; a tool is external testing software (k0lmena, Newman).</p></div>
+    <div class="caja acento-azul"><div class="et">MCP vs. tool</div><p>MCP connects Claude Code to an external system to read from or write to it; a tool runs from the terminal.</p></div>
+    <div class="caja acento-gris"><div class="et">To grow</div><p>Adding a capability means adding a piece: an agent, a skill, a connector, a tool or a script (see <code>ARQUITECTURA.md</code>). The <code>k0lmenia</code> plugin is built from this repo automatically.</p></div>
+  </div>
+</div></body></html>

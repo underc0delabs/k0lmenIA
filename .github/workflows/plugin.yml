@@ -1,0 +1,51 @@
+# Publica k0lmenIA como plugin de Claude Code en la rama `plugin` (liviana: sin el historial del repo de
+# desarrollo). Corre en cada push a main: arma el plugin con scripts/construir_plugin.py y, si cambió algo,
+# lo sube como un commit nuevo de la rama plugin. Como el plugin no fija versión, cada commit es una versión:
+# los QAs la reciben con /plugin marketplace update k0lmenia (o solos, si activaron la actualización automática).
+#
+# Instalación: claude plugin marketplace add underc0delabs/k0lmenIA  y  claude plugin install k0lmenia@k0lmenia
+# (.claude-plugin/marketplace.json de main apunta a esta rama; el viejo underc0delabs/k0lmenIA#plugin sigue andando).
+name: Plugin
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: plugin
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Armar el plugin
+        run: python scripts/construir_plugin.py --destino "$RUNNER_TEMP/plugin"
+
+      - name: Publicar en la rama plugin
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd "$RUNNER_TEMP/plugin"
+          git init -q
+          git checkout -q -b plugin
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          # Si la rama ya existe, se apoya sobre su último commit (historia corta y lineal).
+          if git fetch -q --depth 1 origin plugin; then git reset -q --soft FETCH_HEAD; fi
+          git add -A
+          if git diff --cached --quiet; then echo "El plugin no cambió."; exit 0; fi
+          git -c user.name="Underc0de" -c user.email="38077842+underc0delabs@users.noreply.github.com" \
+            commit -q -m "Plugin armado desde ${GITHUB_SHA::7}"
+          git push -q origin plugin
+          echo "Publicado en la rama plugin (desde ${GITHUB_SHA::7})."

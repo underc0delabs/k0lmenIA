@@ -1,0 +1,234 @@
+{
+ "historia": "HU-950",
+ "fuente": "output/casos-de-prueba/manuales/casos-HU-950.xlsx",
+ "ambiente": "QA",
+ "tester": "Lucía QA",
+ "navegador": "Chrome 130",
+ "inicio": "2026-10-28T10:00:00",
+ "estado": "En curso",
+ "pausas": [
+  {
+   "inicio": "2026-10-28T10:41:00",
+   "fin": null
+  }
+ ],
+ "casos": [
+  {
+   "id": "CP-001",
+   "titulo": "Compra con cupón válido",
+   "prioridad": "Crítica",
+   "precondiciones": "Usuario logueado con un producto en el carrito",
+   "estimado_min": 4.5,
+   "estado": "Aprobado",
+   "inicio": "2026-10-28T10:00:00",
+   "fin": "2026-10-28T10:09:00",
+   "duracion_s": 540,
+   "evidencia": [
+    "capturas/cp-001-orden.png"
+   ],
+   "bugs": [],
+   "obtenido": "",
+   "motivo": "",
+   "comentario": "",
+   "falta_info": [],
+   "etiquetas": "@checkout",
+   "pasos": [
+    {
+     "n": 1,
+     "accion": "Ir al carrito",
+     "datos": "Cupón: DESC10",
+     "esperado": "",
+     "resultado": "Aprobado",
+     "obtenido": ""
+    },
+    {
+     "n": 2,
+     "accion": "Ingresar el cupón DESC10",
+     "datos": "",
+     "esperado": "",
+     "resultado": "Aprobado",
+     "obtenido": ""
+    },
+    {
+     "n": 3,
+     "accion": "Confirmar la compra",
+     "datos": "",
+     "esperado": "Se descuenta 10 % una sola vez y se confirma la orden",
+     "resultado": "Aprobado",
+     "obtenido": ""
+    }
+   ]
+  },
+  {
+   "id": "CP-002",
+   "titulo": "Cupón vencido",
+   "prioridad": "Alta",
+   "precondiciones": "Usuario logueado",
+   "estimado_min": 4.5,
+   "estado": "Aprobado",
+   "inicio": "2026-10-28T10:10:00",
+   "fin": "2026-10-28T10:16:00",
+   "duracion_s": 360,
+   "evidencia": [
+    "capturas/cp-002.png"
+   ],
+   "bugs": [],
+   "obtenido": "",
+   "motivo": "",
+   "comentario": "",
+   "falta_info": [],
+   "etiquetas": "@checkout",
+   "pasos": [
+    {
+     "n": 1,
+     "accion": "Ir al carrito",
+     "datos": "Cupón: VIEJO5",
+     "esperado": "",
+     "resultado": "Aprobado",
+     "obtenido": ""
+    },
+    {
+     "n": 2,
+     "accion": "Ingresar el cupón VIEJO5",
+     "datos": "",
+     "esperado": "Muestra 'El cupón venció' y no descuenta",
+     "resultado": "Fallido",
+     "obtenido": "Descuenta 5 % aunque el cupón venció el 30/09"
+    }
+   ]
+  },
+  {
+   "id": "CP-003",
+   "titulo": "Cupón aplicado dos veces",
+   "prioridad": "Alta",
+   "precondiciones": "Usuario logueado",
+   "estimado_min": 4.0,
+   "estado": "Bloqueado",
+   "inicio": "2026-10-28T10:17:00",
+   "fin": "2026-10-28T10:20:00",
+   "duracion_s": 180,
+   "evidencia": [],
+   "bugs": [],
+   "obtenido": "",
+   "motivo": "",
+   "comentario": "",
+   "falta_info": [],
+   "etiquetas": "@checkout",
+   "pasos": [
+    {
+     "n": 1,
+     "accion": "Aplicar DESC10",
+     "datos": "Cupón: DESC10",
+     "esperado": "",
+     "resultado": "Bloqueado",
+     "obtenido": ""
+    },
+    {
+     "n": 2,
+     "accion": "Aplicar DESC10 otra vez",
+     "datos": "",
+     "esperado": "El segundo intento muestra 'Cupón ya aplicado'",
+     "resultado": null,
+     "obtenido": ""
+    }
+   ]
+  },
+  {
+   "id": "CP-004",
+   "titulo": "Pago con tarjeta rechazada",
+   "prioridad": "Media",
+   "precondiciones": "Pasarela en sandbox",
+   "estimado_min": 4.0,
+   "estado": "Fallido",
+   "inicio": "2026-10-28T10:21:00",
+   "fin": "2026-10-28T10:40:00",
+   "duracion_s": 1140,
+   "evidencia": [
+    "capturas/cp-004-error.png"
+   ],
+   "bugs": [
+    "BUG-031"
+   ],
+   "obtenido": "Error 500 al pagar; reintenté logueado con qa.lucia / password: Mate2026! y pasó lo mismo",
+   "motivo": "",
+   "comentario": "La orden quedó en estado 'Pagada' aunque la pasarela la rechazó",
+   "falta_info": [],
+   "etiquetas": "@pagos",
+   "pasos": [
+    {
+     "n": 1,
+     "accion": "Pagar con la tarjeta de rechazo",
+     "datos": "Tarjeta: 4000 0000 0000 0002",
+     "esperado": "Muestra 'Pago rechazado' y la orden queda pendiente",
+     "resultado": "Fallido",
+     "obtenido": "Error 500 en /api/pagos"
+    }
+   ]
+  },
+  {
+   "id": "CP-005",
+   "titulo": "Cupón con monto mínimo no alcanzado",
+   "prioridad": "Media",
+   "precondiciones": "Carrito por debajo de $5.000",
+   "estimado_min": 4.5,
+   "estado": "Pendiente",
+   "inicio": null,
+   "fin": null,
+   "duracion_s": null,
+   "evidencia": [],
+   "bugs": [],
+   "obtenido": "",
+   "motivo": "",
+   "comentario": "",
+   "falta_info": [],
+   "etiquetas": [],
+   "pasos": [
+    {
+     "n": 1,
+     "accion": "Ir al carrito",
+     "datos": "Cupón: MIN5000",
+     "esperado": "",
+     "resultado": null,
+     "obtenido": ""
+    },
+    {
+     "n": 2,
+     "accion": "Ingresar el cupón MIN5000",
+     "datos": "",
+     "esperado": "Avisa el monto mínimo y no descuenta",
+     "resultado": null,
+     "obtenido": ""
+    }
+   ]
+  },
+  {
+   "id": "CP-006",
+   "titulo": "Cupón en mayúsculas y minúsculas",
+   "prioridad": "Baja",
+   "precondiciones": "Usuario logueado",
+   "estimado_min": 3.5,
+   "estado": "Pendiente",
+   "inicio": null,
+   "fin": null,
+   "duracion_s": null,
+   "evidencia": [],
+   "bugs": [],
+   "obtenido": "",
+   "motivo": "",
+   "comentario": "",
+   "falta_info": [],
+   "etiquetas": [],
+   "pasos": [
+    {
+     "n": 1,
+     "accion": "Ingresar desc10",
+     "datos": "Cupón: desc10",
+     "esperado": "Lo acepta igual que DESC10",
+     "resultado": null,
+     "obtenido": ""
+    }
+   ]
+  }
+ ],
+ "actualizado": "2026-10-28T10:41:00"
+}

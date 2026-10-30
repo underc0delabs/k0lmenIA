@@ -1,0 +1,5 @@
+Corrí la subida en seco (--dry-run): no se creó nada en Xray. El plan está en output/gestion/plan-HU-901.md: carpeta "HU-901 Registro", 7 casos (CP-001 a CP-007) vinculados a PROJ-12, 35 min de ejecución manual. CP-005 a CP-007 van con falta-info (FI-01 a FI-03).
+
+Necesito que confirmes:
+1. ¿Subo los 7 casos a Xray con ese plan? (recomendado: sí, los de falta-info quedan fuera de la regresión)
+2. ¿O subo solo CP-001 a CP-004 hasta que se respondan las FI?

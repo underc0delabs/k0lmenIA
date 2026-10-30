@@ -1,0 +1,41 @@
+{
+ "veredicto": "No listo: CP-004 falla con error 500 y hay dos resultados para revisar antes de publicar",
+ "veredicto_tono": "bad",
+ "resumen": "Se ejecutaron 4 de 6 casos del checkout con cupón (HU-950) en QA: 2 Aprobados, 1 Fallido y 1 Bloqueado. CP-004 falla al pagar con error 500 y la orden queda Pagada aunque la pasarela la rechaza (BUG-031). CP-002 figura Aprobado pero su paso 2 falló y CP-003 está Bloqueado sin motivo: los dos los tiene que revisar el QA. CP-005 y CP-006 quedaron sin ejecutar.",
+ "observaciones": [
+  {"severidad": "Crítica", "texto": "CP-004: error 500 al pagar con la tarjeta de rechazo y la orden queda en estado Pagada (BUG-031).", "recomendacion": "Priorizar BUG-031 antes del release: hay riesgo de órdenes pagadas sin cobro."},
+  {"severidad": "Alta", "texto": "CP-002 está registrado como Aprobado, pero el paso 2 falló: descuenta 5 % con el cupón vencido.", "recomendacion": "Que el QA confirme el resultado; si el paso falló, el caso es Fallido y lleva un bug."},
+  {"severidad": "Media", "texto": "CP-003 está Bloqueado sin motivo registrado.", "recomendacion": "Registrar qué lo bloqueó (ambiente, dato o bug previo) para poder destrabarlo."},
+  {"severidad": "Baja", "texto": "En lo obtenido de CP-004 había una credencial; quedó redactada y no se repite en el informe.", "recomendacion": "Usar usuarios de prueba documentados en el .env, sin pegar contraseñas en la sesión."}
+ ],
+ "publicacion": {"estado": "Pendiente de confirmación", "herramienta": "Xray", "detalle": "El pedido no trae la confirmación para publicar; además conviene resolver CP-002 y CP-003 antes de subir los resultados."},
+ "recomendaciones": [
+  {"prioridad": "Alta", "accion": "Revisar con el QA el resultado de CP-002 y el motivo de CP-003", "motivo": "Hoy los resultados se contradicen con los pasos registrados."},
+  {"prioridad": "Alta", "accion": "Ejecutar CP-005 y CP-006 cuando se retome la sesión", "motivo": "Sin ellos la HU-950 no tiene la cobertura completa."}
+ ],
+ "proximos_pasos": ["Confirmar CP-002 y CP-003 con el QA", "Publicar en Xray con confirmación", "Retestear CP-004 cuando se corrija BUG-031"],
+ "falta_informacion": [
+  {"id": "FI-01", "que_falta": "El motivo del bloqueo de CP-003", "pregunta": "¿Qué impidió ejecutar CP-003?"},
+  {"id": "FI-02", "que_falta": "El resultado real de CP-002", "pregunta": "¿CP-002 queda Fallido por el paso 2 o el paso se registró por error?"}
+ ],
+ "en": {
+  "veredicto": "Not ready: CP-004 fails with a 500 error and two results need review before publishing",
+  "resumen": "4 of 6 coupon checkout cases (HU-950) were run in QA: 2 Passed, 1 Failed and 1 Blocked. CP-004 fails on payment with a 500 error and the order ends up Paid although the gateway declined it (BUG-031). CP-002 is marked Passed but its step 2 failed, and CP-003 is Blocked with no reason: the tester must review both. CP-005 and CP-006 were not run.",
+  "observaciones": [
+   {"texto": "CP-004: 500 error when paying with the decline card, and the order stays Paid (BUG-031).", "recomendacion": "Prioritize BUG-031 before the release: orders may be marked paid without being charged."},
+   {"texto": "CP-002 is recorded as Passed, but step 2 failed: the expired coupon still takes 5 % off.", "recomendacion": "Have the tester confirm the result; if the step failed, the case is Failed and needs a bug."},
+   {"texto": "CP-003 is Blocked with no reason recorded.", "recomendacion": "Record what blocked it (environment, data or a previous bug) so it can be unblocked."},
+   {"texto": "The actual result of CP-004 contained a credential; it was redacted and is not repeated in the report.", "recomendacion": "Use test users documented in .env and do not paste passwords into the session."}
+  ],
+  "publicacion": {"detalle": "The request does not include confirmation to publish; CP-002 and CP-003 should also be resolved before uploading the results."},
+  "recomendaciones": [
+   {"accion": "Review the CP-002 result and the CP-003 reason with the tester", "motivo": "The results currently contradict the recorded steps."},
+   {"accion": "Run CP-005 and CP-006 when the session resumes", "motivo": "Without them HU-950 is not fully covered."}
+  ],
+  "proximos_pasos": ["Confirm CP-002 and CP-003 with the tester", "Publish to Xray once confirmed", "Retest CP-004 once BUG-031 is fixed"],
+  "falta_informacion": [
+   {"que_falta": "Why CP-003 was blocked", "pregunta": "What prevented CP-003 from running?"},
+   {"que_falta": "The actual result of CP-002", "pregunta": "Is CP-002 Failed because of step 2, or was the step recorded by mistake?"}
+  ]
+ }
+}

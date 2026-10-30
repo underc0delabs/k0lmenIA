@@ -1,0 +1,7 @@
+{
+  "cuentaCreada": "¡Cuenta creada! Revisá tu correo para activarla.",
+  "emailInvalido": "Ingresá un email válido",
+  "usuarioLargo": "El usuario debe tener entre 4 y 20 caracteres",
+  "edadMinima": "Tenés que ser mayor de 18 años para registrarte",
+  "cuponYaAplicado": "Ya aplicaste un cupón en esta compra"
+}

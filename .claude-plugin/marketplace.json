@@ -1,0 +1,20 @@
+{
+  "name": "k0lmenia",
+  "owner": {
+    "name": "Underc0de"
+  },
+  "description": "Marketplace de K0lmenIA Light: el plugin se publica solo en la rama plugin de este repo en cada cambio de main.",
+  "plugins": [
+    {
+      "name": "k0lmenia",
+      "source": {
+        "source": "github",
+        "repo": "underc0delabs/k0lmenIA",
+        "ref": "plugin"
+      },
+      "description": "K0lmenIA Light: agentes de QA para Claude Code, en español. Documentación del proyecto, análisis de historias, casos de prueba (Excel y BDD), revisión de casos, triage de bugs, ejecución E2E y de API (REST, GraphQL y gRPC), ejecución manual guiada, automatización sin tokens con k0lmena, gestión en Xray y k0lmenaTMT, e informes en español e inglés.",
+      "homepage": "https://underc0delabs.github.io/k0lmenIA/",
+      "category": "testing"
+    }
+  ]
+}

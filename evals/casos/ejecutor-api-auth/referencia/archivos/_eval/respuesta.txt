@@ -1,0 +1,3 @@
+Corrí la conversión y el reporte de HU-970.
+- API-002 es un bug: el login acepta una contraseña incorrecta (200 en vez de 401). Severidad Crítica: cualquiera entra.
+- API-003 NO es un bug de la app: da 401 porque API_TOKEN está vacío en el .env. Es un problema del ambiente de prueba: completá API_TOKEN en el .env (npm run configurar) y lo vuelvo a correr.

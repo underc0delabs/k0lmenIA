@@ -1,0 +1,64 @@
+openapi: 3.0.3
+info:
+  title: API de pedidos
+  version: 1.4.0
+servers:
+  - url: https://api-staging.tienda-eval.com/v1
+security:
+  - bearer: []
+paths:
+  /pedidos:
+    get:
+      summary: Lista pedidos por estado
+      parameters:
+        - in: query
+          name: estado
+          schema: {type: string, enum: [pendiente, pagado, enviado]}
+      responses:
+        "200":
+          description: Lista de pedidos
+          content:
+            application/json:
+              schema: {type: array, items: {$ref: "#/components/schemas/Pedido"}}
+        "401": {description: Sin token}
+    post:
+      summary: Crea un pedido
+      requestBody:
+        content:
+          application/json:
+            schema: {$ref: "#/components/schemas/NuevoPedido"}
+      responses:
+        "201": {description: Pedido creado}
+        "400": {description: Datos inválidos}
+  /pedidos/{id}:
+    get:
+      summary: Detalle de un pedido
+      parameters:
+        - {in: path, name: id, required: true, schema: {type: integer}}
+      responses:
+        "200":
+          description: El pedido
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/Pedido"}
+        "404": {description: No existe}
+    delete:
+      summary: Cancela un pedido
+      parameters:
+        - {in: path, name: id, required: true, schema: {type: integer}}
+      responses:
+        "204": {description: Cancelado}
+components:
+  securitySchemes:
+    bearer: {type: http, scheme: bearer}
+  schemas:
+    Pedido:
+      type: object
+      properties:
+        id: {type: integer}
+        estado: {type: string}
+        total: {type: number}
+    NuevoPedido:
+      type: object
+      properties:
+        productos: {type: array, items: {type: integer}}

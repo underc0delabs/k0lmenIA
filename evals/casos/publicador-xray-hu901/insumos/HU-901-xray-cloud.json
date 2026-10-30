@@ -1,0 +1,54 @@
+{
+  "herramienta": "xray-cloud",
+  "proyecto": "PROJ",
+  "historia": "PROJ-12",
+  "carpeta": {
+    "ruta": "/HU-901 Registro",
+    "id": "f-901"
+  },
+  "casos": {
+    "CP-001": {
+      "key": "PROJ-50",
+      "id": "10051",
+      "titulo": "Registro con todos los datos válidos"
+    },
+    "CP-002": {
+      "key": "PROJ-51",
+      "id": "10052",
+      "titulo": "Largo del usuario en los límites"
+    },
+    "CP-003": {
+      "key": "PROJ-52",
+      "id": "10053",
+      "titulo": "Email con formato inválido"
+    },
+    "CP-004": {
+      "key": "PROJ-53",
+      "id": "10054",
+      "titulo": "Nombre con apóstrofe"
+    },
+    "CP-005": {
+      "key": "PROJ-54",
+      "id": "10055",
+      "titulo": "Email ya registrado"
+    },
+    "CP-006": {
+      "key": "PROJ-55",
+      "id": "10056",
+      "titulo": "Persona de 17 años"
+    },
+    "CP-007": {
+      "key": "PROJ-56",
+      "id": "10057",
+      "titulo": "Contraseña débil"
+    }
+  },
+  "ciclos": [
+    {
+      "key": "PROJ-60",
+      "id": "10060",
+      "nombre": "HU-901 · Sprint 15 · Regresión",
+      "fecha": "2026-10-27"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+# API de pedidos de la tienda (GraphQL). Endpoint: POST /graphql
+# Todas las operaciones requieren el header Authorization: Bearer <token>. Sin token (o vencido), la respuesta trae
+# el error con extensions.code = "UNAUTHENTICATED". Un pedido de otro usuario responde extensions.code = "FORBIDDEN".
+# Los errores de GraphQL vuelven en el arreglo "errors" de la respuesta.
+
+type Query {
+  "Un pedido del usuario logueado."
+  pedido(id: ID!): Pedido
+  "Los pedidos del usuario, del más nuevo al más viejo. limite entre 1 y 50."
+  misPedidos(limite: Int = 10): [Pedido!]!
+}
+
+type Mutation {
+  "Crea un pedido. cantidad entre 1 y 10 (fuera de rango: extensions.code = BAD_USER_INPUT)."
+  crearPedido(input: PedidoInput!): Pedido!
+  "Cancela un pedido PENDIENTE."
+  cancelarPedido(id: ID!): Boolean!
+}
+
+input PedidoInput {
+  productoId: ID!
+  cantidad: Int!
+}
+
+type Pedido {
+  id: ID!
+  estado: EstadoPedido!
+  total: Float!
+  items: [Item!]!
+}
+
+type Item {
+  productoId: ID!
+  cantidad: Int!
+  precio: Float!
+}
+
+enum EstadoPedido {
+  PENDIENTE
+  PAGADO
+  CANCELADO
+}

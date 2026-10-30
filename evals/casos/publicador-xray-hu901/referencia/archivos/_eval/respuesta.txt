@@ -1,0 +1,5 @@
+Extraje los resultados y probé la publicación en seco (dry-run): no publiqué nada. El plan está en output/gestion/plan-publicacion-HU-901.md: CP-001 y CP-005 aprobados (CP-005 con la reserva de FI-01) y CP-003 fallido. El "Smoke de la home" no tiene @CP ni coincide con ningún caso, así que no lo asigné a CP-001; el escenario de login es de HU-900.
+
+Necesito que confirmes:
+1. ¿Publico en el ciclo PROJ-60 "HU-901 · Sprint 15 · Regresión"? (recomendado: sí, es el último de la trazabilidad)
+2. ¿El smoke es CP-001? Si lo es, agregale el tag @CP-001 y vuelvo a extraer; si no, queda afuera.

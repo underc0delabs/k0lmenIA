@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>K0lmenIA Light · Documentación</title>
+  <meta name="description" content="Agentes de QA para Claude Code: análisis de historias, casos de prueba, ejecución web y de API, automatización con k0lmena y gestión en Xray o k0lmenaTMT. Todo en español.">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0E0C09">
+  <meta property="og:title" content="K0lmenIA Light · Documentación">
+  <meta property="og:description" content="Diseño de pruebas, ejecución, automatización con k0lmena y gestión en Xray o k0lmenaTMT.">
+  <meta property="og:image" content="assets/img/arquitectura.png">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23FFD60A'/%3E%3Cstop offset='1' stop-color='%23FF8A00'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon points='16,3 48,3 63,32 48,61 16,61 1,32' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='Saira,Segoe UI,Arial' font-size='26' font-weight='800' fill='%230E0C09' text-anchor='middle'%3Ek0%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="assets/fuentes/saira.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fuentes/inter.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="alternate" hreflang="es" href="index.html">
+  <link rel="alternate" hreflang="en" href="en/index.html">
+  <link rel="stylesheet" href="assets/estilos.css">
+  <script src="assets/sitio.js"></script>
+</head>
+<body>
+
+<!-- ======================================================= BARRA SUPERIOR -->
+<header class="barra">
+  <button class="btn-icono" id="abrir-nav" type="button" aria-label="Abrir el menú">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <a class="marca" href="#inicio"><span class="logo">k0</span>K0lmenIA Light <span class="version">Docs</span></a>
+  <div class="espacio"></div>
+  <button class="buscar-btn" id="abrir-busqueda" type="button" aria-label="Buscar en la documentación (Ctrl K)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <span class="txt">Buscar en la documentación…</span><kbd>Ctrl K</kbd>
+  </button>
+  <nav class="acciones">
+    <a class="enlace-barra idioma" href="en/index.html" hreflang="en" lang="en" title="Read the documentation in English">EN</a>
+    <a class="enlace-barra" href="https://github.com/underc0delabs/k0lmenIA/releases/download/docs/k0lmenIA-documentacion.pdf">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg><span>PDF</span></a>
+    <a class="enlace-barra acento" href="https://github.com/underc0delabs/k0lmenIA" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 00-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 015.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.7 5.38-5.27 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0012 .5z"/></svg><span>GitHub</span></a>
+    <button class="btn-icono" id="cambiar-tema" type="button" aria-label="Cambiar tema">
+      <svg class="sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="luna" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+    </button>
+  </nav>
+</header>
+
+<div class="layout">
+<!-- ======================================================= MENÚ LATERAL -->
+<aside class="lateral" aria-label="Contenido">
+  <div class="grupo">Introducción</div>
+  <a href="#que-es">Qué es K0lmenIA Light</a>
+  <a href="#arquitectura">Arquitectura</a>
+  <a href="#flujo">Cómo se usa</a>
+  <a href="#agentes">Agentes</a>
+  <div class="grupo">Primeros pasos</div>
+  <a href="#requisitos">Requisitos</a>
+  <a href="#instalacion">Instalación</a>
+  <a href="#plugin">Como plugin de Claude Code</a>
+  <a href="#configuracion">Configuración (.env)</a>
+  <div class="grupo">Guías</div>
+  <a href="#documentacion">Documentación del proyecto</a>
+  <a href="#contexto">Contexto y falta información</a>
+  <a href="#guia">Diseño y ejecución</a>
+  <a href="#k0lmena">Automatización con k0lmena</a>
+  <a href="#gestion">Xray y k0lmenaTMT</a>
+  <a href="#ci">k0lmena en el pipeline (CI)</a>
+  <a href="#anti-bots">Apps con protección anti-bots</a>
+  <a href="#base-de-datos">Verificación en base de datos</a>
+  <a href="#triage">Triage de bugs</a>
+  <a href="#ejecucion-manual">Ejecución manual</a>
+  <a href="#historial">Historial de corridas</a>
+  <a href="#tablero">Portal de informes</a>
+  <a href="#idiomas">Informes en español e inglés</a>
+  <a href="#avisos">Avisos a Slack y Teams</a>
+  <a href="#evals">Evals de los agentes</a>
+  <a href="#tokens">Uso de tokens</a>
+  <a href="#conectores">Conectores MCP</a>
+  <a href="#planes">¿Necesitás más?</a>
+  <div class="grupo">Referencia</div>
+  <a href="#convenciones">Convenciones</a>
+  <a href="#estructura">Estructura del repo</a>
+  <a href="#faq">Problemas frecuentes</a>
+  <a href="#extender">Extender el proyecto</a>
+</aside>
+
+<main class="contenido">
+
+<!-- ======================================================= PORTADA + ÍNDICE (solo PDF) -->
+<section class="solo-impresion portada">
+  <div>
+    <div class="k">Documentación del proyecto</div>
+    <h1><span>K0lmenIA Light</span></h1>
+    <div class="l">Agentes de QA para Claude Code: análisis de historias, casos de prueba, ejecución web y de API, automatización con k0lmena y gestión en Xray o k0lmenaTMT — todo en español.</div>
+    <div class="chips"><span>13 agentes</span><span>Web · API</span><span>Playwright · Cucumber · Newman</span><span>Xray · k0lmenaTMT</span><span>Jira</span><span>Slack · Teams</span><span>PostgreSQL · MySQL · SQL Server · MongoDB</span><span>Suites sin tokens</span><span>Plugin de Claude Code</span><span>Informes ES · EN</span></div>
+  </div>
+  <div class="p"><span>QARMY · Underc0de</span><span>github.com/underc0delabs/k0lmenIA</span><span>Licencia MIT</span></div>
+</section>
+<section class="solo-impresion indice">
+  <h2>Contenido</h2>
+  <ol>
+  <li><span>1</span>Qué es K0lmenIA Light</li><li><span>2</span>Arquitectura</li><li><span>3</span>Cómo se usa</li><li><span>4</span>Agentes</li><li><span>5</span>Requisitos</li><li><span>6</span>Instalación</li><li><span>7</span>Como plugin de Claude Code</li><li><span>8</span>Configuración: el archivo .env</li><li><span>9</span>Documentación del proyecto</li><li><span>10</span>Investigación de contexto y "Falta información"</li><li><span>11</span>Diseño y ejecución</li><li><span>12</span>Automatización con k0lmena</li><li><span>13</span>Gestión de pruebas: Xray y k0lmenaTMT</li><li><span>14</span>k0lmena en el pipeline (CI)</li><li><span>15</span>Apps con protección anti-bots</li><li><span>16</span>Verificación en base de datos</li><li><span>17</span>Triage de bugs</li><li><span>18</span>Ejecución manual acompañada</li><li><span>19</span>Historial de corridas</li><li><span>20</span>Portal de informes</li><li><span>21</span>Informes en español e inglés</li><li><span>22</span>Avisos a Slack y Teams</li><li><span>23</span>Evals de los agentes</li><li><span>24</span>Uso de tokens</li><li><span>25</span>Conectores MCP</li><li><span>26</span>¿Necesitás más?</li><li><span>27</span>Convenciones</li><li><span>28</span>Estructura del repositorio</li><li><span>29</span>Problemas frecuentes</li><li><span>30</span>Extender el proyecto</li></ol>
+</section>
+
+<!-- ======================================================= HERO -->
+<section class="hero" id="inicio">
+  <div class="pildora">agentes de QA para Claude Code · suites sin tokens</div>
+  <h1><span class="grad">K0lmenIA Light</span></h1>
+  <p class="lema">Diseñá, ejecutá y automatizá pruebas conversando en español. Los agentes analizan historias, escriben y revisan casos, ejecutan pruebas web y de API, te acompañan en la ejecución manual, automatizan con <b>k0lmena</b> y llevan todo a <b>Xray o k0lmenaTMT</b>. Se usa como <b>plugin de Claude Code</b> o clonando el repo, y cada informe sale en <b>español e inglés</b>.</p>
+  <div class="ctas">
+    <a class="btn primario" href="#instalacion">Empezar
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6l6 6-6 6"/></svg></a>
+    <a class="btn" href="https://github.com/underc0delabs/k0lmenIA" target="_blank" rel="noopener">Ver en GitHub</a>
+    <a class="btn" href="https://github.com/underc0delabs/k0lmenIA/releases/download/docs/k0lmenIA-documentacion.pdf">Descargar PDF</a>
+  </div>
+  <div class="tecnologias">
+    <span class="tec"><i style="background:#d97757"></i>Claude Code</span>
+    <span class="tec"><i style="background:#2ead33"></i>Playwright</span>
+    <span class="tec"><i style="background:#23d96c"></i>Cucumber</span>
+    <span class="tec"><i style="background:#ff6c37"></i>Postman · Newman</span>
+    <span class="tec"><i style="background:#3178c6"></i>TypeScript</span>
+    <span class="tec"><i style="background:#5fa04e"></i>Node.js</span>
+    <span class="tec"><i style="background:#3776ab"></i>Python</span>
+    <span class="tec"><i style="background:#0052cc"></i>Jira</span>
+    <span class="tec"><i style="background:#e01e5a"></i>Slack · Teams</span>
+    <span class="tec"><i style="background:#e10098"></i>GraphQL · gRPC · Bruno · Insomnia</span>
+    <span class="tec"><i style="background:#00c7b1"></i>Xray · k0lmenaTMT</span>
+    <span class="tec"><i style="background:#4169e1"></i>PostgreSQL</span>
+    <span class="tec"><i style="background:#4479a1"></i>MySQL · MariaDB</span>
+    <span class="tec"><i style="background:#cc2927"></i>SQL Server</span>
+    <span class="tec"><i style="background:#47a248"></i>MongoDB</span>
+  </div>
+  <div class="metricas">
+    <div class="metrica"><div class="n">13</div><div class="t">agentes especializados</div></div>
+    <div class="metrica"><div class="n">2</div><div class="t">tipos de automatización</div></div>
+    <div class="metrica"><div class="n">2</div><div class="t">herramientas de gestión</div></div>
+    <div class="metrica"><div class="n">0</div><div class="t">tokens para correr las suites</div></div>
+  </div>
+</section>
+
+<!-- ======================================================= QUÉ ES -->
+<section class="seccion" id="que-es">
+  <div class="kicker">Introducción</div>
+  <h2>Qué es K0lmenIA Light</h2>
+  <p class="bajada">Un equipo de <b>agentes especializados en QA</b> para Claude Code, pensado para profesionales de testing manual: no hace falta programar, se trabaja conversando dentro de VS Code. Es la versión gratuita de K0lmenIA, con licencia MIT.</p>
+  <p>Ponés un insumo (una historia, una observación de bug, un contrato de API o directamente una key de Jira), pedís lo que necesitás en lenguaje natural y el agente que corresponde genera el resultado: análisis, casos, ejecuciones con evidencia o la automatización en k0lmena.</p>
+
+  <div class="tarjetas">
+    <div class="tarjeta c-violeta"><div class="ico">◆</div><h4>1 · Diseño</h4><p>Analizar historias, escribir y revisar casos manuales y BDD (con su tiempo estimado) y triar los bugs antes de cargarlos.</p><div class="salida">Queda en <code>output/</code></div></div>
+    <div class="tarjeta c-verde"><div class="ico">▶</div><h4>2 · Ejecución y automatización</h4><p>Ejecutar en el navegador o contra una API, acompañar la ejecución manual y automatizar una sola vez: después corre con <code>npm test</code>, sin tokens.</p><div class="salida">Queda en <code>output/</code> y <code>herramientas/k0lmena/</code></div></div>
+    <div class="tarjeta c-cian"><div class="ico">⇄</div><h4>3 · Gestión</h4><p>Casos, ciclos y resultados con evidencias en Xray (Cloud o Server/DC) o k0lmenaTMT.</p><div class="salida">Queda en la herramienta y en <code>output/gestion/</code></div></div>
+  </div>
+
+  <h3>Principios</h3>
+  <div class="tabla"><table>
+    <tr><th style="width:24%">Principio</th><th>En la práctica</th></tr>
+    <tr><td>No inventar</td><td>Si falta un paso, un dato o una regla, el agente lo marca y lo pregunta. Mejor un artefacto con huecos señalados que uno completo pero inventado.</td></tr>
+    <tr><td>Respetar los formatos</td><td>Los campos, su orden y sus valores los definen las plantillas y los scripts, no el agente.</td></tr>
+    <tr><td>Trazabilidad</td><td>Todo referencia la historia (<code>HU-XXX</code>); cada escenario automatizado lleva el ID del caso (<code>@CP-001</code>) y la key de la herramienta de gestión.</td></tr>
+    <tr><td>Cobertura pensada</td><td>Positivos, negativos, bordes y validaciones de campos, no solo el camino feliz.</td></tr>
+    <tr><td>Investigar antes de suponer</td><td>Antes de trabajar una historia se revisan la documentación del proyecto (repositorio y mapa de la web), sus comentarios, subtareas, épica e issues vinculados. Lo que no aparece queda como <b>Falta información</b>.</td></tr>
+    <tr><td>Ahorro de tokens</td><td>Lo que se repite se automatiza una vez y después corre sin agentes.</td></tr>
+    <tr><td>Seguridad</td><td>Los secretos viven en el <code>.env</code> de la raíz, que nunca se versiona; los agentes nunca piden tokens por el chat.</td></tr>
+    <tr><td>Dos idiomas</td><td>Cada informe sale en español y en inglés, con una banderita para elegir cuál mandar.</td></tr>
+    <tr><td>Donde trabajes</td><td>Como <b>plugin de Claude Code</b> en la carpeta de cualquier proyecto o clonando este repo: las actualizaciones llegan sin tocar tu trabajo.</td></tr>
+  </table></div>
+</section>
+
+<!-- ======================================================= ARQUITECTURA -->
+<section class="seccion con-lamina" id="arquitectura">
+  <div class="lamina">
+    <div class="kicker">Introducción</div>
+    <h2>Arquitectura</h2>
+    <figure class="figura">
+      <a href="assets/img/arquitectura.png" target="_blank" rel="noopener"><img src="assets/img/arquitectura.png" alt="Diagrama de arquitectura de K0lmenIA Light: Claude Code, agentes, soporte, conectores MCP, herramientas y sistemas externos"></a>
+      <figcaption>Arquitectura de K0lmenIA Light · hacé clic para ver en tamaño completo</figcaption>
+    </figure>
+  </div>
+  <figure class="figura">
+    <a href="assets/img/relaciones.png" target="_blank" rel="noopener"><img src="assets/img/relaciones.png" alt="Cómo se relacionan las piezas: el agente en el centro usa skills, plantillas, scripts, herramientas y conectores MCP, lee input y escribe output"></a>
+    <figcaption>Cómo se relacionan las piezas · el agente es el centro · hacé clic para ver en tamaño completo</figcaption>
+  </figure>
+  <div class="tabla"><table>
+    <tr><th style="width:22%">Pieza</th><th>Qué es</th><th style="width:26%">Dónde</th></tr>
+    <tr><td>Claude Code</td><td>Orquestador: interpreta el pedido, elige el agente y aplica los estándares del proyecto (cortos a propósito: el detalle se lee a pedido).</td><td><code>CLAUDE.md</code> · <code>REFERENCIA.md</code></td></tr>
+    <tr><td>Agentes</td><td>El "quién": un especialista por tarea.</td><td><code>.claude/agents/</code></td></tr>
+    <tr><td>Skills</td><td>El "cómo": conocimiento que se carga cuando hace falta (técnicas de diseño, ejecución E2E y de API, convenciones de k0lmena).</td><td><code>.claude/skills/</code></td></tr>
+    <tr><td>Plantillas y scripts</td><td>Formato de salida (planilla de casos, cobertura, bug) y reportes HTML determinísticos.</td><td><code>plantillas/</code> · <code>scripts/</code></td></tr>
+    <tr><td>Integración de gestión</td><td><code>gestion.py</code> con un adaptador por herramienta: Xray Cloud, Xray Server/DC y k0lmenaTMT (por su server MCP, sin el modelo).</td><td><code>scripts/gestion/</code></td></tr>
+    <tr><td>Conectores MCP</td><td>Playwright y Atlassian (Jira) activos; k0lmenaTMT listo para habilitar.</td><td><code>.mcp.json</code> · <code>scripts/mcp/</code></td></tr>
+    <tr><td>Herramientas</td><td>Newman para colecciones de Postman, k0lmena para web y API y plantillas de CI.</td><td><code>herramientas/</code></td></tr>
+    <tr><td>Informes y portal</td><td>Cada informe en español e inglés (<code>es/</code> y <code>en/</code>) y el portal con categorías e historial.</td><td><code>scripts/_i18n.py</code> · <code>output/index.html</code></td></tr>
+    <tr><td>Plugin</td><td>El mismo K0lmenIA Light, instalable en cualquier proyecto. El comando <code>k0lmenia</code> reemplaza a <code>npm run</code>; el código queda en el plugin y los datos en el proyecto.</td><td><code>bin/k0lmenia</code> · <code>scripts/construir_plugin.py</code></td></tr>
+    <tr><td>Entrada y salida</td><td>Insumos del usuario y artefactos generados, ordenados por tipo.</td><td><code>input/</code> · <code>output/</code></td></tr>
+  </table></div>
+</section>
+
+<!-- ======================================================= CÓMO SE USA -->
+<section class="seccion con-lamina" id="flujo">
+  <div class="lamina">
+    <div class="kicker">Introducción</div>
+    <h2>Cómo se usa</h2>
+    <figure class="figura">
+      <a href="assets/img/uso.png" target="_blank" rel="noopener"><img src="assets/img/uso.png" alt="Flujo de uso de K0lmenIA Light: diseño, ejecución y automatización, gestión"></a>
+      <figcaption>Flujo de punta a punta · hacé clic para ver en tamaño completo</figcaption>
+    </figure>
+  </div>
+  <ol class="pasos">
+    <li><b>Poné tus insumos</b>Pedí <i>"Documentá el proyecto"</i> para juntar el contexto del repositorio, las historias y la web en <code>input/documentacion/</code>; poné lo demás en <code>input/</code>, o pasá una key de Jira.</li>
+    <li><b>Pedí en lenguaje natural</b>Claude Code elige el agente. También podés nombrarlo: <i>"usá el web-mapper para…"</i>.</li>
+    <li><b>Revisá el resultado</b>En <code>output/</code> o en <code>herramientas/k0lmena/</code>.</li>
+    <li><b>Automatizá lo que se repite</b>Y corrélo con <code>npm test</code> todas las veces que quieras, sin tokens.</li>
+  </ol>
+  <div class="aviso info"><span class="ico">i</span><p><b>Lista de tareas.</b> Para encargar varias cosas de una vez, escribí en <code>TAREAS.md</code> (en la raíz) una tarea por línea, con su casilla (<code>- [ ] Escribir los casos manuales de la HU-001</code>), y pedí <i>"Hacé las tareas de TAREAS.md"</i>. Claude pregunta todo lo que necesita al principio, las hace en orden y marca cada una.</p></div>
+  <div class="tabla"><table>
+    <tr><th style="width:7%">#</th><th>Le pedís</th><th style="width:32%">Obtenés</th></tr>
+    <tr><td>0</td><td>"Documentá el proyecto" · "Juntá el contexto de PROJ-12"</td><td>Base del proyecto + dossier de la historia en <code>input/documentacion/</code></td></tr>
+    <tr><td>1</td><td>"Investigá el contexto de PROJ-12"</td><td>Ficha de contexto + Falta información</td></tr>
+    <tr><td>2</td><td>"Analizá la historia HU-001"</td><td>Ambigüedades y preguntas para el PO</td></tr>
+    <tr><td>3</td><td>"Generá los casos de HU-001"</td><td><code>casos-HU-001.xlsx</code> + cobertura</td></tr>
+    <tr><td>4</td><td>"Revisá los casos de HU-001"</td><td>Puntaje, duplicados y tiempo de ejecución</td></tr>
+    <tr><td>5</td><td>"Subí los casos a Xray en 'HU-001 Registro', vinculados a PROJ-12, y creá el ciclo Sprint 5"</td><td>Casos y ciclo en Xray</td></tr>
+    <tr><td>6</td><td>"Automatizá en k0lmena los casos de HU-001 contra https://tu-app.com"</td><td><code>.feature</code> + steps + locators</td></tr>
+    <tr><td>7</td><td><code>npm test</code> · <code>npm run report:web</code></td><td>Reporte HTML con evidencias</td></tr>
+    <tr><td>8</td><td>"Subí los resultados al ciclo del Sprint 5"</td><td>Estados y evidencias en Xray</td></tr>
+    <tr><td>9</td><td>"Acompañame a ejecutar los casos de HU-012"</td><td>Sesión guiada + informe de ejecución manual</td></tr>
+    <tr><td>10</td><td>"¿Este bug ya está cargado en Jira?"</td><td>Duplicados, regresiones y severidad sugerida</td></tr>
+    <tr><td>11</td><td>"Avisá en Slack el resultado de la última corrida"</td><td>Aviso en Slack o Teams</td></tr>
+  </table></div>
+</section>
+
+<!-- ======================================================= AGENTES -->
+<section class="seccion" id="agentes">
+  <div class="kicker">Introducción</div>
+  <h2>Agentes</h2>
+  <p class="bajada">Claude Code elige el agente según lo que pidas. Son 13 agentes en <code>.claude/agents/</code>, agrupados en cuatro familias. El catálogo completo (cuándo usar cada uno, pedido de ejemplo, entradas, salidas y qué confirma) está en <a href="https://github.com/underc0delabs/k0lmenIA/blob/main/AGENTES.md">AGENTES.md</a>.</p>
+
+  <div class="subtitulo-grupo"><h3>Análisis y diseño</h3></div>
+  <div class="tarjetas">
+    <div class="tarjeta c-violeta"><h4>documentador-proyecto</h4><p>Arma la documentación del proyecto para los demás agentes: lee el repositorio local (solo lectura), las historias de Jira con sus comentarios y links, y hace un mapa funcional de la web.</p><div class="usa"><b>Skills</b> documentacion-proyecto, investigacion-contexto, ejecucion-e2e<br><b>Usa</b> npm run mapa-funcional, indice_documentacion.py<br><b>Conectores</b> atlassian, playwright-headless</div><div class="salida"><code>input/documentacion/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>analista-historias</h4><p>Investiga el contexto de la historia y detecta ambigüedades, vacíos, riesgos y Falta información.</p><div class="usa"><b>Skills</b> investigacion-contexto<br><b>Usa</b> formatear_tablas.py<br><b>Conectores</b> atlassian</div><div class="salida"><code>output/analisis-historias/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>generador-casos-manuales</h4><p>Casos en Excel y Markdown + informe de cobertura con preguntas para el PO.</p><div class="usa"><b>Skills</b> redaccion-casos-manuales, investigacion-contexto, tecnicas-de-diseno<br><b>Usa</b> generar_casos.py<br><b>Conectores</b> atlassian</div><div class="salida"><code>output/casos-de-prueba/manuales/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>generador-casos-bdd</h4><p>Escenarios Gherkin (keywords en inglés, contenido en español) + cobertura.</p><div class="usa"><b>Skills</b> investigacion-contexto, tecnicas-de-diseno<br><b>Usa</b> formatear_tablas.py<br><b>Conectores</b> atlassian</div><div class="salida"><code>output/casos-de-prueba/bdd/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>revisor-casos</h4><p>Revisa casos que ya existen: pasos ambiguos o sin resultado esperado, duplicados, historias sin negativos, puntaje por caso y cuánto lleva ejecutarlos a mano.</p><div class="usa"><b>Skills</b> investigacion-contexto, tecnicas-de-diseno<br><b>Usa</b> revisar_casos.py, estimacion.py</div><div class="salida"><code>output/revision-casos/</code></div></div>
+    <div class="tarjeta c-violeta"><h4>triador-bugs</h4><p>Antes de cargar un bug busca duplicados y posibles regresiones (Jira y bugs locales) y sugiere severidad, componente, responsable e historia.</p><div class="usa"><b>Usa</b> buscar_duplicados.py, avisar.py<br><b>Conectores</b> atlassian</div><div class="salida"><code>output/triage/</code></div></div>
+  </div>
+
+  <div class="subtitulo-grupo"><h3>Ejecución en vivo</h3><span class="etiqueta tok">usa tokens en cada corrida</span></div>
+  <div class="tarjetas">
+    <div class="tarjeta c-naranja"><h4>ejecutor-e2e</h4><p>Ejecuta casos en un navegador real con Playwright MCP (headed o headless), con evidencia.</p><div class="usa"><b>Skills</b> ejecucion-e2e<br><b>Usa</b> generar_reporte.py<br><b>Conectores</b> playwright, playwright-headless</div><div class="salida"><code>output/ejecuciones/</code></div></div>
+    <div class="tarjeta c-naranja"><h4>ejecutor-api</h4><p>Corre una colección de Postman, Bruno o Insomnia con Newman (REST y GraphQL).</p><div class="usa"><b>Skills</b> ejecucion-api, pruebas-graphql, pruebas-grpc<br><b>Usa</b> Newman, correr_newman.py</div><div class="salida"><code>output/ejecuciones/</code></div></div>
+    <div class="tarjeta c-naranja"><h4>asistente-ejecucion-manual</h4><p>Cierra la ejecución manual acompañada: informe con resultados, evidencia, tiempo real contra estimado e inconsistencias, y la publicación con confirmación.</p><div class="usa"><b>Skills</b> ejecucion-manual<br><b>Usa</b> ejecucion_manual.py, generar_informe_ejecucion_manual.py</div><div class="salida"><code>output/ejecucion-manual/</code></div></div>
+  </div>
+
+  <div class="subtitulo-grupo"><h3>Automatización con k0lmena</h3><span class="etiqueta neutra">tokens una sola vez</span></div>
+  <div class="tarjetas">
+    <div class="tarjeta c-verde"><h4>web-mapper</h4><p>Recorre la web siguiendo tus casos y genera <code>.feature</code>, steps y locators.</p><div class="usa"><b>Skills</b> automatizacion-k0lmena, ejecucion-e2e, investigacion-contexto<br><b>Conectores</b> playwright, playwright-headless</div><div class="salida"><code>herramientas/k0lmena/web/</code></div></div>
+    <div class="tarjeta c-verde"><h4>api-mapper</h4><p>Lee Postman o Swagger/OpenAPI (REST, GraphQL o gRPC), verifica los endpoints y genera los <code>.feature</code>.</p><div class="usa"><b>Skills</b> automatizacion-k0lmena, investigacion-contexto, tecnicas-de-diseno, pruebas-graphql, pruebas-grpc<br><b>Usa</b> resumir_openapi.py, resumir_graphql.py</div><div class="salida"><code>herramientas/k0lmena/api/</code></div></div>
+  </div>
+
+  <div class="subtitulo-grupo"><h3>Gestión</h3></div>
+  <div class="tarjetas">
+    <div class="tarjeta c-cian"><h4>gestor-pruebas</h4><p>Carpetas, casos, vínculos con la historia y ciclos en Xray (Cloud o Server/DC) o k0lmenaTMT.</p><div class="usa"><b>Usa</b> scripts/gestion/gestion.py<br><b>Conectores</b> k0lmena-tmt (consultas)</div><div class="salida"><code>output/gestion/</code></div></div>
+    <div class="tarjeta c-cian"><h4>publicador-resultados</h4><p>Sube los resultados de <code>npm test</code> (o de un JUnit XML) al ciclo, con sus evidencias.</p><div class="usa"><b>Usa</b> scripts/gestion/gestion.py</div><div class="salida">Xray o k0lmenaTMT</div></div>
+  </div>
+
+  <h3>Skills</h3>
+  <p>El "cómo" que usan los agentes y la conversación principal; se cargan solo cuando hacen falta. Detalle en <code>.claude/skills/README.md</code>.</p>
+  <div class="tabla"><table>
+    <tr><th style="width:26%">Skill</th><th>Qué enseña</th></tr>
+    <tr><td><code>investigacion-contexto</code></td><td>Investigar la historia completa y registrar la Falta información (FI-XX).</td></tr>
+    <tr><td><code>tecnicas-de-diseno</code></td><td>Equivalencia, valores límite, tabla de decisión, transición de estados y pairwise.</td></tr>
+    <tr><td><code>redaccion-casos-manuales</code></td><td>Columnas, esquema del JSON de <code>generar_casos.py</code>, reglas de campos e informe de cobertura.</td></tr>
+    <tr><td><code>ejecucion-e2e</code></td><td>Ejecutar en el navegador con Playwright MCP: modos, snapshots, esperas y evidencia.</td></tr>
+    <tr><td><code>ejecucion-api</code></td><td>Correr colecciones con Newman: base_url, token, validaciones y resultados.</td></tr>
+    <tr><td><code>pruebas-graphql</code></td><td>Probar APIs GraphQL: schema, errores parciales, autorización por campo, profundidad y paginación.</td></tr>
+    <tr><td><code>pruebas-grpc</code></td><td>gRPC (Protobuf, modos de RPC, status codes, deadlines) y WebSocket.</td></tr>
+    <tr><td><code>automatizacion-k0lmena</code></td><td>Convenciones de k0lmena: features, steps, locators, tags y steps de base de datos.</td></tr>
+    <tr><td><code>documentacion-proyecto</code></td><td>Lectura del repositorio, mapa funcional, dossier y modos barrido y actualizar.</td></tr>
+    <tr><td><code>base-conocimiento</code></td><td>Armar y mantener la base de conocimiento del proyecto cuando cambian los requerimientos.</td></tr>
+    <tr><td><code>ejecucion-manual</code></td><td>Ejecución manual acompañada, caso por caso y paso por paso (<code>/k0lmenia:ejecucion-manual</code>).</td></tr>
+    <tr><td><code>guia-pruebas</code></td><td>Asistente para elegir qué probar y con qué agente o skill.</td></tr>
+    <tr><td><code>empezar</code></td><td>Bienvenida y puesta en marcha (<code>/k0lmenia:empezar</code> en el plugin).</td></tr>
+  </table></div>
+</section>
+
+<!-- ======================================================= REQUISITOS -->
+<section class="seccion" id="requisitos">
+  <div class="kicker">Primeros pasos</div>
+  <h2>Requisitos</h2>
+  <div class="tabla"><table>
+    <tr><th style="width:32%">Para…</th><th>Necesitás</th></tr>
+    <tr><td>Usar los agentes</td><td><b>Claude Code</b> + cuenta de Claude (Pro, Max, Team o Enterprise) o API de Anthropic. VS Code recomendado.</td></tr>
+    <tr><td>Casos, reportes y gestión</td><td><b>Python 3.10+</b> (<code>pip install -r requirements.txt</code>; en Mac/Linux, <code>pip3</code>)</td></tr>
+    <tr><td>Ejecutar E2E en vivo</td><td><b>Node.js 20+</b> (22 LTS recomendado) y navegadores de Playwright</td></tr>
+    <tr><td>Colecciones de Postman</td><td><b>Newman</b></td></tr>
+    <tr><td>Automatizar con k0lmena</td><td><b>Node.js 20+</b> (22 LTS recomendado)</td></tr>
+  </table></div>
+</section>
+
+<!-- ======================================================= INSTALACIÓN -->
+<section class="seccion" id="instalacion">
+  <div class="kicker">Primeros pasos</div>
+  <h2>Instalación</h2>
+  <p class="bajada">La forma más fácil es el plugin (ver la sección siguiente). Si preferís clonar el repo:</p>
+  <div class="codigo"><pre><span class="c"># 1. Claude Code (macOS / Linux; en Windows seguí la guía oficial)</span>
+curl -fsSL https://claude.ai/install.sh | bash
+
+<span class="c"># 2. El repositorio</span>
+git clone https://github.com/underc0delabs/k0lmenIA.git
+cd k0lmenIA
+pip install -r requirements.txt   <span class="c"># en Mac/Linux: pip3 install -r requirements.txt</span>
+npm install                       <span class="c"># k0lmena (se instala en herramientas/k0lmena)</span>
+npm run configurar                <span class="c"># tu app y tus herramientas: crea el .env y activa los conectores</span>
+
+<span class="c"># 3. Revisá que esté todo listo</span>
+npm run doctor
+
+<span class="c"># 4. A trabajar</span>
+code .
+claude</pre></div>
+  <div class="aviso info"><span class="ico">i</span><p>En Windows el comando de Python es <code>python</code>; en Mac y Linux, <code>python3</code> y <code>pip3</code>. Para la ejecución E2E en vivo: <code>npx playwright install</code>; para colecciones de Postman: <code>npm install -g newman</code>.</p></div>
+</section>
+
+<!-- ======================================================= PLUGIN -->
+<section class="seccion" id="plugin">
+  <div class="kicker">Primeros pasos</div>
+  <h2>Como plugin de Claude Code</h2>
+  <p class="bajada">Se instala como <b>plugin</b> y funciona en la carpeta de cualquier proyecto, sin clonar este repo. Las actualizaciones llegan solas y nunca tocan tu trabajo.</p>
+  <div class="codigo"><pre>claude plugin marketplace add underc0delabs/k0lmenIA
+claude plugin install k0lmenia@k0lmenia</pre></div>
+  <ol class="pasos">
+    <li><b>Abrí Claude Code en la carpeta de tu proyecto</b>Y escribí <code>/k0lmenia:empezar</code>: prepara el proyecto (carpetas, <code>.env</code> y k0lmena), revisa que tengas todo instalado, te ayuda a conectar Jira y te propone la primera tarea.</li>
+    <li><b>Pedí lo que necesites</b>En lenguaje natural: <i>"Escribí los casos de prueba de PROJ-12"</i>, <i>"Probá el login en el navegador"</i>.</li>
+  </ol>
+  <div class="tabla"><table>
+    <tr><th style="width:26%">Tema</th><th>Cómo funciona</th></tr>
+    <tr><td>Comandos</td><td>Lo que en el repo es <code>npm run &lt;x&gt;</code>, en el plugin es <code>k0lmenia &lt;x&gt;</code> (<code>k0lmenia ayuda</code> los lista). Los agentes se llaman <code>k0lmenia:&lt;agente&gt;</code>.</td></tr>
+    <tr><td>Qué instala y dónde</td><td>El código queda en la caché de Claude Code y se actualiza solo. <code>k0lmenia init</code> deja en tu proyecto <code>input/</code>, <code>output/</code>, el <code>.env</code>, <code>TAREAS.md</code>, tu copia de k0lmena y los mismos permisos que el repo. Nunca pisa un archivo que ya existe.</td></tr>
+    <tr><td>Actualizar</td><td>Cada push a <code>main</code> se publica en la rama <code>plugin</code>. Activá la actualización automática (<code>/plugin</code> → Marketplaces → <code>k0lmenia</code>) o corré <code>/plugin marketplace update k0lmenia</code>.</td></tr>
+    <tr><td>Novedades</td><td>Después de una actualización, Claude te cuenta al iniciar la sesión qué cambió; a pedido, <code>k0lmenia novedades</code> (con el repo, <code>npm run novedades</code>).</td></tr>
+    <tr><td>Actualizar k0lmena</td><td><code>k0lmenia actualizar</code>: tus pruebas no se tocan; si modificaste un archivo del framework, la versión nueva queda al lado como <code>.nuevo</code>.</td></tr>
+  </table></div>
+</section>
+
+<!-- ======================================================= CONFIGURACIÓN -->
+<section class="seccion" id="configuracion">
+  <div class="kicker">Primeros pasos</div>
+  <h2>Configuración: el archivo .env</h2>
+  <p class="bajada">Hay <b>un solo <code>.env</code>, en la raíz</b>. Lo usan los agentes, k0lmena y los scripts de gestión. Nunca se sube al repo; la plantilla comentada es <code>.env.example</code>. La forma fácil: <code>npm run configurar</code>.</p>
+  <div class="tabla"><table>
+    <tr><th style="width:26%">Grupo</th><th>Variables</th></tr>
+    <tr><td>App bajo prueba</td><td><code>APP_URL</code> <code>APP_USER</code> <code>APP_PASSWORD</code></td></tr>
+    <tr><td>API</td><td><code>API_TOKEN</code> <code>API_BASEURL</code></td></tr>
+    <tr><td>Web (k0lmena)</td><td><code>BROWSER</code> <code>HEADLESS</code> <code>VIEWPORT_WIDTH</code> <code>VIEWPORT_HEIGHT</code> <code>LOCALE</code> <code>TIMEZONE</code></td></tr>
+    <tr><td>Ejecución y evidencias</td><td><code>TAGS</code> <code>PARALLEL</code> <code>EVIDENCE</code> <code>VIDEO</code> <code>TRACE</code> <code>K0LMENA_AUTO_HEALING</code></td></tr>
+    <tr><td>Bases de datos</td><td><code>DB_CONEXIONES</code> + por conexión <code>DB_&lt;NOMBRE&gt;_MOTOR</code> <code>_HOST</code> <code>_PUERTO</code> <code>_BASE</code> <code>_USUARIO</code> <code>_CLAVE</code> <code>_ESCRITURA</code> <code>_PRODUCCION</code></td></tr>
+    <tr><td>Repositorio de la app</td><td><code>REPO_RUTA_LOCAL</code></td></tr>
+    <tr><td>Gestión</td><td><code>GESTION_HERRAMIENTA</code> <code>GESTION_PROYECTO</code> + credenciales de Xray o k0lmenaTMT</td></tr>
+  </table></div>
+  <div class="aviso warn"><span class="ico">!</span><p>Usá credenciales de un entorno de <b>prueba</b>. Los agentes leen los secretos del <code>.env</code>: nunca pegues un token en el chat.</p></div>
+</section>
+
+<!-- ======================================================= DOCUMENTACIÓN DEL PROYECTO -->
+<section class="seccion" id="documentacion">
+  <div class="kicker">Guías</div>
+  <h2>Documentación del proyecto</h2>
+  <p class="bajada">El <b>documentador-proyecto</b> junta el contexto real del proyecto en <code>input/documentacion/</code>, para que los demás agentes trabajen sobre lo que existe y no sobre suposiciones.</p>
+  <div class="pedido">Documentá el proyecto.</div>
+  <div class="pedido">Juntá todo el contexto de PROJ-12 antes de escribir los casos.</div>
+  <div class="tabla"><table>
+    <tr><th style="width:24%">Fuente</th><th>Qué lee</th></tr>
+    <tr><td>Repositorio de la app</td><td>El clon local (<code>REPO_RUTA_LOCAL</code>): README y docs, validaciones y límites, mensajes, estados, roles y permisos, rutas y contratos de API (solo lectura).</td></tr>
+    <tr><td>Historias</td><td>Jira con todos sus comentarios, subtareas, épica, vínculos y bugs.</td></tr>
+    <tr><td>La aplicación</td><td><code>npm run mapa-funcional</code>: páginas, menús, formularios con cada campo, botones y mensajes (solo GET, sin enviar nada).</td></tr>
+  </table></div>
+  <p>Deja una base del proyecto, un dossier por historia y un índice (<code>INDICE.md</code>), cada dato con su fuente. Es <b>incremental</b>: <i>"Actualizá la documentación"</i> rehace solo lo que cambió, y <code>npm run actualizar-conocimiento</code> lo puede correr programado.</p>
+</section>
+
+<!-- ======================================================= CONTEXTO -->
+<section class="seccion" id="contexto">
+  <div class="kicker">Guías</div>
+  <h2>Investigación de contexto y "Falta información"</h2>
+  <p class="bajada">Antes de analizar, escribir casos o automatizar una historia, los agentes investigan su contexto completo (skill <code>investigacion-contexto</code>) en lugar de suponer.</p>
+  <div class="tabla"><table>
+    <tr><th style="width:30%">Fuente</th><th>Qué revisan</th></tr>
+    <tr><td>Documentación del proyecto</td><td>Primero: el índice y el dossier de la historia en <code>input/documentacion/</code>.</td></tr>
+    <tr><td>Historia de Jira</td><td>Descripción, criterios, estado, labels, componentes y adjuntos.</td></tr>
+    <tr><td>Comentarios</td><td><b>Todos</b>: las decisiones que se tomaron después reemplazan a la descripción.</td></tr>
+    <tr><td>Subtareas, épica e issues vinculados</td><td>Reglas generales, historias hermanas y bugs conocidos del flujo.</td></tr>
+    <tr><td>Contratos e <code>input/</code></td><td>Swagger, Postman y documentación local.</td></tr>
+  </table></div>
+  <p>Lo que no aparece en ninguna fuente se marca como <b>Falta información</b> con un ID por historia (<code>FI-01</code>, <code>FI-02</code>, …) que viaja a la planilla de casos, los <code>.feature</code> (<code>@falta-info @FI-01</code>), las coberturas, los mapeos, los reportes de ejecución y lo que se publica en Xray o k0lmenaTMT.</p>
+</section>
+
+<!-- ======================================================= DISEÑO Y EJECUCIÓN -->
+<section class="seccion" id="guia">
+  <div class="kicker">Guías</div>
+  <h2>Diseño y ejecución</h2>
+  <div class="guia"><h4>Analizar una historia <span class="etiqueta neutra">analista-historias</span></h4>
+    <div class="pedido">Analizá la historia HU-001 y decime qué ambigüedades tiene.</div>
+    <p>Revisa cada criterio y entrega <code>analisis-HU-001.md</code> con ambigüedades, vacíos, riesgos, casos no contemplados y preguntas para el PO.</p></div>
+  <div class="guia"><h4>Escribir los casos <span class="etiqueta neutra">generador-casos-manuales</span></h4>
+    <div class="pedido">Generá los casos de prueba de HU-001.</div>
+    <p>Planilla <code>casos-HU-001.xlsx</code>, su <code>.md</code> y el informe de cobertura, con positivos, negativos y bordes, y el tiempo estimado de ejecución de cada caso.</p></div>
+  <div class="guia"><h4>Pasar a BDD <span class="etiqueta neutra">generador-casos-bdd</span></h4>
+    <div class="pedido">Pasá HU-001 a BDD.</div>
+    <p>Escenarios Gherkin con <code>@HU-001</code> y <code>@CP-XXX</code>, listos para automatizar.</p></div>
+  <div class="guia"><h4>Revisar casos existentes <span class="etiqueta neutra">revisor-casos</span></h4>
+    <div class="pedido">Revisá los casos de HU-001 y decime cuánto lleva ejecutarlos.</div>
+    <p>Puntaje por caso, problemas con su sugerencia, duplicados, historias sin negativos y tiempo de ejecución manual.</p></div>
+  <div class="guia"><h4>Ejecutar en el navegador <span class="etiqueta neutra">ejecutor-e2e</span></h4>
+    <div class="pedido">Ejecutá CP-001 y CP-002 de HU-001 contra https://tu-app.com en headless.</div>
+    <p>Reporte HTML con capturas de cada paso en <code>output/ejecuciones/</code>.</p></div>
+  <div class="guia"><h4>Correr una colección de API <span class="etiqueta neutra">ejecutor-api</span></h4>
+    <div class="pedido">Corré la colección de input/api para HU-001.</div>
+    <p>Postman, Bruno o Insomnia con Newman, con el token y la URL del <code>.env</code>, y su reporte HTML.</p></div>
+</section>
+
+<!-- ======================================================= K0LMENA -->
+<section class="seccion" id="k0lmena">
+  <div class="kicker">Guías</div>
+  <h2>Automatización con k0lmena</h2>
+  <p class="bajada"><a href="https://github.com/underc0delabs/k0lmena">k0lmena</a> vive en <code>herramientas/k0lmena/</code>. Los agentes <i>mapper</i> verifican tus casos contra la app real y escriben la automatización <b>una sola vez</b>; después la suite corre las veces que quieras, <b>sin tokens</b>.</p>
+  <div class="codigo"><pre>npm test                          <span class="c"># web + API</span>
+npm run test:web                  <span class="c"># también: test:api · test:all</span>
+TAGS=@HU-001 npm test             <span class="c"># filtrar por tag</span>
+npm run report:web                <span class="c"># regenera el reporte HTML (también: report:api)</span></pre></div>
+  <div class="tabla"><table>
+    <tr><th style="width:16%">Suite</th><th>Test que pasa</th><th>Test que falla</th></tr>
+    <tr><td>Web</td><td>Captura final (+ GIF opcional)</td><td>Video completo, captura, error, logs del navegador y de Node, trace de Playwright</td></tr>
+    <tr><td>API</td><td>Request y response (<code>Authorization</code> oculto)</td><td>Lo mismo + la validación que falló</td></tr>
+  </table></div>
+  <p><code>npm run login</code> guarda una sesión iniciada a mano (captcha, 2FA, SSO) para que <code>npm test</code> y el navegador de los agentes arranquen logueados. También: <code>npm run mapa-funcional</code>, <code>npm run record</code>, <code>npm run record:generator</code>, <code>npm run debug</code> y auto-healing de locators. Detalle en <code>herramientas/k0lmena/README.md</code>.</p>
+</section>
+
+<!-- ======================================================= GESTIÓN -->
+<section class="seccion" id="gestion">
+  <div class="kicker">Guías</div>
+  <h2>Gestión de pruebas: Xray y k0lmenaTMT</h2>
+  <p class="bajada">Configurá <code>GESTION_HERRAMIENTA</code> (<code>xray-cloud</code> · <code>xray-dc</code> · <code>k0lmena-tmt</code>), <code>GESTION_PROYECTO</code> y las credenciales en el <code>.env</code>.</p>
+  <div class="pedido">Subí los casos de HU-001 a Xray en la carpeta 'HU-001 Registro', vinculados a PROJ-12, y creá el ciclo Sprint 5.</div>
+  <div class="pedido">Subí los resultados de la última corrida al ciclo PROJ-60.</div>
+  <p>El <b>gestor-pruebas</b> crea carpetas, casos, vínculos y ciclos (y con <code>sincronizar-casos</code> pone al día los que cambiaron); el <b>publicador-resultados</b> carga estado, error y evidencias. Sirve para k0lmena y para cualquier framework que genere <b>JUnit XML</b>. La trazabilidad (<code>output/gestion/&lt;HU&gt;-&lt;herramienta&gt;.json</code>) evita duplicados.</p>
+  <h3>k0lmenaTMT</h3>
+  <p>Se integra con el token personal (<code>K0LMENA_TMT_TOKEN</code>). Las cargas las hace <code>scripts/gestion</code> por su server MCP, sin pasar cada caso por la conversación; el conector <code>k0lmena-tmt</code> queda para consultar desde el chat. Keys: <code>TC-&lt;id&gt;</code> (casos) y <code>CY-&lt;id&gt;</code> (ciclos).</p>
+</section>
+
+<!-- ======================================================= CI -->
+<section class="seccion" id="ci">
+  <div class="kicker">Guías</div>
+  <h2>k0lmena en el pipeline (CI)</h2>
+  <p class="bajada">Las suites de k0lmena corren solas en el pipeline del equipo, sin agentes ni tokens.</p>
+  <div class="codigo"><pre>npm run ci -- generar --plataforma github                <span class="c"># → .github/workflows/k0lmena.yml</span>
+npm run ci -- generar --plataforma gitlab --suite all    <span class="c"># → .gitlab-ci.yml</span>
+npm run ci -- generar --plataforma jenkins               <span class="c"># → Jenkinsfile</span>
+npm run ci -- generar --plataforma azure --suite api     <span class="c"># → azure-pipelines.yml</span></pre></div>
+  <p>El pipeline instala k0lmena y Chromium, corre las suites y guarda los reportes como artefacto; con <code>GESTION_CICLO</code> publica los resultados en Xray o k0lmenaTMT. El <code>.env</code> va entero como secret del pipeline. Detalle en <code>herramientas/ci/README.md</code>.</p>
+</section>
+
+<!-- ======================================================= ANTI-BOTS -->
+<section class="seccion" id="anti-bots">
+  <div class="kicker">Guías</div>
+  <h2>Apps con protección anti-bots</h2>
+  <p class="bajada">Si la app tiene Cloudflare, Akamai, DataDome, Imperva, AWS WAF o un captcha, puede frenar al navegador automatizado. K0lmenIA no intenta esquivarlo.</p>
+  <div class="tabla"><table>
+    <tr><th style="width:26%">Qué hace</th><th>Cómo</th></tr>
+    <tr><td>No da falsos fallos</td><td>El escenario queda <b>Bloqueado: anti-bots</b> (también en Xray y k0lmenaTMT) y los agentes frenan y lo reportan.</td></tr>
+    <tr><td>Header de bypass</td><td><code>QA_BYPASS_HEADER</code> y <code>QA_BYPASS_TOKEN</code> en el <code>.env</code>: se mandan solo a los hosts de la app.</td></tr>
+    <tr><td>Chrome real y ritmo humano</td><td><code>NAVEGADOR_CANAL=chrome</code> y <code>RITMO_HUMANO=si</code>.</td></tr>
+    <tr><td>Plan B manual</td><td><code>npm run login</code>: resolvés el desafío a mano y la sesión queda guardada (<code>SESION=si</code>).</td></tr>
+  </table></div>
+</section>
+
+<!-- ======================================================= BASE DE DATOS -->
+<section class="seccion" id="base-de-datos">
+  <div class="kicker">Guías</div>
+  <h2>Verificación en base de datos</h2>
+  <p class="bajada">k0lmena trae steps para verificar en <b>PostgreSQL, MySQL / MariaDB, SQL Server y MongoDB</b> lo que dejaron guardado tus pruebas. Los mappers los suman a un <code>.feature</code> solo cuando lo pedís.</p>
+  <div class="pedido">Sumá al escenario de registro la verificación en la base de datos.</div>
+  <div class="codigo"><pre>Then el registro de "usuarios" donde "id" es "{idUsuario}" tiene:
+  | campo  | valor  |
+  | estado | ACTIVO |</pre></div>
+  <div class="codigo"><pre>npm run bd -- conexiones
+npm run bd -- consultar --sql "SELECT id, estado FROM usuarios WHERE email = ?" --param ana@test.com</pre></div>
+  <div class="aviso warn"><span class="ico">!</span><p><b>Solo lectura por defecto.</b> Para preparar o limpiar datos, la conexión necesita <code>DB_&lt;NOMBRE&gt;_ESCRITURA=si</code>; con <code>DB_&lt;NOMBRE&gt;_PRODUCCION=si</code> nunca escribe. Las columnas sensibles se enmascaran.</p></div>
+</section>
+
+<!-- ======================================================= TRIAGE -->
+<section class="seccion" id="triage">
+  <div class="kicker">Guías</div>
+  <h2>Triage de bugs</h2>
+  <div class="pedido">¿BUG-008 ya está cargado en Jira?</div>
+  <p>El <b>triador-bugs</b> busca si el bug ya existe en Jira o en los bugs locales, detecta <b>regresiones</b> de bugs cerrados y sugiere severidad, prioridad, componente, responsable e historia. Crear o vincular en Jira, solo con tu confirmación.</p>
+</section>
+
+<!-- ======================================================= EJECUCIÓN MANUAL -->
+<section class="seccion" id="ejecucion-manual">
+  <div class="kicker">Guías</div>
+  <h2>Ejecución manual acompañada</h2>
+  <p class="bajada">Con el skill <code>ejecucion-manual</code> la conversación te guía por los casos manuales: un caso y un paso por vez, el resultado, la evidencia, el tiempo real contra el estimado y el bug redactado en el momento si algo falla.</p>
+  <div class="codigo"><pre>/k0lmenia:ejecucion-manual HU-012                <span class="c"># en Claude Code</span>
+npm run ejecucion-manual -- estado --sesion output/ejecucion-manual/HU-012</pre></div>
+  <p>La sesión queda en <code>output/ejecucion-manual/&lt;HU&gt;/sesion.json</code>, así que se pausa y se retoma otro día. Al cerrar, el <b>asistente-ejecucion-manual</b> arma el informe (ES/EN) y avisa las inconsistencias; publicar en Xray o k0lmenaTMT, solo con confirmación.</p>
+</section>
+
+<!-- ======================================================= HISTORIAL -->
+<section class="seccion" id="historial">
+  <div class="kicker">Guías</div>
+  <h2>Historial de corridas</h2>
+  <p>Cada corrida de <code>npm test</code> guarda sus <b>últimas 5 corridas</b> con su evidencia en <code>herramientas/k0lmena/reports/&lt;suite&gt;/historial/</code>, y cada informe trae la sección <b>Evolución de las corridas</b>: qué es nuevo, qué se resolvió y cómo evolucionan los indicadores.</p>
+</section>
+
+<!-- ======================================================= PORTAL -->
+<section class="seccion" id="tablero">
+  <div class="kicker">Guías</div>
+  <h2>Portal de informes</h2>
+  <p><code>output/index.html</code> abre con un <b>tablero de inicio</b>: los indicadores globales (cada suite de <code>npm test</code> con su % aprobado y su tendencia, bugs abiertos, informes de hoy y de la semana), las <b>alertas</b> con lo que hay que revisar y una tarjeta por categoría con el último informe de cada herramienta. Abajo, <b>Todos los informes</b>, con filtros por texto, herramienta, historia, estado y fechas. Se arma solo (<code>npm run portal</code>) y se abre con doble clic.</p>
+</section>
+
+<!-- ======================================================= IDIOMAS -->
+<section class="seccion" id="idiomas">
+  <div class="kicker">Guías</div>
+  <h2>Informes en español e inglés</h2>
+  <div class="codigo arbol"><pre>output/ejecucion-manual/HU-012/
+├── informe-ejecucion-manual.html      <span class="c">acceso: abre el idioma elegido (español por defecto)</span>
+├── es/informe-ejecucion-manual.html   <span class="c">español</span>
+├── en/informe-ejecucion-manual.html   <span class="c">inglés</span>
+└── sesion.json analisis.json …        <span class="c">la evidencia es la misma para los dos</span></pre></div>
+  <p>La banderita de arriba a la derecha pasa de un idioma al otro y recuerda tu elección. Lo que escribe el agente lo traduce el mismo agente (bloque <code>"en"</code> del JSON); la interfaz la traduce el script con un diccionario (<code>scripts/i18n/en/</code>), sin gastar tokens.</p>
+</section>
+
+<!-- ======================================================= AVISOS -->
+<section class="seccion" id="avisos">
+  <div class="kicker">Guías</div>
+  <h2>Avisos a Slack y Teams</h2>
+  <div class="codigo"><pre>npm run avisar -- --titulo "Regresión" --texto "3 escenarios fallaron" --nivel error
+npm run avisar -- --desde-cucumber herramientas/k0lmena/reports/web/cucumber-report.json</pre></div>
+  <p>Publica por webhook (<code>SLACK_WEBHOOK_URL</code>, <code>TEAMS_WEBHOOK_URL</code> en el <code>.env</code>). Lo usa el triador cuando se pide.</p>
+</section>
+
+<!-- ======================================================= EVALS -->
+<section class="seccion" id="evals">
+  <div class="kicker">Guías</div>
+  <h2>Evals de los agentes</h2>
+  <p>Los <b>evals</b> (<code>evals/</code>) miden la calidad de lo que generan los agentes: cada caso trae <b>trampas deliberadas</b> (ambigüedades, contradicciones, límites, secretos) y chequeos determinísticos. Corren en un workspace aislado con <code>claude -p</code> y dejan un informe con las regresiones contra la corrida anterior.</p>
+  <div class="codigo"><pre>npm run evals -- --listar
+npm run evals -- --correr --agente generador-casos-manuales</pre></div>
+  <div class="aviso info"><span class="ico">i</span><p><b>Gastan tokens</b>: cada caso es una conversación completa, con un tope por caso. <code>--referencia</code> y <code>--solo-verificar</code> revisan sin correr el agente.</p></div>
+</section>
+
+<!-- ======================================================= TOKENS -->
+<section class="seccion" id="tokens">
+  <div class="kicker">Guías</div>
+  <h2>Uso de tokens</h2>
+  <p><code>python scripts/metricas_tokens.py</code> lee las transcripciones de Claude Code del proyecto (solo los conteos, <b>nunca el texto</b>), atribuye el uso a cada agente y arma un informe con el costo estimado por agente, día y modelo.</p>
+</section>
+
+<!-- ======================================================= CONECTORES -->
+<section class="seccion" id="conectores">
+  <div class="kicker">Guías</div>
+  <h2>Conectores MCP</h2>
+  <div class="tabla"><table>
+    <tr><th style="width:26%">Conector</th><th>Para qué</th><th style="width:26%">Autenticación</th></tr>
+    <tr><td><code>playwright</code> · <code>playwright-headless</code></td><td>Navegador para el ejecutor E2E, el web-mapper y el documentador</td><td>Activo por defecto</td></tr>
+    <tr><td><code>atlassian</code></td><td><b>Jira</b>: historias, criterios, comentarios y vínculos</td><td>Activo por defecto: tu cuenta (OAuth) o API token</td></tr>
+    <tr><td><code>k0lmena-tmt</code></td><td>Consultas en k0lmenaTMT (las cargas, por <code>gestion.py</code>)</td><td>Token personal</td></tr>
+  </table></div>
+  <div class="codigo"><pre>npm run conector                            <span class="c"># lista los conectores y cuáles tenés activos</span>
+npm run conector -- activar k0lmena-tmt     <span class="c"># queda solo para vos; reiniciá Claude Code</span></pre></div>
+  <p>Ninguno lleva secretos: las credenciales se leen del <code>.env</code>. <code>npm run doctor</code> te dice qué le falta a cada conector activo. Guía completa en <code>CONECTORES.md</code>.</p>
+</section>
+
+<!-- ======================================================= PLANES -->
+<section class="seccion" id="planes">
+  <div class="kicker">Planes</div>
+  <h2>¿Necesitás más?</h2>
+  <p class="bajada">K0lmenIA Light trae lo elemental del día a día de QA. Cuando el equipo necesita más, hay dos planes pagos.</p>
+  <div class="tarjetas">
+    <div class="tarjeta c-violeta"><h4>K0lmenIA Pro</h4><p>Todos los agentes para probar (101 en total): accesibilidad, rendimiento, seguridad, performance, mobile, regresión visual, exploratorias, análisis de fallos, causa raíz, e-commerce, IA y chatbots, analytics, datos y más, con más conectores (Confluence, Figma, GitHub, GitLab, Linear, observabilidad y otros).</p><div class="salida">USD 29 por usuario por mes</div></div>
+    <div class="tarjeta c-cian"><h4>K0lmenIA Empresa</h4><p>Todo Pro más métricas, tablero de calidad, trazabilidad, evidencias de auditoría, presentaciones, onboarding, SAP, Salesforce y Dynamics, resumen diario, planificación de capacidad y gestión en QMetry, AIO Tests, Zephyr Scale y Azure DevOps.</p><div class="salida">USD 590 por mes hasta 10 personas</div></div>
+  </div>
+  <p>Más información en <a href="https://k0lmena.com/k0lmenia/" target="_blank" rel="noopener">k0lmena.com/k0lmenia</a>.</p>
+</section>
+
+<!-- ======================================================= CONVENCIONES -->
+<section class="seccion" id="convenciones">
+  <div class="kicker">Referencia</div>
+  <h2>Convenciones</h2>
+  <div class="dos-col">
+    <div class="tabla"><table>
+      <tr><th>Elemento</th><th>Formato</th></tr>
+      <tr><td>Historias</td><td><code>HU-001</code></td></tr>
+      <tr><td>Criterios de aceptación</td><td><code>CA1</code> · <code>CA2</code></td></tr>
+      <tr><td>Casos manuales</td><td><code>CP-001</code></td></tr>
+      <tr><td>Casos de API</td><td><code>CP-API-001</code></td></tr>
+      <tr><td>Bugs</td><td><code>BUG-001</code></td></tr>
+      <tr><td>Falta información</td><td><code>FI-01</code> · <code>@falta-info @FI-01</code></td></tr>
+    </table></div>
+    <div class="tabla"><table>
+      <tr><th>Escala</th><th>Valores</th></tr>
+      <tr><td>Severidad y prioridad</td><td>Crítica · Alta · Media · Baja</td></tr>
+      <tr><td>Estado de un caso</td><td>N/A · Pendiente · En ejecución · Aprobado · Fallido · Bloqueado</td></tr>
+    </table></div>
+  </div>
+  <h3>Tags en k0lmena</h3>
+  <div class="tabla"><table>
+    <tr><th style="width:26%">Dónde</th><th>Tags</th></tr>
+    <tr><td>Feature</td><td><code>@HU-001 @web</code></td></tr>
+    <tr><td>Scenario</td><td><code>@CP-001</code> (<code>@smoke</code> si es crítico) · <code>@bloqueado</code> · <code>@falta-info @FI-01</code></td></tr>
+    <tr><td>Archivos</td><td><code>&lt;tipo&gt;/features/HU-001-&lt;slug&gt;.feature</code> · <code>steps/HU-001.steps.ts</code> · <code>locators/HU-001.locators.ts</code></td></tr>
+  </table></div>
+</section>
+
+<!-- ======================================================= ESTRUCTURA -->
+<section class="seccion" id="estructura">
+  <div class="kicker">Referencia</div>
+  <h2>Estructura del repositorio</h2>
+  <div class="codigo arbol"><pre>k0lmenIA/
+├── CLAUDE.md               <span class="c">contexto y estándares (corto a propósito)</span>
+├── REFERENCIA.md           <span class="c">salida de cada agente, comandos y scripts</span>
+├── AGENTES.md              <span class="c">catálogo de agentes</span>
+├── ARQUITECTURA.md         <span class="c">cómo crece el repo</span>
+├── CONECTORES.md           <span class="c">cómo activar los conectores MCP</span>
+├── CHANGELOG.md            <span class="c">cambios de cada versión</span>
+├── .env.example            <span class="c">plantilla de variables</span>
+├── .mcp.json               <span class="c">conectores MCP (sin secretos)</span>
+├── package.json            <span class="c">atajos (npm test…)</span>
+├── docs/                   <span class="c">esta documentación, PDF y diagramas</span>
+├── tests/                  <span class="c">tests de los scripts</span>
+├── evals/                  <span class="c">evals de los agentes</span>
+├── .claude/agents/         <span class="c">los 13 agentes</span>
+├── .claude/skills/         <span class="c">los 13 skills</span>
+├── input/ · output/        <span class="c">insumos y resultados</span>
+├── plantillas/             <span class="c">bug, planilla de casos, cobertura</span>
+├── scripts/                <span class="c">casos, reportes, gestión (Xray y k0lmenaTMT), conectores, portal y doctor</span>
+└── herramientas/
+    ├── newman/             <span class="c">colecciones de Postman, Bruno e Insomnia</span>
+    ├── ci/                 <span class="c">plantillas de pipeline</span>
+    └── k0lmena/            <span class="c">framework de automatización (web y API)</span></pre></div>
+</section>
+
+<!-- ======================================================= FAQ -->
+<section class="seccion" id="faq">
+  <div class="kicker">Referencia</div>
+  <h2>Problemas frecuentes</h2>
+  <details class="faq"><summary>¿Qué pasa si a la historia le falta información?</summary><div>Los agentes primero la buscan en los comentarios, subtareas, épica e issues vinculados. Lo que no encuentran queda como <b>Falta información</b> (<code>FI-01</code>) con la pregunta para el PO, y viaja a todos los artefactos.</div></details>
+  <details class="faq"><summary>No sé qué me falta instalar o configurar</summary><div>Corré <code>npm run doctor</code>: revisa Python, Node, k0lmena, Playwright, Newman, las fuentes, el <code>.env</code>, las integraciones, los conectores y git, y dice cómo resolver cada cosa.</div></details>
+  <details class="faq"><summary>Un agente nuevo no aparece</summary><div>Reiniciá Claude Code.</div></details>
+  <details class="faq"><summary><code>npm test</code> corre 0 escenarios</summary><div>Todavía no automatizaste nada o <code>TAGS</code> no coincide.</div></details>
+  <details class="faq"><summary>Un escenario nunca se ejecuta</summary><div>Tiene <code>@bloqueado</code>: el motivo está en un comentario arriba.</div></details>
+  <details class="faq"><summary>Un agente devuelve "Necesito que confirmes"</summary><div>Es a propósito: los agentes no pueden preguntar a mitad del trabajo. Respondé y Claude lo continúa.</div></details>
+  <details class="faq"><summary>Un conector MCP no conecta</summary><div>Corré <code>npm run doctor</code>: dice qué variable falta en el <code>.env</code>. Atlassian se autoriza desde <code>/mcp</code>.</div></details>
+</section>
+
+<!-- ======================================================= EXTENDER -->
+<section class="seccion" id="extender">
+  <div class="kicker">Referencia</div>
+  <h2>Extender el proyecto</h2>
+  <ol class="pasos">
+    <li><b>Creá el archivo</b><code>.claude/agents/mi-agente.md</code> con frontmatter <code>name</code> y <code>description</code>. La descripción es lo que usa Claude Code para decidir cuándo invocarlo.</li>
+    <li><b>Escribí el cuerpo</b>En español: rol, entradas, proceso, salida y reglas.</li>
+    <li><b>Definí el formato</b>Si genera un formato propio, sumá su plantilla en <code>plantillas/</code> o su script en <code>scripts/</code>, y su carpeta en <code>output/</code>.</li>
+    <li><b>Informe en dos idiomas</b>Si arma un informe HTML, escribilo con <code>escribir_bilingue</code> y <code>localizar</code> (<code>scripts/_i18n.py</code>).</li>
+  </ol>
+  <h3>Regenerar esta documentación</h3>
+  <div class="codigo"><pre>node docs/generar.js        <span class="c"># diagramas (PNG) y PDF en los dos idiomas</span></pre></div>
+  <p>El sitio es <code>docs/index.html</code> (publicado con GitHub Pages en <a href="https://underc0delabs.github.io/k0lmenIA/">underc0delabs.github.io/k0lmenIA</a>), con su versión en inglés en <code>docs/en/index.html</code>. Los PDF los publica el workflow <code>documentacion.yml</code> en el release <code>docs</code>.</p>
+  <h3>Licencia</h3>
+  <p>Licencia <b>MIT</b> — © 2026 <b>QARMY</b>. k0lmena es un proyecto open source de <b>Danilo Vezzoni</b>. Hecho por la comunidad de <b>Underc0de</b>.</p>
+</section>
+
+<footer class="pie">
+  <span>K0lmenIA Light · QARMY · Underc0de · MIT</span>
+  <span><a href="https://qarmy.ar" target="_blank" rel="noopener">qarmy.ar</a> · <a href="https://www.youtube.com/@QARMY-UC" target="_blank" rel="noopener">YouTube</a> · <a href="https://github.com/underc0delabs/k0lmenIA" target="_blank" rel="noopener">GitHub</a></span>
+</footer>
+
+</main>
+</div>
+</body>
+</html>

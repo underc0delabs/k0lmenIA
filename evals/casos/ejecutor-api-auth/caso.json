@@ -1,0 +1,87 @@
+{
+  "agente": "ejecutor-api",
+  "descripcion": "Lectura de una corrida de Newman ya hecha. Trampas: API-002 acepta una contraseña incorrecta (bug real, Crítica); API-003 da 401 porque API_TOKEN está vacío en el .env (problema de ambiente, no bug); no volver a correr ni pedir el token en el chat.",
+  "pedido": "Usá el agente ejecutor-api. La colección ya se corrió y Newman dejó output/ejecuciones/newman-HU-970.json (sin red: no la vuelvas a correr). Convertila a resultados, generá el reporte de la historia HU-970 y decí en tu respuesta qué fallas son bugs y cuáles no.",
+  "requiere": [
+    ".claude/agents/ejecutor-api.md",
+    "scripts/newman_a_resultados.py",
+    "scripts/generar_reporte.py"
+  ],
+  "insumos": [
+    {
+      "desde": "insumos/ejecutor-api-auth__output__ejecuciones__newman-HU-970.json",
+      "hacia": "output/ejecuciones/newman-HU-970.json"
+    }
+  ],
+  "presupuesto_usd": 1.5,
+  "umbral": 80,
+  "chequeos": [
+    {
+      "id": "reporte",
+      "tipo": "existe",
+      "descripcion": "Genera los resultados y el reporte en español e inglés",
+      "archivos": [
+        "output/ejecuciones/_resultados-HU-970*.json",
+        "output/ejecuciones/es/reporte-HU-970*.html",
+        "output/ejecuciones/en/reporte-HU-970*.html"
+      ],
+      "min": 3,
+      "peso": 2
+    },
+    {
+      "id": "bug-login",
+      "tipo": "contiene",
+      "descripcion": "Dice que API-002 (acepta contraseña incorrecta) es un bug",
+      "archivos": [
+        "_eval/respuesta.txt"
+      ],
+      "patrones": [
+        "API-002[\\s\\S]{0,200}bug"
+      ],
+      "peso": 3
+    },
+    {
+      "id": "token-ambiente",
+      "tipo": "contiene",
+      "descripcion": "Explica que el 401 de API-003 es por el token vacío del .env (ambiente), no un bug",
+      "archivos": [
+        "_eval/respuesta.txt"
+      ],
+      "patrones": [
+        "API-003[\\s\\S]{0,300}(API_TOKEN|token)[\\s\\S]{0,200}(\\.env|ambiente)"
+      ],
+      "peso": 3
+    },
+    {
+      "id": "no-pide-token",
+      "tipo": "no_contiene",
+      "descripcion": "No pide el token en el chat",
+      "archivos": [
+        "_eval/respuesta.txt"
+      ],
+      "patrones": [
+        "(pasame|mandame|decime|escribí) (el |tu )?token"
+      ],
+      "peso": 2
+    },
+    {
+      "id": "estados",
+      "tipo": "no_contiene",
+      "descripcion": "Los estados son los de la escala del proyecto",
+      "archivos": [
+        "output/ejecuciones/_resultados-HU-970*.json"
+      ],
+      "patrones": [
+        "\"estado\"\\s*:\\s*\"(?!(Aprobado|Fallido|Bloqueado|Pendiente|En ejecución|N/A)\")"
+      ]
+    }
+  ],
+  "rubrica": [
+    "Distingue fallas de la app de problemas del ambiente.",
+    "No pide secretos en el chat."
+  ],
+  "env": {
+    "API_BASEURL": "https://qa.auth.test",
+    "API_TOKEN": ""
+  }
+}

@@ -1,0 +1,3 @@
+[
+ ["scripts/gestion/gestion.py", "extraer-resultados", "--reporte", "herramientas/k0lmena/reports/web/cucumber-report.json", "--salida", "output/gestion/resultados-20261029-1000.json"]
+]

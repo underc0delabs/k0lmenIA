@@ -1,0 +1,2 @@
+[["scripts/revisar_casos.py", "--historia", "HU-950"],
+ ["scripts/revisar_casos.py", "--solo-informe", "--nombre", "HU-950"]]

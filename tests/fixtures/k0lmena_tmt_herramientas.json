@@ -1,0 +1,735 @@
+{
+ "_origen": "tools/list del server MCP de k0lmenaTMT (underc0delabs/k0lmenatmt:latest, 2026-10-24)",
+ "herramientas": {
+  "get_dashboard_stats": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number",
+     "description": "Optional. Restrict to a single project the user has access to. Omit for all projects."
+    },
+    "dateRange": {
+     "type": "string",
+     "enum": [
+      "7d",
+      "30d",
+      "90d",
+      "all"
+     ],
+     "description": "Time window for the stats. Defaults to 30d."
+    }
+   }
+  },
+  "query_test_cases": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number",
+     "description": "Optional. Single accessible project. Omit for all."
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "NOT_RUN",
+      "PASS",
+      "FAILED",
+      "SKIPPED"
+     ],
+     "description": "Filter by status."
+    },
+    "automated": {
+     "type": "boolean",
+     "description": "Filter by automation flag."
+    },
+    "priorityId": {
+     "type": "number",
+     "description": "Filter by priority id."
+    },
+    "directoryId": {
+     "type": "number",
+     "description": "Filter by directory (folder) id."
+    },
+    "tag": {
+     "type": "string",
+     "description": "Filter cases whose tags contain this substring."
+    },
+    "limit": {
+     "type": "number",
+     "description": "Max sample rows to return (default 25, max 100)."
+    }
+   }
+  },
+  "query_executions": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number",
+     "description": "Optional. Single accessible project. Omit for all."
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "pending",
+      "running",
+      "completed",
+      "failed"
+     ],
+     "description": "Filter by suite status."
+    },
+    "fromDate": {
+     "type": "string",
+     "description": "ISO date — only executions executed on/after this date."
+    },
+    "toDate": {
+     "type": "string",
+     "description": "ISO date — only executions executed on/before this date."
+    },
+    "limit": {
+     "type": "number",
+     "description": "Max sample rows (default 25, max 100)."
+    }
+   }
+  },
+  "get_most_failing_tests": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number",
+     "description": "Optional. Single accessible project. Omit for all."
+    },
+    "limit": {
+     "type": "number",
+     "description": "How many tests to return (default 10, max 50)."
+    }
+   }
+  },
+  "get_team_workload": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number",
+     "description": "Optional. Single accessible project. Omit for all."
+    }
+   }
+  },
+  "query_test_plans": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number",
+     "description": "Optional. Single accessible project. Omit for all."
+    },
+    "limit": {
+     "type": "number",
+     "description": "Max sample rows (default 25, max 100)."
+    }
+   }
+  },
+  "query_tags": {
+   "type": "object",
+   "properties": {
+    "limit": {
+     "type": "number",
+     "description": "Max tags to return (default 50, max 100)."
+    }
+   }
+  },
+  "render_chart": {
+   "type": "object",
+   "properties": {
+    "type": {
+     "type": "string",
+     "enum": [
+      "bar",
+      "line",
+      "pie"
+     ],
+     "description": "Chart type."
+    },
+    "title": {
+     "type": "string",
+     "description": "Chart title."
+    },
+    "series": {
+     "type": "array",
+     "description": "Data points. Use {label, value} for bar/pie, {x, y} for line.",
+     "items": {
+      "type": "object",
+      "properties": {
+       "label": {
+        "type": "string"
+       },
+       "value": {
+        "type": "number"
+       },
+       "x": {
+        "type": "string"
+       },
+       "y": {
+        "type": "number"
+       }
+      }
+     }
+    }
+   },
+   "required": [
+    "type",
+    "title",
+    "series"
+   ]
+  },
+  "create_project": {
+   "type": "object",
+   "properties": {
+    "name": {
+     "type": "string",
+     "description": "Project name."
+    }
+   },
+   "required": [
+    "name"
+   ]
+  },
+  "create_directory": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number",
+     "description": "Accessible project the folder belongs to."
+    },
+    "projectRef": {
+     "type": "string",
+     "description": "Ref of a create_project proposal from this turn (instead of projectId)."
+    },
+    "name": {
+     "type": "string",
+     "description": "Folder name."
+    },
+    "parentDirectoryId": {
+     "type": "number",
+     "description": "Optional parent folder id for nesting."
+    }
+   },
+   "required": [
+    "name"
+   ]
+  },
+  "create_test_case": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number",
+     "description": "Accessible project."
+    },
+    "projectRef": {
+     "type": "string",
+     "description": "Ref of a create_project proposal from this turn (instead of projectId)."
+    },
+    "title": {
+     "type": "string",
+     "description": "Test case title."
+    },
+    "description": {
+     "type": "string"
+    },
+    "precondition": {
+     "type": "string"
+    },
+    "directoryId": {
+     "type": "number",
+     "description": "Existing folder id. Omit to use the project main folder."
+    },
+    "directoryRef": {
+     "type": "string",
+     "description": "Ref of a create_directory proposal from this turn."
+    },
+    "priorityId": {
+     "type": "number",
+     "description": "Optional priority id."
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "NOT_RUN",
+      "PASS",
+      "FAILED",
+      "SKIPPED"
+     ],
+     "description": "Defaults to NOT_RUN."
+    },
+    "automated": {
+     "type": "boolean"
+    },
+    "estimatedDuration": {
+     "type": "number",
+     "description": "Estimated duration in minutes."
+    },
+    "tags": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "steps": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "Step action / description."
+       },
+       "data": {
+        "type": "string",
+        "description": "Optional test data."
+       },
+       "expectedResult": {
+        "type": "string",
+        "description": "Expected result of the step."
+       }
+      },
+      "required": [
+       "name"
+      ]
+     }
+    }
+   },
+   "required": [
+    "title"
+   ]
+  },
+  "update_test_case": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number",
+     "description": "Accessible project the case belongs to."
+    },
+    "id": {
+     "type": "number",
+     "description": "Test case id to edit."
+    },
+    "title": {
+     "type": "string"
+    },
+    "description": {
+     "type": "string"
+    },
+    "precondition": {
+     "type": "string"
+    },
+    "priorityId": {
+     "type": "number"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "NOT_RUN",
+      "PASS",
+      "FAILED",
+      "SKIPPED"
+     ]
+    },
+    "automated": {
+     "type": "boolean"
+    },
+    "tags": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "steps": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "Step action / description."
+       },
+       "data": {
+        "type": "string",
+        "description": "Optional test data."
+       },
+       "expectedResult": {
+        "type": "string",
+        "description": "Expected result of the step."
+       }
+      },
+      "required": [
+       "name"
+      ]
+     }
+    }
+   },
+   "required": [
+    "projectId",
+    "id"
+   ]
+  },
+  "delete_test_case": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number",
+     "description": "Accessible project the case belongs to."
+    },
+    "id": {
+     "type": "number",
+     "description": "Test case id to delete."
+    }
+   },
+   "required": [
+    "projectId",
+    "id"
+   ]
+  },
+  "create_tag": {
+   "type": "object",
+   "properties": {
+    "name": {
+     "type": "string",
+     "description": "Tag name."
+    },
+    "color": {
+     "type": "string",
+     "description": "Optional hex color, e.g. #F9B006."
+    }
+   },
+   "required": [
+    "name"
+   ]
+  },
+  "create_test_plan": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number",
+     "description": "Accessible project."
+    },
+    "projectRef": {
+     "type": "string",
+     "description": "Ref of a create_project proposal from this turn (instead of projectId)."
+    },
+    "name": {
+     "type": "string",
+     "description": "Plan name."
+    },
+    "objective": {
+     "type": "string"
+    },
+    "scope": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "name"
+   ]
+  },
+  "update_test_plan": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number"
+    },
+    "id": {
+     "type": "number",
+     "description": "Test plan id."
+    },
+    "name": {
+     "type": "string"
+    },
+    "objective": {
+     "type": "string"
+    },
+    "scope": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "projectId",
+    "id"
+   ]
+  },
+  "create_test_cycle": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number",
+     "description": "Accessible project."
+    },
+    "projectRef": {
+     "type": "string",
+     "description": "Ref of a create_project proposal from this turn (instead of projectId)."
+    },
+    "name": {
+     "type": "string",
+     "description": "Cycle name."
+    },
+    "description": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "name"
+   ]
+  },
+  "add_case_to_cycle": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number"
+    },
+    "projectRef": {
+     "type": "string",
+     "description": "Ref of a create_project proposal from this turn (instead of projectId)."
+    },
+    "testCycleId": {
+     "type": "number",
+     "description": "Existing cycle id."
+    },
+    "cycleRef": {
+     "type": "string",
+     "description": "Ref of a create_test_cycle proposal from this turn."
+    },
+    "testCaseId": {
+     "type": "number",
+     "description": "Existing test case id."
+    },
+    "caseRef": {
+     "type": "string",
+     "description": "Ref of a create_test_case proposal from this turn."
+    },
+    "name": {
+     "type": "string",
+     "description": "Suite name (defaults to the case title)."
+    },
+    "assignedTo": {
+     "type": "number",
+     "description": "User id to assign; defaults to the current user."
+    }
+   },
+   "required": []
+  },
+  "add_cycle_to_plan": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number"
+    },
+    "projectRef": {
+     "type": "string",
+     "description": "Ref of a create_project proposal from this turn."
+    },
+    "testPlanId": {
+     "type": "number",
+     "description": "Existing plan id."
+    },
+    "planRef": {
+     "type": "string",
+     "description": "Ref of a create_test_plan proposal from this turn."
+    },
+    "testCycleId": {
+     "type": "number",
+     "description": "Existing cycle id."
+    },
+    "cycleRef": {
+     "type": "string",
+     "description": "Ref of a create_test_cycle proposal from this turn."
+    },
+    "assignedTo": {
+     "type": "number",
+     "description": "User id to assign; defaults to the current user."
+    }
+   },
+   "required": []
+  },
+  "record_execution": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number"
+    },
+    "cycleSuiteId": {
+     "type": "number",
+     "description": "Cycle suite id to record against."
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "pending",
+      "running",
+      "completed",
+      "failed"
+     ]
+    },
+    "pass": {
+     "type": "number"
+    },
+    "fail": {
+     "type": "number"
+    },
+    "blocked": {
+     "type": "number"
+    },
+    "evidenceUrl": {
+     "type": "string",
+     "description": "URL of evidence already hosted elsewhere (screenshot, log) to attach to this result."
+    },
+    "executionTimeMs": {
+     "type": "number",
+     "description": "Real execution time of this test case in milliseconds (e.g. from an execution timer). Adds to the cycle real duration. Omit to keep the current value."
+    }
+   },
+   "required": [
+    "projectId",
+    "cycleSuiteId"
+   ]
+  },
+  "launch_cycle": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number"
+    },
+    "id": {
+     "type": "number",
+     "description": "Test cycle id."
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "pending",
+      "running",
+      "completed",
+      "failed"
+     ]
+    }
+   },
+   "required": [
+    "projectId",
+    "id",
+    "status"
+   ]
+  },
+  "attach_evidence": {
+   "type": "object",
+   "properties": {
+    "projectId": {
+     "type": "number",
+     "description": "Project the test case / cycle belongs to."
+    },
+    "testCaseId": {
+     "type": "number",
+     "description": "Test case for design evidence (omit when using cycleSuiteId)."
+    },
+    "cycleSuiteId": {
+     "type": "number",
+     "description": "Execution of a test case in a cycle (execution evidence)."
+    },
+    "stepId": {
+     "type": "number",
+     "description": "Optional: step id of the test case. Omit for general evidence."
+    },
+    "attachments": {
+     "type": "array",
+     "maxItems": 10,
+     "items": {
+      "type": "object",
+      "properties": {
+       "fileName": {
+        "type": "string",
+        "description": "e.g. \"login-error.png\""
+       },
+       "mimeType": {
+        "type": "string",
+        "description": "e.g. \"image/png\", \"video/mp4\", \"application/pdf\""
+       },
+       "contentBase64": {
+        "type": "string",
+        "description": "File content in base64 (a data: URL is also accepted)."
+       }
+      },
+      "required": [
+       "fileName",
+       "mimeType",
+       "contentBase64"
+      ]
+     }
+    },
+    "links": {
+     "type": "array",
+     "maxItems": 10,
+     "items": {
+      "type": "object",
+      "properties": {
+       "url": {
+        "type": "string",
+        "description": "http(s) URL, max 255 chars (report, hosted video, CI run…)."
+       },
+       "name": {
+        "type": "string",
+        "description": "Optional label."
+       }
+      },
+      "required": [
+       "url"
+      ]
+     }
+    }
+   },
+   "required": [
+    "projectId"
+   ]
+  },
+  "get_change_set": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "number",
+     "description": "The change-set id."
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "apply_change_set": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "number",
+     "description": "The change-set id."
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "reject_change_set": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "number",
+     "description": "The change-set id."
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "undo_change_set": {
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "number",
+     "description": "The change-set id."
+    }
+   },
+   "required": [
+    "id"
+   ]
+  }
+ }
+}

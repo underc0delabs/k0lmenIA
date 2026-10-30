@@ -1,0 +1,59 @@
+# Evals de los agentes (scripts/evaluar_agentes.py). GASTA TOKENS: solo corre a mano, desde
+# Actions > Evals de los agentes > Run workflow. Necesita el secret ANTHROPIC_API_KEY en el repo.
+# Ver evals/README.md.
+name: Evals de los agentes
+
+on:
+  workflow_dispatch:
+    inputs:
+      agente:
+        description: "Agente a evaluar (vacío = todos los casos)"
+        required: false
+        default: ""
+      modelo:
+        description: "Modelo (vacío = el de Claude Code por defecto)"
+        required: false
+        default: ""
+      presupuesto:
+        description: "Tope de gasto por caso, en USD"
+        required: false
+        default: "2"
+
+permissions:
+  contents: read
+
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Dependencias
+        run: |
+          python -m pip install -r requirements.txt
+          npm install -g @anthropic-ai/claude-code
+
+      - name: Correr los evals
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          ARGS="--correr --presupuesto-usd ${{ inputs.presupuesto }}"
+          if [ -n "${{ inputs.agente }}" ]; then ARGS="$ARGS --agente ${{ inputs.agente }}"; fi
+          if [ -n "${{ inputs.modelo }}" ]; then ARGS="$ARGS --modelo ${{ inputs.modelo }}"; fi
+          python scripts/evaluar_agentes.py $ARGS
+
+      - name: Guardar el informe
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evals
+          path: evals/resultados/

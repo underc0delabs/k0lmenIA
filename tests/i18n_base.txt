@@ -1,0 +1,170 @@
+# {n}: la edad mínima no está definida
+: busca duplicados en Jira.
+: documentación verificada.
+: te acompaña paso a paso. · Registra aprobado o fallido.
+: un caso por agente.
+Agregar un producto al carrito.
+Al aplicar un cupón válido en el carrito y volver a tocar "Aplicar" con el mismo código, el descuento se suma otra vez sobre el total.
+Aplicar las propuestas en la planilla
+Arma al menos {n} preguntas de refinamiento
+Asistente de ejecución manual
+Atajos de flujos
+BLOQUEO {n}: desafío de Cloudflare; pedir la excepción para QA o usar npm run login
+Carrito con al menos un producto y un cupón de porcentaje vigente.
+Cerrar sesión
+Cerrar sesión desde Mi cuenta
+Como visitante quiero crear una cuenta
+Compra con cupón válido
+Contraseña débil
+Cupón aplicado dos veces
+Cupón con monto mínimo no alcanzado
+Cupón en mayúsculas y minúsculas
+Cupón vencido
+Deja el análisis en output/analisis-historias/analisis-{n}.md
+Descuenta {n} % aunque el cupón venció el {n}
+Detecta la contradicción de la edad mínima ({n} en la descripción, {n} en el CA4)
+Edad mínima
+Edad mínima ({n} o {n})
+Edad mínima: persona de {n} años
+Edad mínima: {n} vs {n} ({n}).
+Edad mínima: {n}.
+El cupón se aplica una sola vez; un segundo intento muestra que ya está aplicado.
+El descuento se acumula ({n} %, {n} %, {n} %…).
+El paso vago pasa a una acción concreta.
+El resultado anterior no se podía verificar.
+El texto del mensaje de email duplicado
+Email con formato inválido
+Error {n} en /api/pagos
+Es un duplicado de {n}.
+Estar en el formulario de registro
+Evals para todos los agentes
+Existe una cuenta con ana@test.ar
+FALTA INFORMACIÓN ({n}): Edad mínima
+FALTA INFORMACIÓN ({n}): Edad mínima ({n} o {n})
+FALTA INFORMACIÓN ({n}): Reglas de la contraseña segura
+FALTA INFORMACIÓN ({n}): Texto del error de email duplicado
+Hay un caso duplicado, dos con un resultado o un paso que no se puede verificar, uno sin resultado esperado y ningún caso negativo.
+Historia con trampas: CA3 ambiguo (contraseña segura), contradicción entre la descripción ({n} años) y el CA4 ({n}), mensaje de email duplicado sin definir y una pregunta del dev sin respuesta.
+Historia y comentarios
+Ingresar el cupón DESC15 y tocar "Aplicar".
+Ingresar el cupón VIEJO5
+Ingreso válido
+La contraseña "segura" no tiene reglas.
+La historia define el alta de cuenta.
+Llega el correo
+Login con Recordarme mantiene la sesión al reabrir el navegador
+Login con contraseña incorrecta
+Login con email y contraseña válidos
+Login con email y contraseña válidos (copia)
+Login con recordarme
+Login válido
+Los casos necesitan ajustes antes de ejecutarse
+Lucía QA
+Marca como ambiguo que la contraseña sea 'segura' (sin reglas)
+Muestra 'El cupón venció' y no descuenta
+Muestra 'Pago rechazado' y la orden queda pendiente
+NOMBRE DEL PROYECTO
+No hay ninguno: contraseña incorrecta, email inexistente, campos vacíos y bloqueo por intentos.
+No inventa el texto del error de email duplicado como si fuera un hecho
+No se crea la cuenta
+No se crea la cuenta y se muestra un mensaje de error (texto a confirmar)
+No tenía resultado esperado.
+Nombre con {n} caracteres (máximo)
+Nombre de {n} caracteres
+Nombre vacío
+Pagar con la tarjeta de rechazo
+Pago con tarjeta rechazada
+Pasa las tablas por formatear_tablas.py
+Paso {n} vago: “Verificar que funcione el cierre de sesión etc.”
+Password: (en el gestor de contraseñas del equipo)
+Perfil del usuario
+Pregunta por el texto del error de email duplicado (CA2 no lo define)
+Recoge la pregunta abierta del dev (mayúsculas en el email)
+Recuperar contraseña
+Registra al menos {n} ítems de Falta información ({n})
+Registro con datos válidos
+Registro con email duplicado
+Registro con todos los datos válidos
+Registro de menores.
+Registro desde otra región
+Registro válido
+Reglas de la contraseña segura
+Reglas de negocio
+Reglas de negocio — k0lmenIA
+Regresión de un bug crítico
+Respeta las secciones del análisis, en orden
+Se abre Mi cuenta sin pedir las credenciales
+Se crea la cuenta
+Se listan los pedidos del usuario con fecha, número y total
+Se muestra "El usuario debe tener entre {n} y {n} caracteres"
+Se muestra "¡Cuenta creada! Revisá tu correo para activarla."
+Se muestra un error, pero el texto esperado no está definido ({n})
+Se vuelve al login y Mi cuenta ya no abre sin credenciales
+Según la edad mínima que confirme el PO
+Según las reglas que confirme el PO
+Sumar casos negativos y de borde
+Texto del error de email duplicado
+Texto que no está en el diccionario
+Tocar "Aplicar" de nuevo con el mismo cupón.
+Título poco descriptivo: “Cerrar sesión”
+Usuario con {n} caracteres (límite máximo + {n})
+Usuario con {n} caracteres (límite máximo)
+Usuario con {n} caracteres (límite mínimo - {n})
+Usuario con {n} caracteres (límite mínimo)
+Usuario de {n} caracteres
+Ve el inicio
+Ver el historial de pedidos
+Volver a correr la revisión
+completo los datos válidos
+el resultado es "<resultado>"
+estoy en el formulario de registro
+ingreso una fecha de <edad> años
+k0lmena no está instalado
+veo "¡Cuenta creada!"
+{n} no tiene casos negativos ni de borde
+{n} · Login con contraseña incorrecta
+{n} · Login con contraseña incorrecta: {n}
+{n} · Login válido
+{n} · Login válido: {n}
+{n} · Perfil del usuario
+{n} · Perfil del usuario: {n}
+{n} · Registro con datos válidos
+{n} · Registro con datos válidos: {n}
+{n} · Registro con email duplicado
+{n} · Registro con email duplicado: {n}
+{n} · Registro desde otra región
+{n} · Registro desde otra región: {n}
+{n} — Cupón con monto mínimo no alcanzado
+{n} — Cupón en mayúsculas y minúsculas
+{n} — Pago con tarjeta rechazada
+{n} — [Carrito] El cupón de descuento se aplica más de una vez al tocar "Aplicar" repetidas veces
+{n} — [Carrito] El cupón de descuento se aplica más de una vez al tocar "Aplicar" repetidas veces — k0lmenIA
+{n}. Abrir el login {n}. Marcar Recordarme {n}. Tocar Ingresar {n}. Cerrar y volver a abrir el navegador
+{n}. Completar con el email existente
+{n}. Completar el email
+{n}. Completar el nombre
+{n}. Completar el usuario
+{n}. Completar la contraseña
+{n}. Completar la fecha
+{n}. Completar todos los campos válidos
+{n}. Dejar el nombre vacío
+{n}. Hacer clic en Ingresar
+{n}. Ingresar {n} años
+{n}. Ir a Mi cuenta {n}. Tocar Cerrar sesión
+{n}. Ir al login
+· Regresión de un bug crítico
+¿Cuál es la edad mínima?
+¿Cuál es la edad mínima? La descripción dice {n} y el CA4 {n}.
+¿Cuál vale?
+¿Qué mensaje se muestra?
+¿Qué mensaje tiene que mostrar el registro con un email existente?
+¿Qué reglas aplica?
+¿Qué reglas tiene la contraseña?
+Índice
+Índice — k0lmenIA
+— Decí qué se ve exactamente: el mensaje, el dato o la pantalla.
+— Que diga qué se prueba y en qué condición: “Inicio de sesión con contraseña incorrecta muestra un error”.
+— Si prueban lo mismo, dejá uno; si difieren, que el título diga en qué.
+— Sin resultado esperado no se puede decidir si pasó o falló.
+— Una acción concreta por paso, sin “etc.” ni “verificar que funcione”.
+✕ Regresión de un bug crítico

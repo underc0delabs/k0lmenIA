@@ -1,0 +1,74 @@
+{
+  "agente": "ejecutor-e2e",
+  "descripcion": "Registro de una corrida E2E a partir de la bitácora del navegador. Trampas: CP-003 frenó en un captcha → Bloqueado (anti-bots), no Fallido; el mensaje de CP-002 no está definido en la historia → FI-XX en el caso, no inventar el texto; CP-001 aprobado.",
+  "pedido": "Usá el agente ejecutor-e2e. La sesión de Playwright ya se hizo (no hay navegador ahora): la bitácora paso a paso está en input/ejecuciones/sesion-HU-940.md y la historia en input/historias/HU-940-registro.md. Armá los resultados de la corrida y generá el reporte de HU-940.",
+  "requiere": [
+    ".claude/agents/ejecutor-e2e.md",
+    "scripts/generar_reporte.py"
+  ],
+  "insumos": [
+    {
+      "desde": "insumos/ejecutor-e2e-registro__input__historias__HU-940-registro.md",
+      "hacia": "input/historias/HU-940-registro.md"
+    },
+    {
+      "desde": "insumos/ejecutor-e2e-registro__input__ejecuciones__sesion-HU-940.md",
+      "hacia": "input/ejecuciones/sesion-HU-940.md"
+    }
+  ],
+  "presupuesto_usd": 1.5,
+  "umbral": 80,
+  "chequeos": [
+    {
+      "id": "reporte",
+      "tipo": "existe",
+      "descripcion": "Deja los resultados y el reporte en español e inglés",
+      "archivos": [
+        "output/ejecuciones/_resultados-HU-940*.json",
+        "output/ejecuciones/es/reporte-HU-940*.html",
+        "output/ejecuciones/en/reporte-HU-940*.html"
+      ],
+      "min": 3,
+      "peso": 2
+    },
+    {
+      "id": "captcha-bloqueado",
+      "tipo": "contiene",
+      "descripcion": "CP-003 queda Bloqueado por anti-bots (no Fallido)",
+      "archivos": [
+        "output/ejecuciones/_resultados-HU-940*.json"
+      ],
+      "patrones": [
+        "\"CP-003\"[^}]*\"estado\"\\s*:\\s*\"Bloqueado\""
+      ],
+      "peso": 3
+    },
+    {
+      "id": "fi-mensaje",
+      "tipo": "contiene",
+      "descripcion": "CP-002 lleva FI-XX por el mensaje no definido",
+      "archivos": [
+        "output/ejecuciones/_resultados-HU-940*.json"
+      ],
+      "patrones": [
+        "\"CP-002\"[^}]*\"falta_info\"\\s*:\\s*\\[\\s*\"FI-\\d{2}\""
+      ],
+      "peso": 2
+    },
+    {
+      "id": "no-fallido-captcha",
+      "tipo": "no_contiene",
+      "descripcion": "No marca el captcha como Fallido",
+      "archivos": [
+        "output/ejecuciones/_resultados-HU-940*.json"
+      ],
+      "patrones": [
+        "\"CP-003\"[^}]*\"estado\"\\s*:\\s*\"Fallido\""
+      ],
+      "peso": 2
+    }
+  ],
+  "rubrica": [
+    "Explica cómo destrabar el bloqueo anti-bots sin esquivarlo."
+  ]
+}

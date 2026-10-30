@@ -1,0 +1,69 @@
+# No versionar lo que generan los agentes, pero conservar las carpetas vacías
+/output/**
+!/output/
+!/output/**/
+!/output/**/.gitkeep
+
+# Logs de la aplicación: pueden tener datos personales, no se versionan
+/input/logs/*
+!/input/logs/.gitkeep
+
+# Documentación del proyecto que junta el documentador-proyecto (código, historias, comentarios y
+# páginas internas del cliente): no se versiona. Se regenera con el agente.
+/input/documentacion/*
+!/input/documentacion/.gitkeep
+
+# PDF de la documentación: los arma y publica el workflow documentacion.yml (release "docs"); node docs/generar.js
+# los genera en tu PC, pero no se versionan (pesan ~9 MB cada uno).
+/docs/*.pdf
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editores
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Node (por si más adelante se agregan herramientas)
+node_modules/
+npm-debug.log*
+
+# Variables de entorno / secretos (tokens de MCP, etc.)
+.env
+.env.local
+
+# Sesiones guardadas con npm run login (cookies de la app: equivalen a una contraseña)
+.auth/
+
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# MCP: NO commitees secretos. El .mcp.json se versiona sin secretos: los tokens se leen del .env
+# con los scripts de scripts/mcp/ (ver CONECTORES.md), nunca con el valor real en el archivo.
+
+# Permisos personales de Claude Code (no se comparten)
+.claude/settings.local.json
+
+# Carpeta por defecto de Playwright MCP (capturas/traces sueltas)
+.playwright-mcp/
+
+# Logs sueltos
+*.log
+# Los logs de ejemplo de los evals son datos inventados y los necesitan los casos
+!/evals/casos/*/insumos/*.log
+
+# Resultados de los evals de los agentes (scripts/evaluar_agentes.py): se regeneran
+/evals/resultados/
+
+# Plugin armado por scripts/construir_plugin.py (se publica en la rama plugin)
+/dist/
+
+
+# Caché de pytest (también cuando se corre sin el plugin de caché)
+.pytest_cache/

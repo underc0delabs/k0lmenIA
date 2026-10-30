@@ -1,0 +1,34 @@
+{
+  "agente": "revisor-casos",
+  "descripcion": "Planilla de 5 casos de login con defectos sembrados: un duplicado (CP-004), un resultado vago (CP-002), un paso vago con 'etc.' (CP-003), un caso sin resultado esperado (CP-005) y ningún caso negativo. Tiene que proponer arreglos concretos (sin otro resultado vago), resolver el duplicado, pedir negativos y no tocar la planilla original.",
+  "pedido": "Usá el agente revisor-casos para revisar los casos de la historia HU-950 (output/casos-de-prueba/manuales/casos-HU-950.xlsx). No hay conectores activos.",
+  "requiere": [".claude/agents/revisor-casos.md", "scripts/revisar_casos.py"],
+  "insumos": [
+    {"desde": "insumos/casos-defectuosos/casos-HU-950.xlsx", "hacia": "output/casos-de-prueba/manuales/casos-HU-950.xlsx"}
+  ],
+  "presupuesto_usd": 1.5,
+  "umbral": 80,
+  "chequeos": [
+    {"id": "archivos", "tipo": "existe", "descripcion": "Corre revisar_casos.py y deja revision.json, analisis.json y el informe",
+     "archivos": ["output/revision-casos/HU-950/revision.json", "output/revision-casos/HU-950/analisis.json", "output/revision-casos/HU-950/informe-revision.html"], "min": 3, "peso": 2},
+    {"id": "bilingue", "tipo": "existe", "descripcion": "El informe sale también en inglés",
+     "archivos": ["output/revision-casos/HU-950/en/informe-revision.html"]},
+    {"id": "propuestas", "tipo": "contiene", "descripcion": "Propone cómo arreglar el resultado vago, el paso vago y el caso sin resultado",
+     "archivos": ["output/revision-casos/HU-950/analisis.json"], "patrones": ["HU-950:CP-002", "HU-950:CP-003", "HU-950:CP-005"], "peso": 3},
+    {"id": "sin-resultado-vago", "tipo": "no_contiene", "descripcion": "Las propuestas no vuelven a usar un resultado vago",
+     "archivos": ["output/revision-casos/HU-950/analisis.json"],
+     "patrones": ["\"resultado\"\\s*:\\s*\"[^\"]{0,60}(funciona\\w* (correctamente|bien)|como se espera|todo (bien|ok))"], "peso": 2},
+    {"id": "duplicado", "tipo": "contiene", "descripcion": "Resuelve el duplicado CP-004 (eliminarlo o unificarlo con CP-001)",
+     "archivos": ["output/revision-casos/HU-950/analisis.json"],
+     "patrones": ["CP-004[\\s\\S]{0,400}(duplicad|elimin|unific|fusion|descart)|(duplicad|elimin|unific|fusion)[\\s\\S]{0,400}CP-004"], "peso": 2},
+    {"id": "negativos", "tipo": "contiene", "descripcion": "Pide sumar casos negativos o de borde (no hay ninguno)",
+     "archivos": ["output/revision-casos/HU-950/analisis.json"], "patrones": ["negativ"]},
+    {"id": "original-intacto", "tipo": "contiene", "descripcion": "No modifica la planilla original (las propuestas van en el análisis)",
+     "archivos": ["output/casos-de-prueba/manuales/casos-HU-950.xlsx"], "patrones": ["Funciona correctamente"], "peso": 2}
+  ],
+  "rubrica": [
+    "Cada propuesta es accionable: pasos concretos y un resultado esperado verificable.",
+    "No marca como problema algo que no lo es (o lo descarta con motivo).",
+    "El resumen se entiende sin conocer la herramienta."
+  ]
+}

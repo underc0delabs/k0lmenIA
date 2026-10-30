@@ -1,0 +1,4 @@
+# Dependencias para desarrollar y testear el repo (además de requirements.txt)
+-r requirements.txt
+pytest>=8
+pyyaml>=6

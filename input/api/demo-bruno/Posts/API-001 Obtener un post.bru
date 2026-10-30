@@ -1,0 +1,24 @@
+meta {
+  name: API-001 — Obtener un post existente (Alta)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/posts/1
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.id: eq 1
+  res.body.title: isString
+}
+
+tests {
+  test("Devuelve id y title", function () {
+    expect(res.getBody()).to.have.property("id");
+    expect(res.getBody()).to.have.property("title");
+  });
+}

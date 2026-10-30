@@ -1,0 +1,246 @@
+[
+  {
+    "keyword": "Feature",
+    "name": "Registro de cuenta",
+    "uri": "features/registro.feature",
+    "id": "registro",
+    "tags": [
+      {
+        "name": "@HU-901"
+      }
+    ],
+    "elements": [
+      {
+        "keyword": "Scenario",
+        "name": "Registro con todos los datos válidos",
+        "line": 9,
+        "type": "scenario",
+        "id": "registro-con-todos-los-datos-válidos",
+        "tags": [
+          {
+            "name": "@HU-901"
+          },
+          {
+            "name": "@CP-001"
+          },
+          {
+            "name": "@positivo"
+          }
+        ],
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "que estoy en el registro",
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "When ",
+            "name": "completo el formulario",
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Then ",
+            "name": "veo el resultado",
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "name": "Email con formato inválido",
+        "line": 28,
+        "type": "scenario",
+        "id": "email-con-formato-inválido",
+        "tags": [
+          {
+            "name": "@HU-901"
+          },
+          {
+            "name": "@CP-003"
+          },
+          {
+            "name": "@negativo"
+          }
+        ],
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "que estoy en el registro",
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "When ",
+            "name": "completo el formulario",
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Then ",
+            "name": "veo el resultado",
+            "result": {
+              "status": "failed",
+              "duration": 1000000,
+              "error_message": "AssertionError: se esperaba 'Email inválido' y se vio 'Error inesperado'"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "name": "Email ya registrado",
+        "line": 41,
+        "type": "scenario",
+        "id": "email-ya-registrado",
+        "tags": [
+          {
+            "name": "@HU-901"
+          },
+          {
+            "name": "@CP-005"
+          },
+          {
+            "name": "@negativo"
+          },
+          {
+            "name": "@falta-info"
+          },
+          {
+            "name": "@FI-01"
+          }
+        ],
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "que estoy en el registro",
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "When ",
+            "name": "completo el formulario",
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Then ",
+            "name": "veo el resultado",
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "name": "Smoke de la home",
+        "line": 60,
+        "type": "scenario",
+        "id": "smoke-de-la-home",
+        "tags": [
+          {
+            "name": "@smoke"
+          }
+        ],
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "que estoy en el registro",
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "When ",
+            "name": "completo el formulario",
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Then ",
+            "name": "veo el resultado",
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "keyword": "Feature",
+    "name": "Login",
+    "uri": "features/login.feature",
+    "id": "login",
+    "tags": [
+      {
+        "name": "@HU-900"
+      }
+    ],
+    "elements": [
+      {
+        "keyword": "Scenario",
+        "name": "Login con credenciales válidas",
+        "line": 5,
+        "type": "scenario",
+        "id": "login-con-credenciales-válidas",
+        "tags": [
+          {
+            "name": "@HU-900"
+          },
+          {
+            "name": "@CP-101"
+          }
+        ],
+        "steps": [
+          {
+            "keyword": "Given ",
+            "name": "que estoy en el registro",
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "When ",
+            "name": "completo el formulario",
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          },
+          {
+            "keyword": "Then ",
+            "name": "veo el resultado",
+            "result": {
+              "status": "passed",
+              "duration": 1000000
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,45 @@
+{
+  "titulo": "Registro — HU-940",
+  "historia": "HU-940",
+  "fecha": "2026-10-30 10:00",
+  "modo": "headless",
+  "casos": [
+    {
+      "id": "CP-001",
+      "titulo": "Registro con datos válidos",
+      "prioridad": "Crítica",
+      "estado": "Aprobado",
+      "duracion_s": 4
+    },
+    {
+      "id": "CP-002",
+      "titulo": "Registro con email duplicado",
+      "prioridad": "Alta",
+      "estado": "Aprobado",
+      "duracion_s": 3,
+      "motivo": "Se muestra un error, pero el texto esperado no está definido (FI-01)",
+      "falta_info": [
+        "FI-01"
+      ]
+    },
+    {
+      "id": "CP-003",
+      "titulo": "Registro desde otra región",
+      "prioridad": "Media",
+      "estado": "Bloqueado",
+      "duracion_s": 2,
+      "motivo": "BLOQUEO ANTI-BOTS: desafío de Cloudflare; pedir la excepción para QA o usar npm run login"
+    }
+  ],
+  "falta_informacion": [
+    {
+      "id": "FI-01",
+      "que_falta": "El texto del mensaje de email duplicado",
+      "pregunta": "¿Qué mensaje tiene que mostrar el registro con un email existente?",
+      "estado": "Abierto"
+    }
+  ],
+  "en": {
+    "titulo": "Sign-up — HU-940"
+  }
+}

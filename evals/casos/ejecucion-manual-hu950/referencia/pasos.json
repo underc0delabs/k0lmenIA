@@ -1,0 +1,3 @@
+[
+ ["scripts/ejecucion_manual.py", "cerrar", "--sesion", "output/ejecucion-manual/HU-950", "--analisis", "output/ejecucion-manual/HU-950/analisis.json"]
+]

@@ -1,0 +1,7 @@
+[
+  [
+    "scripts/generar_reporte.py",
+    "output/ejecuciones/_resultados-HU-940.json",
+    "output/ejecuciones/reporte-HU-940.html"
+  ]
+]

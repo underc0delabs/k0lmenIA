@@ -1,0 +1,17 @@
+[
+  [
+    "scripts/newman_a_resultados.py",
+    "output/ejecuciones/newman-HU-970.json",
+    "output/ejecuciones/_resultados-HU-970.json",
+    "Auth API — HU-970"
+  ],
+  [
+    "-c",
+    "import json,pathlib; p=pathlib.Path('output/ejecuciones/_resultados-HU-970.json'); d=json.loads(p.read_text(encoding='utf-8')); d['historia']='HU-970'; p.write_text(json.dumps(d,ensure_ascii=False),encoding='utf-8')"
+  ],
+  [
+    "scripts/generar_reporte.py",
+    "output/ejecuciones/_resultados-HU-970.json",
+    "output/ejecuciones/reporte-HU-970.html"
+  ]
+]

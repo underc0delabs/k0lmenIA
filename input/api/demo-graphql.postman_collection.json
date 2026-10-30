@@ -1,0 +1,106 @@
+{
+  "info": {
+    "name": "Demo GraphQL k0lmenIA (Countries)",
+    "description": "Colección de ejemplo de GraphQL para Newman. Apunta a https://countries.trevorblades.com (API GraphQL pública, sin login). Los requests usan el modo GraphQL de Postman (query + variables). En GraphQL un error suele volver con status 200 y la lista 'errors': por eso cada request valida también 'data' y 'errors'.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "https://countries.trevorblades.com" }
+  ],
+  "item": [
+    {
+      "name": "API-GQL-001 — Consultar un país por código (Alta)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "query Pais($code: ID!) {\n  country(code: $code) {\n    name\n    capital\n    currency\n  }\n}",
+            "variables": "{\n  \"code\": \"AR\"\n}"
+          }
+        },
+        "url": "{{base_url}}/"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('El status es 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('No devuelve errores', function () {",
+              "    pm.expect(pm.response.json().errors).to.be.undefined;",
+              "});",
+              "pm.test('Devuelve Argentina con su capital', function () {",
+              "    var pais = pm.response.json().data.country;",
+              "    pm.expect(pais.name).to.eql('Argentina');",
+              "    pm.expect(pais.capital).to.eql('Buenos Aires');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API-GQL-002 — Código de país inexistente devuelve null (Media)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "query Pais($code: ID!) {\n  country(code: $code) {\n    name\n  }\n}",
+            "variables": "{\n  \"code\": \"ZZ\"\n}"
+          }
+        },
+        "url": "{{base_url}}/"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('El país es null', function () {",
+              "    pm.expect(pm.response.json().data.country).to.be.null;",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API-GQL-003 — Campo inexistente devuelve error de validación (Media)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "graphql",
+          "graphql": {
+            "query": "query CampoInexistente {\n  country(code: \"AR\") {\n    campoQueNoExiste\n  }\n}",
+            "variables": ""
+          }
+        },
+        "url": "{{base_url}}/"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Devuelve un error que nombra el campo', function () {",
+              "    var errores = pm.response.json().errors;",
+              "    pm.expect(errores).to.be.an('array').that.is.not.empty;",
+              "    pm.expect(errores[0].message).to.include('campoQueNoExiste');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

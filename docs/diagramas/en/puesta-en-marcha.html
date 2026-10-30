@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>K0lmenIA Light · Getting started</title>
+<link rel="stylesheet" href="../diagramas.css">
+<style>
+  .lienzo { width: 1800px; }
+  .cols { display: grid; grid-template-columns: 1fr 1.08fr 1.12fr; gap: 22px; }
+  .col { background: rgba(249,176,6,0.025); border: 1px solid var(--linea); border-radius: 18px; padding: 18px; }
+  .col > h2 { margin: 0 0 4px; font-size: 24px; display: flex; align-items: center; gap: 12px; }
+  .col > p { margin: 0 0 16px; color: var(--muted); font-size: 15px; }
+  .num { width: 38px; height: 38px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 20px; font-weight: 800; color: var(--noche); }
+  .paso { display: grid; grid-template-columns: 34px 1fr; gap: 12px; background: var(--panel); border: 1px solid var(--linea); border-radius: 12px; padding: 11px 14px; margin-bottom: 10px; }
+  .n { width: 30px; height: 30px; border-radius: 50%; background: var(--panel2); border: 1px solid var(--linea); display: grid; place-items: center; font-weight: 800; font-size: 15px; }
+  .paso b { font-size: 16px; display: block; margin-bottom: 4px; }
+  .paso span { color: var(--muted); font-size: 13.5px; line-height: 1.4; display: block; }
+  .term { background: var(--terminal); border: 1px solid var(--linea); border-radius: 10px; padding: 8px 12px; margin-top: 6px; font-family: var(--mono); font-size: 14px; line-height: 1.65; color: var(--verde); }
+  .term .c { color: var(--muted); }
+  .grupo { background: var(--panel); border: 1px solid var(--linea); border-left: 5px solid var(--azul); border-radius: 12px; padding: 10px 14px; margin-bottom: 10px; }
+  .grupo .t { font-size: 15px; font-weight: 700; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .grupo .t i { font-style: normal; font-size: 12.5px; color: var(--muted); font-weight: 400; }
+  .env { font-family: var(--mono); font-size: 13.5px; line-height: 1.6; margin-top: 6px; color: var(--texto2); }
+  .env .k { color: var(--cian); }
+  .env .v { color: var(--muted); }
+  .alerta { border: 1px dashed var(--naranja); border-radius: 12px; padding: 10px 14px; color: var(--miel); font-size: 14px; line-height: 1.45; margin-top: 4px; }
+  .prompt { background: var(--panel); border: 1px solid var(--linea); border-radius: 14px 14px 14px 4px; padding: 10px 14px; margin-bottom: 10px; }
+  .prompt .q { font-size: 15.5px; font-style: italic; color: var(--texto); }
+  .prompt .a { font-size: 13px; color: var(--muted); margin-top: 4px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .ag { font-family: var(--mono); font-size: 12.5px; padding: 1px 8px; border-radius: 999px; background: var(--panel2); border: 1px solid var(--linea); color: var(--texto); }
+  .nuevo { font-size: 10.5px; font-weight: 800; padding: 2px 7px; border-radius: 999px; background: rgba(201,166,107,0.16); color: var(--cian); text-transform: uppercase; letter-spacing: .5px; }
+  .fam { font-size: 12px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); font-weight: 700; margin: 12px 0 8px 2px; }
+  .fam:first-of-type { margin-top: 0; }
+  .pie { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 22px; }
+</style></head>
+<body><div class="lienzo" id="captura">
+  <div class="titulo">
+    <div><h1>K0lmenIA Light <span class="tenue">· Getting started</span></h1>
+      <p class="sub">Install, set your tokens in the <code>.env</code> and start asking the agents for things</p></div>
+    <div class="marca">QARMY · Underc0de</div>
+  </div>
+
+  <div class="cols">
+    <!-- 1 · PASOS -->
+    <div class="col">
+      <h2><span class="num" style="background:var(--verde)">1</span>Get it running</h2>
+      <p>A few minutes, only once</p>
+      <div class="paso"><div class="n">1</div><div><b>Requirements</b><span>Python 3.10+ · Node.js 20+ (22 LTS recommended) · VS Code + Claude Code (Claude account or Anthropic API).</span></div></div>
+      <div class="paso"><div class="n">2</div><div><b>Clone the repository</b>
+        <div class="term">git clone https://github.com/underc0delabs/k0lmenIA.git<br>cd k0lmenIA</div></div></div>
+      <div class="paso"><div class="n">3</div><div><b>Install the dependencies</b>
+        <div class="term">pip install -r requirements.txt <span class="c"># Mac/Linux: pip3</span><br>npm install <span class="c">                   # installs k0lmena</span></div></div></div>
+      <div class="paso"><div class="n">4</div><div><b>Create your <code>.env</code></b>
+        <div class="term">cp .env.example .env <span class="c">          # PowerShell: copy</span></div>
+        <span>Fill in only what you'll use (column 2).</span></div></div>
+      <div class="paso"><div class="n">5</div><div><b>Check that everything is ready</b>
+        <div class="term">npm run doctor <span class="c">               # says what's missing and how</span></div></div></div>
+      <div class="paso"><div class="n">6</div><div><b>Open Claude Code</b>
+        <div class="term">code .<br>claude <span class="c">                       # asks you to sign in the 1st time</span></div>
+        <span>For extra browsers: <code>cd herramientas/k0lmena</code> · <code>npx playwright install chromium firefox webkit</code></span></div></div>
+      <div class="alerta" style="margin-top:14px"><b>Or without cloning: as a Claude Code plugin.</b> <code>/plugin marketplace add underc0delabs/k0lmenIA</code> · <code>/plugin install k0lmenia@k0lmenia</code> · in your project, <code>k0lmenia init</code> and <code>k0lmenia doctor</code>. Commands are <code>k0lmenia &lt;x&gt;</code>, and it updates with <code>/plugin marketplace update k0lmenia</code> without touching your work.</div>
+    </div>
+
+    <!-- 2 · TOKENS -->
+    <div class="col">
+      <h2><span class="num" style="background:var(--azul)">2</span>Set tokens in the <code>.env</code></h2>
+      <p>A single file, at the root · never versioned · the agents never ask for tokens in the chat</p>
+      <div class="grupo"><div class="t">App under test <i>E2E, mappers</i></div>
+        <div class="env"><span class="k">APP_URL</span>=<span class="v">https://staging.tu-app.com</span><br><span class="k">APP_USER</span>=<span class="v">…</span> · <span class="k">APP_PASSWORD</span>=<span class="v">…</span><br><span class="k">BASEURL</span>=<span class="v">(if empty, uses APP_URL)</span></div></div>
+      <div class="grupo" style="border-left-color:var(--violeta)"><div class="t">API <i>Newman, API suite</i></div>
+        <div class="env"><span class="k">API_BASEURL</span>=<span class="v">https://api.tu-app.com</span> · <span class="k">API_TOKEN</span>=<span class="v">&lt;your-token&gt;</span></div></div>
+      <div class="grupo" style="border-left-color:var(--cian)"><div class="t">Jira <i>atlassian connector (active)</i></div>
+        <div class="env"><span class="v">OAuth from /mcp, or with a token:</span><br><span class="k">ATLASSIAN_MCP_AUTENTICACION</span>=<span class="v">token</span><br><span class="k">JIRA_BASE_URL</span> · <span class="k">JIRA_EMAIL</span> · <span class="k">JIRA_API_TOKEN</span></div></div>
+      <div class="grupo" style="border-left-color:var(--verde)"><div class="t">Test management <i>scripts/gestion</i></div>
+        <div class="env"><span class="k">GESTION_HERRAMIENTA</span>=<span class="v">xray-cloud | xray-dc | k0lmena-tmt</span><br><span class="k">GESTION_PROYECTO</span>=<span class="v">PROJ</span><br><span class="v">Xray Cloud:</span> <span class="k">XRAY_CLOUD_CLIENT_ID</span> · <span class="k">XRAY_CLOUD_CLIENT_SECRET</span><br><span class="v">Xray DC:</span> <span class="k">XRAY_DC_URL</span> · <span class="k">XRAY_DC_TOKEN</span><br><span class="v">k0lmenaTMT:</span> <span class="k">K0LMENA_TMT_TOKEN</span><br><span class="v">Optional:</span> <span class="k">ESTIMACION_FACTOR</span>=<span class="v">1.3 (estimated time × 1.3)</span></div></div>
+      <div class="grupo" style="border-left-color:var(--violeta)"><div class="t">App repository <i>documentador-proyecto</i></div>
+        <div class="env"><span class="k">REPO_RUTA_LOCAL</span>=<span class="v">C:/repos/mi-app</span></div></div>
+      <div class="grupo" style="border-left-color:var(--gris)"><div class="t">Databases</div>
+        <div class="env"><span class="k">DB_CONEXIONES</span>=<span class="v">principal</span> + <span class="k">DB_PRINCIPAL_MOTOR</span> · <span class="k">_HOST</span> · <span class="k">_BASE</span> · <span class="k">_USUARIO</span> · <span class="k">_CLAVE</span></div></div>
+      <div class="grupo" style="border-left-color:var(--cian)"><div class="t">Notifications <i>Slack/Teams</i></div>
+        <div class="env"><span class="k">SLACK_WEBHOOK_URL</span> · <span class="k">TEAMS_WEBHOOK_URL</span></div></div>
+      <div class="grupo" style="border-left-color:var(--naranja)"><div class="t">Browser, bot protection and language <i>npm test, tools, agents</i></div>
+        <div class="env"><span class="k">NAVEGADOR_CANAL</span>=<span class="v">chrome</span> · <span class="k">RITMO_HUMANO</span>=<span class="v">si</span><br><span class="k">QA_BYPASS_HEADER</span>=<span class="v">X-QA-Bypass</span> · <span class="k">QA_BYPASS_TOKEN</span>=<span class="v">…</span><br><span class="k">DOCUMENTACION_EN</span>=<span class="v">(empty: Claude asks) | si | no</span></div></div>
+      <div class="alerta"><b>Optional connector</b> k0lmenaTMT: <code>npm run conector -- activar k0lmena-tmt</code>, restart Claude Code and check with <code>/mcp</code>. Use test credentials, never production ones.</div>
+    </div>
+
+    <!-- 3 · PROMPTS -->
+    <div class="col">
+      <h2><span class="num" style="background:var(--violeta)">3</span>Ask the agents</h2>
+      <p>In natural language: Claude Code picks the agent (or you name it)</p>
+      <div class="fam">Analysis and design</div>
+      <div class="prompt"><div class="q">"Document the project"</div><div class="a"><span class="ag">documentador-proyecto</span><span class="nuevo">new</span> repository, stories, links and web app</div></div>
+      <div class="prompt"><div class="q">"Analyze story HU-001 and tell me what's left to define"</div><div class="a"><span class="ag">analista-historias</span></div></div>
+      <div class="prompt"><div class="q">"Generate the test cases for PROJ-12"</div><div class="a"><span class="ag">generador-casos-manuales</span> Excel with estimated time + coverage</div></div>
+      <div class="prompt"><div class="q">"Review the HU-001 test cases and tell me how long they take"</div><div class="a"><span class="ag">revisor-casos</span> score, duplicates and minutes</div></div>
+      <div class="prompt"><div class="q">"Is this bug already filed in Jira?"</div><div class="a"><span class="ag">triador-bugs</span><span class="nuevo">new</span> duplicates and regressions</div></div>
+      <div class="fam">Live execution</div>
+      <div class="prompt"><div class="q">"Run CP-001 of HU-001 against https://your-app.com headless"</div><div class="a"><span class="ag">ejecutor-e2e</span> report with screenshots</div></div>
+      <div class="prompt"><div class="q">"Guide me through the HU-012 test cases"</div><div class="a"><span class="ag">asistente-ejecucion-manual</span> step by step + report</div></div>
+      <div class="fam">Automation with k0lmena</div>
+      <div class="prompt"><div class="q">"Automate the HU-001 test cases in k0lmena"</div><div class="a"><span class="ag">web-mapper</span> then <code>npm test</code>, no tokens</div></div>
+      <div class="fam">Test management</div>
+      <div class="prompt"><div class="q">"Upload the HU-001 test cases to Xray and create the Sprint 5 cycle"</div><div class="a"><span class="ag">gestor-pruebas</span></div></div>
+      <div class="prompt"><div class="q">"Upload the last run results to cycle PROJ-60"</div><div class="a"><span class="ag">publicador-resultados</span> statuses and evidence</div></div>
+    </div>
+  </div>
+
+  <div class="pie">
+    <div class="caja acento-azul"><div class="et">If a fact is missing</div><p>The agent doesn't make it up: it returns <b>"Necesito que confirmes"</b> (I need you to confirm) and Claude asks you.</p></div>
+    <div class="caja acento-naranja"><div class="et">Actions with side effects</div><p>Writing to a database, creating data in Jira/Xray or running load: always with your ok.</p></div>
+    <div class="caja acento-verde"><div class="et">Saves tokens</div><p>What's automated runs with <code>npm test</code>, with no agents.</p></div>
+    <div class="caja acento-violeta"><div class="et">Everything ends up in</div><p><code>output/</code> (HTML reports in Spanish and English, with the last 5 runs in <code>historial/</code> and the <code>index.html</code> portal) and <code>herramientas/k0lmena/</code> (automation).</p></div>
+  </div>
+</div></body></html>

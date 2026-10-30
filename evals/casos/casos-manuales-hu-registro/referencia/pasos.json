@@ -1,0 +1,2 @@
+[["scripts/generar_casos.py", "_eval/casos-HU-901.json", "output/casos-de-prueba/manuales/casos-HU-901.xlsx", "--limpiar"],
+ ["scripts/formatear_tablas.py", "output/casos-de-prueba/manuales/casos-HU-901-cobertura.md"]]

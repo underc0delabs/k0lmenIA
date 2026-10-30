@@ -1,0 +1,152 @@
+[
+ {
+  "name": "Compra",
+  "uri": "features/HU-870-compra.feature",
+  "tags": [
+   {
+    "name": "@HU-870"
+   }
+  ],
+  "elements": [
+   {
+    "type": "scenario",
+    "name": "Buscar un producto",
+    "line": 5,
+    "id": "buscar-un-producto",
+    "tags": [
+     {
+      "name": "@CP-001"
+     }
+    ],
+    "steps": [
+     {
+      "keyword": "When ",
+      "name": "busca zapatillas",
+      "result": {
+       "status": "passed",
+       "duration": 1200000000
+      }
+     },
+     {
+      "keyword": "When ",
+      "name": "ve resultados",
+      "result": {
+       "status": "passed",
+       "duration": 1200000000
+      }
+     }
+    ]
+   },
+   {
+    "type": "scenario",
+    "name": "Agregar al carrito",
+    "line": 10,
+    "id": "agregar-al-carrito",
+    "tags": [
+     {
+      "name": "@CP-002"
+     }
+    ],
+    "steps": [
+     {
+      "keyword": "When ",
+      "name": "abre la ficha del producto",
+      "result": {
+       "status": "passed",
+       "duration": 1200000000
+      }
+     },
+     {
+      "keyword": "When ",
+      "name": "toca Agregar",
+      "result": {
+       "status": "failed",
+       "duration": 1200000000,
+       "error_message": "TimeoutError: locator.click: Timeout 30000ms exceeded.\n  - waiting for locator('#btn-agregar')"
+      }
+     }
+    ]
+   },
+   {
+    "type": "scenario",
+    "name": "Aplicar cupón una sola vez",
+    "line": 15,
+    "id": "aplicar-cupón-una-sola-vez",
+    "tags": [
+     {
+      "name": "@CP-003"
+     }
+    ],
+    "steps": [
+     {
+      "keyword": "When ",
+      "name": "aplica el cupón DESC10 dos veces",
+      "result": {
+       "status": "passed",
+       "duration": 1200000000
+      }
+     },
+     {
+      "keyword": "When ",
+      "name": "ve el total",
+      "result": {
+       "status": "failed",
+       "duration": 1200000000,
+       "error_message": "AssertionError: expect(received).toBe(expected)\nExpected: 9000\nReceived: 8000"
+      }
+     }
+    ]
+   },
+   {
+    "type": "scenario",
+    "name": "Pagar con tarjeta",
+    "line": 20,
+    "id": "pagar-con-tarjeta",
+    "tags": [
+     {
+      "name": "@CP-004"
+     }
+    ],
+    "steps": [
+     {
+      "keyword": "When ",
+      "name": "va al checkout",
+      "result": {
+       "status": "failed",
+       "duration": 1200000000,
+       "error_message": "TimeoutError: page.waitForSelector: Timeout 30000ms exceeded."
+      },
+      "embeddings": [
+       {
+        "mime_type": "text/plain",
+        "data": "QkxPUVVFTyBBTlRJLUJPVFM6IENsb3VkZmxhcmUgKGRlc2FmaW8pIGVuIGh0dHBzOi8vdGllbmRhLnFhL2NoZWNrb3V0CkVsIHBhc28gZmFsbMOzIHBvcnF1ZSBsYSBwcm90ZWNjacOzbiBhbnRpLWJvdHMgZGUgbGEgYXBwIGZyZW7DsyBhbCBuYXZlZ2Fkb3IgYXV0b21hdGl6YWRvOyBubyBlcyB1biBidWcgZGUgbGEgYXBwLg=="
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "type": "scenario",
+    "name": "Ver mis pedidos",
+    "line": 25,
+    "id": "ver-mis-pedidos",
+    "tags": [
+     {
+      "name": "@CP-005"
+     }
+    ],
+    "steps": [
+     {
+      "keyword": "When ",
+      "name": "abre Mis pedidos",
+      "result": {
+       "status": "failed",
+       "duration": 1200000000,
+       "error_message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at https://tienda.qa/pedidos"
+      }
+     }
+    ]
+   }
+  ]
+ }
+]

@@ -1,0 +1,44 @@
+{
+  "agente": "analista-historias",
+  "descripcion": "Historia con trampas: CA3 ambiguo (contraseña segura), contradicción entre la descripción (18 años) y el CA4 (16), mensaje de email duplicado sin definir y una pregunta del dev sin respuesta.",
+  "pedido": "Usá el agente analista-historias para analizar la historia input/historias/HU-901-registro.md. No hay conectores activos: los comentarios de Jira están copiados en la misma historia.",
+  "insumos": [
+    {"desde": "insumos/HU-901-registro.md", "hacia": "input/historias/HU-901-registro.md"}
+  ],
+  "presupuesto_usd": 1.5,
+  "umbral": 80,
+  "chequeos": [
+    {"id": "archivo", "tipo": "existe", "descripcion": "Deja el análisis en output/analisis-historias/analisis-HU-901.md",
+     "archivos": ["output/analisis-historias/analisis-HU-901*.md"], "peso": 2},
+    {"id": "secciones", "tipo": "orden", "descripcion": "Respeta las secciones del análisis, en orden",
+     "archivos": ["output/analisis-historias/analisis-HU-901*.md"],
+     "patrones": ["^#+\\s*Resumen", "^#+\\s*Evaluaci[óo]n", "^#+\\s*Ambig[üu]edades", "^#+\\s*Escenarios no contemplados", "^#+\\s*Riesgos", "^#+\\s*Preguntas", "^#+\\s*Recomendaciones"]},
+    {"id": "contradiccion-edad", "tipo": "contiene", "descripcion": "Detecta la contradicción de la edad mínima (18 en la descripción, 16 en el CA4)",
+     "archivos": ["output/analisis-historias/analisis-HU-901*.md"],
+     "patrones": ["(16|diecis[ée]is).{0,300}(18|dieciocho)|(18|dieciocho).{0,300}(16|diecis[ée]is)"], "peso": 3},
+    {"id": "contrasena-ambigua", "tipo": "contiene", "descripcion": "Marca como ambiguo que la contraseña sea 'segura' (sin reglas)",
+     "archivos": ["output/analisis-historias/analisis-HU-901*.md"],
+     "patrones": ["contrase[ñn]a.{0,200}(segura|reglas|criterio|requisitos|define|especifica)"], "peso": 2},
+    {"id": "mensaje-duplicado", "tipo": "contiene", "descripcion": "Pregunta por el texto del error de email duplicado (CA2 no lo define)",
+     "archivos": ["output/analisis-historias/analisis-HU-901*.md"], "modo": "alguno",
+     "patrones": ["(email|correo).{0,160}(registrad|existente|duplicad).{0,250}(mensaje|texto)", "(mensaje|texto).{0,250}(email|correo).{0,160}(registrad|existente|duplicad)"], "peso": 2},
+    {"id": "mayusculas", "tipo": "contiene", "descripcion": "Recoge la pregunta abierta del dev (mayúsculas en el email)",
+     "archivos": ["output/analisis-historias/analisis-HU-901*.md", "output/contexto/*.md"],
+     "patrones": ["may[úu]scul"]},
+    {"id": "falta-info", "tipo": "conteo", "descripcion": "Registra al menos 3 ítems de Falta información (FI-XX)",
+     "archivos": ["output/analisis-historias/analisis-HU-901*.md", "output/contexto/*.md"],
+     "patron": "FI-\\d{2}", "min": 3, "distintos": true, "peso": 2},
+    {"id": "preguntas", "tipo": "conteo", "descripcion": "Arma al menos 4 preguntas de refinamiento",
+     "archivos": ["output/analisis-historias/analisis-HU-901*.md"], "patron": "\\?", "min": 4},
+    {"id": "no-inventa-mensaje", "tipo": "no_contiene", "descripcion": "No inventa el texto del error de email duplicado como si fuera un hecho",
+     "archivos": ["output/analisis-historias/analisis-HU-901*.md"],
+     "patrones": ["(muestra|mostrar[áa]?|aparece|debe mostrar)\\s+(el mensaje\\s+)?[\"“](El|Este|Ese)\\s+(email|correo)[^\"”]{0,60}ya[^\"”]{0,40}[\"”]"]},
+    {"id": "tablas", "tipo": "tablas_normalizadas", "descripcion": "Pasa las tablas por formatear_tablas.py",
+     "archivos": ["output/analisis-historias/analisis-HU-901*.md"]}
+  ],
+  "rubrica": [
+    "Las ambigüedades señaladas son reales y concretas (no genéricas).",
+    "Las preguntas para el PO se pueden responder con un dato concreto.",
+    "No presenta como hecho nada que no esté en la historia."
+  ]
+}

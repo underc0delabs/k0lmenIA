@@ -1,0 +1,11 @@
+{
+  "herramienta": "xray-cloud",
+  "proyecto": "PROJ",
+  "historia": "PROJ-11",
+  "carpeta": {"ruta": "/HU-900 Login", "id": "f-900"},
+  "casos": {
+    "CP-101": {"key": "PROJ-45", "id": "10045", "titulo": "Login con credenciales válidas"},
+    "CP-102": {"key": "PROJ-46", "id": "10046", "titulo": "Login con contraseña vencida"}
+  },
+  "ciclos": []
+}

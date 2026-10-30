@@ -1,0 +1,55 @@
+{
+  "agente": "generador-casos-manuales",
+  "descripcion": "Casos manuales de una historia con campos con límites (usuario 4-20, nombre 2-50), un mensaje sin definir (email duplicado), una regla ambigua (contraseña segura) y una contradicción (edad 16 / 18).",
+  "pedido": "Usá el agente generador-casos-manuales para generar los casos de prueba de la historia input/historias/HU-901-registro.md. No hay conectores activos: los comentarios de Jira están copiados en la misma historia.",
+  "insumos": [
+    {"desde": "insumos/HU-901-registro.md", "hacia": "input/historias/HU-901-registro.md"}
+  ],
+  "presupuesto_usd": 3,
+  "umbral": 80,
+  "chequeos": [
+    {"id": "archivos", "tipo": "existe", "descripcion": "Entrega los tres artefactos: .xlsx, .md y -cobertura.md",
+     "archivos": ["output/casos-de-prueba/manuales/casos-HU-901.xlsx", "output/casos-de-prueba/manuales/casos-HU-901.md", "output/casos-de-prueba/manuales/casos-HU-901-cobertura.md"],
+     "min": 3, "peso": 2},
+    {"id": "columnas", "tipo": "xlsx_columnas", "descripcion": "La planilla tiene las columnas de la plantilla",
+     "archivos": ["output/casos-de-prueba/manuales/casos-HU-901.xlsx"],
+     "columnas": ["ID #", "Título", "Descripción", "Precondiciones", "Datos de Prueba", "Pasos", "Resultado Esperado", "Estado", "Prioridad", "Tiempo estimado (min)", "#Etiquetas", "Comentarios"]},
+    {"id": "casos-validos", "tipo": "xlsx_casos", "descripcion": "Al menos 10 casos con IDs CP-001… consecutivos, prioridades y estados de la escala, ordenados por prioridad, con pasos y resultado",
+     "archivos": ["output/casos-de-prueba/manuales/casos-HU-901.xlsx"], "min": 10, "peso": 2},
+    {"id": "tipos", "tipo": "xlsx_tipos", "descripcion": "Cobertura por tipo: positivos, negativos y de borde",
+     "archivos": ["output/casos-de-prueba/manuales/casos-HU-901.xlsx"], "peso": 3,
+     "tipos": {
+       "positivos": {"patron": "v[áa]lid|exitos|correct|se crea|@positiv|camino feliz|happy", "min": 1},
+       "negativos": {"patron": "inv[áa]lid|incorrect|vac[ií]|rechaz|no (se )?permit|no se crea|sin |ya (est[áa] )?registrad|duplicad|menor|fuera de|d[ée]bil|no cumple|@negativ", "min": 4},
+       "borde": {"patron": "l[ií]mite|borde|m[ií]nim|m[áa]xim|\\b(1|2|3|4|5|19|20|21|49|50|51)\\s*caracter|exactamente|@borde|@limite", "min": 3}
+     }},
+    {"id": "limites-usuario", "tipo": "contiene", "descripcion": "Aplica valores límite al usuario (3/4 y 20/21 caracteres)",
+     "archivos": ["output/casos-de-prueba/manuales/casos-HU-901.xlsx"],
+     "patrones": ["\\b(3|4)\\s*caracter", "\\b(20|21)\\s*caracter"], "peso": 2},
+    {"id": "falta-info", "tipo": "xlsx_falta_info", "descripcion": "Marca los casos que dependen de información faltante y arma la hoja Falta información",
+     "archivos": ["output/casos-de-prueba/manuales/casos-HU-901.xlsx"], "min_casos": 2, "min_items": 2, "peso": 2},
+    {"id": "duplicado-no-inventa", "tipo": "xlsx_filtro", "descripcion": "El caso de email duplicado depende de un FI y no inventa el texto del mensaje",
+     "archivos": ["output/casos-de-prueba/manuales/casos-HU-901.xlsx"],
+     "filtro": "(email|correo).{0,60}(ya (est[áa] )?registrad|duplicad|existente)",
+     "debe": "@falta-info|FI-\\d+",
+     "no_debe_resultado": "[\"“][^\"”]*(ya|registrad|existe|en uso)[^\"”]*[\"”]", "peso": 2},
+    {"id": "edad-no-elige", "tipo": "xlsx_filtro", "descripcion": "Los casos de edad mínima quedan marcados como Falta información (no eligen entre 16 y 18)",
+     "archivos": ["output/casos-de-prueba/manuales/casos-HU-901.xlsx"],
+     "filtro": "edad|mayor(es)? de|menor(es)? de|\\b1[678] años", "debe": "@falta-info|FI-\\d+", "peso": 2},
+    {"id": "mensaje-definido", "tipo": "contiene", "descripcion": "Usa el texto exacto que sí define la historia (CA5)",
+     "archivos": ["output/casos-de-prueba/manuales/casos-HU-901.xlsx"],
+     "patrones": ["El usuario debe tener entre 4 y 20 caracteres"]},
+    {"id": "cobertura", "tipo": "contiene", "descripcion": "El informe de cobertura recorre los cinco criterios y la Falta información",
+     "archivos": ["output/casos-de-prueba/manuales/casos-HU-901-cobertura.md"],
+     "patrones": ["CA1", "CA2", "CA3", "CA4", "CA5", "Falta informaci[óo]n"]},
+    {"id": "tablas", "tipo": "tablas_normalizadas", "descripcion": "Pasa las tablas del informe de cobertura por formatear_tablas.py",
+     "archivos": ["output/casos-de-prueba/manuales/casos-HU-901-cobertura.md"]},
+    {"id": "sin-json-temporal", "tipo": "no_contiene", "descripcion": "Borra el JSON temporal (--limpiar)",
+     "archivos": ["output/casos-de-prueba/manuales/*"], "patrones": ["\"falta_informacion\"\\s*:"]}
+  ],
+  "rubrica": [
+    "Los pasos son accionables y el resultado esperado es verificable.",
+    "No hay casos redundantes (dos casos que prueban exactamente lo mismo).",
+    "Los supuestos usados para escribir un caso están aclarados en Comentarios."
+  ]
+}
