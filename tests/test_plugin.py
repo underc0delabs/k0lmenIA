@@ -190,13 +190,13 @@ def test_init_copia_ejemplos_y_suma_permisos_sin_pisar(tmp_path):
     (proyecto / ".claude").mkdir(parents=True)
     (proyecto / ".claude" / "settings.json").write_text(json.dumps({"permissions": {"allow": ["Bash(git status)"]}, "model": "opus"}),
                                                         encoding="utf-8")
-    (proyecto / "input" / "chatbots").mkdir(parents=True)
-    (proyecto / "input" / "chatbots" / "guion.ejemplo.json").write_text("mio", encoding="utf-8")
+    (proyecto / "input" / "ejecucion-manual").mkdir(parents=True)
+    (proyecto / "input" / "ejecucion-manual" / "casos-HU-950.ejemplo.json").write_text("mio", encoding="utf-8")
     assert _k0lmenia(plugin, proyecto, "init", "--sin-npm").returncode == 0
     versionados = subprocess.run(["git", "ls-files", "input"], cwd=RAIZ, capture_output=True, text=True).stdout.splitlines()
     assert (proyecto / "input" / "README.md").exists() and (proyecto / "input" / "api" / "demo.postman_collection.json").exists()
     assert len([v for v in versionados if not v.endswith(".gitkeep")]) == len([p for p in (proyecto / "input").rglob("*") if p.is_file() and p.name != ".gitkeep"])
-    assert (proyecto / "input" / "chatbots" / "guion.ejemplo.json").read_text(encoding="utf-8") == "mio"  # no pisa lo tuyo
+    assert (proyecto / "input" / "ejecucion-manual" / "casos-HU-950.ejemplo.json").read_text(encoding="utf-8") == "mio"  # no pisa lo tuyo
     ajustes = json.loads((proyecto / ".claude" / "settings.json").read_text(encoding="utf-8"))
     assert ajustes["model"] == "opus" and ajustes["permissions"]["allow"][0] == "Bash(git status)"
     assert "mcp__plugin_k0lmenia_playwright__*" in ajustes["permissions"]["allow"]
