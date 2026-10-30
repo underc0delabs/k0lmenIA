@@ -1,0 +1,33 @@
+meta {
+  name: API-002 — Crear un post (Media)
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{base_url}}/posts
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "title": "k0lmenIA",
+    "body": "prueba de creación desde Bruno",
+    "userId": 1
+  }
+}
+
+vars:post-response {
+  idCreado: res.body.id
+}
+
+assert {
+  res.status: eq 201
+  res.body.id: isDefined
+  res.body.title: eq "k0lmenIA"
+}

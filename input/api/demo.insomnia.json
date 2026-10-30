@@ -1,0 +1,82 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-10-14T12:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v10.3.0",
+  "resources": [
+    {
+      "_id": "wrk_demo",
+      "_type": "workspace",
+      "parentId": null,
+      "name": "Demo Insomnia k0lmenIA (JSONPlaceholder)",
+      "description": "Export de ejemplo de Insomnia (v4) para probar la conversión a Postman y la ejecución con Newman. Apunta a https://jsonplaceholder.typicode.com.",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_demo",
+      "name": "Base Environment",
+      "data": {}
+    },
+    {
+      "_id": "env_demo",
+      "_type": "environment",
+      "parentId": "env_base",
+      "name": "JSONPlaceholder",
+      "data": { "base_url": "https://jsonplaceholder.typicode.com" }
+    },
+    {
+      "_id": "fld_posts",
+      "_type": "request_group",
+      "parentId": "wrk_demo",
+      "name": "Posts",
+      "metaSortKey": -100
+    },
+    {
+      "_id": "req_001",
+      "_type": "request",
+      "parentId": "fld_posts",
+      "name": "API-001 — Obtener un post existente (Alta)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/posts/1",
+      "headers": [],
+      "parameters": [],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -30,
+      "afterResponseScript": "insomnia.test('El status es 200', () => {\n  insomnia.expect(insomnia.response.code).to.eql(200);\n});\ninsomnia.test('Devuelve id y title', () => {\n  const data = insomnia.response.json();\n  insomnia.expect(data).to.have.property('id');\n  insomnia.expect(data).to.have.property('title');\n});"
+    },
+    {
+      "_id": "req_002",
+      "_type": "request",
+      "parentId": "fld_posts",
+      "name": "API-002 — Crear un post (Media)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/posts",
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "parameters": [],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"k0lmenIA\",\n  \"body\": \"prueba de creación desde Insomnia\",\n  \"userId\": 1\n}"
+      },
+      "authentication": {},
+      "metaSortKey": -20,
+      "afterResponseScript": "insomnia.test('El status es 201 (creado)', () => {\n  insomnia.expect(insomnia.response.code).to.eql(201);\n});\ninsomnia.test('Devuelve el id del nuevo post', () => {\n  insomnia.expect(insomnia.response.json()).to.have.property('id');\n});"
+    },
+    {
+      "_id": "req_003",
+      "_type": "request",
+      "parentId": "fld_posts",
+      "name": "API-003 — Posts de un usuario (Media)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/posts",
+      "headers": [],
+      "parameters": [{ "name": "userId", "value": "1" }],
+      "body": {},
+      "authentication": {},
+      "metaSortKey": -10,
+      "afterResponseScript": "insomnia.test('Devuelve solo los posts del usuario 1', () => {\n  const posts = insomnia.response.json();\n  insomnia.expect(posts).to.be.an('array').that.is.not.empty;\n  insomnia.expect(posts.every((p) => p.userId === 1)).to.eql(true);\n});"
+    }
+  ]
+}

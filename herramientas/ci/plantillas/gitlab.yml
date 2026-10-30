@@ -1,0 +1,45 @@
+# k0lmena en CI (GitLab CI). Generado con: npm run ci -- generar --plataforma gitlab
+#
+# Corre las suites de k0lmena sin agentes ni tokens, guarda los reportes como artefacto y, si hay
+# ciclo (GESTION_CICLO), publica los resultados en Xray, QMetry, AIO Tests o Zephyr.
+#
+# Configuración (Settings > CI/CD > Variables):
+#   - K0LMENA_ENV_FILE, de tipo *File*, protegida: el contenido de tu .env (APP_URL, GESTION_HERRAMIENTA,
+#     GESTION_PROYECTO y los tokens de la herramienta de gestión). GitLab la deja en un archivo y pone
+#     su ruta en la variable, que es justo lo que leen k0lmena y scripts/gestion.
+#   - GESTION_CICLO (opcional): key del ciclo donde publicar (ej. PROJ-60). Sin ella no se publica.
+# Nunca pongas valores en este archivo.
+
+stages:
+  - pruebas
+
+k0lmena:
+  stage: pruebas
+  image: node:22-bookworm
+  timeout: 1h
+  variables:
+    K0LMENA_SUITES: "__SUITES__"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "web"
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq python3 python3-pip python3-venv > /dev/null
+    - npm ci --prefix herramientas/k0lmena
+    - (cd herramientas/k0lmena && npx playwright install --with-deps chromium)
+  script:
+    - |
+      estado=0
+      for suite in $K0LMENA_SUITES; do npm run test:$suite || estado=1; done
+      if [ -n "$GESTION_CICLO" ]; then
+        python3 -m venv /tmp/venv && /tmp/venv/bin/pip install -q -r requirements.txt
+        /tmp/venv/bin/python herramientas/ci/ci.py publicar --suites "$K0LMENA_SUITES" || estado=1
+      fi
+      exit $estado
+  artifacts:
+    when: always
+    name: reportes-k0lmena
+    paths:
+      - herramientas/k0lmena/reports/
+      - output/gestion/
+    expire_in: 30 days

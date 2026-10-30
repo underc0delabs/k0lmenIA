@@ -1,0 +1,18 @@
+{
+  "proyecto": "Tienda de práctica",
+  "modulo": "HU-950 — Checkout con cupón",
+  "casos": [
+    {"id": "CP-001", "titulo": "Compra con cupón válido", "descripcion": "Aplica DESC10 y paga", "precondiciones": "Usuario logueado con un producto en el carrito",
+     "datos": "Cupón: DESC10", "pasos": "1. Ir al carrito\n2. Ingresar el cupón DESC10\n3. Confirmar la compra", "resultado": "Se descuenta 10 % una sola vez y se confirma la orden",
+     "estado": "Pendiente", "prioridad": "Crítica", "etiquetas": "@checkout"},
+    {"id": "CP-002", "titulo": "Cupón vencido", "descripcion": "Rechaza un cupón vencido", "precondiciones": "Usuario logueado",
+     "datos": "Cupón: VIEJO5", "pasos": "1. Ir al carrito\n2. Ingresar el cupón VIEJO5", "resultado": "Muestra 'El cupón venció' y no descuenta",
+     "estado": "Pendiente", "prioridad": "Alta", "etiquetas": "@checkout"},
+    {"id": "CP-003", "titulo": "Cupón aplicado dos veces", "descripcion": "No acumula el mismo cupón", "precondiciones": "Usuario logueado",
+     "datos": "Cupón: DESC10", "pasos": "1. Aplicar DESC10\n2. Aplicar DESC10 otra vez", "resultado": "El segundo intento muestra 'Cupón ya aplicado'",
+     "estado": "Pendiente", "prioridad": "Alta", "etiquetas": "@checkout"},
+    {"id": "CP-004", "titulo": "Pago con tarjeta rechazada", "descripcion": "Informa el rechazo", "precondiciones": "Pasarela en sandbox",
+     "datos": "Tarjeta: 4000 0000 0000 0002", "pasos": "1. Pagar con la tarjeta de rechazo", "resultado": "Muestra 'Pago rechazado' y la orden queda pendiente",
+     "estado": "Pendiente", "prioridad": "Media", "etiquetas": "@pagos"}
+  ]
+}

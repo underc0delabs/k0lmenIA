@@ -1,0 +1,20 @@
+{
+  "name": "k0lmenia",
+  "description": "K0lmenIA Light: agentes de QA para Claude Code, en español. Documentación del proyecto, análisis de historias, casos de prueba (Excel y BDD), revisión de casos, triage de bugs, ejecución E2E y de API (REST, GraphQL y gRPC), ejecución manual guiada, automatización sin tokens con k0lmena, gestión en Xray y k0lmenaTMT, e informes en español e inglés.",
+  "author": {
+    "name": "Underc0de"
+  },
+  "homepage": "https://underc0delabs.github.io/k0lmenIA/",
+  "repository": "https://github.com/underc0delabs/k0lmenIA",
+  "privacyPolicyUrl": "https://k0lmena.com/k0lmenia/privacidad/",
+  "license": "MIT",
+  "keywords": [
+    "qa",
+    "testing",
+    "español",
+    "playwright",
+    "xray",
+    "bdd",
+    "k0lmena"
+  ]
+}

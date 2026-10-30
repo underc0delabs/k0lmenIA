@@ -1,0 +1,8 @@
+[
+  {"id": "EV-01", "evento": "page_view", "proveedor": "GA4", "unico": false, "descripcion": "Vista de página en todo el sitio"},
+  {"id": "EV-02", "evento": "generate_lead", "proveedor": "GA4", "pagina": "/contacto", "parametros_requeridos": ["form_id"],
+   "descripcion": "Envío del formulario de contacto"},
+  {"id": "EV-03", "evento": "add_to_cart", "proveedor": "GA4", "parametros_requeridos": ["currency", "value"], "parametros": {"currency": "ARS"},
+   "descripcion": "Agregar un producto al carrito"},
+  {"id": "EV-04", "evento": "PageView", "proveedor": "Meta Pixel", "unico": false, "descripcion": "Vista de página para audiencias de Ads"}
+]

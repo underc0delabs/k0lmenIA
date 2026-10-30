@@ -1,0 +1,31 @@
+{
+  "name": "k0lmenia",
+  "private": true,
+  "description": "Atajos para correr k0lmena (herramientas/k0lmena) desde la raíz del repo",
+  "scripts": {
+    "postinstall": "npm install --prefix herramientas/k0lmena",
+    "test": "npm --prefix herramientas/k0lmena run test --",
+    "test:web": "npm --prefix herramientas/k0lmena run test:web --",
+    "test:api": "npm --prefix herramientas/k0lmena run test:api --",
+    "test:all": "npm --prefix herramientas/k0lmena run test:all --",
+    "report:web": "npm --prefix herramientas/k0lmena run report:web --",
+    "report:api": "npm --prefix herramientas/k0lmena run report:api --",
+    "bd": "npm --prefix herramientas/k0lmena run bd --",
+    "debug": "npm --prefix herramientas/k0lmena run debug --",
+    "login": "npm --prefix herramientas/k0lmena run login --",
+    "test:repo": "node tests/node/correr.js",
+    "ejecucion-manual": "node scripts/py.js scripts/ejecucion_manual.py",
+    "novedades": "node scripts/py.js scripts/novedades.py",
+    "doctor": "node scripts/py.js scripts/doctor.py",
+    "mapa-funcional": "npm --prefix herramientas/k0lmena run mapa-funcional --",
+    "ci": "node scripts/py.js herramientas/ci/ci.py",
+    "actualizar-conocimiento": "node scripts/py.js scripts/actualizar_conocimiento.py",
+    "portal": "node scripts/py.js scripts/portal_informes.py",
+    "avisar": "node scripts/py.js scripts/avisar.py",
+    "evals": "node scripts/py.js scripts/evaluar_agentes.py",
+    "record": "npm --prefix herramientas/k0lmena run record --",
+    "record:generator": "npm --prefix herramientas/k0lmena run record:generator --",
+    "configurar": "node scripts/configurar.js",
+    "conector": "node scripts/mcp/conector.js"
+  }
+}

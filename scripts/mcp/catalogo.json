@@ -1,0 +1,19 @@
+{
+  "_info": "Conectores MCP opcionales de k0lmenIA. No están en .mcp.json para que Claude Code arranque sin pedir aprobaciones: cada persona activa los que usa con  npm run conector -- activar <nombre>  (quedan registrados solo para ella). Ver CONECTORES.md.",
+  "conectores": {
+    "k0lmena-tmt": {
+      "descripcion": "k0lmenaTMT",
+      "variables": "K0LMENA_TMT_TOKEN",
+      "servidor": {
+        "type": "http",
+        "url": "${K0LMENA_TMT_URL:-http://localhost:4000/api/v1/mcp}",
+        "headersHelper": "node scripts/mcp/k0lmena-tmt-headers.js"
+      },
+      "grupo": "Gestión de pruebas",
+      "origen": "oficial",
+      "descripcion_en": "k0lmenaTMT"
+    }
+  },
+  "_sin_conector": {},
+  "_sin_conector_en": {}
+}

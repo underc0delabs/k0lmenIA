@@ -1,0 +1,9 @@
+# Dependencias de los scripts del repo (instalá con: pip install -r requirements.txt)
+openpyxl>=3.1
+tabulate>=0.9
+requests>=2.31
+# Specs OpenAPI / Swagger en YAML (scripts/resumir_openapi.py)
+pyyaml>=6
+# Solo para regenerar la documentación (node docs/generar.js): quita el pie de la portada del PDF
+pypdf>=4.0
+tzdata>=2024.1  # base de zonas horarias para zoneinfo (en Windows no viene con Python): scripts/_programacion.py
