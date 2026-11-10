@@ -28,6 +28,7 @@ Actuales:
 - `doctor.py` — revisa el entorno (Python, Node, k0lmena, Playwright, Newman, `.env` y conectores) y dice qué falta. También: `npm run doctor`.
 - `construir_plugin.py` — arma K0lmenIA Light como plugin de Claude Code (lo publica el workflow `plugin.yml` en la rama `plugin`).
 - `novedades.py` — novedades desde la última vez (`npm run novedades`, `k0lmenia novedades`): lee el CHANGELOG, guarda la marca de lo visto (en el plugin, en CLAUDE_PLUGIN_DATA) y con `--contexto` le da al hook de inicio del plugin el resumen corto para que Claude lo cuente.
+- `planes.py` — los planes de k0lmenIA en esta PC (`npm run planes`, `k0lmenia planes`): qué está instalado, a qué planes hay acceso (`git ls-remote` con las credenciales de git, sin pedir nada) y qué suma cada uno; `--instalar <plan>` instala el plugin del plan y `--aviso` le da al hook de inicio del plugin el aviso diario. Lee `catalogo-planes.json`.
 - `generar_informe_novedades.py` — informe HTML de las novedades (cantidad, cambios por entrada, línea de tiempo y detalle).
 - `evaluar_agentes.py` — evals de los agentes (`evals/`): preparar el workspace aislado, correr con `claude -p`, verificar y armar el informe con regresiones.
 - `metricas_tokens.py` — uso de tokens y costo estimado por agente a partir de las transcripciones de Claude Code (solo conteos).

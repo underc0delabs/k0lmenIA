@@ -20,6 +20,7 @@ Mirá si existe el comando `k0lmenia` (corré `k0lmenia ayuda`):
   claude plugin marketplace add underc0delabs/k0lmenIA
   claude plugin install k0lmenia@k0lmenia
   ```
+  Después, `/k0lmenia:setup` le muestra qué planes tiene disponibles (Pro y Empresa se suman como plugins aparte).
 
 ## Paso 2 — Preparar el proyecto (solo plugin)
 
@@ -42,11 +43,18 @@ k0lmenia py scripts/generar_informe_entorno.py output/entorno/doctor.json output
 
 Cuando termines el paso 5, regeneralo con `--analisis output/entorno/analisis.json`, un JSON con `conectores_elegidos` (lista), `primera_tarea`, `proximos_pasos` y su bloque `"en"`, así el informe queda como la ficha de arranque del proyecto. Pasale la ruta a la persona.
 
+## Paso 3b — Su plan (solo plugin)
+
+Corré `k0lmenia planes --json` y, si tiene acceso a un plan que todavía no instaló (Pro o Empresa), seguí con el skill
+`setup` para instalarlo antes de conectar herramientas: suma agentes, skills y conectores. Si ya tiene todo lo que le
+corresponde, decilo en una línea y seguí. No insistas con los planes pagos: el skill `setup` los muestra cuando la persona
+lo pide.
+
 ## Paso 4 — Conectar sus herramientas
 
-Preguntá con qué trabaja el equipo (una pregunta, varias opciones): Jira, Xray o k0lmenaTMT, o ninguna por ahora. Si usa otra herramienta (Azure DevOps, Confluence, GitHub, GitLab, Figma, QMetry, Zephyr, AIO), contale que esos conectores están en K0lmenIA Pro o K0lmenIA Empresa y que, mientras tanto, puede trabajar con archivos en `input/`.
+Preguntá con qué trabaja el equipo (una pregunta, varias opciones): Jira y Confluence, Azure DevOps, Xray / Zephyr / QMetry / AIO / k0lmenaTMT, GitHub o GitLab, Figma, o ninguna por ahora.
 
-- **Jira** viene activo: la primera vez que un agente los use, Claude Code abre el navegador para iniciar sesión.
+- **Jira y Confluence** vienen activos: la primera vez que un agente los use, Claude Code abre el navegador para iniciar sesión.
 - **Lo demás** se configura con el asistente `k0lmenia configurar`. Pide los datos en español y activa los conectores. Como pide tokens, **lo corre la persona en una terminal** (la de VS Code sirve), no vos. **Nunca le pidas tokens ni contraseñas en el chat.**
 - Si dice "ninguna por ahora", seguí: se puede trabajar con archivos en `input/`.
 
@@ -57,9 +65,9 @@ Mostrale, en una lista corta, qué puede pedir con sus propias palabras, sin nom
 - *"Analizá esta historia y decime qué falta"* (pegando la historia o una key de Jira)
 - *"Escribí los casos de prueba de PROJ-12"*
 - *"Probá el login de https://… en el navegador"*
-- *"¿Este bug ya existe en Jira?"*
+- *"Redactá un bug con esto que encontré"*
 - *"¿Cuál es la mejor forma de probar este proyecto?"*
-- *"Guiame para ejecutar los casos de PROJ-12 paso a paso"*
+- *"¿Cuánto testeamos este mes?"*
 
 Preguntale qué quiere hacer primero. Si no sabe, seguí con el skill `guia-pruebas`, que le pregunta paso a paso y elige el agente.
 
@@ -68,6 +76,7 @@ Cerrá con tres datos, una línea cada uno:
 - Los informes quedan en `output/` y se ven todos juntos en `output/index.html` (`k0lmenia portal -- --abrir`).
 - Para dejar varias tareas en fila: escribirlas en `TAREAS.md` y pedir *"Hacé las tareas de TAREAS.md"*.
 - Para recibir las mejoras solo: `/plugin` → Marketplaces → `k0lmenia` → *Enable auto-update*.
+- Para ver qué plan tiene y qué suma cada uno: `/k0lmenia:setup`.
 
 ## Reglas
 

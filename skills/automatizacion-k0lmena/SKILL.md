@@ -1,6 +1,6 @@
 ---
 name: automatizacion-k0lmena
-description: Convenciones para automatizar en k0lmena — dónde van .feature, steps y locators de web y api, nombres y tags, steps reutilizables y de BD. Lo usan web-mapper y api-mapper.
+description: Convenciones para automatizar en k0lmena — dónde van .feature, steps y locators de web, api y mobile, nombres y tags, steps reutilizables y de BD. Lo usan los mappers y verificador-datos.
 ---
 
 # Automatización con k0lmena
@@ -11,7 +11,8 @@ k0lmena vive en `herramientas/k0lmena/`. Los mappers **escriben código una vez*
 herramientas/k0lmena/
 ├── web/      features/  steps/  locators/   (Playwright + Cucumber; hooks/, utils/ ya existen)
 ├── api/      features/  steps/              (axios + Cucumber; steps/comunes.steps.ts ya existe)
-├── mobile/  performance/                (automatización mobile y de performance: disponibles en K0lmenIA Pro)
+├── mobile/   features/  steps/  locators/   (WebdriverIO + Appium; support/ ya existe; apps/ = .apk/.ipa)
+├── performance/  k6/http/  artillery/  jmeter/   (k6, Artillery y JMeter; lo genera el performance-mapper)
 ├── cucumber.js  run-tests.js  env.js      (env.js carga el .env ÚNICO de la raíz del repo)
 ```
 
@@ -29,7 +30,7 @@ herramientas/k0lmena/
 +-----------+-----------------------------------------+
 ```
 
-- Tags del `Feature`: `@HU-001`, el módulo (`@modulo-<nombre>`, el mismo del caso de origen) y el tipo (`@web` o `@api`).
+- Tags del `Feature`: `@HU-001`, el módulo (`@modulo-<nombre>`, el mismo del caso de origen) y el tipo (`@web`, `@api` o `@mobile`).
 - Tags de cada `Scenario`: el ID del caso de origen (`@CP-001`, `@CP-API-001`), su prioridad (`@critica`/`@alta`/`@media`/`@baja`, la misma del caso de origen), `@regresion` si entra en la regresión (todos, salvo `@falta-info` y `@bloqueado`) y, si es smoke o crítico, `@smoke` (siempre en minúscula: Cucumber distingue mayúsculas y `TAGS=@smoke` no encuentra `@Smoke`). Si el caso de origen es un `.feature` que ya trae el tag de prioridad, conservalo tal cual.
 - **Falta información**: si el caso depende de un dato que no está definido (ficha `output/contexto/contexto-HU-XXX.md`, skill `investigacion-contexto`), el escenario lleva `@falta-info @FI-01` y el comentario `# FALTA INFORMACIÓN (FI-01): <qué falta>` arriba. Corre normalmente (salvo que también sea `@bloqueado`) y el reporte de k0lmena le agrega una nota visible; al publicar en Xray/QMetry/AIO, el comentario lo indica.
 - Si la fuente no es una HU (ej. un contrato de API), usá un slug: `api/features/pets.feature` y tag `@contrato-pets`.
@@ -179,6 +180,24 @@ When guardo el campo GraphQL "createPost.id" como "idPost"
 - Los campos `GraphQL` se leen **dentro de `data`** (`country.name` es `data.country.name`); los steps comunes (`la respuesta contiene el campo "data.country"`, `el status de la respuesta es`, los headers y el token) también sirven.
 - Un escenario por operación y condición; las **mutations** son métodos con efecto (confirmación antes de verificarlas).
 
+## Mobile — steps y locators
+
+Locators: un objeto por historia con selectores de WebdriverIO. Priorizá: accessibility id (`~Iniciar sesión`) → resource-id (`android=new UiSelector().resourceId("emailInput")` o `id=com.app:id/email`) → texto (`android=new UiSelector().text("Ingresar")`, `-ios predicate string:label == "Ingresar"`). Evitá XPath salvo que no haya alternativa.
+
+```ts
+// mobile/steps/HU-001.steps.ts
+import { Given, When, Then } from '@wdio/cucumber-framework';
+import { HU001 } from '../locators/HU-001.locators';
+
+When('el usuario ingresa {string} en el campo usuario', async (usuario: string) => {
+  const campo = await $(HU001.inputUsuario);
+  await campo.waitForDisplayed({ timeout: 10000 });
+  await campo.setValue(usuario);
+});
+```
+
+Dónde corre (dispositivo, emulador o BrowserStack) se define en el `.env` de la raíz (`MOBILE_TARGET`); el código de los steps es el mismo.
+
 ## Base de datos — verificaciones en los tests
 
 `tools/bd/bd.steps.ts` está cargado en las suites web y API (en mobile todavía no funciona: WebdriverIO usa su propia copia de Cucumber, así que no los agregues a un `.feature` mobile). Son steps **de solo lectura** que verifican lo que una prueba dejó guardado. Conexiones en el `.env` (`DB_CONEXIONES` + `DB_<NOMBRE>_*`); sin nombre se usa la primera. **Solo se agregan cuando la persona lo pide explícitamente** (*"sumá la verificación en la base"*, *"validá que quede guardado en la tabla X"*). Aunque un caso diga *"el dato se guarda en la base"*, no los agregues por tu cuenta: dejalo anotado como sugerencia en el reporte de mapeo (*"se puede sumar verificación en BD si se pide"*). Cuando se piden, mirá antes las tablas y columnas con `k0lmenia bd -- esquema --tabla <tabla>`: no adivines nombres.
@@ -210,13 +229,136 @@ When guardo el campo "id" de la consulta como "idPedido"
 - MongoDB: la tabla es la colección y la consulta libre es un JSON: `{"coleccion": "usuarios", "filtro": {"estado": "ACTIVO"}}`.
 - Cada verificación adjunta al reporte la consulta y las filas encontradas (con los datos sensibles enmascarados).
 
+## Performance — k6, Artillery y JMeter
+
+Se corre con `k0lmenia perf -- <script> <perfil>` (`run-perf.js`). Perfiles: `smoke` (carga mínima, valida el script), `load`, `stress`, `soak`, `spike`. Cada corrida deja en `reports/performance/<k6|artillery|jmeter>/` el reporte HTML, un resumen JSON chico, el resultado crudo y el log; la consola muestra solo el resumen.
+
+```
++------------------------+------------------------------------------+------------------------------------------+
+| Herramienta            | Cuándo                                   | Archivos                                 |
++========================+==========================================+==========================================+
+| k6                     | APIs / HTTP (escala a miles de usuarios) | `performance/k6/http/HU-001-<slug>.ts`   |
++------------------------+------------------------------------------+------------------------------------------+
+| Artillery + Playwright | Flujos de navegador (pocos usuarios:     | `performance/artillery/HU-001-           |
+|                        | cada uno es un Chromium)                 | <slug>.yaml` + `HU-001-<slug>.ts`        |
+|                        |                                          | (processor)                              |
++------------------------+------------------------------------------+------------------------------------------+
+| JMeter                 | APIs / HTTP cuando el equipo ya trabaja  | `performance/jmeter/HU-001-<slug>.jmx` + |
+|                        | con JMeter o trae un `.jmx` para reusar, | `HU-001-<slug>.json`                     |
+|                        | o para protocolos que no son HTTP (JDBC, |                                          |
+|                        | JMS, SOAP, TCP…)                         |                                          |
++------------------------+------------------------------------------+------------------------------------------+
+```
+
+### k6
+
+```ts
+// performance/k6/http/HU-001-<slug>.ts
+import { check, group, sleep } from 'k6';
+import { env, opciones, pedir } from '../lib/k0lmena';
+export { handleSummary } from '../lib/k0lmena';   // obligatorio: arma el reporte
+
+const BASE = env.API_BASEURL;                       // o env.BASEURL; token: env.TOKEN (API_TOKEN)
+const E = { listar: 'GET /usuarios', crear: 'POST /usuarios' };   // nombre = método + path con {params}
+
+export const options = opciones({
+  vus: 50, duracion: '5m',                          // carga objetivo (la define la persona)
+  // rampa: '1m', duracionSoak: '2h', pico: 200,    // opcionales
+  umbrales: {                                       // los define la persona
+    http_req_failed: ['rate<0.01'],
+    http_req_duration: ['p(95)<500', 'p(99)<1000'],
+    'http_req_duration{name:POST /usuarios}': ['p(95)<800'],   // umbral por endpoint
+    checks: ['rate>0.99'],
+  },
+  endpoints: Object.values(E),                      // métricas por endpoint en el reporte
+});
+
+export default function () {
+  group('Listar usuarios', () => {
+    const res = pedir('GET', E.listar, `${BASE}/usuarios?page=1`);
+    check(res, { 'listar: status 200': (r) => r.status === 200 });
+  });
+  sleep(1);                                         // tiempo de pensamiento
+}
+```
+
+- `pedir(metodo, nombre, url, body?, headers?)` agrega `Content-Type` JSON y el `Authorization: Bearer` si hay `API_TOKEN`.
+- `__ENV.X` lee cualquier variable del `.env` de la raíz (ej. `__ENV.APP_USER`). Nunca escribas credenciales en el script.
+- Datos variables: `__VU` y `__ITER` para no repetir (ej. emails únicos); un login por usuario va en `setup()` o al inicio de la iteración.
+- No modifiques `lib/k0lmena.ts`.
+
+### Artillery + Playwright
+
+```yaml
+# performance/artillery/HU-001-<slug>.yaml
+config:
+  target: https://app.ejemplo.com                  # la URL confirmada por la persona
+  engines: { playwright: { launchOptions: { headless: true } } }
+  processor: ./HU-001-<slug>.ts
+  plugins: { ensure: {} }                          # obligatorio para evaluar los umbrales
+  ensure:
+    maxErrorRate: 1                                # % de usuarios que no completaron el flujo
+    thresholds:
+      - browser.step.Iniciar sesión.p95: 3000      # <métrica>: máximo (ms)
+  environments:                                    # un environment por perfil
+    smoke:  { phases: [{ name: smoke, duration: 30, arrivalCount: 2 }] }
+    load:   { phases: [{ name: rampa, duration: 60, arrivalRate: 1, rampTo: 5 }, { name: sostenido, duration: 300, arrivalRate: 5, maxVusers: 20 }] }
+scenarios:
+  - { name: HU-001 <flujo>, engine: playwright, testFunction: flujo }
+```
+
+```ts
+// performance/artillery/HU-001-<slug>.ts
+export async function flujo(page, _vu, _events, test) {
+  await test.step('Iniciar sesión', async () => {      // cada step = métrica browser.step.<nombre>
+    await page.goto('/login');
+    await page.getByLabel('Usuario').fill(process.env.APP_USER ?? '');
+    await page.getByLabel('Contraseña').fill(process.env.APP_PASSWORD ?? '');
+    await page.getByRole('button', { name: 'Ingresar' }).click();
+    await page.getByRole('heading', { name: 'Inicio' }).waitFor();   // cada step termina con una espera observable
+  });
+}
+```
+
+- Usá los mismos selectores que `web/locators/HU-XXX.locators.ts` (role/label/placeholder) si la historia ya está automatizada.
+- `arrivalRate` = usuarios nuevos por segundo; `maxVusers` = tope de simultáneos. Cada usuario es un navegador: en una PC común, más de 10-20 simultáneos satura la máquina y mide la PC, no la app.
+
+### JMeter
+
+Se parte de la plantilla `performance/jmeter/plantilla/plantilla.jmx` + `plantilla.json` (copiá las dos y renombralas `HU-001-<slug>`). Requiere Java 8+ y JMeter (`k0lmenia bootstrap:jmeter`, queda en `tools/jmeter`; o `JMETER_HOME`).
+
+El `.json` va al lado del `.jmx`, con el destino, la carga de cada perfil y los umbrales (todo lo define la persona):
+
+```json
+{
+  "destino": "API_BASEURL",
+  "perfiles": {
+    "smoke": { "usuarios": 1,  "rampa": 1,  "duracion": 30 },
+    "load":  { "usuarios": 50, "rampa": 60, "duracion": 300 }
+  },
+  "umbrales": {
+    "error_pct": 1, "p95": 500, "p99": 1000,
+    "por_muestra": { "POST /usuarios": { "p95": 800 } }
+  }
+}
+```
+
+- `destino`: el nombre de una variable del `.env` (`API_BASEURL`, `APP_URL`) o una URL. Llega al `.jmx` como `${__P(base_url)}`; cada request usa `${__P(base_url)}/path` en el campo *Path*.
+- Cada clave del perfil llega como propiedad: `${__P(usuarios,1)}`, `${__P(rampa,1)}`, `${__P(duracion,30)}` en el Thread Group (con *scheduler* y loops `-1`). Se pueden sumar claves propias (ej. `pico`) y leerlas igual.
+- Umbrales (todos en ms, salvo `error_pct` en %): `error_pct`, `p50`, `p90`, `p95`, `p99`, `avg`, `max`, y `por_muestra` con el nombre exacto del request. Los evalúa el reporte de k0lmena: JMeter no los conoce.
+- Cada HTTP Request se nombra `MÉTODO /path` (es la "muestra" del reporte) y lleva una **Response Assertion** con el código esperado; sin aserción, un 404 cuenta como éxito.
+- Credenciales: `${__groovy(System.getenv('API_TOKEN') ?: '')}` (o cualquier variable del `.env`); nunca escritas en el `.jmx`.
+- Datos variables: `${__threadNum}` y `${__counter(FALSE,)}` para no repetir (ej. emails únicos).
+- `--vus` y `--duracion` pisan `usuarios` y `duracion` en una corrida. Además del reporte de k0lmena, cada corrida deja el dashboard nativo de JMeter en `<corrida>-dashboard/index.html`.
+- Si la persona trae un `.jmx` propio: adaptalo a estas convenciones (propiedades en el Thread Group, `base_url`, nombres `MÉTODO /path`, aserciones) en lugar de reescribirlo desde cero.
+
 ## Validar lo generado (una sola vez)
 
 Desde `herramientas/k0lmena/` (PowerShell usa `$env:REPORT_DIR="reports/validacion"; $env:TAGS="@HU-001"; k0lmenia test:web`):
 
 ```bash
 REPORT_DIR=reports/validacion TAGS=@HU-001 k0lmenia test:web   # web: no pisa el último k0lmenia test
-TAGS=@HU-001 k0lmenia test:api      # este sí reemplaza el último reporte: avisalo
+TAGS=@HU-001 k0lmenia test:api      # o test:mobile (estos sí reemplazan el último reporte: avisalo)
 ```
 
 - Si falla por un locator o un step mal armado, corregilo y volvé a correr. **Máximo 2 reintentos**; si sigue fallando por el test (no lográs armar el locator o el step), marcá el escenario `@bloqueado` con el motivo y seguí.

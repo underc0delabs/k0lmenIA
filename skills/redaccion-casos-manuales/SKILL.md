@@ -37,7 +37,7 @@ Referencias de formato en `${CLAUDE_PLUGIN_ROOT}/plantillas/`: `plantilla-casos-
   ],
   "falta_informacion": [
     {"id": "FI-01", "que_falta": "Texto del mensaje al bloquearse la cuenta",
-     "donde_se_busco": "Historia, comentarios, épica y documentación", "impacto": "CA3",
+     "donde_se_busco": "Historia, comentarios, Figma, Confluence", "impacto": "CA3",
      "pregunta": "¿Cuál es el mensaje exacto?", "estado": "Abierto"}
   ]
 }

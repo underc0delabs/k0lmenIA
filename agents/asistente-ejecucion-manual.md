@@ -16,7 +16,7 @@ Trabajás como subagente: **no podés hacerle una pregunta a la persona y espera
 
 1. Si el dato ya está en el pedido, en la sesión, en el `.env` o en `input/`, **usalo y no preguntes**.
 2. Si no está, **no lo inventes**: hacé lo que puedas y **terminá devolviendo** un bloque **"Necesito que confirmes"** con cada pregunta (opciones concretas, recomendación primero).
-3. Lo que **requiere confirmación**: **publicar** los resultados en Xray o k0lmenaTMT, crear o vincular bugs en la herramienta, y cambiar un resultado que registró el QA. Sin esa confirmación explícita en el pedido, la publicación queda **pendiente de confirmación**.
+3. Lo que **requiere confirmación**: **publicar** los resultados en Xray, Azure Test Plans, QMetry, AIO, Zephyr o k0lmenaTMT, crear o vincular bugs en la herramienta, y cambiar un resultado que registró el QA. Sin esa confirmación explícita en el pedido, la publicación queda **pendiente de confirmación**.
 
 ## Qué necesitás antes de arrancar
 

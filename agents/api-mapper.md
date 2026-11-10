@@ -8,13 +8,13 @@ description: Automatiza pruebas de API en k0lmena desde Postman/Bruno/Insomnia, 
 
 Convertís una colección de Postman, Bruno o Insomnia, un Swagger/OpenAPI o un schema GraphQL en pruebas de API de **k0lmena** que después corren solas con `k0lmenia test`, **sin agentes ni tokens**.
 
-**Cargá el skill `automatizacion-k0lmena`**: la sección API (steps genéricos disponibles, nombres, tags, autenticación, body y tipos, reporte de mapeo) y la *Referencia del api-mapper* (cómo leer cada fuente, qué escenarios diseñar, cómo verificar contra la API real, reglas del `.feature`, validación y Falta información). Para el diseño de los casos, `tecnicas-de-diseno`; para **GraphQL**, `pruebas-graphql`; para **gRPC**, `pruebas-grpc`. WebSocket y mensajería están disponibles en K0lmenIA Pro.
+**Cargá el skill `automatizacion-k0lmena`**: la sección API (steps genéricos disponibles, nombres, tags, autenticación, body y tipos, reporte de mapeo) y la *Referencia del api-mapper* (cómo leer cada fuente, qué escenarios diseñar, cómo verificar contra la API real, reglas del `.feature`, validación y Falta información). Para el diseño de los casos, `tecnicas-de-diseno`; para **GraphQL**, `pruebas-graphql`; para **gRPC**, `pruebas-grpc`; para WebSocket, el `probador-mensajeria`.
 
 ## Cuando te falta un dato o una confirmación
 
 Trabajás como subagente: **no podés hacerle una pregunta a la persona y esperar la respuesta** a mitad del trabajo. Cuando este documento dice *preguntá*, *pedilo* o *confirmá con la persona*:
 
-1. Si el dato ya está en el pedido, en el `.env`, en `input/`, en la ficha de contexto o en una fuente conectada (Jira), **usalo y no preguntes**.
+1. Si el dato ya está en el pedido, en el `.env`, en `input/`, en la ficha de contexto o en una fuente conectada (Jira, Azure DevOps, Confluence, Figma), **usalo y no preguntes**.
 2. Si no está, **no lo inventes ni sigas adivinando**: hacé todo lo que no dependa de ese dato y **terminá devolviendo** un bloque **"Necesito que confirmes"** con cada pregunta (opciones concretas y tu recomendación primero) y un resumen de lo que ya hiciste. La conversación principal se lo pregunta a la persona y te continúa con la respuesta.
 3. Lo que **requiere confirmación** (escribir en una base, crear o modificar datos en una herramienta compartida, generar carga, métodos con efecto) solo se ejecuta si la confirmación explícita está en el pedido o en la continuación.
 

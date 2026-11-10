@@ -1,0 +1,959 @@
+{
+  "_info": "Generado por scripts/catalogo_planes.py (repo de Empresa). No se edita a mano: se cambia el reparto ahí, se regenera y se copia a los tres repos.",
+  "marketplace": "k0lmenia",
+  "compra": "https://k0lmena.com/k0lmenia/",
+  "planes": [
+    {
+      "id": "light",
+      "nombre": "K0lmenIA",
+      "plan": "Gratis",
+      "precio": "Gratis",
+      "plugin": "k0lmenia",
+      "repo": "underc0delabs/k0lmenIA",
+      "fuente": {
+        "source": "github",
+        "repo": "underc0delabs/k0lmenIA",
+        "ref": "plugin"
+      },
+      "depende": [],
+      "resumen": "Lo elemental del día a día de QA: historias, casos manuales y BDD, bugs, ejecución E2E y de API, Xray y k0lmenaTMT.",
+      "descripcion": "K0lmenIA: agentes de QA para Claude Code, en español. Documentación del proyecto, análisis de historias, casos de prueba (Excel y BDD), revisión de casos, triage de bugs, ejecución E2E y de API (REST, GraphQL y gRPC), ejecución manual guiada, automatización sin tokens con k0lmena, gestión en Xray y k0lmenaTMT, e informes en español e inglés. Pro y Empresa se suman como plugins aparte (/k0lmenia:setup).",
+      "web": "https://underc0delabs.github.io/k0lmenIA/",
+      "gestion": [
+        "Xray Cloud",
+        "Xray Server/DC",
+        "k0lmenaTMT"
+      ],
+      "conectores": [
+        "playwright",
+        "playwright-headless",
+        "atlassian",
+        "k0lmena-tmt"
+      ],
+      "agentes": [
+        {
+          "nombre": "documentador-proyecto",
+          "descripcion": "Arma y mantiene input/documentacion/ — lee el repo (GitHub, GitLab, Azure Repos, Bitbucket), las historias de Jira/Azure DevOps y recorre la app."
+        },
+        {
+          "nombre": "analista-historias",
+          "descripcion": "Analiza una historia de usuario y sus criterios — ambigüedades, vacíos, riesgos y casos no contemplados — y arma preguntas de refinamiento."
+        },
+        {
+          "nombre": "generador-casos-manuales",
+          "descripcion": "Escribe casos de prueba manuales desde una historia o sus criterios — positivos, negativos, de borde y validaciones — en Excel, Markdown e informe de cobertura."
+        },
+        {
+          "nombre": "generador-casos-bdd",
+          "descripcion": "Escribe escenarios BDD/Gherkin (keywords en inglés, contenido en español) desde una historia o sus criterios, con .feature y cobertura por criterio."
+        },
+        {
+          "nombre": "revisor-casos",
+          "descripcion": "Revisa y puntúa casos de prueba existentes (.xlsx, .feature o la herramienta de gestión) — resultados vagos, pasos sin acción, duplicados, falta de negativos — con versión mejorada."
+        },
+        {
+          "nombre": "triador-bugs",
+          "descripcion": "Triage de un bug o un lote antes de cargarlo — duplicados y relacionados en Jira/Azure DevOps y locales, regresiones, severidad, prioridad y responsable."
+        },
+        {
+          "nombre": "ejecutor-e2e",
+          "descripcion": "Ejecuta en vivo, en el navegador con Playwright MCP, casos o escenarios web no automatizados, con evidencia."
+        },
+        {
+          "nombre": "ejecutor-api",
+          "descripcion": "Corre en vivo una colección Postman, Bruno o Insomnia con Newman (REST o GraphQL) y reporta pasó/falló en HTML."
+        },
+        {
+          "nombre": "web-mapper",
+          "descripcion": "Automatiza casos web (manuales o BDD) en k0lmena recorriendo la app con Playwright MCP; después corren con npm test sin tokens."
+        },
+        {
+          "nombre": "api-mapper",
+          "descripcion": "Automatiza pruebas de API en k0lmena desde Postman/Bruno/Insomnia, OpenAPI o GraphQL, verificando contra la API real; después corren con npm test sin tokens."
+        },
+        {
+          "nombre": "gestor-pruebas",
+          "descripcion": "Organiza las pruebas en Xray, QMetry, AIO, Zephyr Scale, k0lmenaTMT o Azure Test Plans — carpetas, casos, ciclos y vínculos — con confirmación."
+        },
+        {
+          "nombre": "publicador-resultados",
+          "descripcion": "Sube a Xray, QMetry, AIO, Zephyr Scale o k0lmenaTMT los resultados de una corrida de k0lmena — estado de cada caso, comentario y evidencias."
+        },
+        {
+          "nombre": "asistente-ejecucion-manual",
+          "descripcion": "Consolida una sesión de ejecución manual (resultados, tiempos, inconsistencias, bugs e informe) y la publica con confirmación."
+        }
+      ],
+      "skills": [
+        {
+          "nombre": "automatizacion-k0lmena",
+          "descripcion": "Convenciones para automatizar en k0lmena — dónde van .feature, steps y locators de web, api y mobile, nombres y tags, steps reutilizables y de BD."
+        },
+        {
+          "nombre": "base-conocimiento",
+          "descripcion": "Flujo de la conversación principal para armar y mantener la base de conocimiento de un proyecto (input/documentacion/) — investigar, explorar, documentar y actualizar."
+        },
+        {
+          "nombre": "documentacion-proyecto",
+          "descripcion": "Referencia del documentador-proyecto — cómo leer el repositorio por proveedor, el mapa funcional, qué se guarda en input/documentacion/ y los modos barrido y actualizar."
+        },
+        {
+          "nombre": "ejecucion-api",
+          "descripcion": "El cómo de ejecutar pruebas de API con Newman — correr una colección Postman/Bruno/Insomnia (REST o GraphQL), manejar base_url y token e interpretar resultados."
+        },
+        {
+          "nombre": "ejecucion-e2e",
+          "descripcion": "El cómo de ejecutar E2E con Playwright MCP de forma robusta — headed vs. headless, elementos por snapshot, esperas sin flakiness, evidencia y traducir un caso a acciones."
+        },
+        {
+          "nombre": "empezar",
+          "descripcion": "Bienvenida y puesta en marcha de k0lmenIA — prepara el proyecto (carpetas, .env, k0lmena), revisa lo que falta, guía la conexión de herramientas y sugiere la primera tarea."
+        },
+        {
+          "nombre": "guia-pruebas",
+          "descripcion": "Asistente de la conversación principal que guía a la persona para elegir qué probar y con qué agente o skill, paso a paso."
+        },
+        {
+          "nombre": "investigacion-contexto",
+          "descripcion": "El cómo de investigar una historia antes de analizarla, planificarla o automatizarla — documentación, historia, épica, Confluence, Figma y contratos — y registrar lo que falta (FI-XX) en una ficha."
+        },
+        {
+          "nombre": "pruebas-graphql",
+          "descripcion": "El cómo de probar APIs GraphQL — introspección, queries y mutations, errores con HTTP 200, nulabilidad, paginación, N+1 y autorización por campo."
+        },
+        {
+          "nombre": "pruebas-grpc",
+          "descripcion": "El cómo de probar APIs gRPC — Protobuf, los cuatro modos de RPC, status codes, deadlines, TLS/mTLS, gRPC-Web y grpcurl; más WebSocket."
+        },
+        {
+          "nombre": "redaccion-casos-manuales",
+          "descripcion": "Referencia del generador-casos-manuales — columnas de la planilla, esquema del JSON para scripts/generar_casos.py, reglas de cada campo y el informe de cobertura."
+        },
+        {
+          "nombre": "tecnicas-de-diseno",
+          "descripcion": "Técnicas de diseño de pruebas de caja negra — equivalencia, valores límite, tabla de decisión, transición de estados y pairwise."
+        },
+        {
+          "nombre": "ejecucion-manual",
+          "descripcion": "Acompaña al QA mientras ejecuta casos manuales paso a paso: resultados, evidencia, tiempos, bugs e informe."
+        },
+        {
+          "nombre": "setup",
+          "descripcion": "Muestra qué plan de k0lmenIA tiene la persona, a qué planes tiene acceso (Pro, Empresa) y qué suma cada uno, instala los que le corresponden y configura k0lmenaTMT."
+        }
+      ],
+      "scripts": []
+    },
+    {
+      "id": "pro",
+      "nombre": "K0lmenIA Pro",
+      "plan": "Pro",
+      "precio": "USD 29 por usuario por mes",
+      "plugin": "k0lmenia-pro",
+      "repo": "underc0delabs/k0lmenIA-PRO-plugin",
+      "fuente": {
+        "source": "github",
+        "repo": "underc0delabs/k0lmenIA-PRO-plugin"
+      },
+      "depende": [
+        "k0lmenia"
+      ],
+      "resumen": "Todo el ciclo de QA: accesibilidad, seguridad, performance, mobile, desktop, e-commerce, APIs avanzadas, IA y chatbots, causa raíz, cobertura, producción, mutación y más, con Confluence, Figma, GitHub, GitLab, Linear, Sentry, Datadog y otros conectores.",
+      "descripcion": "K0lmenIA Pro (requiere el plugin k0lmenia): suma 88 agentes de QA en español — accesibilidad, seguridad, performance, mobile, desktop, e-commerce, APIs avanzadas, IA y chatbots, causa raíz, cobertura, producción y más. Licencia comercial.",
+      "web": "https://k0lmena.com/k0lmenia/",
+      "gestion": [],
+      "conectores": [
+        "figma",
+        "figma-desktop",
+        "github",
+        "gitlab",
+        "linear",
+        "clickup",
+        "monday",
+        "asana",
+        "trello",
+        "notion",
+        "youtrack",
+        "shortcut",
+        "appium-mcp",
+        "scalar",
+        "sentry",
+        "sentry-local",
+        "datadog",
+        "newrelic",
+        "google-analytics",
+        "search-console",
+        "intercom",
+        "testrail",
+        "browserstack",
+        "sauce-labs",
+        "postman"
+      ],
+      "agentes": [
+        {
+          "nombre": "analista-accesibilidad",
+          "descripcion": "Audita accesibilidad (a11y) contra WCAG 2.2 AA en web (axe-core, teclado, reflow), mobile (TalkBack/VoiceOver) y desktop (UI Automation)."
+        },
+        {
+          "nombre": "analista-analytics",
+          "descripcion": "Prueba analytics y píxeles de una web (GA4, GTM, Meta, Ads, Adobe, Segment, Mixpanel, Matomo) — tags, eventos del plan de medición, consentimiento, PII, duplicados y confirmación por API."
+        },
+        {
+          "nombre": "analista-causa-raiz",
+          "descripcion": "Busca la causa raíz de un bug en el código (solo lectura, repo local o GitHub/GitLab/Azure Repos/Bitbucket) y sugiere el fix como diff, el mismo patrón en otros lugares y pruebas."
+        },
+        {
+          "nombre": "analista-cobertura",
+          "descripcion": "Matriz de cobertura y trazabilidad HU → criterios → casos → automatización → gestión → resultado → bugs, con los huecos."
+        },
+        {
+          "nombre": "analista-cobertura-codigo",
+          "descripcion": "Cobertura de código (JaCoCo, LCOV, coverage.py, Cobertura, OpenCover): global, por módulo y del cambio de un PR (diff coverage), con informe HTML."
+        },
+        {
+          "nombre": "analista-codigo-seguro",
+          "descripcion": "SAST y búsqueda de secretos de solo lectura sobre el código (escáner propio + semgrep), triage por OWASP/CWE y secretos a rotar."
+        },
+        {
+          "nombre": "analista-dependencias",
+          "descripcion": "Análisis de dependencias (SCA) de solo lectura con npm audit, pip-audit u osv-scanner — CVE por severidad, directas vs. transitivas, licencias."
+        },
+        {
+          "nombre": "analista-fallos",
+          "descripcion": "Analiza los fallos de npm test (k0lmena web, API o mobile) — causa (bug, locator, ambiente, datos), flaky reintentando y bugs reales redactados."
+        },
+        {
+          "nombre": "analista-feedback-usuarios",
+          "descripcion": "Analiza reseñas de App Store y Google Play y tickets de Zendesk, Freshdesk o Intercom por tema, versión y semana, sin datos personales, y los vuelve bugs candidatos."
+        },
+        {
+          "nombre": "analista-flujos-reales",
+          "descripcion": "Flujos reales de los usuarios (GA4, Search Console, sesiones, logs) contra la suite; genera casos y BDD para los no cubiertos."
+        },
+        {
+          "nombre": "analista-logs",
+          "descripcion": "Analiza logs del servidor (nginx/Apache, JSON, syslog, .gz) — errores por firma, línea de tiempo y cruce con los escenarios fallidos de k0lmena."
+        },
+        {
+          "nombre": "analista-mutacion",
+          "descripcion": "Mutation testing de un proyecto autorizado (Stryker, mutmut, PITest, Infection) — mutation score, mutantes sobrevivientes y los tests que faltan."
+        },
+        {
+          "nombre": "analista-observabilidad",
+          "descripcion": "Revisa la observabilidad de un servicio autorizado — logs estructurados, métricas Prometheus, trazas OpenTelemetry, healthchecks, SLOs y alertas."
+        },
+        {
+          "nombre": "analista-produccion",
+          "descripcion": "Analiza errores de producción en solo lectura (Sentry, Datadog, New Relic, Crashlytics, CSV) — nuevos, regresiones o en aumento con un release — y los vuelve bugs priorizados."
+        },
+        {
+          "nombre": "analista-reuniones",
+          "descripcion": "Analiza transcripciones de reuniones — decisiones, acciones, criterios y casos afectados, riesgos — con informe HTML."
+        },
+        {
+          "nombre": "analista-seguridad",
+          "descripcion": "Escaneo de seguridad web PASIVO con OWASP ZAP baseline sobre URLs autorizadas — encabezados, cookies, configuración insegura."
+        },
+        {
+          "nombre": "analista-seguridad-camaras",
+          "descripcion": "Seguridad PASIVA de cámaras IP y NVR autorizados — puertos y servicios inseguros (Telnet, FTP, RTSP sin auth) y CVE del firmware, sin atacar."
+        },
+        {
+          "nombre": "analista-seo",
+          "descripcion": "SEO y GEO de un sitio autorizado — indexabilidad, robots, sitemap, canónicas, hreflang, on-page, JSON-LD y crawlers de IA — en solo lectura."
+        },
+        {
+          "nombre": "analista-traductor",
+          "descripcion": "Revisa traducciones e i18n en todos los idiomas del sitio — textos sin traducir, claves a la vista, encoding, cortes, formatos regionales."
+        },
+        {
+          "nombre": "anonimizador-datos",
+          "descripcion": "Anonimiza exportes reales (CSV, JSON, Excel, SQL) para QA — detecta PII, la reemplaza con formato válido y consistente entre tablas y verifica que no quede."
+        },
+        {
+          "nombre": "auditor-rendimiento-web",
+          "descripcion": "Audita la velocidad de carga con Lighthouse (mobile y desktop) — Core Web Vitals, oportunidades, peso y terceros."
+        },
+        {
+          "nombre": "calidad-imagen",
+          "descripcion": "Evalúa la imagen de cámaras autorizadas — frames negros, desenfoque y congelamiento con OpenCV, y con visión lente sucia o encuadre."
+        },
+        {
+          "nombre": "consultor-proyecto",
+          "descripcion": "Responde preguntas del producto solo con la documentación existente (input/documentacion, fichas de contexto, artefactos), citando la fuente o diciendo que no está documentado."
+        },
+        {
+          "nombre": "cross-browser",
+          "descripcion": "Compatibilidad entre Chromium (Chrome/Edge), Firefox y WebKit (Safari), desktop y mobile — corre la suite de k0lmena en cada uno o compara páginas."
+        },
+        {
+          "nombre": "depurador-suite",
+          "descripcion": "Higiene de la regresión — duplicados, obsoletos, sin ejecutar, inestables y solapamientos; propone qué retirar o automatizar."
+        },
+        {
+          "nombre": "estratega-proyecto",
+          "descripcion": "Diseña la estrategia de pruebas de un PROYECTO con sus datos (sprints, historias devueltas, entregas tarde, bugs, código) — tipos de prueba, automatizar o no, sprint o N+1, riesgos."
+        },
+        {
+          "nombre": "estratega-pruebas",
+          "descripcion": "Arma el plan de pruebas de una historia, feature o release — alcance, tipos de prueba, riesgos, datos y entorno, criterios de entrada/salida — como dashboard HTML."
+        },
+        {
+          "nombre": "evaluador-ux",
+          "descripcion": "Evaluación heurística de usabilidad con las 10 heurísticas de Nielsen — chequeos automáticos en desktop y mobile más recorrido a mano — con puntaje por heurística."
+        },
+        {
+          "nombre": "explorador-web",
+          "descripcion": "Exploratorias de un sitio — links e imágenes rotas, errores de JS, recursos que fallan, responsive con capturas, más exploración a mano."
+        },
+        {
+          "nombre": "generador-casos-api",
+          "descripcion": "Diseña casos de prueba de API REST o GraphQL desde un contrato, endpoints o colección — positivos, negativos, schema y autorización."
+        },
+        {
+          "nombre": "generador-charters",
+          "descripcion": "Planifica pruebas exploratorias por sesiones — charters, hojas de sesión y notas — y convierte las notas en informe con bugs y preguntas."
+        },
+        {
+          "nombre": "generador-datos-prueba",
+          "descripcion": "Genera datos de prueba realistas (válidos, inválidos y de borde) en Markdown o CSV, sin tocar ninguna base."
+        },
+        {
+          "nombre": "generador-reporte-cierre",
+          "descripcion": "Informe de cierre de una ronda o historia — resumen ejecutivo, go/no-go, resultados, bugs por severidad y pendientes — como dashboard HTML."
+        },
+        {
+          "nombre": "generador-reporte-html",
+          "descripcion": "Arma el reporte HTML (dashboard) de UNA corrida de pruebas — indicadores, aprobados/fallidos/bloqueados y detalle."
+        },
+        {
+          "nombre": "generador-reportes-bug",
+          "descripcion": "Convierte notas sueltas de un error en un reporte de bug con la plantilla del proyecto, marcando lo que falta en vez de inventarlo."
+        },
+        {
+          "nombre": "investigador-proyecto",
+          "descripcion": "Releva un proyecto COMPLETO por MCP desde un tablero (Jira, Azure DevOps, Trello, Linear, monday, ClickUp, Notion, GitHub/GitLab) — épicas, historias, wiki, repos — con mapas y preguntas."
+        },
+        {
+          "nombre": "mapa-de-riesgo",
+          "descripcion": "Mapa de riesgo por módulo — cruza cambios en el código, bugs, errores de producción, cobertura y uso real."
+        },
+        {
+          "nombre": "migrador-automatizacion",
+          "descripcion": "Migra a k0lmena suites existentes (Selenium, Cypress, Playwright, WebdriverIO, Postman, Bruno, Insomnia) sin perder casos ni IDs — inventario, % migrable y borradores."
+        },
+        {
+          "nombre": "mobile-mapper",
+          "descripcion": "Automatiza casos mobile en k0lmena recorriendo la app con Appium MCP en dispositivo, emulador o simulador; después corren con npm test."
+        },
+        {
+          "nombre": "pentester-web",
+          "descripcion": "Pentest web AUTORIZADO — escaneo activo de OWASP ZAP más verificación manual del OWASP Top 10 con Playwright, confirmando cada hallazgo."
+        },
+        {
+          "nombre": "performance-mapper",
+          "descripcion": "Pruebas de performance (carga, estrés, soak, spike) con k0lmena — k6, Artillery+Playwright o JMeter — desde un plan acordado."
+        },
+        {
+          "nombre": "pixel-perfect",
+          "descripcion": "Regresión visual: compara cada página contra una referencia aceptada o un diseño de Figma, píxel a píxel y por elemento."
+        },
+        {
+          "nombre": "probador-api-fuzzing",
+          "descripcion": "Fuzzing de APIs desde el contrato (OpenAPI o GraphQL) con Schemathesis — errores 500, respuestas fuera de contrato, validaciones flojas — con curl para reproducir."
+        },
+        {
+          "nombre": "probador-billeteras",
+          "descripcion": "Prueba billeteras, fintech y medios de pago en ambiente de prueba — saldo y ledger, idempotencia, doble gasto, conciliación, webhooks y tokenización (PCI)."
+        },
+        {
+          "nombre": "probador-blockchain",
+          "descripcion": "Prueba apps Web3 y smart contracts en testnets o nodos locales — funcional, tokens ERC, gas, seguridad (reentrancy, acceso) e integración dApp — con Hardhat/Foundry y Slither."
+        },
+        {
+          "nombre": "probador-busqueda",
+          "descripcion": "Prueba búsqueda y relevancia (Elasticsearch, Algolia, Solr, Typesense, Meilisearch) — ranking, typos, sinónimos, facetas, cero resultados — con golden set."
+        },
+        {
+          "nombre": "probador-chatbot",
+          "descripcion": "Prueba chatbots conversacionales (web, WhatsApp, Teams; Dialogflow, Rasa, Botpress, Copilot Studio o LLM) — guiones multi-turno repetidos, intents, contexto, fallback y derivación."
+        },
+        {
+          "nombre": "probador-contratos",
+          "descripcion": "Contract testing entre servicios (Pact, consumer-driven y bi-direccional) para REST, GraphQL, gRPC y eventos — Pact Broker y can-i-deploy."
+        },
+        {
+          "nombre": "probador-datos",
+          "descripcion": "Prueba datos y pipelines (ETL/ELT, warehouse, batch, streaming) — calidad, reconciliación origen↔destino, esquema, transformaciones e idempotencia — en solo lectura."
+        },
+        {
+          "nombre": "probador-desktop",
+          "descripcion": "Prueba apps de escritorio de Windows (WinForms, WPF, WinUI, Win32, Electron, Java, Qt) — funcional, instalación, integración con el SO y regresión — con WinAppDriver, pywinauto o Playwright."
+        },
+        {
+          "nombre": "probador-documentos",
+          "descripcion": "Prueba documentos generados (PDF, Excel, CSV, Word) — datos y cálculos, placeholders sin reemplazar, formato y locale, layout y metadata."
+        },
+        {
+          "nombre": "probador-experimentos",
+          "descripcion": "Prueba feature flags y A/B tests (LaunchDarkly, Unleash, Flagsmith, GrowthBook) — combinaciones pairwise, flags obsoletos, reparto de variantes con chi-cuadrado y medición."
+        },
+        {
+          "nombre": "probador-formularios",
+          "descripcion": "Prueba las validaciones de los formularios campo por campo SIN enviarlos — obligatorios, largos, formatos, rangos, acentos — y el mensaje de error, con matriz y capturas."
+        },
+        {
+          "nombre": "probador-ia",
+          "descripcion": "Prueba funciones de IA/LLM (chatbot, RAG, generación, agente) — golden set, alucinaciones y grounding, formato y seguridad de prompt (injection, jailbreak, fuga) — con métricas."
+        },
+        {
+          "nombre": "probador-ivr",
+          "descripcion": "Prueba IVR, voz y voicebots telefónicos — árbol de menús (DTMF y voz), prompts/TTS, enrutamiento y colas, telefonía SIP y grabación."
+        },
+        {
+          "nombre": "probador-juegos",
+          "descripcion": "Prueba videojuegos (Unity, Unreal, Godot, HTML5, mobile, consola, PC) — mecánicas, compatibilidad, FPS y memoria, guardado, multijugador y monetización."
+        },
+        {
+          "nombre": "probador-mensajeria",
+          "descripcion": "Prueba mensajería y eventos (Kafka, RabbitMQ, SQS/SNS, Pub/Sub, MQTT, WebSocket, SSE) — entrega, orden, idempotencia, reintentos, DLQ y esquemas."
+        },
+        {
+          "nombre": "probador-migraciones-bd",
+          "descripcion": "Prueba migraciones de base de datos (Flyway, Liquibase, Alembic, Django, Rails, Knex, SQL): destructivas, bloqueos, reversibilidad y, en una base de QA, up/down."
+        },
+        {
+          "nombre": "probador-mobile",
+          "descripcion": "Prueba apps Android/iOS con Appium MCP — permisos, interrupciones, offline, deep links, push — y revisa APK/AAB/IPA antes de publicar en las tiendas."
+        },
+        {
+          "nombre": "probador-notificaciones",
+          "descripcion": "Prueba SMS y OTP, WhatsApp, push e in-app — buzón local que atrapa lo que manda la app, número de prueba de Twilio, llegada, contenido, OTP, segmentos y baja."
+        },
+        {
+          "nombre": "probador-onvif",
+          "descripcion": "Prueba el control ONVIF de una cámara — info, perfiles y URIs, snapshot, NTP, firmware, PTZ y eventos de movimiento."
+        },
+        {
+          "nombre": "probador-permisos",
+          "descripcion": "Prueba los permisos por rol de una web — cada rol y anónimo, matriz rol × pantalla y rol × endpoint, URL directa y API, contra la regla."
+        },
+        {
+          "nombre": "probador-pos",
+          "descripcion": "Prueba sistemas de punto de venta (POS) y periféricos — venta, caja y arqueo, pagos y EMV, impresora, cajón y balanza, fiscal, offline y conciliación."
+        },
+        {
+          "nombre": "probador-prestashop",
+          "descripcion": "Prueba una tienda PrestaShop (1.6, 1.7, 8.x) — releva vidriera y Webservice API, deriva las pruebas (checkout, transportistas, combinaciones, redondeo) y las corre con Playwright."
+        },
+        {
+          "nombre": "probador-resiliencia",
+          "descripcion": "Prueba cómo reacciona la app cuando falla lo de abajo — API 500, timeout, red lenta, sin conexión o JSON roto desde el navegador, y caos server-side con Toxiproxy."
+        },
+        {
+          "nombre": "probador-scalar",
+          "descripcion": "Prueba APIs en Scalar — usa su MCP, baja el Registry, escribe los casos y arma una colección con tests pm (Newman) que se importa a Scalar con confirmación."
+        },
+        {
+          "nombre": "probador-seguridad-api",
+          "descripcion": "OWASP API Security Top 10 en QA: BOLA/IDOR, autenticación rota, BFLA, mass assignment, exposición de datos, rate limiting, SSRF e inventario, con matriz rol × endpoint."
+        },
+        {
+          "nombre": "probador-shopify",
+          "descripcion": "Prueba una tienda Shopify — releva vidriera y Admin API de lectura (temas, mercados, envíos, descuentos, webhooks), deriva las pruebas (checkout con Bogus Gateway) y las corre con Playwright."
+        },
+        {
+          "nombre": "probador-soap",
+          "descripcion": "Prueba servicios SOAP desde su WSDL — arma los sobres, los envía con el ejecutor-api y verifica XSD, SOAP Faults, namespaces y WS-Security."
+        },
+        {
+          "nombre": "probador-streaming",
+          "descripcion": "Prueba streaming y playback de video (RTSP/ONVIF, RTMP, HLS, DASH, WebRTC, VOD) con ffprobe/ffmpeg — que levante, códec, FPS, bitrate y continuidad."
+        },
+        {
+          "nombre": "probador-vtex",
+          "descripcion": "Prueba una tienda VTEX — releva vidriera, Catalog y app de lectura, deriva las pruebas (checkout, pagos sandbox, canales, promos) y las corre con Playwright en un workspace de QA."
+        },
+        {
+          "nombre": "probador-wordpress",
+          "descripcion": "Prueba WordPress o WooCommerce — releva vidriera, REST API y WP-CLI (pasarelas, envíos, cupones, stock, plugins), deriva las pruebas y las corre con Playwright."
+        },
+        {
+          "nombre": "redactor-manual",
+          "descripcion": "Crea o actualiza manuales de usuario basados en evidencia — documentación, casos y la app recorrida con Playwright, con dudas como QA REVIEW, en Markdown y HTML."
+        },
+        {
+          "nombre": "reparador-automatizacion",
+          "descripcion": "Repara la automatización web de k0lmena cuando falla por un locator o una espera — diagnostica con el DOM guardado, propone el locator más robusto, lo aplica con respaldo y verifica."
+        },
+        {
+          "nombre": "revisor-automatizacion",
+          "descripcion": "Revisa el código de PRUEBAS de cualquier framework (carpeta, repo o PR) — esperas fijas, .only, tests sin aserciones, selectores frágiles, estado compartido — con puntaje y comentarios."
+        },
+        {
+          "nombre": "revisor-codigo",
+          "descripcion": "Code review estático de solo lectura de un repo, rama o PR/MR (GitHub, GitLab, Bitbucket, Azure Repos) — seguridad, performance, confiabilidad y mantenibilidad — con comentarios para el PR."
+        },
+        {
+          "nombre": "revisor-contenido",
+          "descripcion": "Revisa los textos en el idioma principal — typos, ortografía (LanguageTool), placeholders, Lorem ipsum, claves de i18n a la vista y microcopy."
+        },
+        {
+          "nombre": "selector-casos-de-prueba",
+          "descripcion": "Elige qué casos correr para un cambio — desde un diff, PR o notas de release, cruza con el inventario (manuales, BDD, k0lmena) y prioriza por riesgo con tiempo y ahorro."
+        },
+        {
+          "nombre": "verificador-ambiente",
+          "descripcion": "Responde \"¿QA está listo para probar?\" — servicios, versión desplegada contra la release, smoke, certificados, DNS y feature flags — con veredicto Listo / Con observaciones / No listo."
+        },
+        {
+          "nombre": "verificador-correos",
+          "descripcion": "Verifica los correos de la app con Mailpit — contenido, links, variables, vista desktop/mobile y entregabilidad (SPF, DKIM, DMARC, spam)."
+        },
+        {
+          "nombre": "verificador-datos",
+          "descripcion": "Consulta las bases del .env (PostgreSQL, MySQL/MariaDB, SQL Server, MongoDB) para verificar qué guardó una prueba y suma verificaciones de BD a los .feature."
+        },
+        {
+          "nombre": "verificador-grabaciones",
+          "descripcion": "Verifica las grabaciones de una cámara o NVR por ONVIF (Recording y Search) — rango cubierto, huecos y retención."
+        },
+        {
+          "nombre": "virtualizador-servicios",
+          "descripcion": "Virtualiza dependencias (APIs de terceros, pasarelas) con mocks compatibles con WireMock — stubs desde OpenAPI o grabando, escenarios y fallas — y verifica qué llamó la app."
+        },
+        {
+          "nombre": "exportador-documentos",
+          "descripcion": "Exporta cualquier informe de k0lmenIA a Word y PDF formales, con portada de la marca, índice, gráficos y control de versiones."
+        },
+        {
+          "nombre": "probador-autenticacion",
+          "descripcion": "Prueba la autenticación en QA (login, enumeración, bloqueo, recuperación, sesión, logout, cookies, JWT, MFA, OAuth)."
+        },
+        {
+          "nombre": "probador-concurrencia",
+          "descripcion": "Condiciones de carrera en QA: doble envío, último stock, ediciones en paralelo, idempotencia y cupones, con invariantes."
+        },
+        {
+          "nombre": "probador-fechas-y-regiones",
+          "descripcion": "Prueba fechas, zonas horarias, horario de verano, vencimientos, edades y formatos de número y moneda por país."
+        },
+        {
+          "nombre": "vigia-apis-externas",
+          "descripcion": "Detecta cuando la API de un tercero cambia su contrato (esquema, códigos, deprecación, tiempos) contra una línea base."
+        }
+      ],
+      "skills": [
+        {
+          "nombre": "analisis-causa-raiz",
+          "descripcion": "El cómo de encontrar la causa raíz de un bug en el código (solo lectura) — recorrido hasta la falla, evidencia, hipótesis descartadas, fix como diff y pruebas."
+        },
+        {
+          "nombre": "analisis-dependencias",
+          "descripcion": "El cómo del análisis de dependencias (SCA): lockfiles, CVE/GHSA y CVSS, directas vs. transitivas, reachability, licencias, SBOM y cadena de suministro."
+        },
+        {
+          "nombre": "analisis-feedback",
+          "descripcion": "El cómo de analizar reseñas y tickets sin datos personales — temas y su refinamiento, rating por versión, picos tras un release, y de la queja al bug candidato."
+        },
+        {
+          "nombre": "analisis-produccion",
+          "descripcion": "El cómo de analizar errores de producción en solo lectura (Sentry, Datadog, New Relic, Crashlytics) — antes y después de un release, prioridad por impacto y cruce con bugs."
+        },
+        {
+          "nombre": "analisis-reuniones",
+          "descripcion": "El cómo de pasar una transcripción a decisiones, acciones, casos afectados, riesgos y preguntas abiertas."
+        },
+        {
+          "nombre": "anonimizacion-datos",
+          "descripcion": "El cómo de anonimizar datos para QA — detección de PII con validación, estrategias por tipo, consistencia con HMAC, subconjuntos y verificación de PII residual."
+        },
+        {
+          "nombre": "calidad-de-imagen",
+          "descripcion": "El cómo de evaluar la calidad de imagen de una cámara — qué mide OpenCV (brillo, Laplaciano, diferencia entre capturas), umbrales y qué juzgar con visión (lente sucia, encuadre)."
+        },
+        {
+          "nombre": "cobertura-codigo",
+          "descripcion": "El cómo de la cobertura de código: formatos (JaCoCo, LCOV, coverage.py, Cobertura, OpenCover), diff coverage de un PR, mapeo a módulos y umbrales."
+        },
+        {
+          "nombre": "codigo-seguro",
+          "descripcion": "El cómo del SAST y los secretos — inyección, XSS, deserialización, SSRF, cripto débil y control de acceso, OWASP/CWE, semgrep y triage por explotabilidad."
+        },
+        {
+          "nombre": "control-onvif",
+          "descripcion": "El cómo de probar el control ONVIF con onvif-zeep — servicios (device, media, PTZ, eventos), perfiles, URIs de stream y snapshot, y PTZ de forma segura."
+        },
+        {
+          "nombre": "depuracion-suite",
+          "descripcion": "El cómo de la higiene de la regresión — duplicados, obsoletos, inestables, qué caso queda y cuánto se ahorra."
+        },
+        {
+          "nombre": "estrategia-proyecto",
+          "descripcion": "Guía de la conversación principal para la estrategia de pruebas de un PROYECTO — entrevista, sprints y métricas de proceso — y qué probar, si automatizar y sprint o N+1; después invoca al estratega-proyecto."
+        },
+        {
+          "nombre": "flujo-bug",
+          "descripcion": "Atajo · un bug de punta a punta — redactarlo, buscar duplicados, causa raíz en el código y cargarlo con confirmación."
+        },
+        {
+          "nombre": "flujo-historia",
+          "descripcion": "Atajo · una historia de punta a punta — contexto, análisis, casos y BDD, automatización, ejecución e informe."
+        },
+        {
+          "nombre": "flujo-pr",
+          "descripcion": "Atajo · revisión de un PR — código, tests, cobertura del cambio y casos afectados, con los comentarios listos."
+        },
+        {
+          "nombre": "flujos-reales",
+          "descripcion": "El cómo de medir los recorridos reales (GA4, Search Console, sesiones, logs) y generar casos y BDD."
+        },
+        {
+          "nombre": "guia-performance",
+          "descripcion": "Guía de la conversación principal para planificar una prueba de performance — tipo, herramienta (k6, Artillery, JMeter), usuarios, rampa y umbrales — para el performance-mapper."
+        },
+        {
+          "nombre": "mapa-riesgo",
+          "descripcion": "El cómo del mapa de riesgo por módulo — fuentes, puntaje explicable (probabilidad × impacto) y qué probar por nivel."
+        },
+        {
+          "nombre": "metricas-qa",
+          "descripcion": "El cómo de responder preguntas de métricas de QA (\"¿cuánto testeamos este mes?\", bugs por criticidad, sprints) con cualquier fuente y el dashboard."
+        },
+        {
+          "nombre": "migracion-automatizacion",
+          "descripcion": "El cómo de migrar a k0lmena una suite existente sin perder casos ni IDs — inventario, calidad de localizadores, borrador, pendientes y plan por etapas."
+        },
+        {
+          "nombre": "pruebas-accesibilidad",
+          "descripcion": "El cómo de auditar accesibilidad en web (WCAG 2.2, axe-core, teclado, ARIA, lectores), mobile (TalkBack/VoiceOver) y desktop (UI Automation)."
+        },
+        {
+          "nombre": "pruebas-analytics",
+          "descripcion": "El cómo de probar analytics y píxeles (GA4, GTM, Meta, Ads, Adobe, Segment, Mixpanel, Matomo) — plan de medición, consentimiento, PII, duplicados y confirmación por API."
+        },
+        {
+          "nombre": "pruebas-async",
+          "descripcion": "El cómo de probar mensajería y eventos async (Kafka, RabbitMQ, SQS/SNS, MQTT, WebSocket, SSE) — entrega, orden, idempotencia, DLQ, esquemas y consumer lag."
+        },
+        {
+          "nombre": "pruebas-billeteras",
+          "descripcion": "El cómo de probar billeteras y medios de pago — ledger, estados, idempotencia, doble gasto, conciliación, KYC/AML, webhooks y 3-D Secure."
+        },
+        {
+          "nombre": "pruebas-blockchain",
+          "descripcion": "El cómo de probar Web3 y smart contracts — testnets, tokens ERC, gas, seguridad (reentrancy, acceso, MEV, oráculos), firmas, dApp y Hardhat/Foundry/Slither."
+        },
+        {
+          "nombre": "pruebas-busqueda",
+          "descripcion": "El cómo de probar búsqueda y relevancia (Elasticsearch, Algolia, Solr, Typesense) — ranking, typos, sinónimos, facetas y medición con golden set (precision@k, nDCG)."
+        },
+        {
+          "nombre": "pruebas-chatbots",
+          "descripcion": "El cómo de probar chatbots — guiones multi-turno, intents, contexto, fallback, derivación, canales (web, WhatsApp, Teams), NLU y bots con LLM."
+        },
+        {
+          "nombre": "pruebas-contenido",
+          "descripcion": "El cómo de revisar los textos en el idioma principal — typos, ortografía (LanguageTool), placeholders, claves de i18n a la vista y microcopy."
+        },
+        {
+          "nombre": "pruebas-contratos",
+          "descripcion": "El cómo del contract testing — consumer-driven (Pact) vs. provider, matchers, verificación del proveedor, Pact Broker y can-i-deploy."
+        },
+        {
+          "nombre": "pruebas-datos",
+          "descripcion": "El cómo de probar datos y pipelines (ETL/ELT, warehouse, streaming) — calidad por dimensiones, reconciliación, esquema y drift, idempotencia, PII y linaje."
+        },
+        {
+          "nombre": "pruebas-desktop",
+          "descripcion": "El cómo de probar apps de escritorio de Windows por tecnología (WinForms, WPF, Win32, Electron, Qt) y herramienta (WinAppDriver, pywinauto, Playwright)."
+        },
+        {
+          "nombre": "pruebas-documentos",
+          "descripcion": "El cómo de probar documentos generados (PDF, Excel, CSV, Word) — datos, cálculos, placeholders, formato/locale, layout y metadata, con pypdf/openpyxl."
+        },
+        {
+          "nombre": "pruebas-ecommerce",
+          "descripcion": "El cómo de probar una tienda online de cualquier plataforma — catálogo, precios, stock, carrito, checkout, envíos, cupones, pagos de prueba y reembolsos."
+        },
+        {
+          "nombre": "pruebas-experimentos",
+          "descripcion": "El cómo de probar feature flags y A/B tests — pairwise, dependencias, valores por defecto, flags obsoletos, reparto con chi-cuadrado (SRM) y medición."
+        },
+        {
+          "nombre": "pruebas-exploratorias",
+          "descripcion": "Referencia del explorador-web — qué revisa npm run explorar, la checklist de exploración manual, el analisis.json y la severidad por tipo de hallazgo."
+        },
+        {
+          "nombre": "pruebas-fuzzing-api",
+          "descripcion": "El cómo de hacer fuzzing de APIs con Schemathesis: chequeos, métodos seguros, triage de falsos positivos y cómo reportarlo."
+        },
+        {
+          "nombre": "pruebas-ia",
+          "descripcion": "El cómo de probar funciones de IA/LLM — golden set, alucinaciones y grounding, formato, seguridad de prompt (injection, jailbreak, fuga), robustez y evals."
+        },
+        {
+          "nombre": "pruebas-ivr",
+          "descripcion": "El cómo de probar voz, IVR y voicebots — menús (DTMF y ASR), prompts/TTS, enrutamiento y colas, transferencias, SIP, grabación y cumplimiento."
+        },
+        {
+          "nombre": "pruebas-juegos",
+          "descripcion": "El cómo de probar videojuegos — motores, funcional, compatibilidad, FPS y memoria, guardado, multijugador, monetización y exploratorias de juego."
+        },
+        {
+          "nombre": "pruebas-migraciones",
+          "descripcion": "El cómo de probar migraciones de BD: destructivas, bloqueos, reversibilidad, compatibilidad expand/contract y la prueba up/down en una base de QA."
+        },
+        {
+          "nombre": "pruebas-mobile",
+          "descripcion": "El cómo de probar apps Android e iOS — permisos, interrupciones, offline, deep links, push, MASVS, a11y y publicación en las tiendas."
+        },
+        {
+          "nombre": "pruebas-mutacion",
+          "descripcion": "El cómo del mutation testing — mutantes, killed/survived, mutation score vs. coverage, equivalentes, acotar el costo y herramientas (Stryker, mutmut, PITest)."
+        },
+        {
+          "nombre": "pruebas-notificaciones",
+          "descripcion": "El cómo de probar SMS y OTP, WhatsApp, push e in-app — buzón local o número de prueba, contenido, OTP, segmentos SMS (GSM-7/UCS-2), baja y duplicados."
+        },
+        {
+          "nombre": "pruebas-observabilidad",
+          "descripcion": "El cómo de probar la observabilidad — logs estructurados sin PII, métricas Prometheus (RED/USE), trazas OpenTelemetry, healthchecks, SLOs y alertas."
+        },
+        {
+          "nombre": "pruebas-pos",
+          "descripcion": "El cómo de probar POS y hardware — venta, caja y arqueo, pagos y EMV, periféricos, integración fiscal, modo offline y cierres X/Z."
+        },
+        {
+          "nombre": "pruebas-prestashop",
+          "descripcion": "El cómo de probar PrestaShop (1.6, 1.7, 8.x) — back y front office, temas y overrides, checkout, combinaciones y stock, multitienda y Webservice API."
+        },
+        {
+          "nombre": "pruebas-resiliencia",
+          "descripcion": "Referencia del probador-resiliencia — qué simula npm run resiliencia, cómo revisar sus resultados, la exploración manual de fallas y el caos server-side con Toxiproxy."
+        },
+        {
+          "nombre": "pruebas-scalar",
+          "descripcion": "El cómo de probar APIs en Scalar — el MCP generado desde el OpenAPI, el Registry, casos como colección con tests pm (Newman) y su importación."
+        },
+        {
+          "nombre": "pruebas-seo",
+          "descripcion": "El cómo de probar SEO y GEO — indexabilidad, robots, sitemap, canónicas, hreflang, JSON-LD, on-page y GEO (crawlers de IA, llms.txt)."
+        },
+        {
+          "nombre": "pruebas-shopify",
+          "descripcion": "El cómo de probar Shopify — temas (Theme Check), Liquid, checkout y Bogus Gateway, Markets, envíos, descuentos, webhooks con HMAC y Admin API de lectura."
+        },
+        {
+          "nombre": "pruebas-soap",
+          "descripcion": "El cómo de probar servicios SOAP — WSDL, sobre, SOAPAction, 1.1 vs. 1.2, XSD, SOAP Faults, WS-Security y compatibilidad."
+        },
+        {
+          "nombre": "pruebas-tokens",
+          "descripcion": "El cómo de probar tokens de auth (JWT, OAuth/OIDC, sesión, API keys) y tokenización de pagos — firma, claims, ataques (alg none, replay, scope)."
+        },
+        {
+          "nombre": "pruebas-vtex",
+          "descripcion": "El cómo de probar VTEX — workspaces, Store Framework, Catalog, Pricing, Logistics, Payments, Checkout y orderForm, OMS y marketplace."
+        },
+        {
+          "nombre": "pruebas-wordpress",
+          "descripcion": "El cómo de probar WordPress y WooCommerce — WP-CLI, plugins y temas, caché, REST y Store API, checkout, pasarelas de prueba, HPOS y cupones."
+        },
+        {
+          "nombre": "redaccion-manual",
+          "descripcion": "El cómo de crear o actualizar manuales de usuario con evidencia — la app recorrida con Playwright, matriz de evidencia, puntos QA REVIEW, aprobación y salida en Markdown, HTML y Word."
+        },
+        {
+          "nombre": "refinamiento-tres-amigos",
+          "descripcion": "Guía de la conversación principal para la sesión de refinamiento (negocio, desarrollo y QA) — Definition of Ready, INVEST, Example Mapping, criterios con ejemplos y riesgos."
+        },
+        {
+          "nombre": "relevamiento-proyecto",
+          "descripcion": "El cómo de relevar un proyecto ENTERO por MCP — Jira, Confluence, Azure DevOps, GitHub y GitLab con consultas acotadas, módulos, flujos y preguntas abiertas."
+        },
+        {
+          "nombre": "revision-automatizacion",
+          "descripcion": "El cómo de revisar el código de pruebas — reglas y severidad (esperas fijas, .only, aserciones, selectores, estado compartido, Gherkin), decisión y comentarios."
+        },
+        {
+          "nombre": "revision-codigo",
+          "descripcion": "El cómo del code review estático — traer el código sin ejecutarlo, qué mirar por categoría y lenguaje, umbrales, severidad, triage de semgrep/ruff/bandit y comentarios."
+        },
+        {
+          "nombre": "seguridad-api",
+          "descripcion": "El cómo de probar seguridad de APIs (OWASP API Top 10): BOLA/IDOR, BFLA, autenticación, mass assignment, exposición de datos, rate limiting, SSRF, CORS e inventario."
+        },
+        {
+          "nombre": "seguridad-camaras",
+          "descripcion": "El cómo del análisis de seguridad pasivo de cámaras IP/NVR — puertos, servicios inseguros, RTSP sin auth y firmware con CVE."
+        },
+        {
+          "nombre": "verificacion-ambiente",
+          "descripcion": "El cómo de verificar si un ambiente está listo para probar: servicios, versión contra la release, smoke, certificados, DNS, flags y dependencias, con veredicto y qué bloquea."
+        },
+        {
+          "nombre": "verificacion-streaming",
+          "descripcion": "El cómo de probar streaming y playback con ffprobe/ffmpeg — protocolos (RTSP, RTMP, HLS, DASH, WebRTC), códec, FPS, bitrate, continuidad y umbrales."
+        },
+        {
+          "nombre": "virtualizacion-servicios",
+          "descripcion": "El cómo de virtualizar servicios (mocks con mappings de WireMock): stubs desde OpenAPI o grabando la API real, escenarios con estado, fallas y verificar qué llamó la app."
+        },
+        {
+          "nombre": "exportacion-documentos",
+          "descripcion": "Cómo exportar informes de k0lmenIA a Word y PDF formales (portada, índice, marca, versiones y gráficos)."
+        },
+        {
+          "nombre": "pruebas-autenticacion",
+          "descripcion": "Referencia del probador-autenticacion — qué revisa npm run autenticacion, qué tiene efecto, el plan de interfaz y el triage."
+        },
+        {
+          "nombre": "pruebas-concurrencia",
+          "descripcion": "Referencia del probador-concurrencia — escenarios de carrera, tipos de invariante, línea de tiempo y triage."
+        },
+        {
+          "nombre": "pruebas-fechas-regiones",
+          "descripcion": "Cómo probar fechas, zonas horarias, horario de verano, vencimientos y formatos regionales."
+        },
+        {
+          "nombre": "vigilancia-apis",
+          "descripcion": "Cómo vigilar APIs de terceros (línea base, qué comparar, severidad, ejecución programada)."
+        }
+      ],
+      "scripts": [
+        "scripts/generar_informe_generico.py"
+      ]
+    },
+    {
+      "id": "empresa",
+      "nombre": "K0lmenIA Empresa",
+      "plan": "Empresa",
+      "precio": "USD 590 por mes, hasta 10 personas",
+      "plugin": "k0lmenia-empresa",
+      "repo": "underc0delabs/k0lmenIA-Empresa-plugin",
+      "fuente": {
+        "source": "github",
+        "repo": "underc0delabs/k0lmenIA-Empresa-plugin"
+      },
+      "depende": [
+        "k0lmenia",
+        "k0lmenia-pro"
+      ],
+      "resumen": "Para equipos: métricas y tablero de calidad, trazabilidad, evidencias para auditoría, presentaciones, planificación de capacidad, SAP, Salesforce y Dynamics, y gestión en Azure DevOps, Zephyr Scale, QMetry y AIO.",
+      "descripcion": "K0lmenIA Empresa (requiere k0lmenia y k0lmenia-pro): métricas y tablero de calidad, trazabilidad, evidencias para auditoría, presentaciones, capacidad, SAP, Salesforce, Dynamics, Azure DevOps, Zephyr Scale, QMetry y AIO. Licencia comercial.",
+      "web": "https://k0lmena.com/k0lmenia/",
+      "gestion": [
+        "Azure DevOps Test Plans",
+        "Zephyr Scale",
+        "QMetry",
+        "AIO Tests"
+      ],
+      "conectores": [
+        "azure-devops",
+        "qtm4j",
+        "qmetry",
+        "aio-tests",
+        "salesforce"
+      ],
+      "agentes": [
+        {
+          "nombre": "analista-metricas",
+          "descripcion": "Métricas de QA de cualquier fuente (Jira, Xray, Azure DevOps, TestRail, k0lmenaTMT, CSV/Excel o k0lmenIA) — ejecuciones, bugs por criticidad, sprints — en un dashboard interactivo."
+        },
+        {
+          "nombre": "tablero-calidad",
+          "descripcion": "Tablero de calidad de un sprint, release o rango con lo que dejaron las herramientas — aprobados y tendencia, % automatizado, cobertura, bugs, inestables."
+        },
+        {
+          "nombre": "analista-trazabilidad",
+          "descripcion": "Verifica la trazabilidad en Jira, Xray o Azure DevOps (épica, historia, caso, ejecución, bug) — historias sin casos, casos huérfanos, links rotos — con el % por épica."
+        },
+        {
+          "nombre": "auditor-evidencias",
+          "descripcion": "Arma el paquete de evidencia auditable de una release para industrias reguladas — matriz requisito → caso → ejecución → evidencia → bug, ISO 29119-3, IEC 62304, PCI, SOX y ZIP con SHA-256."
+        },
+        {
+          "nombre": "presentador-resultados",
+          "descripcion": "Arma la presentación de resultados de QA (sprint review, release, gerencia) con cierre, tablero, métricas y bugs, en diapositivas HTML (ES/EN, PDF) y PowerPoint editable."
+        },
+        {
+          "nombre": "guia-onboarding",
+          "descripcion": "Arma el plan de incorporación de un QA nuevo — recorrido del producto, entorno, agentes útiles según su rol y primeras tareas — en HTML."
+        },
+        {
+          "nombre": "probador-sap",
+          "descripcion": "Prueba SAP (S/4HANA o ECC) en QA — SAP GUI, Fiori/UI5 (OData), roles y SoD y procesos O2C, P2P y R2R."
+        },
+        {
+          "nombre": "probador-salesforce",
+          "descripcion": "Prueba una org de Salesforce (sandbox) — perfiles, permission sets, validaciones, flows y triggers con la CLI sf, tests de Apex y Lightning por perfil."
+        },
+        {
+          "nombre": "probador-dynamics",
+          "descripcion": "Prueba Dynamics 365 y otros CRM/ERP de bajo código en entorno no productivo — roles, Dataverse, business rules, flows, plugins y procesos end-to-end — por rol."
+        },
+        {
+          "nombre": "planificador-capacidad",
+          "descripcion": "Calcula cuánto se puede probar en un sprint o release según el equipo y el historial, con escenarios y el riesgo de lo que queda afuera."
+        }
+      ],
+      "skills": [
+        {
+          "nombre": "evidencias-auditoria",
+          "descripcion": "El cómo de armar evidencia de pruebas auditable — matriz requisito → caso → ejecución → evidencia → bug, qué pide cada marco (ISO 29119-3, IEC 62304, PCI, SOX) e integridad."
+        },
+        {
+          "nombre": "flujo-auditoria",
+          "descripcion": "Atajo · preparar una auditoría — trazabilidad, paquete de evidencias verificable y presentación."
+        },
+        {
+          "nombre": "flujo-post-release",
+          "descripcion": "Atajo · después de salir a producción — errores nuevos, feedback de usuarios y trazabilidad de lo que salió."
+        },
+        {
+          "nombre": "flujo-release",
+          "descripcion": "Atajo · release o regresión — ambiente, mapa de riesgo, selección de casos, ejecución, fallos, cierre y presentación."
+        },
+        {
+          "nombre": "flujo-sprint",
+          "descripcion": "Atajo · cierre de sprint — métricas, tablero de calidad, informe de cierre y presentación para la review."
+        },
+        {
+          "nombre": "presentacion-resultados",
+          "descripcion": "El cómo de presentar resultados de QA — qué contar según quién escucha, una idea por diapositiva, qué gráfico para cada dato y el presentacion.json."
+        },
+        {
+          "nombre": "pruebas-dynamics",
+          "descripcion": "El cómo de probar Dynamics 365 y otros CRM/ERP de bajo código — soluciones, roles, business rules, flows, plugins, Dataverse y procesos end-to-end."
+        },
+        {
+          "nombre": "pruebas-salesforce",
+          "descripcion": "El cómo de probar Salesforce — sandboxes, perfiles, permission sets, sharing y FLS, validaciones, flows, Apex y límites, y Lightning con Playwright."
+        },
+        {
+          "nombre": "pruebas-sap",
+          "descripcion": "El cómo de probar SAP — SAP GUI y Fiori/UI5, mandantes y transportes, roles (PFCG, SoD), procesos O2C/P2P/R2R, jobs e IDocs."
+        },
+        {
+          "nombre": "resumen-diario",
+          "descripcion": "Configura y manda el resumen diario de QA a Slack y Teams (pruebas, bugs, producción, sprint, ambiente), programado."
+        },
+        {
+          "nombre": "trazabilidad-herramientas",
+          "descripcion": "El cómo de auditar la trazabilidad épica → historia → caso → ejecución → bug en Jira, Xray o Azure DevOps — reglas, severidad y % por épica."
+        },
+        {
+          "nombre": "planificacion-capacidad",
+          "descripcion": "Cómo estimar cuánto se puede probar en un sprint o release y armar escenarios con riesgo."
+        }
+      ],
+      "scripts": [
+        "scripts/gestion/para_azure_devops.py",
+        "scripts/gestion/adaptadores/aio.py",
+        "scripts/gestion/adaptadores/qtm4j.py",
+        "scripts/gestion/adaptadores/zephyr_scale.py"
+      ]
+    }
+  ]
+}

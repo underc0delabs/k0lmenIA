@@ -154,6 +154,7 @@ Los skills se cargan solo cuando hacen falta.
 | documentacion-proyecto | Lectura del repositorio, mapa funcional, estructura de input/documentacion/ y dossier, modos barrido y actualizar | documentador-proyecto |
 | base-conocimiento | Armar y mantener la base de conocimiento del proyecto en input/documentacion/ y la rutina ágil cuando cambian los requerimientos | la conversación principal |
 | ejecucion-manual | Ejecución manual acompañada: caso por caso y paso por paso, resultados, evidencia, tiempos, bugs, pausa y retomar | la conversación principal (`/k0lmenia:ejecucion-manual`) y asistente-ejecucion-manual |
+| setup | Planes de k0lmenIA: qué plan tenés, a cuáles tenés acceso (Pro, Empresa) y qué suma cada uno; instala los que corresponden y configura k0lmenaTMT | la conversación principal (`/k0lmenia:setup`) |
 | guia-pruebas | Asistente interactivo para elegir qué probar y con qué agente o skill | la conversación principal |
 | empezar | Bienvenida y puesta en marcha: preparar el proyecto, revisar el entorno, conectar herramientas y elegir la primera tarea | la conversación principal (`/k0lmenia:empezar` en el plugin) |
 
