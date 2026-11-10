@@ -7,6 +7,8 @@ Los cambios más relevantes, del más nuevo al más viejo. El detalle de cada un
 - **Pro y Empresa se suman como plugins aparte** (`k0lmenia-pro` y `k0lmenia-empresa`) desde el mismo marketplace `k0lmenia`: el core gratis queda instalado y cada plan pago suma sus agentes, skills y conectores encima.
 - **`/k0lmenia:setup`** muestra qué plan tenés, a cuáles tenés acceso (según tu acceso a sus repos en GitHub) y qué suma cada uno, instala los que te corresponden y configura k0lmenaTMT. Desde una terminal: `k0lmenia planes`.
 - Los agentes del core usan la versión completa de su texto: si pedís algo de un plan que no tenés, te dice en cuál está.
+- **`/k0lmenia:options`**: cuadro comparativo de los tres planes (una fila por capacidad) y todas las opciones de cada uno: agentes, skills y conectores. Desde una terminal: `k0lmenia planes --opciones`.
+- **`/k0lmenia:setup` arranca por tu proyecto**: te pide la web principal, la recorre, te recomienda qué agentes y planes te sirven y te muestra checks para activar los plugins de los planes a los que tenés acceso. Desde una terminal: `k0lmenia planes --recomendar <url>`.
 
 ## 2026-10-30 — K0lmenIA Light
 

@@ -203,7 +203,7 @@ function avisoVersion() {
 /** Aviso para el contexto de la sesión si el proyecto todavía no se preparó (primer uso del plugin en esta carpeta). */
 function avisoPrimerUso() {
   if (fs.existsSync(path.join(PROYECTO, '.env')) || fs.existsSync(path.join(PROYECTO, 'input'))) return '';
-  return '\nEsta carpeta todavía no está preparada para k0lmenIA (no tiene input/, output/ ni .env). Cuando la persona pida algo de QA o pregunte cómo empezar, sugerile escribir `/k0lmenia:empezar` (prepara el proyecto, revisa lo que falta y la lleva a su primera tarea).\n';
+  return '\nEsta carpeta todavía no está preparada para k0lmenIA (no tiene input/, output/ ni .env). Cuando la persona pida algo de QA o pregunte cómo empezar, sugerile empezar por `/k0lmenia:setup` (pide la web del proyecto, recomienda qué usar y activa los plugins de su plan) y seguir con `/k0lmenia:empezar` (prepara el proyecto, revisa lo que falta y la lleva a su primera tarea). Para ver qué trae cada plan: `/k0lmenia:options`.\n';
 }
 
 /** input/: copia los ejemplos del plugin que falten en el proyecto (README, colecciones de demo, guiones, planes…).

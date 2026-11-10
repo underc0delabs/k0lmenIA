@@ -144,3 +144,45 @@ def test_acceso_distingue_sin_permiso(monkeypatch):
     assert planes.acceso("x/y")[0] == "no"
     monkeypatch.setattr(planes.subprocess, "run", lambda *a, **k: R(128, "fatal: unable to access: Could not resolve host"))
     assert planes.acceso("x/y")[0] == "desconocido"
+
+
+def test_opciones_compara_y_lista_todo():
+    import planes
+    texto = planes.opciones({"planes": [{"id": "light", "estado": "instalado"}, {"id": "pro", "estado": "disponible"},
+                                        {"id": "empresa", "estado": "bloqueado"}]})
+    assert "## Comparación" in texto and "## Todas las opciones" in texto
+    assert "| **En esta PC** | ✅ instalado | ⬇️ disponible | 🔒 sin acceso |" in texto
+    for p in CATALOGO["planes"]:  # todas las opciones de todos los planes
+        for a in p["agentes"]:
+            assert f"| `{a['nombre']}` |" in texto
+        for s in p["skills"]:
+            assert f"| `{s['nombre']}` |" in texto
+    total = sum(len(p["agentes"]) for p in CATALOGO["planes"])
+    assert f"| Agentes | {len(CATALOGO['planes'][0]['agentes'])} |" in texto and f"| {total} |" in texto
+    # cada fila de la tabla tiene una celda por plan (ningún "|" suelto en las descripciones)
+    filas = [l for l in texto.splitlines() if l.startswith("| `")]
+    assert all(l.replace("\|", "").count("|") == 3 for l in filas)
+
+
+def test_recomendar_segun_la_web():
+    import planes
+    html = ("<html><head><title>Mi tienda &amp; más</title><script src='https://cdn.shopify.com/x.js'></script>"
+            "<script src='https://www.googletagmanager.com/gtm.js'></script></head><body>"
+            "<form><input type='password'></form><a href='/cart'>Carrito</a></body></html>")
+    d = planes.recomendar_desde("https://tienda.test", html, {"Strict-Transport-Security": "max-age=1"})
+    assert d["titulo"] == "Mi tienda & más"
+    ids = {s["id"] for s in d["senales"]}
+    assert {"shopify", "analytics", "login", "ecommerce"} <= ids and "seguridad" in ids  # faltan CSP y nosniff
+    agentes = {r["agente"]: r["plan"] for r in d["recomendados"]}
+    assert agentes["probador-shopify"] == "pro" and agentes["web-mapper"] == "light"
+    assert d["plan_sugerido"] == "pro" and "probador-sap" not in agentes
+    d = planes.recomendar_desde("https://erp.test", "<script src='/resources/sap-ui-core.js'></script>")
+    assert d["plan_sugerido"] == "empresa" and any(r["agente"] == "probador-sap" for r in d["recomendados"])
+
+
+def test_las_senales_recomiendan_agentes_que_existen():
+    import planes
+    todos = {a["nombre"] for p in CATALOGO["planes"] for a in p["agentes"]}
+    nombrados = {a for *_, agentes in planes.SENALES for a in agentes} | {a for a, _ in planes.SIEMPRE}
+    nombrados |= {"analista-seguridad", "pentester-web"}
+    assert nombrados <= todos, nombrados - todos

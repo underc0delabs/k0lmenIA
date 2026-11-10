@@ -45,10 +45,10 @@ Cuando termines el paso 5, regeneralo con `--analisis output/entorno/analisis.js
 
 ## Paso 3b — Su plan (solo plugin)
 
-Corré `k0lmenia planes --json` y, si tiene acceso a un plan que todavía no instaló (Pro o Empresa), seguí con el skill
-`setup` para instalarlo antes de conectar herramientas: suma agentes, skills y conectores. Si ya tiene todo lo que le
-corresponde, decilo en una línea y seguí. No insistas con los planes pagos: el skill `setup` los muestra cuando la persona
-lo pide.
+Si la persona todavía no pasó por el skill `setup` en esta carpeta, seguí con él ahora: pide la web principal del
+proyecto, la recorre, recomienda qué usar y activa los plugins de los planes a los que tiene acceso. Al terminar, volvé
+acá al paso 4. Si ya lo hizo, corré `k0lmenia planes --json --sin-red`, decí en una línea qué planes tiene activos y
+seguí. No insistas con los planes pagos.
 
 ## Paso 4 — Conectar sus herramientas
 
