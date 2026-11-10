@@ -2,6 +2,92 @@
   "_info": "Generado por scripts/catalogo_planes.py (repo de Empresa). No se edita a mano: se cambia el reparto ahí, se regenera y se copia a los tres repos.",
   "marketplace": "k0lmenia",
   "compra": "https://k0lmena.com/k0lmenia/",
+  "capacidades": [
+    {
+      "nombre": "Análisis de historias, casos manuales y BDD, revisión de casos",
+      "desde": "light"
+    },
+    {
+      "nombre": "Bugs: redacción, triage y duplicados",
+      "desde": "light"
+    },
+    {
+      "nombre": "Ejecución E2E en el navegador y de API (REST, GraphQL, gRPC)",
+      "desde": "light"
+    },
+    {
+      "nombre": "Ejecución manual acompañada",
+      "desde": "light"
+    },
+    {
+      "nombre": "Automatización sin tokens con k0lmena (web y API)",
+      "desde": "light"
+    },
+    {
+      "nombre": "Gestión en Xray y k0lmenaTMT; Jira",
+      "desde": "light"
+    },
+    {
+      "nombre": "Accesibilidad, SEO, UX y rendimiento web",
+      "desde": "pro"
+    },
+    {
+      "nombre": "Seguridad: pentest web, APIs, SAST, dependencias",
+      "desde": "pro"
+    },
+    {
+      "nombre": "Mobile, desktop, cross-browser y pixel perfect",
+      "desde": "pro"
+    },
+    {
+      "nombre": "E-commerce: Shopify, VTEX, WordPress/WooCommerce, PrestaShop, pagos",
+      "desde": "pro"
+    },
+    {
+      "nombre": "IA, chatbots, IVR, búsqueda, streaming, notificaciones",
+      "desde": "pro"
+    },
+    {
+      "nombre": "Causa raíz, logs, producción, observabilidad, resiliencia",
+      "desde": "pro"
+    },
+    {
+      "nombre": "Performance (k6, Artillery, JMeter), fuzzing, contratos, mutación",
+      "desde": "pro"
+    },
+    {
+      "nombre": "Estrategia, mapa de riesgo, selección de casos, informe de cierre",
+      "desde": "pro"
+    },
+    {
+      "nombre": "Confluence, Figma, GitHub, GitLab, Linear, Sentry, Datadog y más",
+      "desde": "pro"
+    },
+    {
+      "nombre": "Métricas de QA, tablero de calidad y resumen diario",
+      "desde": "empresa"
+    },
+    {
+      "nombre": "Trazabilidad y evidencias para auditoría (ISO 29119, PCI, SOX)",
+      "desde": "empresa"
+    },
+    {
+      "nombre": "Presentaciones de resultados y planificación de capacidad",
+      "desde": "empresa"
+    },
+    {
+      "nombre": "SAP, Salesforce y Dynamics 365",
+      "desde": "empresa"
+    },
+    {
+      "nombre": "Azure DevOps Test Plans, Zephyr Scale, QMetry y AIO Tests",
+      "desde": "empresa"
+    },
+    {
+      "nombre": "Onboarding guiado del equipo",
+      "desde": "empresa"
+    }
+  ],
   "planes": [
     {
       "id": "light",
@@ -139,7 +225,11 @@
         },
         {
           "nombre": "setup",
-          "descripcion": "Muestra qué plan de k0lmenIA tiene la persona, a qué planes tiene acceso (Pro, Empresa) y qué suma cada uno, instala los que le corresponden y configura k0lmenaTMT."
+          "descripcion": "Setup inicial de k0lmenIA — pide la web principal del proyecto, la recorre, recomienda qué agentes y plugins (Pro, Empresa) le sirven, muestra checks para activar los planes a los que tiene acceso, los instala y configur"
+        },
+        {
+          "nombre": "options",
+          "descripcion": "Muestra el cuadro comparativo de los planes de k0lmenIA (gratis, Pro y Empresa) y todas las opciones de cada uno — agentes, skills, conectores y gestión de pruebas — con lo que hay instalado en esta PC."
         }
       ],
       "scripts": []
