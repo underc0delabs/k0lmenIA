@@ -12,6 +12,13 @@ import os  # noqa: E402
 
 os.environ["K0LMENIA_PORTAL"] = "0"
 
+# Los planes instalados en esta PC (~/.k0lmenia/planes.json) no cambian lo que prueban los tests, y el aviso diario de
+# planes (scripts/planes.py --aviso) no sale a la red.
+import tempfile  # noqa: E402
+
+os.environ["K0LMENIA_REGISTRO"] = str(Path(tempfile.mkdtemp(prefix="k0lmenia-registro-")) / "planes.json")
+os.environ["K0LMENIA_SIN_AVISO"] = "1"
+
 
 # ------------------------------------------------------------------ traducciones (modo estricto, lo usa el CI)
 # Con K0LMENIA_I18N_ESTRICTO=1, cada texto que quede en español en la versión en inglés de los informes que arman

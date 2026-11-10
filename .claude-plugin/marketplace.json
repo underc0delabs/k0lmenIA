@@ -3,7 +3,7 @@
   "owner": {
     "name": "Underc0de"
   },
-  "description": "Marketplace de K0lmenIA Light: el plugin se publica solo en la rama plugin de este repo en cada cambio de main.",
+  "description": "K0lmenIA: agentes de QA para Claude Code, en español. El core es gratis; Pro y Empresa se suman como plugins aparte para quien tiene acceso a su repo (/k0lmenia:setup).",
   "plugins": [
     {
       "name": "k0lmenia",
@@ -12,8 +12,28 @@
         "repo": "underc0delabs/k0lmenIA",
         "ref": "plugin"
       },
-      "description": "K0lmenIA Light: agentes de QA para Claude Code, en español. Documentación del proyecto, análisis de historias, casos de prueba (Excel y BDD), revisión de casos, triage de bugs, ejecución E2E y de API (REST, GraphQL y gRPC), ejecución manual guiada, automatización sin tokens con k0lmena, gestión en Xray y k0lmenaTMT, e informes en español e inglés.",
+      "description": "K0lmenIA: agentes de QA para Claude Code, en español. Documentación del proyecto, análisis de historias, casos de prueba (Excel y BDD), revisión de casos, triage de bugs, ejecución E2E y de API (REST, GraphQL y gRPC), ejecución manual guiada, automatización sin tokens con k0lmena, gestión en Xray y k0lmenaTMT, e informes en español e inglés. Pro y Empresa se suman como plugins aparte (/k0lmenia:setup).",
       "homepage": "https://underc0delabs.github.io/k0lmenIA/",
+      "category": "testing"
+    },
+    {
+      "name": "k0lmenia-pro",
+      "source": {
+        "source": "github",
+        "repo": "underc0delabs/k0lmenIA-PRO-plugin"
+      },
+      "description": "K0lmenIA Pro (requiere el plugin k0lmenia): suma 88 agentes de QA en español — accesibilidad, seguridad, performance, mobile, desktop, e-commerce, APIs avanzadas, IA y chatbots, causa raíz, cobertura, producción y más. Licencia comercial.",
+      "homepage": "https://k0lmena.com/k0lmenia/",
+      "category": "testing"
+    },
+    {
+      "name": "k0lmenia-empresa",
+      "source": {
+        "source": "github",
+        "repo": "underc0delabs/k0lmenIA-Empresa-plugin"
+      },
+      "description": "K0lmenIA Empresa (requiere k0lmenia y k0lmenia-pro): métricas y tablero de calidad, trazabilidad, evidencias para auditoría, presentaciones, capacidad, SAP, Salesforce, Dynamics, Azure DevOps, Zephyr Scale, QMetry y AIO. Licencia comercial.",
+      "homepage": "https://k0lmena.com/k0lmenia/",
       "category": "testing"
     }
   ]

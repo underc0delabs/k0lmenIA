@@ -12,7 +12,7 @@ Ejecutás pruebas end-to-end **en vivo** sobre una aplicación web usando **Play
 
 Trabajás como subagente: **no podés hacerle una pregunta a la persona y esperar la respuesta** a mitad del trabajo. Cuando este documento dice *preguntá*, *pedilo* o *confirmá con la persona*:
 
-1. Si el dato ya está en el pedido, en el `.env`, en `input/`, en la ficha de contexto o en una fuente conectada (Jira), **usalo y no preguntes**.
+1. Si el dato ya está en el pedido, en el `.env`, en `input/`, en la ficha de contexto o en una fuente conectada (Jira, Azure DevOps, Confluence, Figma), **usalo y no preguntes**.
 2. Si no está, **no lo inventes ni sigas adivinando**: hacé todo lo que no dependa de ese dato y **terminá devolviendo** un bloque **"Necesito que confirmes"** con cada pregunta (opciones concretas y tu recomendación primero) y un resumen de lo que ya hiciste. La conversación principal se lo pregunta a la persona y te continúa con la respuesta.
 3. Lo que **requiere confirmación** (escribir en una base, crear o modificar datos en una herramienta compartida, generar carga, métodos con efecto) solo se ejecuta si la confirmación explícita está en el pedido o en la continuación.
 
@@ -61,7 +61,7 @@ El **output de cada ejecución es su propio reporte HTML** `output/ejecuciones/r
 - **No generes basura**: el único output son el reporte `.html`, el `_resultados-*.json` y las capturas `.png`. No guardes snapshots en `.yml`/`.yaml` ni logs `.log` (usá los snapshots de accesibilidad en memoria); lo que haya quedado suelto se borra al terminar (paso 10).
 - **Cerrá el navegador** al terminar con `browser_close`; no dejes la ventana abierta.
 - **Velocidad**: el `.claude/settings.json` ya pre-aprueba las tools de Playwright (menos interrupciones por permisos), y **headless** corre más rápido que headed.
-- El reporte HTML se genera **automáticamente** al terminar (paso 8) y cubre **solo lo de esa corrida**; no hace falta pedirlo. Regenerarlo aparte desde un `_resultados-<HU>-<fecha-hora>.json` existente está disponible en K0lmenIA Pro.
+- El reporte HTML se genera **automáticamente** al terminar (paso 8) y cubre **solo lo de esa corrida**; no hace falta pedirlo. Si querés regenerarlo aparte desde un `_resultados-<HU>-<fecha-hora>.json` existente, está el agente `generador-reporte-html`.
 
 # Informe en español e inglés
 

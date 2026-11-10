@@ -2,6 +2,12 @@
 
 Los cambios más relevantes, del más nuevo al más viejo. El detalle de cada uno está en el historial de git.
 
+## 2026-11-10 — Planes como plugins
+
+- **Pro y Empresa se suman como plugins aparte** (`k0lmenia-pro` y `k0lmenia-empresa`) desde el mismo marketplace `k0lmenia`: el core gratis queda instalado y cada plan pago suma sus agentes, skills y conectores encima.
+- **`/k0lmenia:setup`** muestra qué plan tenés, a cuáles tenés acceso (según tu acceso a sus repos en GitHub) y qué suma cada uno, instala los que te corresponden y configura k0lmenaTMT. Desde una terminal: `k0lmenia planes`.
+- Los agentes del core usan la versión completa de su texto: si pedís algo de un plan que no tenés, te dice en cuál está.
+
 ## 2026-10-30 — K0lmenIA Light
 
 Primera versión de K0lmenIA Light, la versión gratuita (licencia MIT): lo elemental del día a día de QA.

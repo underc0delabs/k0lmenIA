@@ -1,11 +1,11 @@
 ---
 name: pruebas-grpc
-description: El cómo de probar APIs gRPC — Protobuf, los cuatro modos de RPC, status codes, deadlines, TLS/mTLS, gRPC-Web y grpcurl; más WebSocket. La usan ejecutor-api y api-mapper.
+description: El cómo de probar APIs gRPC — Protobuf, los cuatro modos de RPC, status codes, deadlines, TLS/mTLS, gRPC-Web y grpcurl; más WebSocket. La usan ejecutor-api, api-mapper y generador-casos-api.
 ---
 
 # Pruebas de gRPC (y APIs de tiempo real)
 
-gRPC no es REST: usa **HTTP/2 + Protocol Buffers** (binario), con un **contrato fuerte en el `.proto`**, **cuatro modos de RPC** y **status codes propios** (no HTTP). Se suma a la familia de API (`ejecucion-api`); el detalle de WebSocket está disponible en K0lmenIA Pro.
+gRPC no es REST: usa **HTTP/2 + Protocol Buffers** (binario), con un **contrato fuerte en el `.proto`**, **cuatro modos de RPC** y **status codes propios** (no HTTP). Se suma a la familia de API (`ejecucion-api`); para WebSocket, el detalle está en `pruebas-async`.
 
 ## 1. El contrato: Protocol Buffers (.proto)
 
@@ -40,7 +40,7 @@ gRPC no es REST: usa **HTTP/2 + Protocol Buffers** (binario), con un **contrato 
 ## 6. Compatibilidad del esquema (contract testing nativo)
 
 - La compatibilidad de Protobuf es por **número de campo**: **agregar** un campo nuevo es compatible; **reusar** un número viejo o **cambiar el tipo** de un campo rompe a los clientes viejos; los campos removidos deben quedar **reservados** (`reserved`).
-- Cambiar un `enum` o un `oneof` sin cuidado rompe. Esto es contract testing: el `.proto` es el contrato.
+- Cambiar un `enum` o un `oneof` sin cuidado rompe. Esto es contract testing (ver `pruebas-contratos`): el `.proto` es el contrato.
 
 ## 7. gRPC-Web e interceptores
 
@@ -49,12 +49,12 @@ gRPC no es REST: usa **HTTP/2 + Protocol Buffers** (binario), con un **contrato 
 
 ## 8. WebSocket (API de tiempo real)
 
-- Para APIs de tiempo real por **WebSocket** (suscripciones, push): reconexión sin perder/duplicar, heartbeat, orden y autorización por conexión — el detalle está disponible en K0lmenIA Pro.
+- Para APIs de tiempo real por **WebSocket** (suscripciones, push): reconexión sin perder/duplicar, heartbeat, orden y autorización por conexión — el detalle está en `pruebas-async`. Súmalo cuando la API tenga canales en vivo.
 
 ## 9. Automatizar
 
 - **grpcurl** (CLI) para invocar métodos con el `.proto` o por reflection; **Postman** soporta gRPC; **Buf** para lint y **breaking-change detection** del `.proto`.
-- Derivá los casos desde el `.proto` (por método y modo, status esperados, validación, auth); el `ejecutor-api` los corre; el `api-mapper` los automatiza en k0lmena.
+- El `generador-casos-api` deriva casos desde el `.proto` (por método y modo, status esperados, validación, auth); el `ejecutor-api` los corre; el `api-mapper` los automatiza en k0lmena.
 - Datos de prueba: un request válido, uno inválido por tipo/obligatorio, uno que dispare cada status, un stream vacío y uno largo.
 
 ## 10. Bugs típicos de gRPC

@@ -135,7 +135,7 @@ def test_el_plugin_lleva_el_changelog_y_muestra_las_novedades_al_actualizarse(tm
     env.update(CLAUDE_PLUGIN_DATA=str(datos), K0LMENIA_PORTAL="0")
 
     def sesion():
-        return subprocess.run(["node", str(plugin / "bin" / "k0lmenia"), "preparar", "--contexto"], cwd=proyecto, env=env,
+        return subprocess.run(["node", str(plugin / ("bin" if cp.ES_CORE else "lib") / "k0lmenia"), "preparar", "--contexto"], cwd=proyecto, env=env,
                               capture_output=True, text=True, encoding="utf-8").stdout
     assert "se actualizó" not in sesion()  # recién instalado: solo marca
     entradas = nov.entradas((plugin / "CHANGELOG.md").read_text(encoding="utf-8"))
@@ -144,6 +144,6 @@ def test_el_plugin_lleva_el_changelog_y_muestra_las_novedades_al_actualizarse(tm
     salida = sesion()
     assert "hay 2 novedad(es)" in salida and entradas[0]["titulo"][:40] in salida
     assert "se actualizó" not in sesion()
-    r = subprocess.run(["node", str(plugin / "bin" / "k0lmenia"), "novedades", "--todas", "--sin-html"], cwd=proyecto, env=env,
+    r = subprocess.run(["node", str(plugin / ("bin" if cp.ES_CORE else "lib") / "k0lmenia"), "novedades", "--todas", "--sin-html"], cwd=proyecto, env=env,
                        capture_output=True, text=True, encoding="utf-8")
     assert r.returncode == 0 and entradas[-1]["encabezado"] in r.stdout

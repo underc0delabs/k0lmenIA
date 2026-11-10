@@ -26,23 +26,37 @@ def test_transformar_comandos_y_rutas():
     assert cp.transformar(t) == t  # idempotente: no duplica prefijos
 
 
+def _ejecutable(plugin):
+    """El comando k0lmenia: bin/ en el core (y en el repo); lib/ en un add-on, para no pisar el del core en el PATH."""
+    return plugin / ("bin" if (plugin / "bin" / "k0lmenia").exists() else "lib") / "k0lmenia"
+
+
 def test_armar_el_plugin(tmp_path):
     destino = cp.construir(tmp_path / "plugin")
     manifiesto = json.loads((destino / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
-    catalogo = json.loads((destino / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8"))
-    assert manifiesto["name"] == "k0lmenia" and "version" not in manifiesto  # sin versión: cada commit es una versión
-    assert catalogo["plugins"][0] == {**catalogo["plugins"][0], "name": "k0lmenia", "source": "./"}
+    assert manifiesto["name"] == cp.NOMBRE and "version" not in manifiesto  # sin versión: cada commit es una versión
     agentes = list((destino / "agents").glob("*.md"))
-    assert len(agentes) == len(list((RAIZ / ".claude" / "agents").glob("*.md")))
-    assert (destino / "skills" / "estandares" / "SKILL.md").exists()
+    assert sorted(a.stem for a in agentes) == sorted(cp.AGENTES_PLAN)  # solo los de su plan
+    assert sorted(p.name for p in (destino / "skills").iterdir()) == sorted(cp.SKILLS_PLAN + (["estandares"] if cp.ES_CORE else []))
     sin_transformar = [a.name for a in agentes if "python scripts/" in a.read_text(encoding="utf-8")
                        or "npm run " in a.read_text(encoding="utf-8")]
     assert not sin_transformar, f"agentes con comandos del repo: {sin_transformar}"
     hooks = json.loads((destino / "hooks" / "hooks.json").read_text(encoding="utf-8"))
-    assert "preparar" in hooks["hooks"]["SessionStart"][0]["hooks"][0]["command"]
-    mcp = json.loads((destino / ".mcp.json").read_text(encoding="utf-8"))
-    assert "${CLAUDE_PLUGIN_ROOT}" in mcp["mcpServers"]["playwright"]["args"][0]
-    assert (destino / "bin" / "k0lmenia").exists() and (destino / "scripts" / "_i18n.py").exists()
+    comando = hooks["hooks"]["SessionStart"][0]["hooks"][0]["command"]
+    assert (destino / "scripts" / "_i18n.py").exists() and (destino / "catalogo-planes.json").exists()
+    if cp.ES_CORE:
+        catalogo = json.loads((destino / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8"))
+        assert catalogo["name"] == "k0lmenia" and [p["name"] for p in catalogo["plugins"]] == ["k0lmenia", "k0lmenia-pro", "k0lmenia-empresa"]
+        assert catalogo["plugins"][0]["source"] == "./"
+        assert "preparar" in comando and "dependencies" not in manifiesto
+        mcp = json.loads((destino / ".mcp.json").read_text(encoding="utf-8"))
+        assert "${CLAUDE_PLUGIN_ROOT}" in mcp["mcpServers"]["playwright"]["args"][0]
+        assert (destino / "bin" / "k0lmenia").exists() and not (destino / "lib").exists()
+    else:
+        # Un add-on: depende del core (y Empresa de Pro), se registra al iniciar la sesión y no trae lo que trae el core.
+        assert manifiesto["dependencies"][0] == "k0lmenia" and f"registrar {cp.PLAN}" in comando
+        assert not (destino / "bin").exists() and (destino / "lib" / "k0lmenia").exists()
+        assert not (destino / ".mcp.json").exists() and not (destino / ".claude-plugin" / "marketplace.json").exists()
     assert not any(destino.rglob("node_modules")) and not any(destino.rglob("__pycache__"))
     assert not (destino / "scripts" / "construir_plugin.py").exists()
     # Volver a armar sobre la misma carpeta la limpia (lo que hace la publicación en la rama plugin).
@@ -53,7 +67,7 @@ def test_armar_el_plugin(tmp_path):
 
 def _k0lmenia(plugin, proyecto, *args):
     env = {k: v for k, v in os.environ.items() if k not in ("K0LMENIA_PROYECTO", "K0LMENIA_CODIGO")}
-    return subprocess.run(["node", str(plugin / "bin" / "k0lmenia"), *args], cwd=proyecto, env=env,
+    return subprocess.run(["node", str(_ejecutable(plugin)), *args], cwd=proyecto, env=env,
                           capture_output=True, text=True, encoding="utf-8")
 
 
@@ -147,12 +161,20 @@ def test_actualizar_k0lmena_sin_perder_cambios(tmp_path):
 
 
 def test_marketplace_de_main_apunta_a_la_rama_plugin():
-    """`claude plugin marketplace add underc0delabs/k0lmenIA` (sin #plugin) lee este catálogo, que trae el plugin de la rama."""
-    m = json.loads((RAIZ / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8"))
-    entrada = m["plugins"][0]
-    assert m["name"] == entrada["name"] == "k0lmenia" and m.get("description")
-    assert entrada["source"] == {"source": "github", "repo": cp.REPO, "ref": "plugin"}
-    assert entrada["description"] == cp.DESCRIPCION  # un solo lugar para la descripción
+    """El catálogo `k0lmenia` vive en el repo público (core): trae los tres plugins. Los repos de Pro y Empresa no tienen
+    catálogo propio: sus plugins se instalan desde ese."""
+    archivo = RAIZ / ".claude-plugin" / "marketplace.json"
+    if not cp.ES_CORE:
+        assert not archivo.exists()
+        return
+    m = json.loads(archivo.read_text(encoding="utf-8"))
+    assert m["name"] == "k0lmenia" and m.get("description")
+    core, pro, empresa = m["plugins"]
+    assert core["name"] == "k0lmenia" and core["source"] == {"source": "github", "repo": cp.REPO, "ref": "plugin"}
+    assert core["description"] == cp.DESCRIPCION  # un solo lugar para la descripción: catalogo-planes.json
+    assert pro["name"] == "k0lmenia-pro" and pro["source"]["repo"].endswith("-plugin")
+    assert empresa["name"] == "k0lmenia-empresa" and empresa["source"]["repo"].endswith("-plugin")
+    assert m == cp.marketplace(desde_rama=False), "regeneralo con: python scripts/construir_plugin.py --marketplace-main"
 
 
 def test_icono_privacidad_y_bienvenida(tmp_path):
@@ -163,8 +185,9 @@ def test_icono_privacidad_y_bienvenida(tmp_path):
     assert png[:8] == b"\x89PNG\r\n\x1a\n" and ancho == alto >= 512 and len(png) < 2_000_000
     manifiesto = json.loads((destino / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
     assert manifiesto["privacyPolicyUrl"].startswith("https://")
-    assert (destino / "skills" / "empezar" / "SKILL.md").exists()
-    assert "/k0lmenia:empezar" in (destino / "README.md").read_text(encoding="utf-8")
+    leeme = (destino / "README.md").read_text(encoding="utf-8")
+    assert (destino / "skills" / "empezar" / "SKILL.md").exists() == cp.ES_CORE
+    assert ("/k0lmenia:empezar" if cp.ES_CORE else "/k0lmenia:setup") in leeme
     assert "#plugin" not in (destino / "README.md").read_text(encoding="utf-8").split("## Actualizar")[0].split("(Si lo")[0]
     # Primer uso: en una carpeta sin preparar, el contexto de inicio sugiere /k0lmenia:empezar; ya preparada, no.
     vacio = tmp_path / "vacio"

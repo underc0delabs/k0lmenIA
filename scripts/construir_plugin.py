@@ -1,33 +1,41 @@
 #!/usr/bin/env python3
 """
-Arma k0lmenIA como plugin de Claude Code (y su marketplace) a partir del repo, sin cambiar el repo.
+Arma el plugin de Claude Code de este repo a partir del repo, sin cambiar el repo. Es el mismo script en los tres repos
+(K0lmenIA, Pro y Empresa): el plan de cada repo está en .claude-plugin/plan.json y lo que trae cada plan, en
+catalogo-planes.json (lo arma scripts/catalogo_planes.py en el repo de Empresa).
 
 Uso (desde la raíz del repo):
     python scripts/construir_plugin.py [--destino dist/plugin]
+    python scripts/construir_plugin.py --marketplace-main     reescribe .claude-plugin/marketplace.json (solo el core)
 
-El resultado es una carpeta lista para publicar (la publica el workflow plugin.yml en la rama `plugin`):
+Dos tipos de plugin, todos en el marketplace `k0lmenia` (el .claude-plugin/marketplace.json del repo público):
 
-    .claude-plugin/marketplace.json   el catálogo de la rama (para quien instaló con underc0delabs/k0lmenIA#plugin); el de
-                                      siempre es .claude-plugin/marketplace.json de main, que apunta a esta rama
-    .claude-plugin/plugin.json        el plugin "k0lmenia" (sin versión fija: cada publicación es una versión)
-    .claude-plugin/icon.png           el ícono (el de main)
-    agents/ skills/                   los de .claude/, con los comandos pasados al plugin (ver más abajo)
-    skills/estandares/                los estándares de CLAUDE.md (un plugin no carga CLAUDE.md)
-    hooks/hooks.json                  al iniciar la sesión: dependencias de Python y el contexto de k0lmenIA
-    .mcp.json                         los conectores de siempre (Playwright y Atlassian), desde el plugin
-    bin/k0lmenia                      el comando que reemplaza a npm run y python scripts/… (queda en el PATH)
-    hooks/permisos.json               los permisos de .claude/settings.json del repo, con los comandos del plugin
-                                      (k0lmenia init los suma al .claude/settings.json del proyecto)
-    scripts/ herramientas/ plantillas/ input/ output/ .env.example package.json requirements.txt
-                                      el código; input/ con los ejemplos versionados (k0lmenia init los copia sin pisar
-                                      nada) y output/ solo con la estructura de carpetas
+  core (k0lmenia, gratis)           agentes y skills del plan gratis, el comando k0lmenia (bin/), los conectores de
+                                    siempre (Playwright y Atlassian), el skill estandares y el hook de inicio de sesión
+  add-on (k0lmenia-pro, -empresa)   solo los agentes y skills que SUMA su plan, y su copia completa del código en
+                                    lib/k0lmenia + scripts/ herramientas/ plantillas/. Declara el core (y Pro, en Empresa)
+                                    como dependencia: Claude Code los instala solos. Al iniciar la sesión se registra en
+                                    ~/.k0lmenia/planes.json y el comando k0lmenia del core le pasa los comandos.
+
+El resultado es una carpeta lista para publicar (la publica el workflow plugin.yml):
+
+    .claude-plugin/plugin.json        el plugin (sin versión fija: cada publicación es una versión)
+    .claude-plugin/marketplace.json   solo el core: el catálogo con los tres plugins (el core desde "./")
+    .claude-plugin/icon.png           el ícono
+    agents/ skills/                   los de .claude/ del plan, con los comandos pasados al plugin (ver más abajo)
+    skills/estandares/                solo el core: los estándares de CLAUDE.md (un plugin no carga CLAUDE.md)
+    hooks/hooks.json, contexto.md     al iniciar la sesión: core → dependencias y contexto; add-on → registro y contexto
+    hooks/permisos.json               los permisos de .claude/settings.json, con los comandos del plugin
+    .mcp.json                         solo el core: los conectores de siempre (Playwright y Atlassian)
+    bin/k0lmenia (core) | lib/k0lmenia (add-on)
+    scripts/ herramientas/ plantillas/ input/ output/ catalogo-planes.json .env.example package.json requirements.txt
 
 Qué cambia en el texto de agentes y skills (el repo no se toca; esto vale solo para el plugin):
     npm run <x> / npm test            ->  k0lmenia <x> / k0lmenia test
     python scripts/<x>.py             ->  k0lmenia py scripts/<x>.py
     plantillas/, scripts/, herramientas/ (código)  ->  ${CLAUDE_PLUGIN_ROOT}/…   (herramientas/k0lmena/ no: vive en
                                                                                    el proyecto, con las pruebas)
-    CLAUDE.md                         ->  el skill estandares
+    CLAUDE.md                         ->  el skill k0lmenia:estandares (del core, en todos los planes)
 """
 import argparse
 import json
@@ -38,21 +46,32 @@ import sys
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
-NOMBRE = "k0lmenia"
-REPO = "underc0delabs/k0lmenIA"
+CORE = "k0lmenia"  # el plugin gratis: su nombre es el prefijo de sus skills, conectores y estándares
+
+_PLAN_REPO = json.loads((RAIZ / ".claude-plugin" / "plan.json").read_text(encoding="utf-8"))
+PLAN = _PLAN_REPO["plan"]  # light | pro | empresa
+REPO = _PLAN_REPO["repo"]  # el repo de desarrollo (este)
+CATALOGO = json.loads((RAIZ / "catalogo-planes.json").read_text(encoding="utf-8"))
+MARKETPLACE = CATALOGO["marketplace"]
+_ESTE = next(p for p in CATALOGO["planes"] if p["id"] == PLAN)
+NOMBRE = _ESTE["plugin"]
+ES_CORE = not _ESTE["depende"]
+DEPENDE = _ESTE["depende"]
+DISTRIBUCION = _ESTE["repo"]  # de donde lo instalan los clientes (el core: la rama plugin del repo público)
+DESCRIPCION = _ESTE["descripcion"]
+AGENTES_PLAN = [a["nombre"] for a in _ESTE["agentes"]]
+SKILLS_PLAN = [s["nombre"] for s in _ESTE["skills"]]
+PRIVACIDAD = "https://k0lmena.com/k0lmenia/privacidad/"
+LICENCIA = "MIT" if ES_CORE else "SEE LICENSE IN LICENSE.md"
 
 # Lo que no viaja en el plugin: dependencias instaladas, corridas, cachés y lo que es solo del repo de desarrollo.
 IGNORAR = shutil.ignore_patterns("node_modules", "__pycache__", "*.pyc", "reports", "historial", ".deps", ".cache",
-                                 "construir_plugin.py", ".pytest_cache")
-CODIGO = ["scripts", "herramientas", "plantillas", "bin"]
-ARCHIVOS = [".env.example", "package.json", "requirements.txt", "LICENSE", "SECURITY.md", "AGENTES.md", "REFERENCIA.md",
+                                 "construir_plugin.py", "catalogo_planes.py", ".pytest_cache")
+CODIGO = ["scripts", "herramientas", "plantillas"]
+ARCHIVOS = [".env.example", "package.json", "requirements.txt", "LICENSE", "LICENSE.md", "LICENSE.en.md",
+            "LICENSE-LIGHT-MIT.txt", "SECURITY.md", "AGENTES.md", "REFERENCIA.md", "catalogo-planes.json",
             "CHANGELOG.md",  # para las novedades al actualizar (scripts/novedades.py)
             "CONECTORES.md"]
-
-# La descripción es la del marketplace de main (.claude-plugin/marketplace.json): un solo lugar para mantenerla.
-MARKETPLACE_MAIN = RAIZ / ".claude-plugin" / "marketplace.json"
-DESCRIPCION = json.loads(MARKETPLACE_MAIN.read_text(encoding="utf-8"))["plugins"][0]["description"]
-PRIVACIDAD = "https://k0lmena.com/k0lmenia/privacidad/"
 
 
 # ------------------------------------------------------------------ transformación del texto
@@ -75,7 +94,7 @@ def transformar(texto):
     t = _NPM.sub(lambda m: f"k0lmenia {m.group(1)}", t)
     t = _NPM_TEST.sub("k0lmenia test", t)
     t = _CODIGO.sub(lambda m: "${CLAUDE_PLUGIN_ROOT}/" + m.group(1), t)
-    t = re.sub(r"`?\bCLAUDE\.md\b`?", f"el skill `{NOMBRE}:estandares`", t)
+    t = re.sub(r"`?\bCLAUDE\.md\b`?", f"el skill `{CORE}:estandares`", t)
     t = re.sub(r"(?<![/\w])(REFERENCIA|AGENTES)\.md", r"${CLAUDE_PLUGIN_ROOT}/\1.md", t)
     return re.sub(re.escape(_RESERVA) + r"(\d+)" + re.escape(_RESERVA), lambda m: guardados[int(m.group(1))], t)
 
@@ -90,15 +109,25 @@ def estandares():
             "de QA con k0lmenIA y cuando un agente lo nombre.\n---\n\n# Estándares de k0lmenIA\n" + cuerpo)
 
 
-CONTEXTO_INICIO = """k0lmenIA está activo (plugin de Claude Code): agentes de QA en español, llamados `k0lmenia:<agente>` (por ejemplo `k0lmenia:triador-bugs`).
+CONTEXTO_CORE = """k0lmenIA está activo (plugin de Claude Code): agentes de QA en español, llamados `k0lmenia:<agente>` (por ejemplo `k0lmenia:triador-bugs`).
 - Antes de una tarea de QA cargá el skill `k0lmenia:estandares`: no inventar, Falta información FI-XX, escalas, qué se confirma con la persona e informes en español e inglés.
 - Delegá en el agente que corresponde y pasale solo el pedido y los datos. No le indiques carpetas ni formatos de salida: cada agente ya sabe dónde guarda lo suyo (output/reportes-bug/, output/casos-de-prueba/, output/analisis-historias/…), y esas carpetas son las que indexa el portal.
-- Los comandos de k0lmenIA se corren con `k0lmenia <comando>` desde esta carpeta, sin `cd` (`k0lmenia ayuda` los lista). Los datos del proyecto (input/, output/, .env y herramientas/k0lmena con las pruebas automatizadas) viven acá; si no existen, sugerí `/k0lmenia:empezar` (o `k0lmenia init`)."""
+- Los comandos de k0lmenIA se corren con `k0lmenia <comando>` desde esta carpeta, sin `cd` (`k0lmenia ayuda` los lista). Los datos del proyecto (input/, output/, .env y herramientas/k0lmena con las pruebas automatizadas) viven acá; si no existen, sugerí `/k0lmenia:empezar` (o `k0lmenia init`).
+- k0lmenIA viene por planes: el core (gratis) y los plugins de Pro (`k0lmenia-pro:`) y Empresa (`k0lmenia-empresa:`). Si la persona pide algo que hace un agente, skill, conector o comando que no está instalado (un agente o script que se nombra y no existe, o una integración de un plan que no tiene), no lo improvises con otro agente: decile en qué plan está (`k0lmenia planes --json --sin-red` lo dice) y que `/k0lmenia:setup` le muestra cómo sumarlo."""
+
+CONTEXTO_ADDON = """{nombre} está instalado: suma agentes (`{plugin}:<agente>`) y skills (`{plugin}:<skill>`) a los del core (`k0lmenia:`). Los comandos se corren igual, con `k0lmenia <comando>` (el core los pasa a este plan), y los estándares son los del skill `k0lmenia:estandares`."""
 
 
 def hooks():
-    return {"hooks": {"SessionStart": [{"hooks": [{"type": "command",
-                                                   "command": 'node "${CLAUDE_PLUGIN_ROOT}/bin/k0lmenia" preparar --contexto'}]}]}}
+    if ES_CORE:
+        cmd = 'node "${CLAUDE_PLUGIN_ROOT}/bin/k0lmenia" preparar --contexto'
+    else:
+        cmd = f'node "${{CLAUDE_PLUGIN_ROOT}}/lib/k0lmenia" registrar {PLAN} --contexto'
+    return {"hooks": {"SessionStart": [{"hooks": [{"type": "command", "command": cmd}]}]}}
+
+
+def contexto():
+    return CONTEXTO_CORE if ES_CORE else CONTEXTO_ADDON.format(nombre=_ESTE["nombre"], plugin=NOMBRE)
 
 
 def mcp():
@@ -112,18 +141,34 @@ def mcp():
 
 
 def manifiesto():
-    return {"name": NOMBRE, "description": DESCRIPCION, "author": {"name": "Underc0de"},
-            "homepage": "https://underc0delabs.github.io/k0lmenIA/", "repository": f"https://github.com/{REPO}",
-            "privacyPolicyUrl": PRIVACIDAD, "license": "MIT", "keywords": ["qa", "testing", "español", "playwright", "xray", "bdd", "k0lmena"]}
+    m = {"name": NOMBRE, "description": DESCRIPCION, "author": {"name": "Underc0de"},
+         "homepage": _ESTE["web"], "repository": f"https://github.com/{DISTRIBUCION}",
+         "privacyPolicyUrl": PRIVACIDAD, "license": LICENCIA,
+         "keywords": ["qa", "testing", "español", "playwright", "xray", "bdd", "k0lmena"]}
+    if DEPENDE:
+        m["dependencies"] = list(DEPENDE)  # Claude Code los instala solos al instalar este plan
+    return m
 
 
-def marketplace():
-    return {"name": NOMBRE, "owner": {"name": "Underc0de"},
-            "description": json.loads(MARKETPLACE_MAIN.read_text(encoding="utf-8"))["description"],
-            "plugins": [{"name": NOMBRE, "source": "./", "description": DESCRIPCION}]}
+def marketplace(desde_rama):
+    """El catálogo `k0lmenia` con los tres plugins. En la rama plugin del core, el core va desde "./"."""
+    plugins = []
+    for p in CATALOGO["planes"]:
+        fuente = "./" if (desde_rama and not p["depende"]) else p["fuente"]
+        plugins.append({"name": p["plugin"], "source": fuente, "description": p["descripcion"], "homepage": p["web"],
+                        "category": "testing"})
+    return {"name": MARKETPLACE, "owner": {"name": "Underc0de"},
+            "description": "K0lmenIA: agentes de QA para Claude Code, en español. El core es gratis; Pro y Empresa se suman "
+                           "como plugins aparte para quien tiene acceso a su repo (/k0lmenia:setup).",
+            "plugins": plugins}
 
 
-LEEME = f"""# k0lmenIA — plugin de Claude Code
+def _instalar(plugin):
+    return (f"claude plugin marketplace add underc0delabs/k0lmenIA\n"
+            f"claude plugin install {plugin}@{MARKETPLACE}")
+
+
+LEEME_CORE = f"""# k0lmenIA — plugin de Claude Code
 
 Agentes de QA en español para Claude Code. Esta rama (`plugin`) la arma sola el repo
 [{REPO}](https://github.com/{REPO}) en cada cambio: no se edita a mano.
@@ -133,47 +178,81 @@ Agentes de QA en español para Claude Code. Esta rama (`plugin`) la arma sola el
 Desde una terminal (una sola vez por persona):
 
 ```
-claude plugin marketplace add {REPO}
-claude plugin install {NOMBRE}@{NOMBRE}
+{_instalar(CORE)}
 ```
 
-O adentro de Claude Code: `/plugin marketplace add {REPO}` y `/plugin install {NOMBRE}@{NOMBRE}`.
+O adentro de Claude Code: `/plugin marketplace add underc0delabs/k0lmenIA` y `/plugin install {CORE}@{MARKETPLACE}`.
 
-Después abrí Claude Code en la carpeta de tu proyecto y escribí **`/{NOMBRE}:empezar`**: prepara el proyecto, revisa
+Después abrí Claude Code en la carpeta de tu proyecto y escribí **`/{CORE}:empezar`**: prepara el proyecto, revisa
 que esté todo instalado, te ayuda a conectar tus herramientas y te sugiere por dónde arrancar.
 
-(Si lo instalaste antes con `{REPO}#plugin`, sigue funcionando igual.)
+## Planes
+
+El core es gratis. **K0lmenIA Pro** y **K0lmenIA Empresa** se suman como plugins aparte (`k0lmenia-pro` y
+`k0lmenia-empresa`) para quien tiene acceso a su repo. **`/{CORE}:setup`** te muestra qué plan tenés, a cuáles tenés
+acceso y qué suma cada uno, e instala los que te corresponden. Desde una terminal: `k0lmenia planes`.
 
 ## Qué instala y dónde
 
 El código (agentes, skills, scripts y herramientas) queda en la caché de Claude Code. En tu proyecto, `k0lmenia init` (o
-`/{NOMBRE}:empezar`) deja lo tuyo: `input/` con los mismos ejemplos que el repo, `output/` con los informes y el portal, el
+`/{CORE}:empezar`) deja lo tuyo: `input/` con los mismos ejemplos que el repo, `output/` con los informes y el portal, el
 `.env`, `TAREAS.md`, tu copia de k0lmena y, en `.claude/settings.json`, los mismos permisos que el repo clonado. Nunca pisa
-un archivo que ya existe. Es lo mismo que clonar el repo; solo no viajan la web y el PDF (están online), los tests del repo
-y los evals de los agentes.
+un archivo que ya existe.
 
 ## Actualizar
 
-Cada cambio en el repo se publica solo en esta rama. Para recibirlo:
+- **Automático** (recomendado): `/plugin` → Marketplaces → `{MARKETPLACE}` → *Enable auto-update*. Una sola vez por persona.
+- **A mano**: `/plugin marketplace update {MARKETPLACE}`.
 
-- **Automático** (recomendado): `/plugin` → Marketplaces → `{NOMBRE}` → *Enable auto-update*. Una sola vez por persona.
-- **A mano**: `/plugin marketplace update {NOMBRE}`.
-
-Eso actualiza agentes, skills, scripts y herramientas. El framework de automatización (`herramientas/k0lmena/` de tu
-proyecto) se actualiza con `k0lmenia actualizar`; Claude te avisa al iniciar la sesión cuando hay una versión nueva.
-Tus pruebas (features, steps, locators) no se tocan, y si modificaste un archivo del framework, la versión nueva queda
-al lado como `.nuevo` para que la compares. Tus datos (`input/`, `output/`, `.env`) viven en tu proyecto y no se tocan.
+El framework de automatización (`herramientas/k0lmena/` de tu proyecto) se actualiza con `k0lmenia actualizar`; Claude te
+avisa al iniciar la sesión cuando hay una versión nueva. Tus pruebas y tus datos (`input/`, `output/`, `.env`) no se tocan.
 
 Para todo el equipo, en el `.claude/settings.json` del proyecto:
 
 ```json
 {{
-  "extraKnownMarketplaces": {{"{NOMBRE}": {{"source": {{"source": "github", "repo": "{REPO}"}}}}}},
-  "enabledPlugins": {{"{NOMBRE}@{NOMBRE}": true}}
+  "extraKnownMarketplaces": {{"{MARKETPLACE}": {{"source": {{"source": "github", "repo": "underc0delabs/k0lmenIA"}}}}}},
+  "enabledPlugins": {{"{CORE}@{MARKETPLACE}": true}}
 }}
 ```
+"""
 
-Cada persona lo instala una vez con `claude plugin install {NOMBRE}@{NOMBRE} --scope project`.
+LEEME_ADDON = f"""# {_ESTE['nombre']} — plugin de Claude Code
+
+{_ESTE['resumen']}
+
+Este repo tiene el plugin armado; se actualiza solo con cada versión nueva: no se edita a mano. Uso sujeto a la licencia
+comercial (`LICENSE.md`); los componentes de K0lmenIA gratis siguen bajo MIT (`LICENSE-LIGHT-MIT.txt`).
+
+## Instalar
+
+Necesitás acceso de lectura a este repo privado (te lo da Underc0de con tu usuario de GitHub) y tus credenciales de
+GitHub en la PC (`gh auth login` y `gh auth setup-git`). Se instala desde el marketplace de k0lmenIA, junto con lo que
+necesita ({", ".join(f"`{d}`" for d in DEPENDE)}), que Claude Code instala solo:
+
+```
+{_instalar(NOMBRE)}
+```
+
+O, si ya tenés k0lmenIA, adentro de Claude Code: **`/{CORE}:setup`** revisa tu acceso y lo instala.
+
+**Si tenías la versión anterior** (el plugin `k0lmenia` desde el marketplace `{NOMBRE}`),
+desinstalala antes: `claude plugin uninstall k0lmenia@{NOMBRE}` y `claude plugin marketplace remove {NOMBRE}`. Tus datos
+(`input/`, `output/`, `.env`) viven en tu proyecto y no se tocan.
+
+## Actualizar
+
+`/plugin` → Marketplaces → `{MARKETPLACE}` → *Enable auto-update* (una sola vez por persona), o a mano:
+`/plugin marketplace update {MARKETPLACE}`.
+
+Para todo el equipo, en el `.claude/settings.json` del proyecto:
+
+```json
+{{
+  "extraKnownMarketplaces": {{"{MARKETPLACE}": {{"source": {{"source": "github", "repo": "underc0delabs/k0lmenIA"}}}}}},
+  "enabledPlugins": {{{", ".join(f'"{p}@{MARKETPLACE}": true' for p in [*DEPENDE, NOMBRE])}}}
+}}
+```
 """
 
 
@@ -191,7 +270,8 @@ def _limpiar(destino):
 
 def _estructura(origen, destino):
     """Solo las carpetas y sus .gitkeep (input/ y output/ para k0lmenia init)."""
-    for d in [origen, *sorted(p for p in origen.rglob("*") if p.is_dir())]:
+    sobra = {"__pycache__", "node_modules", ".pytest_cache"}  # lo que dejan las corridas locales: no es estructura
+    for d in [origen, *sorted(p for p in origen.rglob("*") if p.is_dir() and not sobra & set(p.relative_to(origen).parts))]:
         rel = d.relative_to(origen)
         (destino / rel).mkdir(parents=True, exist_ok=True)
         (destino / rel / ".gitkeep").write_text("", encoding="utf-8")
@@ -219,11 +299,11 @@ def _ejemplos(origen, destino):
 
 def permisos():
     """Los permisos del repo (.claude/settings.json) con los comandos y los conectores del plugin, para que trabajar con el
-    plugin pida las mismas confirmaciones que el repo clonado: ni más ni menos."""
+    plugin pida las mismas confirmaciones que el repo clonado: ni más ni menos. Los conectores son siempre los del core."""
     p = json.loads((RAIZ / ".claude" / "settings.json").read_text(encoding="utf-8")).get("permissions") or {}
 
     def regla(r):
-        r = re.sub(r"^mcp__(playwright(?:-headless)?)__", rf"mcp__plugin_{NOMBRE}_\1__", r)
+        r = re.sub(r"^mcp__(playwright(?:-headless)?)__", rf"mcp__plugin_{CORE}_\1__", r)
         m = re.match(r"^Bash\((.*)\)$", r)
         if not m:
             return r
@@ -247,21 +327,18 @@ def _escribir_json(ruta, datos):
     ruta.write_text(json.dumps(datos, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def construir(destino):
-    destino = Path(destino).resolve()
-    _limpiar(destino)
-    for carpeta in CODIGO:
-        shutil.copytree(RAIZ / carpeta, destino / carpeta, ignore=IGNORAR)
-    for archivo in ARCHIVOS:
-        if (RAIZ / archivo).exists():
-            shutil.copy2(RAIZ / archivo, destino / archivo)
-    _ejemplos(RAIZ / "input", destino / "input")
-    _estructura(RAIZ / "output", destino / "output")
-    # Agentes y skills, con los comandos y rutas del plugin.
-    for agente in sorted((RAIZ / ".claude" / "agents").glob("*.md")):
-        (destino / "agents").mkdir(exist_ok=True)
+def _agentes_y_skills(destino):
+    """Solo los del plan de este repo (cada add-on publica lo que suma; lo anterior lo trae su dependencia)."""
+    faltan = [a for a in AGENTES_PLAN if not (RAIZ / ".claude" / "agents" / f"{a}.md").exists()]
+    faltan += [s for s in SKILLS_PLAN if not (RAIZ / ".claude" / "skills" / s / "SKILL.md").exists()]
+    if faltan:
+        sys.exit(f"catalogo-planes.json nombra agentes o skills que este repo no tiene: {', '.join(faltan)}")
+    (destino / "agents").mkdir(exist_ok=True)
+    for nombre in AGENTES_PLAN:
+        agente = RAIZ / ".claude" / "agents" / f"{nombre}.md"
         (destino / "agents" / agente.name).write_text(transformar(agente.read_text(encoding="utf-8")), encoding="utf-8")
-    for skill in sorted(p for p in (RAIZ / ".claude" / "skills").iterdir() if p.is_dir()):
+    for nombre in SKILLS_PLAN:
+        skill = RAIZ / ".claude" / "skills" / nombre
         for archivo in skill.rglob("*"):
             if archivo.is_file():
                 dst = destino / "skills" / skill.name / archivo.relative_to(skill)
@@ -270,34 +347,65 @@ def construir(destino):
                     dst.write_text(transformar(archivo.read_text(encoding="utf-8")), encoding="utf-8")
                 else:
                     shutil.copy2(archivo, dst)
-    (destino / "skills" / "estandares").mkdir(parents=True, exist_ok=True)
-    (destino / "skills" / "estandares" / "SKILL.md").write_text(estandares(), encoding="utf-8")
+
+
+def construir(destino):
+    destino = Path(destino).resolve()
+    _limpiar(destino)
+    for carpeta in CODIGO:
+        shutil.copytree(RAIZ / carpeta, destino / carpeta, ignore=IGNORAR)
+    if ES_CORE:
+        shutil.copytree(RAIZ / "bin", destino / "bin", ignore=IGNORAR)
+    else:
+        # Fuera de bin/: el PATH tiene que tener un solo `k0lmenia`, el del core, que le pasa los comandos a este.
+        (destino / "lib").mkdir()
+        shutil.copy2(RAIZ / "bin" / "k0lmenia", destino / "lib" / "k0lmenia")
+    for archivo in ARCHIVOS:
+        if (RAIZ / archivo).exists():
+            shutil.copy2(RAIZ / archivo, destino / archivo)
+    _ejemplos(RAIZ / "input", destino / "input")
+    _estructura(RAIZ / "output", destino / "output")
+    _agentes_y_skills(destino)
+    if ES_CORE:
+        (destino / "skills" / "estandares").mkdir(parents=True, exist_ok=True)
+        (destino / "skills" / "estandares" / "SKILL.md").write_text(estandares(), encoding="utf-8")
     for doc in ("AGENTES.md", "REFERENCIA.md"):
         if (destino / doc).exists():
             (destino / doc).write_text(transformar((destino / doc).read_text(encoding="utf-8")), encoding="utf-8")
     (destino / "hooks").mkdir(exist_ok=True)
     _escribir_json(destino / "hooks" / "hooks.json", hooks())
-    (destino / "hooks" / "contexto.md").write_text(CONTEXTO_INICIO + "\n", encoding="utf-8")
+    (destino / "hooks" / "contexto.md").write_text(contexto() + "\n", encoding="utf-8")
     _escribir_json(destino / "hooks" / "permisos.json", permisos())
-    _escribir_json(destino / ".mcp.json", mcp())
+    if ES_CORE:
+        _escribir_json(destino / ".mcp.json", mcp())
+        _escribir_json(destino / ".claude-plugin" / "marketplace.json", marketplace(desde_rama=True))
     _escribir_json(destino / ".claude-plugin" / "plugin.json", manifiesto())
-    _escribir_json(destino / ".claude-plugin" / "marketplace.json", marketplace())
     shutil.copy2(RAIZ / ".claude-plugin" / "icon.png", destino / ".claude-plugin" / "icon.png")
-    (destino / "README.md").write_text(LEEME, encoding="utf-8")
-    (destino / ".gitattributes").write_text("bin/k0lmenia text eol=lf\n*.sh text eol=lf\n", encoding="utf-8")
+    (destino / "README.md").write_text(LEEME_CORE if ES_CORE else LEEME_ADDON, encoding="utf-8")
+    ejecutable = "bin/k0lmenia" if ES_CORE else "lib/k0lmenia"
+    (destino / ".gitattributes").write_text(f"{ejecutable} text eol=lf\n*.sh text eol=lf\n", encoding="utf-8")
     return destino
 
 
 def main(argv=None):
     for flujo in (sys.stdout, sys.stderr):
         flujo.reconfigure(encoding="utf-8")
-    ap = argparse.ArgumentParser(description="Arma k0lmenIA como plugin de Claude Code (y su marketplace).")
+    ap = argparse.ArgumentParser(description="Arma el plugin de Claude Code de este repo (core o add-on de su plan).")
     ap.add_argument("--destino", default=str(RAIZ / "dist" / "plugin"))
+    ap.add_argument("--marketplace-main", action="store_true",
+                    help="reescribe .claude-plugin/marketplace.json del repo con el catálogo (solo el core)")
     a = ap.parse_args(argv)
+    if a.marketplace_main:
+        if not ES_CORE:
+            sys.exit("El marketplace vive en el repo del core (underc0delabs/k0lmenIA).")
+        _escribir_json(RAIZ / ".claude-plugin" / "marketplace.json", marketplace(desde_rama=False))
+        print("Listo: .claude-plugin/marketplace.json con los tres plugins.")
+        return 0
     destino = construir(a.destino)
     agentes = len(list((destino / "agents").glob("*.md")))
     skills = len([p for p in (destino / "skills").iterdir() if p.is_dir()])
-    print(f"Plugin armado en {destino}: {agentes} agentes, {skills} skills. Probalo con: claude --plugin-dir \"{destino}\"")
+    print(f"Plugin {NOMBRE} armado en {destino}: {agentes} agentes, {skills} skills. "
+          f"Probalo con: claude --plugin-dir \"{destino}\"")
     return 0
 
 

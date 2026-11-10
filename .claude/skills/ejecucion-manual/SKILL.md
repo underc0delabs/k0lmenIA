@@ -29,7 +29,7 @@ Para cada caso (`python scripts/ejecucion_manual.py siguiente --sesion output/ej
 2. Mostrá **un paso** por vez: acción, datos y resultado esperado, en un bloque corto y claro.
 3. Preguntá el resultado con la herramienta de preguntas: **Aprobado** (recomendado si no dice nada), **Fallido**, **Bloqueado**, **N/A**, y una opción para **pausar**.
 4. Registralo: `registrar --caso CP-XXX --paso N --resultado …`.
-   - **Fallido**: pedí lo que pasó (`--obtenido`), sacá o pedí la captura (`--evidencia`) y ofrecé registrar el bug **ahora** con la plantilla `plantillas/plantilla-reporte-bug.md` (pasos del caso y lo obtenido); el `triador-bugs` busca duplicados antes. La redacción asistida de bugs está disponible en K0lmenIA Pro. El ID del bug va con `--bug BUG-XXX`. Cargarlo en Jira o Azure DevOps solo con confirmación.
+   - **Fallido**: pedí lo que pasó (`--obtenido`), sacá o pedí la captura (`--evidencia`) y ofrecé redactar el bug **ahora**: el `generador-reportes-bug` lo arma con los pasos del caso y lo obtenido, y el `triador-bugs` busca duplicados antes. El ID del bug va con `--bug BUG-XXX`. Cargarlo en Jira o Azure DevOps solo con confirmación.
    - **Bloqueado**: pedí el motivo (`--motivo`) — ambiente caído, dato que falta, bug previo — y seguí con el próximo caso.
    - **N/A**: anotá por qué en `--comentario`.
 5. Cuando el caso se cierra, mostrá en una línea cómo viene la sesión (avance, aprobados, fallidos, tiempo real contra estimado).
@@ -40,7 +40,7 @@ Si el QA quiere cortar: `pausar` (las pausas no cuentan en los tiempos). Al volv
 
 1. `python scripts/ejecucion_manual.py estado --sesion …` y mostrá las **inconsistencias** que detecta (un caso Aprobado con un paso Fallido, un Bloqueado sin motivo, un Fallido sin bug ni resultado, casos sin evidencia): que el QA las corrija o las confirme antes de cerrar.
 2. Invocá al **`asistente-ejecucion-manual`** con la ruta de la sesión: cierra la sesión, arma los resultados para el informe de ejecución y el informe de la sesión, y te devuelve si hay que publicar.
-3. **Publicar** en Xray o k0lmenaTMT: preguntá antes (es una acción con efecto) y pasale la confirmación al agente, que lo hace con el `publicador-resultados`.
+3. **Publicar** en Xray, Azure Test Plans, QMetry, AIO, Zephyr o k0lmenaTMT: preguntá antes (es una acción con efecto) y pasale la confirmación al agente, que lo hace con el `publicador-resultados`.
 
 ## Reglas
 

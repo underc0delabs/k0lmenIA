@@ -14,7 +14,7 @@ Cada agente es un subagente de Claude Code con su rol, su proceso y sus reglas. 
 
 ### Skills — el *cómo* (`.claude/skills/`)
 
-Conocimiento empaquetado que Claude Code carga **on-demand** (solo cuando hace falta). Encapsula el "cómo" de una capacidad reutilizable, para que varios agentes lo aprovechen sin repetir instrucciones. Cada skill es una carpeta con un `SKILL.md` (ver `.claude/skills/README.md`); hoy hay 13 skills. Algunos los usa la **conversación principal** y no un agente, porque necesitan preguntarle cosas a la persona: `empezar` (la bienvenida y puesta en marcha de quien recién instala el plugin), `guia-pruebas` (qué probar y con qué), `ejecucion-manual` (guiar los casos manuales paso a paso) y `base-conocimiento` (documentar todo el proyecto y mantenerlo al día).
+Conocimiento empaquetado que Claude Code carga **on-demand** (solo cuando hace falta). Encapsula el "cómo" de una capacidad reutilizable, para que varios agentes lo aprovechen sin repetir instrucciones. Cada skill es una carpeta con un `SKILL.md` (ver `.claude/skills/README.md`); hoy hay 14 skills. Algunos los usa la **conversación principal** y no un agente, porque necesitan preguntarle cosas a la persona: `empezar` (la bienvenida y puesta en marcha de quien recién instala el plugin), `guia-pruebas` (qué probar y con qué), `ejecucion-manual` (guiar los casos manuales paso a paso) y `base-conocimiento` (documentar todo el proyecto y mantenerlo al día).
 
 ### Base de conocimiento — lo que se sabe del proyecto (`input/documentacion/`)
 

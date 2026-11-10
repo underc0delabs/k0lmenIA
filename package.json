@@ -16,6 +16,7 @@
     "test:repo": "node tests/node/correr.js",
     "ejecucion-manual": "node scripts/py.js scripts/ejecucion_manual.py",
     "novedades": "node scripts/py.js scripts/novedades.py",
+    "planes": "node scripts/py.js scripts/planes.py",
     "doctor": "node scripts/py.js scripts/doctor.py",
     "mapa-funcional": "npm --prefix herramientas/k0lmena run mapa-funcional --",
     "ci": "node scripts/py.js herramientas/ci/ci.py",

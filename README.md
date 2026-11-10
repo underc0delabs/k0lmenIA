@@ -146,7 +146,7 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 </table>
 
 <details>
-<summary><b>Los 13 skills</b> (el "cómo" que usan los agentes y la conversación principal)</summary>
+<summary><b>Los 14 skills</b> (el "cómo" que usan los agentes y la conversación principal)</summary>
 
 <table>
 <tr><th>Skill</th><th>Qué enseña</th><th>Lo usan</th></tr>
@@ -161,6 +161,7 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 <tr><td><code>documentacion-proyecto</code></td><td>Referencia del documentador: lectura del repositorio, mapa funcional, estructura de input/documentacion/ y dossier, modos barrido y actualizar</td><td>documentador-proyecto</td></tr>
 <tr><td><code>base-conocimiento</code></td><td>Armar y mantener la base de conocimiento del proyecto en input/documentacion/ y la rutina ágil cuando cambian los requerimientos</td><td>la conversación principal</td></tr>
 <tr><td><code>ejecucion-manual</code></td><td>Ejecución manual acompañada en la conversación: caso por caso y paso por paso, resultados, evidencia, tiempos, bugs, pausa y retomar</td><td>conversación principal (/k0lmenia:ejecucion-manual) y asistente-ejecucion-manual</td></tr>
+<tr><td><code>setup</code></td><td>Planes de k0lmenIA: qué plan tenés, a cuáles tenés acceso y qué suma cada uno; instala Pro o Empresa y configura k0lmenaTMT</td><td>conversación principal (/k0lmenia:setup)</td></tr>
 <tr><td><code>guia-pruebas</code></td><td>Asistente interactivo para elegir qué probar y con qué agente o skill: pregunta paso a paso y recomienda o ejecuta</td><td>la conversación principal</td></tr>
 <tr><td><code>empezar</code></td><td>Bienvenida y puesta en marcha: preparar el proyecto, revisar el entorno, conectar herramientas y elegir la primera tarea (`/k0lmenia:empezar` en el plugin)</td><td>conversación principal</td></tr>
 </table>
@@ -622,7 +623,7 @@ k0lmenIA/
 ├── .github/workflows/      CI (tests), plugin, documentación y evals (manuales)
 ├── .claude/
 │   ├── agents/             Los 13 agentes
-│   ├── skills/             Los 13 skills
+│   ├── skills/             Los 14 skills
 │   └── settings.json       Conectores habilitados y permisos del proyecto
 ├── input/                  historias/ documentacion/ api/ bugs/ (ver input/README.md)
 ├── output/                 Lo que generan los agentes (contexto/, casos, reportes, mapeos…)

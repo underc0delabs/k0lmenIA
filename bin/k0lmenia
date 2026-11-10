@@ -13,11 +13,19 @@
 //   k0lmenia novedades [--todas]       qué cambió en k0lmenIA desde la última vez que lo viste (y su informe HTML)
 //   k0lmenia ayuda                     esta ayuda
 //
+//   k0lmenia planes [--json|--instalar <plan>]   qué plan tenés, a cuáles tenés acceso y qué suma cada uno
+//
 // El código vive en la caché del plugin (CODIGO) y los datos en el proyecto donde trabajás (PROYECTO: la
 // carpeta actual): output/, input/, .env, .auth/ y la copia de k0lmena con tus pruebas automatizadas. Por eso
 // las actualizaciones del plugin nunca tocan tu trabajo.
+//
+// Planes: el core (plugin k0lmenia) trae este comando. Los planes pagos (k0lmenia-pro, k0lmenia-empresa) son plugins
+// aparte que traen su copia completa del código en lib/k0lmenia (no en bin/, para no pisar este comando en el PATH) y se
+// registran al iniciar la sesión en ~/.k0lmenia/planes.json. Cada comando se pasa al plan más completo instalado
+// (Empresa > Pro > core): así `k0lmenia py scripts/…` y `k0lmenia <comando>` encuentran los scripts de los planes pagos.
 'use strict';
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
@@ -55,7 +63,8 @@ function k0lmenaInstalada() {
 function comandoNpm(nombre, args) {
   const cmd = scriptsNpm()[nombre];
   if (!cmd) {
-    console.error(`k0lmenia: no conozco el comando "${nombre}". Mirá la lista con: k0lmenia ayuda`);
+    console.error(`k0lmenia: no conozco el comando "${nombre}". Mirá la lista con: k0lmenia ayuda ` +
+      '(si es de K0lmenIA Pro o Empresa, /k0lmenia:setup te muestra cómo sumarlo).');
     return 2;
   }
   let m = cmd.match(/^node scripts\/py\.js (\S+)$/);
@@ -331,7 +340,7 @@ function preparar(args = []) {
     } catch {
       /* el aviso nunca frena el inicio de la sesión */
     }
-    process.stdout.write(fs.readFileSync(contexto, 'utf8') + aviso + novedadesContexto());
+    process.stdout.write(fs.readFileSync(contexto, 'utf8') + planesContexto() + aviso + novedadesContexto());
   }
   return r;
 }
@@ -370,6 +379,94 @@ function prepararPython() {
   return 0;
 }
 
+// ---------------------------------------------------------------- planes (core + plugins pagos)
+const PLANES_PAGOS = ['empresa', 'pro']; // del más completo al menos: cada uno incluye todo lo del anterior
+
+function registroPath() {
+  return process.env.K0LMENIA_REGISTRO || path.join(os.homedir(), '.k0lmenia', 'planes.json');
+}
+
+function leerRegistro() {
+  try {
+    return JSON.parse(fs.readFileSync(registroPath(), 'utf8')) || {};
+  } catch {
+    return {};
+  }
+}
+
+/** El plan pago más completo instalado: {plan, raiz} o null. Solo cuenta si su carpeta sigue existiendo. */
+function planMayor() {
+  const reg = leerRegistro();
+  for (const plan of PLANES_PAGOS) {
+    const raiz = reg[plan] && reg[plan].raiz;
+    if (raiz && fs.existsSync(path.join(raiz, 'lib', 'k0lmenia'))) return { plan, raiz: path.resolve(raiz) };
+  }
+  return null;
+}
+
+/** Lo corre el hook de inicio de sesión de cada plugin pago: anota su carpeta (cambia con cada versión) y, con
+ *  --contexto, imprime su recordatorio para la conversación. */
+function registrar(args) {
+  const plan = args[0];
+  if (!PLANES_PAGOS.includes(plan)) {
+    console.error(`k0lmenia: plan desconocido "${plan || ''}" (son: ${PLANES_PAGOS.join(', ')})`);
+    return 2;
+  }
+  try {
+    const reg = leerRegistro();
+    reg[plan] = { raiz: CODIGO, visto: new Date().toISOString() };
+    fs.mkdirSync(path.dirname(registroPath()), { recursive: true });
+    fs.writeFileSync(registroPath(), `${JSON.stringify(reg, null, 2)}\n`);
+  } catch {
+    /* el registro nunca frena el inicio de la sesión */
+  }
+  const contexto = path.join(CODIGO, 'hooks', 'contexto.md');
+  if (args.includes('--contexto') && fs.existsSync(contexto)) process.stdout.write(fs.readFileSync(contexto, 'utf8'));
+  return 0;
+}
+
+/** Para el contexto del inicio de la sesión: qué planes hay instalados y, una vez por día, si hay uno disponible. */
+function planesContexto() {
+  const m = planMayor();
+  const reg = leerRegistro();
+  const pagos = PLANES_PAGOS.slice().reverse().filter((p) => reg[p] && fs.existsSync(path.join(reg[p].raiz, 'lib', 'k0lmenia')));
+  let texto = `\nPlanes instalados: core${pagos.map((p) => ` + ${p === 'pro' ? 'Pro' : 'Empresa'}`).join('')}.`;
+  if (!m) texto += ' Lo que es de Pro o Empresa no está instalado.';
+  texto += '\n';
+  try {
+    const r = spawnSync(PYTHON, [path.join(CODIGO, 'scripts', 'planes.py'), '--aviso'],
+      { cwd: PROYECTO, env: ENV, encoding: 'utf8', timeout: 15000 });
+    if (r.status === 0 && r.stdout.trim()) texto += `${r.stdout.trim()}\n`;
+  } catch {
+    /* nunca frena el inicio de la sesión */
+  }
+  return texto;
+}
+
+/** En qué plan está un script que este plugin no tiene (según catalogo-planes.json). */
+function planDe(script) {
+  try {
+    const cat = JSON.parse(fs.readFileSync(path.join(CODIGO, 'catalogo-planes.json'), 'utf8'));
+    const rel = script.replace(/\\/g, '/').replace(/^\.\//, '');
+    const plan = cat.planes.find((p) => (p.scripts || []).includes(rel));
+    if (plan) return plan.nombre;
+  } catch {
+    /* sin catálogo: respuesta genérica */
+  }
+  return 'K0lmenIA Pro o Empresa';
+}
+
+/** Pasa el comando al plan pago más completo instalado (su lib/k0lmenia). Devuelve null si lo corre este. */
+function delegar(argv) {
+  if (process.env.K0LMENIA_DELEGADO) return null;
+  const m = planMayor();
+  if (!m || m.raiz === CODIGO) return null;
+  const r = spawnSync(process.execPath, [path.join(m.raiz, 'lib', 'k0lmenia'), ...argv],
+    { stdio: 'inherit', env: { ...process.env, K0LMENIA_DELEGADO: '1', K0LMENIA_NUCLEO: CODIGO } });
+  if (r.error) return null; // si el plan pago no arranca, lo corre el core
+  return r.status === null ? 1 : r.status;
+}
+
 function ayuda() {
   const lista = Object.keys(scriptsNpm()).filter((n) => !['postinstall', 'test:repo'].includes(n)).sort();
   console.log(`k0lmenia — k0lmenIA como plugin de Claude Code
@@ -380,6 +477,7 @@ Proyecto (tus datos): ${PROYECTO}
   k0lmenia actualizar           trae las mejoras del framework k0lmena sin tocar tus pruebas
   k0lmenia py <script> [args]   un script de Python del plugin
   k0lmenia novedades [--todas]  qué cambió desde la última vez (y su informe HTML en output/novedades/)
+  k0lmenia planes               qué plan tenés y qué suma cada uno (instalar: k0lmenia planes --instalar pro)
   k0lmenia <comando> [args]     uno de estos:
     ${lista.join(', ')}`);
   return 0;
@@ -388,6 +486,12 @@ Proyecto (tus datos): ${PROYECTO}
 function main(argv) {
   const [cmd, ...resto] = argv;
   const args = sinSeparador(resto);
+  if (cmd === 'registrar') return registrar(args);
+  // preparar es del core: sus dependencias y su contexto (que ya nombra los planes instalados).
+  if (cmd !== 'preparar') {
+    const delegado = delegar(argv);
+    if (delegado !== null) return delegado;
+  }
   if (!cmd || ['ayuda', 'help', '-h', '--help'].includes(cmd)) return ayuda();
   if (cmd === 'init') return init(args);
   if (cmd === 'actualizar') return actualizar(args);
@@ -395,10 +499,16 @@ function main(argv) {
   if (cmd === 'novedades') return correr(PYTHON, [path.join(CODIGO, 'scripts', 'novedades.py'), ...args]);
   if (cmd === 'py') {
     if (!args[0]) return ayuda();
-    return correr(PYTHON, [path.resolve(CODIGO, args[0]), ...args.slice(1)]);
+    const script = path.resolve(CODIGO, args[0]);
+    if (!fs.existsSync(script)) {
+      console.error(`k0lmenia: ${args[0]} no está en tu plan de k0lmenIA (es de ${planDe(args[0])}). ` +
+        'Mirá qué tenés y cómo sumarlo con /k0lmenia:setup (o k0lmenia planes).');
+      return 2;
+    }
+    return correr(PYTHON, [script, ...args.slice(1)]);
   }
   return comandoNpm(cmd, args);
 }
 
 if (require.main === module) process.exit(main(process.argv.slice(2)));
-module.exports = { main, comandoNpm, CODIGO, PROYECTO };
+module.exports = { main, comandoNpm, planMayor, CODIGO, PROYECTO };

@@ -1,6 +1,6 @@
 ---
 name: pruebas-graphql
-description: El cómo de probar APIs GraphQL — introspección, queries y mutations, errores con HTTP 200, nulabilidad, paginación, N+1 y autorización por campo. La usan ejecutor-api y api-mapper.
+description: El cómo de probar APIs GraphQL — introspección, queries y mutations, errores con HTTP 200, nulabilidad, paginación, N+1 y autorización por campo. La usan ejecutor-api, api-mapper y generador-casos-api.
 ---
 
 # Pruebas de APIs GraphQL
@@ -33,7 +33,7 @@ GraphQL no es REST: hay **un solo endpoint** (`/graphql`), el cliente pide exact
 
 ## 5. Rendimiento y abuso del backend
 
-- **N+1**: una query que pide una lista con un campo relacionado puede disparar una consulta por elemento al backend. Pedí listas grandes con campos anidados y mirá los tiempos de respuesta.
+- **N+1**: una query que pide una lista con un campo relacionado puede disparar una consulta por elemento al backend. Pedí listas grandes con campos anidados y mirá el impacto (con `verificador-datos`/perf).
 - **Profundidad y complejidad**: GraphQL permite queries muy anidadas o costosas (incluso ciclos entre tipos). Debe haber **límite de profundidad** y de **complejidad/costo** y **rate limiting**; probá una query profunda/cara y verificá que se rechace.
 - **Batching**: varias operaciones en una request; que no evada los límites.
 
@@ -43,7 +43,7 @@ GraphQL no es REST: hay **un solo endpoint** (`/graphql`), el cliente pide exact
 
 ## 7. Subscriptions (tiempo real)
 
-- Por **WebSocket**: suscribirse, recibir los eventos esperados, reconexión y autorización por suscripción (el detalle de WebSocket está disponible en K0lmenIA Pro).
+- Por **WebSocket**: suscribirse, recibir los eventos esperados, reconexión y autorización por suscripción (ver `pruebas-async` para lo de WebSocket).
 
 ## 8. Persisted queries, caché y versionado
 
@@ -54,7 +54,7 @@ GraphQL no es REST: hay **un solo endpoint** (`/graphql`), el cliente pide exact
 ## 9. Automatizar
 
 - **POST** a `/graphql` con `{ "query": "...", "variables": {...} }` y validar `data`/`errors` con el `ejecutor-api` (Newman) o los **steps GraphQL de k0lmena** (`automatizacion-k0lmena`): `envío la consulta GraphQL:`, `la respuesta GraphQL no tiene errores`, etc.
-- Resumí el esquema con `scripts/resumir_graphql.py` para armar los casos: variables inválidas, campos inexistentes, autorización por campo, errores parciales, profundidad y paginación.
+- Resumí el esquema con `scripts/resumir_graphql.py` para armar los casos; el `generador-casos-api` incluye casos GraphQL (variables inválidas, campos inexistentes, autorización por campo, errores parciales, profundidad y paginación).
 
 ## 10. Bugs típicos de GraphQL
 

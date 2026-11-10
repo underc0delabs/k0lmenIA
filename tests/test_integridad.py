@@ -12,6 +12,10 @@ import pytest
 RAIZ = Path(__file__).resolve().parents[1]
 AGENTES = sorted((RAIZ / ".claude" / "agents").glob("*.md"))
 SKILLS = sorted(p.parent.name for p in (RAIZ / ".claude" / "skills").glob("*/SKILL.md"))
+# Scripts de un plan pago que un agente puede nombrar aunque este repo no los tenga: el comando k0lmenia los busca
+# en el plugin del plan instalado (y si no está, avisa en qué plan están). Salen de catalogo-planes.json.
+DE_OTRO_PLAN = {s for p in json.loads((RAIZ / "catalogo-planes.json").read_text(encoding="utf-8"))["planes"]
+                for s in p.get("scripts", [])}
 
 
 def _scripts_npm():
@@ -46,13 +50,13 @@ def test_agente_referencias_existen(agente):
     t = agente.read_text(encoding="utf-8")
     faltan = []
     for sc in set(re.findall(r"\b(scripts/[\w/]+\.py)", t)):
-        if not (RAIZ / sc).exists():
+        if not (RAIZ / sc).exists() and sc not in DE_OTRO_PLAN:
             faltan.append(sc)
     for hr in set(re.findall(r"\b(herramientas/[\w/]+\.py)", t)):
         if not (RAIZ / hr).exists():
             faltan.append(hr)
     for gi in set(re.findall(r"\b(generar_informe_[\w]+\.py)", t)):
-        if not (RAIZ / "scripts" / gi).exists():
+        if not (RAIZ / "scripts" / gi).exists() and f"scripts/{gi}" not in DE_OTRO_PLAN:
             faltan.append(f"scripts/{gi}")
     for run in set(re.findall(r"npm run ([a-z0-9:_-]+)", t)):
         if run not in NPM:

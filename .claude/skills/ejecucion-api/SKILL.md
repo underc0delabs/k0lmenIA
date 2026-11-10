@@ -19,7 +19,7 @@ colección .json → newman run (JSON) → newman_a_resultados.py → generar_re
 
 - **La trae la persona**: exportada de Postman, guardada en `input/api/`. Es lo más común si ya viven en Postman.
 - **Viene de Bruno o Insomnia**: la carpeta de Bruno (con `bruno.json`) o el export de Insomnia (v4 `.json` / v5 `.yaml`) se le pasan directo a `correr_newman.py`, que los convierte a Postman con `scripts/convertir_coleccion.py` (ver *Bruno e Insomnia* abajo).
-- **La armás vos** a partir de un contrato o de casos de API escritos a mano: generás el `.json` de la colección (requests + `pm.test` con las validaciones) y después la corrés.
+- **La armás vos** a partir de un contrato o de los casos de `generador-casos-api`: generás el `.json` de la colección (requests + `pm.test` con las validaciones) y después la corrés.
 
 ## Validaciones (lo que decide pasó/falló)
 
