@@ -1,14 +1,13 @@
 ---
 name: setup
-description: Setup inicial de k0lmenIA — pide la web principal del proyecto, la recorre, recomienda qué agentes y plugins (Pro, Empresa) le sirven, muestra checks para activar los planes a los que tiene acceso, los instala y configura k0lmenaTMT. Úsalo con /k0lmenia:setup o cuando pregunten qué plan les conviene.
+description: Setup inicial de k0lmenIA — pide la web principal del proyecto, la recorre, recomienda qué agentes le sirven (del core y de Pro), ofrece instalar Pro completo o solo los paquetes que necesita (seguridad, performance…) si tiene acceso, y configura k0lmenaTMT. Úsalo con /k0lmenia:setup o cuando pregunten qué plan les conviene.
 ---
 
 # Setup de k0lmenIA: tu proyecto, tus planes y tus plugins
 
-k0lmenIA se instala por partes: el **core** (`k0lmenia`, gratis) y, encima, un plugin por plan pago: **Pro**
-(`k0lmenia-pro`) y **Empresa** (`k0lmenia-empresa`, que suma Pro). Cada plan pago vive en un repo privado de GitHub: quien
-tiene acceso de lectura a ese repo puede instalarlo. Tu trabajo: entender qué proyecto prueba la persona, recomendarle qué
-usar y dejarle activados los plugins que le corresponden.
+k0lmenIA se instala por partes: el **core** (`k0lmenia`, gratis) y, encima, el plugin privado **Pro**
+(`k0lmenia-pro`). Pro vive en un repo privado de GitHub: quien tiene acceso de lectura a ese repo puede instalarlo. Tu
+trabajo: entender qué proyecto prueba la persona, recomendarle qué usar y dejarle activado Pro si le corresponde.
 
 Lo conducís vos en la conversación principal. Las preguntas van con la herramienta de preguntas.
 
@@ -21,8 +20,9 @@ app mobile, un sistema interno sin acceso), pedile que lo describa en una línea
 
 1. Corré `k0lmenia planes --recomendar <url> --json`. Lee la página principal (una sola petición, sin enviar nada) y
    devuelve las `senales` que vio (tienda, plataforma, login, pagos, chat, analytics, idiomas, video, app, SAP,
-   Salesforce, cabeceras de seguridad…), los agentes `recomendados` con su `motivo` y `plan`, `por_plan`, el
-   `plan_sugerido` y el estado de cada plan (`planes`: instalado, disponible, bloqueado o desconocido).
+   Salesforce, cabeceras de seguridad…), los agentes `recomendados` con su `motivo`, `plan` y (los de Pro) `paquete`,
+   `por_plan`, el `plan_sugerido`, los `paquetes_sugeridos` de Pro y el estado de cada plan (`planes`: instalado,
+   disponible, bloqueado o desconocido; Pro trae además sus `paquetes`, cada uno con `instalado`).
 2. Si tenés el navegador de Playwright (`k0lmenia:playwright-headless`), abrí la URL y mirá la página como la ve una
    persona: qué hace el producto, si hay login, registro, carrito, búsqueda, formularios importantes, chat o app. Si la
    página lo bloquea o pide login, no insistas: alcanza con lo del punto 1. **Solo mirás**: no completes formularios, no
@@ -35,30 +35,42 @@ En pocas líneas, en este orden:
 
 - **Qué es su proyecto** (una línea, con lo que viste).
 - **Lo que ya puede usar con el core**: los recomendados del plan gratis, con el motivo de cada uno.
-- **Lo que suma cada plan pago para este proyecto**: los recomendados de Pro y de Empresa, con su motivo (no la lista
-  completa del plan; para eso está `/k0lmenia:options`).
-- **Plan sugerido**: `plan_sugerido`, y por qué en una línea.
+- **Solo si Pro está instalado o disponible** (`por_plan` lo trae): lo que suma Pro para este proyecto, agrupado por
+  paquete, con su motivo (no la lista completa; para eso está `/k0lmenia:options`), y qué paquetes le sirven
+  (`paquetes_sugeridos`), en una línea.
 
-## Paso 4 — Activar plugins (checks)
+Pro es privado y no se vende: si la persona no lo tiene ni tiene acceso, **no lo menciones**.
 
-Mostrá una sola pregunta de **selección múltiple** ("¿Qué plugins activo?") con una opción por plan **disponible** (tiene
-acceso y no está instalado). Marcá como recomendada la del plan sugerido. Cada opción dice qué suma para este proyecto.
+## Paso 4 — Activar Pro (completo o por paquetes)
 
-- Los planes **instalados** no van como opción: decí que ya están activos (✅).
-- Los planes **bloqueados** (sin acceso) no van como opción: listalos aparte con 🔒, su precio, qué sumarían para este
-  proyecto y el link de `compra`.
-- Si **no hay ninguno disponible**, no hagas la pregunta. Si además `github.credenciales` es `false` o el acceso salió
-  `desconocido`, puede que sí tenga acceso pero falten las credenciales de GitHub en la PC. Explicale que lo resuelva en
-  una terminal (lo corre la persona, no vos) y que vuelva a escribir `/k0lmenia:setup`:
+Pro se instala **completo** (todos los paquetes) o **por paquetes** (solo los que necesita: seguridad, performance…; cada
+paquete suma la base de Pro sola). Según el estado de Pro en `planes`:
+
+- **Disponible**, o **instalado** con paquetes que faltan (`completo` en `false`): una pregunta, "¿Qué instalo de
+  K0lmenIA Pro?", con estas opciones:
+  1. **Solo lo que te sirve** (recomendada si hay `paquetes_sugeridos`): nombrá esos paquetes y qué suma cada uno.
+  2. **Todo Pro**: todos los paquetes.
+  3. **Elijo los paquetes**: mostrá la lista de paquetes que faltan (id y en una línea qué trae) y que la persona
+     escriba cuáles quiere.
+  4. **Nada por ahora**.
+  No ofrezcas los paquetes que ya están instalados (decí cuáles ya tiene, con ✅).
+- **Instalado completo** (`completo` en `true`): no preguntes; decí que ya tiene todo Pro (✅).
+- **Bloqueado** (sin acceso): no preguntes ni lo menciones; seguí con el paso 5.
+- **Desconocido** (no se pudo revisar el acceso, por ejemplo con `github.credenciales` en `false`): no lo ofrezcas. Solo
+  si la persona dice que le dieron acceso a Pro, explicale que cargue sus credenciales de GitHub en una terminal (lo
+  corre la persona, no vos) y que vuelva a escribir `/k0lmenia:setup`:
   ```
   gh auth login
   gh auth setup-git
   ```
-  Si ya pagó y sigue bloqueado, que le pase su usuario de GitHub (`github.usuario`) a Underc0de.
+  Si sigue sin acceso, que le pase su usuario de GitHub (`github.usuario`) a quien le dio acceso.
 
-Por cada plan marcado, corré `k0lmenia planes --instalar <pro|empresa>` (Empresa ya trae Pro: si marcó los dos, alcanza
-con Empresa). Instala el plugin desde el marketplace `k0lmenia` con sus dependencias. Si falla por permisos, volvé a la
-explicación de credenciales. Nunca instales un plan que la persona no marcó.
+Según lo que eligió, corré `k0lmenia planes --instalar pro` (todo) o `k0lmenia planes --instalar <id> <id>…` (los
+paquetes elegidos, por ejemplo `--instalar seguridad performance`). Instala desde el marketplace `k0lmenia` con sus
+dependencias. Si falla por permisos, volvé a la explicación de credenciales. Nunca instales nada que no eligió.
+
+Si más adelante pide algo de un paquete que no tiene (un agente que sugiere seguir con otro de otro paquete, por ejemplo),
+decile en qué paquete está y ofrecé instalarlo con `k0lmenia planes --instalar <id>`.
 
 Al terminar: que escriba `/reload-plugins` (o reinicie Claude Code) para ver los agentes nuevos, y que active la
 actualización automática en `/plugin` → Marketplaces → `k0lmenia` → *Enable auto-update*.
@@ -81,9 +93,9 @@ Una línea con lo que quedó activo y dos pedidos de ejemplo para **su** web, co
 
 ## Reglas
 
-- Mostrá los planes bloqueados una sola vez y sin insistir: es información, no una venta.
-- Si la persona pide algo de un plan que no tiene, decile en qué plan está y que `/k0lmenia:setup` le muestra cómo
-  sumarlo. No lo intentes con otro agente que no corresponde.
+- Nada está a la venta: no hables de precios, compras ni planes a los que la persona no tiene acceso.
+- Si la persona pide algo que no está en lo que tiene instalado, decile que no está incluido en su versión y ofrecé lo
+  que sí se puede hacer. No lo intentes con otro agente que no corresponde.
 - Ninguna acción con efecto sin confirmación: instalar un plugin y activar un conector se confirman antes.
 - En la web de la persona solo se mira: nada de formularios, login ni acciones.
 - Todo en español, concreto.

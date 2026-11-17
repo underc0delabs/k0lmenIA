@@ -1,17 +1,18 @@
 ---
 name: options
-description: Muestra el cuadro comparativo de los planes de k0lmenIA (gratis, Pro y Empresa) y todas las opciones de cada uno — agentes, skills, conectores y gestión de pruebas — con lo que hay instalado en esta PC. Úsalo con /k0lmenia:options o cuando pregunten qué trae cada plan.
+description: Muestra el cuadro comparativo de los planes de k0lmenIA (gratis y Pro) y todas las opciones de cada uno — agentes, skills, conectores y gestión de pruebas — con lo que hay instalado en esta PC. Úsalo con /k0lmenia:options o cuando pregunten qué trae cada plan.
 ---
 
-# Opciones de k0lmenIA: los tres planes
+# Opciones de k0lmenIA: los dos planes
 
-La persona quiere ver qué trae cada plan y en qué se diferencian. Mostralo completo y ordenado; no es una venta.
+La persona quiere ver qué trae cada plan y en qué se diferencian. Mostralo completo y ordenado. Nada está a la venta:
+Pro es privado y el cuadro solo lo incluye si la persona lo tiene instalado o tiene acceso a su repo.
 
 ## Paso 1 — Traer el cuadro
 
 Corré `k0lmenia planes --opciones` (en el repo clonado: `k0lmenia planes -- --opciones`). Devuelve markdown con:
 
-1. **Comparación**: precio, cantidad de agentes, skills y conectores, una fila por capacidad con ✅ o — en cada plan, y la
+1. **Comparación**: cantidad de agentes, skills y conectores, una fila por capacidad con ✅ o — en cada plan, y la
    fila **En esta PC** (instalado, disponible o sin acceso).
 2. **Todas las opciones**: por plan, la tabla de agentes y la de skills (con qué hace cada uno), los conectores y la gestión
    de pruebas. Cada plan incluye todo lo del anterior.
@@ -23,8 +24,10 @@ Si tarda o no hay red, usá `k0lmenia planes --opciones --sin-red` (el cuadro sa
 - Primero la **Comparación**, tal cual (es una tabla markdown).
 - Después **Todas las opciones**, completas: todos los agentes y skills de todos los planes. No resumas ni recortes la
   lista: la persona pidió verlas todas. Mantené los nombres de agentes y skills como vienen (en `código`).
-- Cerrá con una línea: si tiene acceso a un plan que no instaló, `/k0lmenia:setup` lo instala; si no, el link de compra
-  que viene al final del cuadro.
+- Pro viene agrupado en paquetes (base, seguridad, performance…): mostrá la tabla de paquetes y, debajo, los agentes y
+  skills de cada uno, tal cual vienen.
+- Si a Pro le faltan paquetes y la persona tiene acceso, cerrá con una línea: `/k0lmenia:setup` instala todo o solo los
+  paquetes que elija.
 
 ## Paso 3 — Preguntas
 
@@ -33,5 +36,5 @@ conviene para su proyecto, seguí con el skill `setup` (analiza su web y recomie
 
 ## Reglas
 
-- No inventes agentes, precios ni capacidades: todo sale de `k0lmenia planes --opciones`.
+- No inventes agentes ni capacidades: todo sale de `k0lmenia planes --opciones`. No hables de precios ni compras.
 - Todo en español.

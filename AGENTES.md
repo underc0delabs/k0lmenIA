@@ -154,8 +154,8 @@ Los skills se cargan solo cuando hacen falta.
 | documentacion-proyecto | Lectura del repositorio, mapa funcional, estructura de input/documentacion/ y dossier, modos barrido y actualizar | documentador-proyecto |
 | base-conocimiento | Armar y mantener la base de conocimiento del proyecto en input/documentacion/ y la rutina ágil cuando cambian los requerimientos | la conversación principal |
 | ejecucion-manual | Ejecución manual acompañada: caso por caso y paso por paso, resultados, evidencia, tiempos, bugs, pausa y retomar | la conversación principal (`/k0lmenia:ejecucion-manual`) y asistente-ejecucion-manual |
-| setup | Setup inicial: recorre la web del proyecto, recomienda agentes y planes, y activa los plugins de los planes a los que tenés acceso (Pro, Empresa); configura k0lmenaTMT | la conversación principal (`/k0lmenia:setup`) |
-| options | Cuadro comparativo de los planes (gratis, Pro y Empresa) y todas las opciones de cada uno: agentes, skills y conectores | la conversación principal (`/k0lmenia:options`) |
+| setup | Setup inicial: recorre la web del proyecto, recomienda agentes y configura k0lmenaTMT | la conversación principal (`/k0lmenia:setup`) |
+| options | Cuadro comparativo de los planes (gratis y Pro) y todas las opciones de cada uno: agentes, skills y conectores | la conversación principal (`/k0lmenia:options`) |
 | guia-pruebas | Asistente interactivo para elegir qué probar y con qué agente o skill | la conversación principal |
 | empezar | Bienvenida y puesta en marcha: preparar el proyecto, revisar el entorno, conectar herramientas y elegir la primera tarea | la conversación principal (`/k0lmenia:empezar` en el plugin) |
 
@@ -188,4 +188,3 @@ Los skills se cargan solo cuando hacen falta.
 | atlassian (Jira) | Sí | todos los que investigan una historia (skill investigacion-contexto), triador-bugs |
 | k0lmena-tmt | No | consultas en k0lmenaTMT (casos, planes, estadísticas); las cargas van por ${CLAUDE_PLUGIN_ROOT}/scripts/gestion |
 
-¿Necesitás más agentes? **K0lmenIA Pro** suma todos los agentes para probar (101 en total) y **K0lmenIA Empresa**, los de métricas, auditoría y gestión del equipo: https://k0lmena.com/k0lmenia/

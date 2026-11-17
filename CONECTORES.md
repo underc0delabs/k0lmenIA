@@ -173,12 +173,6 @@ El agente `documentador-proyecto` lee el repositorio de la aplicación **en solo
 
 ---
 
-## ¿Necesitás más conectores?
-
-Confluence, Figma, GitHub, GitLab, Linear, ClickUp, monday.com, Asana, Trello, Notion, YouTrack, Shortcut, Appium, observabilidad, analytics, soporte y plataformas de testing están en K0lmenIA Pro; Azure DevOps, QMetry, AIO Tests y Salesforce, en K0lmenIA Empresa. Más información en https://k0lmena.com/k0lmenia/
-
----
-
 ## Buenas prácticas
 
 - **Las herramientas de escritura modifican datos compartidos** (crear o editar casos, importar resultados). Por eso los conectores no se agregan a `permissions.allow`: Claude Code pide confirmación antes de cada acción.

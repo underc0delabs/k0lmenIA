@@ -19,9 +19,8 @@ que esté todo instalado, te ayuda a conectar tus herramientas y te sugiere por 
 
 ## Planes
 
-El core es gratis. **K0lmenIA Pro** y **K0lmenIA Empresa** se suman como plugins aparte (`k0lmenia-pro` y
-`k0lmenia-empresa`) para quien tiene acceso a su repo. **`/k0lmenia:setup`** te muestra qué plan tenés, a cuáles tenés
-acceso y qué suma cada uno, e instala los que te corresponden. Desde una terminal: `k0lmenia planes`.
+El core es gratis y abierto. **K0lmenIA Pro** (`k0lmenia-pro`) es privado: no se vende y lo instala solo quien
+tiene acceso de lectura a su repo. Si es tu caso, **`/k0lmenia:setup`** lo instala. Desde una terminal: `k0lmenia planes`.
 
 ## Qué instala y dónde
 

@@ -1,6 +1,5 @@
 # Gestión de pruebas: Xray y k0lmenaTMT
 
-> QMetry, AIO Tests, Zephyr Scale y Azure DevOps Test Plans están disponibles en K0lmenIA Empresa.
 
 Integración propia de k0lmenIA con las herramientas de gestión de pruebas, sobre sus **APIs oficiales**. Los mismos comandos sirven para las tres variantes:
 

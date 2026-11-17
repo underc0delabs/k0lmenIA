@@ -5,13 +5,15 @@ Los planes de k0lmenIA en esta PC: qué está instalado, a qué planes tiene acc
 Uso (como plugin: `k0lmenia planes …`; en el repo clonado: `npm run planes -- …`):
     planes                      tabla con cada plan (instalado, disponible o bloqueado)
     planes --json               lo mismo en JSON (lo usa el skill /k0lmenia:setup)
-    planes --instalar pro       instala el plugin de un plan (claude plugin install k0lmenia-pro@k0lmenia)
+    planes --instalar pro       instala Pro completo (claude plugin install k0lmenia-pro@k0lmenia: todos sus paquetes)
+    planes --instalar seguridad performance   instala solo esos paquetes de Pro (cada uno suma la base sola)
     planes --aviso              una línea para el inicio de la sesión si hay un plan disponible sin instalar
                                 (revisa como mucho una vez por día; nunca falla)
 
 Cómo se sabe cada cosa:
-  - qué trae cada plan: catalogo-planes.json (lo arma scripts/catalogo_planes.py en el repo de Empresa);
-  - si está instalado: cada plugin pago se registra al iniciar la sesión en ~/.k0lmenia/planes.json (su carpeta);
+  - qué trae cada plan: catalogo-planes.json (lo arma scripts/catalogo_planes.py en el repo de Pro);
+  - si está instalado: cada plugin de Pro se anota al iniciar la sesión en ~/.k0lmenia/planes.json (su carpeta; la
+    base, como el plan `pro`, y cada paquete en `paquetes`);
   - si hay acceso: `git ls-remote` contra el repo del plan, con las mismas credenciales de git que usa Claude Code para
     instalar plugins (nunca pide usuario ni contraseña: si no hay credenciales, el plan sale bloqueado o desconocido).
 """
@@ -40,14 +42,27 @@ def leer_catalogo():
     return json.loads(CATALOGO.read_text(encoding="utf-8"))
 
 
-def instalados():
-    """{plan: carpeta} de los plugins pagos registrados cuya carpeta sigue existiendo."""
+def _registro():
     try:
         datos = json.loads(registro_path().read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return {}
-    return {plan: v["raiz"] for plan, v in datos.items()
+    return datos if isinstance(datos, dict) else {}
+
+
+def instalados():
+    """{plan: carpeta} de los plugins de plan registrados cuya carpeta sigue existiendo (Pro: su base)."""
+    return {plan: v["raiz"] for plan, v in _registro().items()
             if isinstance(v, dict) and v.get("raiz") and Path(v["raiz"]).is_dir()}
+
+
+def paquetes_instalados():
+    """Los ids de los paquetes de Pro instalados: cada uno se anota al iniciar la sesión (la base, como el plan `pro`)."""
+    ids = {pid for pid, v in (_registro().get("paquetes") or {}).items()
+           if isinstance(v, dict) and v.get("raiz") and Path(v["raiz"]).is_dir()}
+    if "pro" in instalados():
+        ids.add("base")
+    return ids
 
 
 def _env_git():
@@ -109,21 +124,31 @@ def estado(chequear_acceso=True, timeout=20):
         with concurrent.futures.ThreadPoolExecutor(max_workers=len(pagos) or 1) as ex:
             futuros = {p["id"]: ex.submit(acceso, p["repo"], timeout) for p in pagos}
             accesos = {k: f.result() for k, f in futuros.items()}
+    con_paquetes = paquetes_instalados()
     planes = []
     for p in cat["planes"]:
         base = not p["depende"]
         inst = base or p["id"] in reg  # el core siempre está: es el que corre este script
         acc, detalle = ("si", "") if base else accesos.get(p["id"], ("desconocido", "no se revisó"))
+        paquetes = [{"id": q["id"], "nombre": q["nombre"], "plugin": q["plugin"], "resumen": q["resumen"],
+                     "agentes": len(q["agentes"]), "skills": len(q["skills"]), "instalado": q["id"] in con_paquetes}
+                    for q in p.get("paquetes", [])]
         planes.append({
-            "id": p["id"], "nombre": p["nombre"], "plan": p["plan"], "precio": p["precio"], "plugin": p["plugin"],
+            "id": p["id"], "nombre": p["nombre"], "plan": p["plan"], "plugin": p["plugin"],
             "repo": p["repo"], "instalado": bool(inst), "acceso": acc, "detalle": detalle,
             "estado": "instalado" if inst else ("disponible" if acc == "si" else ("bloqueado" if acc == "no" else "desconocido")),
             "resumen": p["resumen"], "agentes": len(p["agentes"]), "skills": len(p["skills"]),
             "conectores": p["conectores"], "gestion": p["gestion"],
             "destacados": [f"{a['nombre']}: {a['descripcion']}" for a in p["agentes"][:6]],
+            **({"paquetes": paquetes, "completo": all(q["instalado"] for q in paquetes)} if paquetes else {}),
         })
-    return {"marketplace": cat["marketplace"], "compra": cat["compra"], "planes": planes,
+    return {"marketplace": cat["marketplace"], "planes": planes,
             "github": github() if chequear_acceso else None, "tmt": tmt()}
+
+
+def visible(p):
+    """Pro no se vende ni se ofrece: solo se muestra a quien lo tiene instalado o tiene acceso a su repo privado."""
+    return p["id"] == "light" or p.get("estado") in ("instalado", "disponible")
 
 
 ICONO = {"instalado": "✅", "disponible": "⬇️ ", "bloqueado": "🔒", "desconocido": "❔"}
@@ -132,18 +157,21 @@ ICONO = {"instalado": "✅", "disponible": "⬇️ ", "bloqueado": "🔒", "desc
 def mostrar(e):
     print("Planes de k0lmenIA\n")
     for p in e["planes"]:
-        print(f"{ICONO[p['estado']]} {p['nombre']:<18} {p['estado']:<12} {p['precio']}")
+        if not visible(p):
+            continue
+        print(f"{ICONO[p['estado']]} {p['nombre']:<18} {p['estado']}")
         print(f"   {p['agentes']} agentes · {p['skills']} skills — {p['resumen']}")
-        if p["estado"] == "disponible":
+        for q in p.get("paquetes", []):
+            print(f"   {'✅' if q['instalado'] else '· '} {q['id']:<15} {q['agentes']:>2} agentes — {q['resumen']}")
+        if p.get("paquetes") and not p.get("completo") and p["estado"] in ("instalado", "disponible"):
+            print(f"   → todo: k0lmenia planes --instalar {p['id']}   ·   "
+                  f"solo algunos: k0lmenia planes --instalar seguridad performance …")
+        elif p["estado"] == "disponible":
             print(f"   → instalalo con: k0lmenia planes --instalar {p['id']}")
-        elif p["estado"] == "bloqueado":
-            print(f"   → {e['compra']}")
-        elif p["estado"] == "desconocido":
-            print(f"   → no pude revisar el acceso: {p['detalle']}")
         print()
     gh = e.get("github") or {}
-    if gh and not gh.get("credenciales"):
-        print("Si ya tenés un plan pago y sale bloqueado, cargá tus credenciales de GitHub en una terminal:\n"
+    if gh and not gh.get("credenciales") and any(p["estado"] == "desconocido" for p in e["planes"]):
+        print("Si te dieron acceso a K0lmenIA Pro, cargá tus credenciales de GitHub en una terminal:\n"
               "  gh auth login\n  gh auth setup-git")
     elif gh.get("usuario"):
         print(f"Usuario de GitHub en esta PC: {gh['usuario']}")
@@ -151,28 +179,60 @@ def mostrar(e):
         print("k0lmenaTMT: sin configurar (k0lmenia configurar y después k0lmenia conector activar k0lmena-tmt).")
 
 
-def instalar(plan_id, marketplace="k0lmenia"):
+def resolver(nombres, cat=None):
+    """[(plan, nombre, plugin)] a instalar. `pro` (o `k0lmenia-pro`, `todo`) es Pro completo; un paquete se nombra por su
+    id (`seguridad`), `pro-seguridad` o su plugin (`k0lmenia-pro-seguridad`). Si se pide el completo, los paquetes sobran.
+    Devuelve (lista, desconocidos)."""
+    cat = cat or leer_catalogo()
+    elegidos, desconocidos = [], []
+    for nombre in nombres:
+        n = nombre.strip().lower()
+        hallado = None
+        for p in cat["planes"]:
+            if not p["depende"]:
+                continue
+            if n in (p["id"], p["plugin"], "todo", "completo"):
+                hallado = (p, p["nombre"], p["plugin"])
+            for q in p.get("paquetes", []):
+                if n in (q["id"], q["plugin"], f"{p['id']}-{q['id']}"):
+                    hallado = (p, q["nombre"], q["plugin"])
+        if hallado:
+            if hallado[2] not in [e[2] for e in elegidos]:
+                elegidos.append(hallado)
+        else:
+            desconocidos.append(nombre)
+    completos = {p["plugin"] for p, _, plugin in elegidos if plugin == p["plugin"]}
+    elegidos = [e for e in elegidos if e[2] in completos or e[0]["plugin"] not in completos]
+    return elegidos, desconocidos
+
+
+def instalar(nombres, marketplace="k0lmenia"):
     cat = leer_catalogo()
-    plan = next((p for p in cat["planes"] if p["id"] == plan_id or p["plugin"] == plan_id), None)
-    if not plan or not plan["depende"]:
-        print(f"planes: no hay un plan pago llamado {plan_id!r} (son: pro, empresa).", file=sys.stderr)
+    nombres = [nombres] if isinstance(nombres, str) else list(nombres)
+    elegidos, desconocidos = resolver(nombres, cat)
+    if desconocidos or not elegidos:
+        validos = [p["id"] for p in cat["planes"] if p["depende"]]
+        validos += [q["id"] for p in cat["planes"] for q in p.get("paquetes", [])]
+        print(f"planes: no conozco {', '.join(map(repr, desconocidos)) or 'nada para instalar'}. "
+              f"Podés pedir: {', '.join(validos)}.", file=sys.stderr)
         return 2
-    acc, detalle = acceso(plan["repo"])
-    if acc == "no":
-        print(f"No tenés acceso a {plan['nombre']} ({detalle}).\n"
-              f"Si ya lo contrataste: gh auth login y gh auth setup-git en una terminal, y pasale tu usuario de GitHub a Underc0de.\n"
-              f"Si no: {cat['compra']}", file=sys.stderr)
-        return 3
+    for repo in dict.fromkeys(p["repo"] for p, _, _ in elegidos):
+        acc, detalle = acceso(repo)
+        if acc == "no":
+            print(f"No tenés acceso a {repo} ({detalle}). Es privado: lo instala quien tiene acceso de lectura.\n"
+                  "Si te lo dieron: gh auth login y gh auth setup-git en una terminal.", file=sys.stderr)
+            return 3
     if not shutil.which("claude"):
-        print(f"No encuentro el comando claude. Instalalo desde Claude Code con: /plugin install {plan['plugin']}@{marketplace}",
-              file=sys.stderr)
+        print("No encuentro el comando claude. Instalalo desde Claude Code con: "
+              + " y ".join(f"/plugin install {plugin}@{marketplace}" for _, _, plugin in elegidos), file=sys.stderr)
         return 4
-    print(f"Instalando {plan['nombre']} ({plan['plugin']}@{marketplace})…")
-    r = subprocess.run(["claude", "plugin", "install", f"{plan['plugin']}@{marketplace}"], env=_env_git())
-    if r.returncode != 0:
-        print(f"No se pudo instalar. Si el marketplace no está agregado: claude plugin marketplace add underc0delabs/k0lmenIA",
-              file=sys.stderr)
-        return r.returncode
+    for _, nombre, plugin in elegidos:
+        print(f"Instalando {nombre} ({plugin}@{marketplace})…")
+        r = subprocess.run(["claude", "plugin", "install", f"{plugin}@{marketplace}"], env=_env_git())
+        if r.returncode != 0:
+            print(f"No se pudo instalar {plugin}. Si el marketplace no está agregado: "
+                  "claude plugin marketplace add underc0delabs/k0lmenIA", file=sys.stderr)
+            return r.returncode
     print("Listo. Escribí /reload-plugins (o reiniciá Claude Code) para usar los agentes nuevos.")
     return 0
 
@@ -209,7 +269,7 @@ def _marca(cap_desde, plan_id):
     return "✅" if ORDEN_PLANES.index(plan_id) >= ORDEN_PLANES.index(cap_desde) else "—"
 
 
-ORDEN_PLANES = ["light", "pro", "empresa"]
+ORDEN_PLANES = ["light", "pro"]
 ESTADO_TEXTO = {"instalado": "✅ instalado", "disponible": "⬇️ disponible", "bloqueado": "🔒 sin acceso",
                 "desconocido": "❔ sin revisar"}
 
@@ -219,14 +279,14 @@ def _celda(texto):
 
 
 def opciones(e=None):
-    """Markdown: el cuadro comparativo de los tres planes y, debajo, todo lo que trae cada uno."""
+    """Markdown: el cuadro comparativo de los planes y, debajo, todo lo que trae cada uno. Con el estado de esta PC (`e`),
+    Pro solo aparece si está instalado o hay acceso a su repo (no se ofrece a quien no lo tiene)."""
     cat = leer_catalogo()
-    planes = cat["planes"]
-    acumulado = lambda i, clave: sum(len(p[clave]) for p in planes[: i + 1])  # noqa: E731
     estados = {p["id"]: p["estado"] for p in (e or {}).get("planes", [])}
+    planes = [p for p in cat["planes"] if e is None or visible({"id": p["id"], "estado": estados.get(p["id"])})]
+    acumulado = lambda i, clave: sum(len(p[clave]) for p in planes[: i + 1])  # noqa: E731
     cab = "| | " + " | ".join(f"**{p['nombre']}**" for p in planes) + " |"
     lineas = ["# Planes de k0lmenIA", "", "## Comparación", "", cab, "|---|" + "---|" * len(planes),
-              "| Precio | " + " | ".join(p["precio"] for p in planes) + " |",
               "| Agentes | " + " | ".join(str(acumulado(i, "agentes")) for i in range(len(planes))) + " |",
               "| Skills | " + " | ".join(str(acumulado(i, "skills")) for i in range(len(planes))) + " |",
               "| Conectores | " + " | ".join(str(sum(len(q["conectores"]) for q in planes[: i + 1])) for i in range(len(planes))) + " |"]
@@ -234,15 +294,30 @@ def opciones(e=None):
         lineas.append(f"| {c['nombre']} | " + " | ".join(_marca(c["desde"], p["id"]) for p in planes) + " |")
     if estados:
         lineas.append("| **En esta PC** | " + " | ".join(ESTADO_TEXTO.get(estados.get(p["id"]), "") for p in planes) + " |")
-    lineas += ["", "Cada plan incluye todo lo del anterior. Pro y Empresa se instalan como plugins aparte (`/k0lmenia:setup`); "
-               f"para contratar: {cat['compra']}", "", "## Todas las opciones"]
+    if len(planes) > 1:
+        lineas += ["", "Pro incluye todo lo del plan gratis y se instala aparte (`/k0lmenia:setup`): completo o por paquetes."]
+    lineas += ["", "## Todas las opciones"]
+    instalados_pq = {q["id"] for p in (e or {}).get("planes", []) for q in p.get("paquetes", []) if q.get("instalado")}
     for i, p in enumerate(planes):
         previo = f" (además de todo lo de {planes[i - 1]['nombre']})" if i else ""
-        lineas += ["", f"### {p['nombre']} — {p['precio']}{previo}", "", p["resumen"], "",
-                   f"**Agentes ({len(p['agentes'])})**", "", "| Agente | Qué hace |", "|---|---|"]
-        lineas += [f"| `{a['nombre']}` | {_celda(a['descripcion'])} |" for a in p["agentes"]]
-        lineas += ["", f"**Skills ({len(p['skills'])})**", "", "| Skill | Qué hace |", "|---|---|"]
-        lineas += [f"| `{s['nombre']}` | {_celda(s['descripcion'])} |" for s in p["skills"]]
+        lineas += ["", f"### {p['nombre']}{previo}", "", p["resumen"], ""]
+        agentes = {a["nombre"]: a for a in p["agentes"]}
+        skills = {s["nombre"]: s for s in p["skills"]}
+        grupos = [(None, p["agentes"], p["skills"])]
+        if p.get("paquetes"):
+            lineas += [f"Se instala completo (`{p['plugin']}`) o por paquetes; cada paquete suma la base sola.", "",
+                       "| Paquete | Agentes | Qué trae |" + (" En esta PC |" if e else ""),
+                       "|---|---|---|" + ("---|" if e else "")]
+            lineas += [f"| **{q['id']}** | {len(q['agentes'])} | {_celda(q['resumen'])} |"
+                       + ((" ✅ instalado |" if q["id"] in instalados_pq else " — |") if e else "") for q in p["paquetes"]]
+            grupos = [(q, [agentes[n] for n in q["agentes"]], [skills[n] for n in q["skills"]]) for q in p["paquetes"]]
+        for q, ags, sks in grupos:
+            if q:
+                lineas += ["", f"#### Paquete {q['id']} — {q['nombre']} (`{q['plugin']}`)"]
+            lineas += ["", f"**Agentes ({len(ags)})**", "", "| Agente | Qué hace |", "|---|---|"]
+            lineas += [f"| `{a['nombre']}` | {_celda(a['descripcion'])} |" for a in ags]
+            lineas += ["", f"**Skills ({len(sks)})**", "", "| Skill | Qué hace |", "|---|---|"]
+            lineas += [f"| `{s['nombre']}` | {_celda(s['descripcion'])} |" for s in sks]
         lineas += ["", "**Conectores**: " + ", ".join(f"`{c}`" for c in p["conectores"])]
         if p["gestion"]:
             lineas.append("**Gestión de pruebas**: " + ", ".join(p["gestion"]))
@@ -313,15 +388,25 @@ def recomendar_desde(url, html, cabeceras=None, e=None):
             if agente not in vistos:
                 vistos.add(agente)
                 recomendados.append((agente, s["descripcion"]))
+    # Con el estado de la PC, solo se recomienda lo de los planes que la persona ve (Pro, si lo tiene o tiene acceso).
+    ids = {p["id"] for p in e["planes"] if visible(p)} if e else {p["id"] for p in cat["planes"]}
+    planes = [p for p in cat["planes"] if p["id"] in ids]
+    paquete_de = {a: q["id"] for p in cat["planes"] for q in p.get("paquetes", []) for a in q["agentes"]}
     salida = []
     for agente, motivo in recomendados:
         p = plan_de.get(agente)
-        if p:
-            salida.append({"agente": agente, "motivo": motivo, "plan": p["id"], "plan_nombre": p["nombre"]})
-    por_plan = {p["id"]: [r["agente"] for r in salida if r["plan"] == p["id"]] for p in cat["planes"]}
-    sugerido = next((p["id"] for p in reversed(cat["planes"]) if por_plan[p["id"]]), "light")
+        if p and p["id"] in ids:
+            r = {"agente": agente, "motivo": motivo, "plan": p["id"], "plan_nombre": p["nombre"]}
+            if agente in paquete_de:
+                r["paquete"] = paquete_de[agente]
+            salida.append(r)
+    por_plan = {p["id"]: [r["agente"] for r in salida if r["plan"] == p["id"]] for p in planes}
+    sugerido = next((p["id"] for p in reversed(planes) if por_plan[p["id"]]), "light")
+    # Los paquetes de Pro que suman algo para este proyecto (la base va sola con cualquiera).
+    paquetes = list(dict.fromkeys(r["paquete"] for r in salida if r.get("paquete")))
+    paquetes = [q for q in paquetes if q != "base"] or paquetes
     return {"url": url, "titulo": (html_lib.unescape(" ".join(m.group(1).split()))[:120] if m else None), "senales": senales, "recomendados": salida,
-            "por_plan": por_plan, "plan_sugerido": sugerido, "planes": (e or {}).get("planes")}
+            "por_plan": por_plan, "plan_sugerido": sugerido, "paquetes_sugeridos": paquetes, "planes": (e or {}).get("planes")}
 
 
 def recomendar(url, chequear_acceso=True):
@@ -352,7 +437,10 @@ def mostrar_recomendacion(d):
             print(f"\n{p['nombre']} ({ESTADO_TEXTO.get(estados.get(p['id']), '')}):")
             for r in d["recomendados"]:
                 if r["plan"] == p["id"]:
-                    print(f"  - {r['agente']}: {r['motivo']}")
+                    print(f"  - {r['agente']}" + (f" [paquete {r['paquete']}]" if r.get("paquete") else "") + f": {r['motivo']}")
+    if d.get("paquetes_sugeridos"):
+        print(f"\nPaquetes de Pro que te sirven: {', '.join(d['paquetes_sugeridos'])} "
+              f"(k0lmenia planes --instalar {' '.join(d['paquetes_sugeridos'])}; todo: --instalar pro)")
 
 
 def main(argv=None):
@@ -360,7 +448,7 @@ def main(argv=None):
         flujo.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(description="Planes de k0lmenIA: instalados, disponibles y bloqueados.")
     g = ap.add_mutually_exclusive_group()
-    g.add_argument("--instalar", metavar="PLAN")
+    g.add_argument("--instalar", metavar="QUE", nargs="+", help="pro (completo) o paquetes de Pro: seguridad performance …")
     g.add_argument("--aviso", action="store_true")
     g.add_argument("--opciones", action="store_true", help="cuadro comparativo y todas las opciones de cada plan (markdown)")
     g.add_argument("--recomendar", metavar="URL", help="lee la web del proyecto y recomienda agentes y planes")

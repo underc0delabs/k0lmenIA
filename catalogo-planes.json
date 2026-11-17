@@ -1,7 +1,6 @@
 {
-  "_info": "Generado por scripts/catalogo_planes.py (repo de Empresa). No se edita a mano: se cambia el reparto ahí, se regenera y se copia a los tres repos.",
+  "_info": "Generado por scripts/catalogo_planes.py (repo de Pro). No se edita a mano: se cambia el reparto ahí, se regenera y se copia al repo del core.",
   "marketplace": "k0lmenia",
-  "compra": "https://k0lmena.com/k0lmenia/",
   "capacidades": [
     {
       "nombre": "Análisis de historias, casos manuales y BDD, revisión de casos",
@@ -65,27 +64,27 @@
     },
     {
       "nombre": "Métricas de QA, tablero de calidad y resumen diario",
-      "desde": "empresa"
+      "desde": "pro"
     },
     {
       "nombre": "Trazabilidad y evidencias para auditoría (ISO 29119, PCI, SOX)",
-      "desde": "empresa"
+      "desde": "pro"
     },
     {
       "nombre": "Presentaciones de resultados y planificación de capacidad",
-      "desde": "empresa"
+      "desde": "pro"
     },
     {
       "nombre": "SAP, Salesforce y Dynamics 365",
-      "desde": "empresa"
+      "desde": "pro"
     },
     {
       "nombre": "Azure DevOps Test Plans, Zephyr Scale, QMetry y AIO Tests",
-      "desde": "empresa"
+      "desde": "pro"
     },
     {
       "nombre": "Onboarding guiado del equipo",
-      "desde": "empresa"
+      "desde": "pro"
     }
   ],
   "planes": [
@@ -93,7 +92,6 @@
       "id": "light",
       "nombre": "K0lmenIA",
       "plan": "Gratis",
-      "precio": "Gratis",
       "plugin": "k0lmenia",
       "repo": "underc0delabs/k0lmenIA",
       "fuente": {
@@ -103,7 +101,7 @@
       },
       "depende": [],
       "resumen": "Lo elemental del día a día de QA: historias, casos manuales y BDD, bugs, ejecución E2E y de API, Xray y k0lmenaTMT.",
-      "descripcion": "K0lmenIA: agentes de QA para Claude Code, en español. Documentación del proyecto, análisis de historias, casos de prueba (Excel y BDD), revisión de casos, triage de bugs, ejecución E2E y de API (REST, GraphQL y gRPC), ejecución manual guiada, automatización sin tokens con k0lmena, gestión en Xray y k0lmenaTMT, e informes en español e inglés. Pro y Empresa se suman como plugins aparte (/k0lmenia:setup).",
+      "descripcion": "K0lmenIA: agentes de QA para Claude Code, en español. Documentación del proyecto, análisis de historias, casos de prueba (Excel y BDD), revisión de casos, triage de bugs, ejecución E2E y de API (REST, GraphQL y gRPC), ejecución manual guiada, automatización sin tokens con k0lmena, gestión en Xray y k0lmenaTMT, e informes en español e inglés. Pro se suma como plugin aparte (/k0lmenia:setup).",
       "web": "https://underc0delabs.github.io/k0lmenIA/",
       "gestion": [
         "Xray Cloud",
@@ -225,11 +223,11 @@
         },
         {
           "nombre": "setup",
-          "descripcion": "Setup inicial de k0lmenIA — pide la web principal del proyecto, la recorre, recomienda qué agentes y plugins (Pro, Empresa) le sirven, muestra checks para activar los planes a los que tiene acceso, los instala y configur"
+          "descripcion": "Setup inicial de k0lmenIA — pide la web principal del proyecto, la recorre, recomienda qué agentes le sirven (del core y de Pro), ofrece instalar Pro completo o solo los paquetes que necesita (seguridad, performance…) si"
         },
         {
           "nombre": "options",
-          "descripcion": "Muestra el cuadro comparativo de los planes de k0lmenIA (gratis, Pro y Empresa) y todas las opciones de cada uno — agentes, skills, conectores y gestión de pruebas — con lo que hay instalado en esta PC."
+          "descripcion": "Muestra el cuadro comparativo de los planes de k0lmenIA (gratis y Pro) y todas las opciones de cada uno — agentes, skills, conectores y gestión de pruebas — con lo que hay instalado en esta PC."
         }
       ],
       "scripts": []
@@ -238,7 +236,6 @@
       "id": "pro",
       "nombre": "K0lmenIA Pro",
       "plan": "Pro",
-      "precio": "USD 29 por usuario por mes",
       "plugin": "k0lmenia-pro",
       "repo": "underc0delabs/k0lmenIA-PRO-plugin",
       "fuente": {
@@ -248,10 +245,15 @@
       "depende": [
         "k0lmenia"
       ],
-      "resumen": "Todo el ciclo de QA: accesibilidad, seguridad, performance, mobile, desktop, e-commerce, APIs avanzadas, IA y chatbots, causa raíz, cobertura, producción, mutación y más, con Confluence, Figma, GitHub, GitLab, Linear, Sentry, Datadog y otros conectores.",
-      "descripcion": "K0lmenIA Pro (requiere el plugin k0lmenia): suma 88 agentes de QA en español — accesibilidad, seguridad, performance, mobile, desktop, e-commerce, APIs avanzadas, IA y chatbots, causa raíz, cobertura, producción y más. Licencia comercial.",
-      "web": "https://k0lmena.com/k0lmenia/",
-      "gestion": [],
+      "resumen": "Todo el ciclo de QA: accesibilidad, seguridad, performance, mobile, desktop, e-commerce, APIs avanzadas, IA y chatbots, causa raíz, cobertura, producción, mutación, métricas y tablero de calidad, trazabilidad, evidencias para auditoría, SAP, Salesforce y Dynamics, con Confluence, Figma, GitHub, GitLab, Linear, Sentry, Datadog, Azure DevOps, Zephyr Scale, QMetry, AIO y otros conectores.",
+      "descripcion": "K0lmenIA Pro completo (privado; instala todos los paquetes de Pro y el core): 98 agentes de QA en español — accesibilidad, seguridad, performance, mobile, desktop, e-commerce, APIs avanzadas, IA y chatbots, causa raíz, cobertura, producción, métricas y tablero de calidad, trazabilidad, auditoría, SAP, Salesforce, Dynamics, Azure DevOps, Zephyr Scale, QMetry, AIO y más. Privado: lo instala quien tiene acceso de lectura a su repo.",
+      "web": "https://github.com/underc0delabs/k0lmenIA-PRO-plugin",
+      "gestion": [
+        "Azure DevOps Test Plans",
+        "Zephyr Scale",
+        "QMetry",
+        "AIO Tests"
+      ],
       "conectores": [
         "figma",
         "figma-desktop",
@@ -277,7 +279,12 @@
         "testrail",
         "browserstack",
         "sauce-labs",
-        "postman"
+        "postman",
+        "azure-devops",
+        "qtm4j",
+        "qmetry",
+        "aio-tests",
+        "salesforce"
       ],
       "agentes": [
         {
@@ -631,6 +638,46 @@
         {
           "nombre": "vigia-apis-externas",
           "descripcion": "Detecta cuando la API de un tercero cambia su contrato (esquema, códigos, deprecación, tiempos) contra una línea base."
+        },
+        {
+          "nombre": "analista-metricas",
+          "descripcion": "Métricas de QA de cualquier fuente (Jira, Xray, Azure DevOps, TestRail, k0lmenaTMT, CSV/Excel o k0lmenIA) — ejecuciones, bugs por criticidad, sprints — en un dashboard interactivo."
+        },
+        {
+          "nombre": "tablero-calidad",
+          "descripcion": "Tablero de calidad de un sprint, release o rango con lo que dejaron las herramientas — aprobados y tendencia, % automatizado, cobertura, bugs, inestables."
+        },
+        {
+          "nombre": "analista-trazabilidad",
+          "descripcion": "Verifica la trazabilidad en Jira, Xray o Azure DevOps (épica, historia, caso, ejecución, bug) — historias sin casos, casos huérfanos, links rotos — con el % por épica."
+        },
+        {
+          "nombre": "auditor-evidencias",
+          "descripcion": "Arma el paquete de evidencia auditable de una release para industrias reguladas — matriz requisito → caso → ejecución → evidencia → bug, ISO 29119-3, IEC 62304, PCI, SOX y ZIP con SHA-256."
+        },
+        {
+          "nombre": "presentador-resultados",
+          "descripcion": "Arma la presentación de resultados de QA (sprint review, release, gerencia) con cierre, tablero, métricas y bugs, en diapositivas HTML (ES/EN, PDF) y PowerPoint editable."
+        },
+        {
+          "nombre": "guia-onboarding",
+          "descripcion": "Arma el plan de incorporación de un QA nuevo — recorrido del producto, entorno, agentes útiles según su rol y primeras tareas — en HTML."
+        },
+        {
+          "nombre": "probador-sap",
+          "descripcion": "Prueba SAP (S/4HANA o ECC) en QA — SAP GUI, Fiori/UI5 (OData), roles y SoD y procesos O2C, P2P y R2R."
+        },
+        {
+          "nombre": "probador-salesforce",
+          "descripcion": "Prueba una org de Salesforce (sandbox) — perfiles, permission sets, validaciones, flows y triggers con la CLI sf, tests de Apex y Lightning por perfil."
+        },
+        {
+          "nombre": "probador-dynamics",
+          "descripcion": "Prueba Dynamics 365 y otros CRM/ERP de bajo código en entorno no productivo — roles, Dataverse, business rules, flows, plugins y procesos end-to-end — por rol."
+        },
+        {
+          "nombre": "planificador-capacidad",
+          "descripcion": "Calcula cuánto se puede probar en un sprint o release según el equipo y el historial, con escenarios y el riesgo de lo que queda afuera."
         }
       ],
       "skills": [
@@ -909,86 +956,7 @@
         {
           "nombre": "vigilancia-apis",
           "descripcion": "Cómo vigilar APIs de terceros (línea base, qué comparar, severidad, ejecución programada)."
-        }
-      ],
-      "scripts": [
-        "scripts/generar_informe_generico.py"
-      ]
-    },
-    {
-      "id": "empresa",
-      "nombre": "K0lmenIA Empresa",
-      "plan": "Empresa",
-      "precio": "USD 590 por mes, hasta 10 personas",
-      "plugin": "k0lmenia-empresa",
-      "repo": "underc0delabs/k0lmenIA-Empresa-plugin",
-      "fuente": {
-        "source": "github",
-        "repo": "underc0delabs/k0lmenIA-Empresa-plugin"
-      },
-      "depende": [
-        "k0lmenia",
-        "k0lmenia-pro"
-      ],
-      "resumen": "Para equipos: métricas y tablero de calidad, trazabilidad, evidencias para auditoría, presentaciones, planificación de capacidad, SAP, Salesforce y Dynamics, y gestión en Azure DevOps, Zephyr Scale, QMetry y AIO.",
-      "descripcion": "K0lmenIA Empresa (requiere k0lmenia y k0lmenia-pro): métricas y tablero de calidad, trazabilidad, evidencias para auditoría, presentaciones, capacidad, SAP, Salesforce, Dynamics, Azure DevOps, Zephyr Scale, QMetry y AIO. Licencia comercial.",
-      "web": "https://k0lmena.com/k0lmenia/",
-      "gestion": [
-        "Azure DevOps Test Plans",
-        "Zephyr Scale",
-        "QMetry",
-        "AIO Tests"
-      ],
-      "conectores": [
-        "azure-devops",
-        "qtm4j",
-        "qmetry",
-        "aio-tests",
-        "salesforce"
-      ],
-      "agentes": [
-        {
-          "nombre": "analista-metricas",
-          "descripcion": "Métricas de QA de cualquier fuente (Jira, Xray, Azure DevOps, TestRail, k0lmenaTMT, CSV/Excel o k0lmenIA) — ejecuciones, bugs por criticidad, sprints — en un dashboard interactivo."
         },
-        {
-          "nombre": "tablero-calidad",
-          "descripcion": "Tablero de calidad de un sprint, release o rango con lo que dejaron las herramientas — aprobados y tendencia, % automatizado, cobertura, bugs, inestables."
-        },
-        {
-          "nombre": "analista-trazabilidad",
-          "descripcion": "Verifica la trazabilidad en Jira, Xray o Azure DevOps (épica, historia, caso, ejecución, bug) — historias sin casos, casos huérfanos, links rotos — con el % por épica."
-        },
-        {
-          "nombre": "auditor-evidencias",
-          "descripcion": "Arma el paquete de evidencia auditable de una release para industrias reguladas — matriz requisito → caso → ejecución → evidencia → bug, ISO 29119-3, IEC 62304, PCI, SOX y ZIP con SHA-256."
-        },
-        {
-          "nombre": "presentador-resultados",
-          "descripcion": "Arma la presentación de resultados de QA (sprint review, release, gerencia) con cierre, tablero, métricas y bugs, en diapositivas HTML (ES/EN, PDF) y PowerPoint editable."
-        },
-        {
-          "nombre": "guia-onboarding",
-          "descripcion": "Arma el plan de incorporación de un QA nuevo — recorrido del producto, entorno, agentes útiles según su rol y primeras tareas — en HTML."
-        },
-        {
-          "nombre": "probador-sap",
-          "descripcion": "Prueba SAP (S/4HANA o ECC) en QA — SAP GUI, Fiori/UI5 (OData), roles y SoD y procesos O2C, P2P y R2R."
-        },
-        {
-          "nombre": "probador-salesforce",
-          "descripcion": "Prueba una org de Salesforce (sandbox) — perfiles, permission sets, validaciones, flows y triggers con la CLI sf, tests de Apex y Lightning por perfil."
-        },
-        {
-          "nombre": "probador-dynamics",
-          "descripcion": "Prueba Dynamics 365 y otros CRM/ERP de bajo código en entorno no productivo — roles, Dataverse, business rules, flows, plugins y procesos end-to-end — por rol."
-        },
-        {
-          "nombre": "planificador-capacidad",
-          "descripcion": "Calcula cuánto se puede probar en un sprint o release según el equipo y el historial, con escenarios y el riesgo de lo que queda afuera."
-        }
-      ],
-      "skills": [
         {
           "nombre": "evidencias-auditoria",
           "descripcion": "El cómo de armar evidencia de pruebas auditable — matriz requisito → caso → ejecución → evidencia → bug, qué pide cada marco (ISO 29119-3, IEC 62304, PCI, SOX) e integridad."
@@ -1039,10 +1007,451 @@
         }
       ],
       "scripts": [
+        "scripts/generar_informe_generico.py",
         "scripts/gestion/para_azure_devops.py",
         "scripts/gestion/adaptadores/aio.py",
         "scripts/gestion/adaptadores/qtm4j.py",
         "scripts/gestion/adaptadores/zephyr_scale.py"
+      ],
+      "paquetes": [
+        {
+          "id": "base",
+          "nombre": "K0lmenIA Pro · Base",
+          "plugin": "k0lmenia-pro-base",
+          "fuente": {
+            "source": "github",
+            "repo": "underc0delabs/k0lmenIA-PRO-plugin",
+            "ref": "pro-base"
+          },
+          "depende": [
+            "k0lmenia"
+          ],
+          "resumen": "Lo que comparten todos los paquetes: reportes de bug y HTML, informe de cierre, datos de prueba, verificación en base de datos, casos de API, selección de casos, cobertura, estrategia, exploratorias, análisis de fallos y logs, ambiente, correos, formularios, permisos, anonimización y exportación de documentos.",
+          "descripcion": "K0lmenIA Pro · Base (paquete privado; requiere k0lmenia): Lo que comparten todos los paquetes: reportes de bug y HTML, informe de cierre, datos de prueba, verificación en base de datos, casos de API, selección de casos, cobertura, estrategia, exploratorias, análisis de fallos y logs, ambiente, correos, formularios, permisos, anonimización y exportación de documentos.",
+          "agentes": [
+            "generador-reportes-bug",
+            "generador-reporte-html",
+            "generador-reporte-cierre",
+            "generador-datos-prueba",
+            "verificador-datos",
+            "generador-casos-api",
+            "selector-casos-de-prueba",
+            "analista-cobertura",
+            "estratega-pruebas",
+            "consultor-proyecto",
+            "generador-charters",
+            "explorador-web",
+            "analista-fallos",
+            "analista-logs",
+            "verificador-ambiente",
+            "verificador-correos",
+            "probador-formularios",
+            "probador-permisos",
+            "anonimizador-datos",
+            "exportador-documentos"
+          ],
+          "skills": [
+            "pruebas-exploratorias",
+            "verificacion-ambiente",
+            "anonimizacion-datos",
+            "exportacion-documentos",
+            "guia-performance",
+            "pruebas-tokens",
+            "pruebas-async",
+            "codigo-seguro",
+            "flujo-bug",
+            "flujo-historia",
+            "flujo-pr"
+          ]
+        },
+        {
+          "id": "seguridad",
+          "nombre": "K0lmenIA Pro · Seguridad",
+          "plugin": "k0lmenia-pro-seguridad",
+          "fuente": {
+            "source": "github",
+            "repo": "underc0delabs/k0lmenIA-PRO-plugin",
+            "ref": "pro-seguridad"
+          },
+          "depende": [
+            "k0lmenia",
+            "k0lmenia-pro-base"
+          ],
+          "resumen": "Escaneo pasivo con ZAP, pentest web, SAST y secretos, dependencias (SCA), seguridad y fuzzing de APIs, autenticación y cámaras IP.",
+          "descripcion": "K0lmenIA Pro · Seguridad (paquete privado; requiere k0lmenia y k0lmenia-pro-base): Escaneo pasivo con ZAP, pentest web, SAST y secretos, dependencias (SCA), seguridad y fuzzing de APIs, autenticación y cámaras IP.",
+          "agentes": [
+            "analista-seguridad",
+            "pentester-web",
+            "analista-codigo-seguro",
+            "analista-dependencias",
+            "probador-seguridad-api",
+            "probador-api-fuzzing",
+            "probador-autenticacion",
+            "analista-seguridad-camaras"
+          ],
+          "skills": [
+            "analisis-dependencias",
+            "seguridad-api",
+            "pruebas-fuzzing-api",
+            "pruebas-autenticacion",
+            "seguridad-camaras"
+          ]
+        },
+        {
+          "id": "performance",
+          "nombre": "K0lmenIA Pro · Performance y resiliencia",
+          "plugin": "k0lmenia-pro-performance",
+          "fuente": {
+            "source": "github",
+            "repo": "underc0delabs/k0lmenIA-PRO-plugin",
+            "ref": "pro-performance"
+          },
+          "depende": [
+            "k0lmenia",
+            "k0lmenia-pro-base"
+          ],
+          "resumen": "Carga con k6, Artillery y JMeter, rendimiento web (Core Web Vitals), concurrencia, resiliencia (caos) y observabilidad.",
+          "descripcion": "K0lmenIA Pro · Performance y resiliencia (paquete privado; requiere k0lmenia y k0lmenia-pro-base): Carga con k6, Artillery y JMeter, rendimiento web (Core Web Vitals), concurrencia, resiliencia (caos) y observabilidad.",
+          "agentes": [
+            "performance-mapper",
+            "auditor-rendimiento-web",
+            "probador-concurrencia",
+            "probador-resiliencia",
+            "analista-observabilidad"
+          ],
+          "skills": [
+            "pruebas-concurrencia",
+            "pruebas-resiliencia",
+            "pruebas-observabilidad"
+          ]
+        },
+        {
+          "id": "web-ux",
+          "nombre": "K0lmenIA Pro · Accesibilidad, SEO, UX y visual",
+          "plugin": "k0lmenia-pro-web-ux",
+          "fuente": {
+            "source": "github",
+            "repo": "underc0delabs/k0lmenIA-PRO-plugin",
+            "ref": "pro-web-ux"
+          },
+          "depende": [
+            "k0lmenia",
+            "k0lmenia-pro-base"
+          ],
+          "resumen": "Accesibilidad WCAG, SEO y GEO, UX, pixel perfect, cross-browser, contenido y traducciones, analytics, experimentos A/B y fechas y regiones.",
+          "descripcion": "K0lmenIA Pro · Accesibilidad, SEO, UX y visual (paquete privado; requiere k0lmenia y k0lmenia-pro-base): Accesibilidad WCAG, SEO y GEO, UX, pixel perfect, cross-browser, contenido y traducciones, analytics, experimentos A/B y fechas y regiones.",
+          "agentes": [
+            "analista-accesibilidad",
+            "analista-seo",
+            "evaluador-ux",
+            "pixel-perfect",
+            "cross-browser",
+            "revisor-contenido",
+            "analista-traductor",
+            "analista-analytics",
+            "probador-experimentos",
+            "probador-fechas-y-regiones"
+          ],
+          "skills": [
+            "pruebas-accesibilidad",
+            "pruebas-seo",
+            "pruebas-contenido",
+            "pruebas-analytics",
+            "pruebas-experimentos",
+            "pruebas-fechas-regiones"
+          ]
+        },
+        {
+          "id": "mobile-desktop",
+          "nombre": "K0lmenIA Pro · Mobile y desktop",
+          "plugin": "k0lmenia-pro-mobile-desktop",
+          "fuente": {
+            "source": "github",
+            "repo": "underc0delabs/k0lmenIA-PRO-plugin",
+            "ref": "pro-mobile-desktop"
+          },
+          "depende": [
+            "k0lmenia",
+            "k0lmenia-pro-base"
+          ],
+          "resumen": "Apps mobile (Appium) y de escritorio, su automatización y las notificaciones.",
+          "descripcion": "K0lmenIA Pro · Mobile y desktop (paquete privado; requiere k0lmenia y k0lmenia-pro-base): Apps mobile (Appium) y de escritorio, su automatización y las notificaciones.",
+          "agentes": [
+            "probador-mobile",
+            "mobile-mapper",
+            "probador-desktop",
+            "probador-notificaciones"
+          ],
+          "skills": [
+            "pruebas-mobile",
+            "pruebas-desktop",
+            "pruebas-notificaciones"
+          ]
+        },
+        {
+          "id": "ecommerce",
+          "nombre": "K0lmenIA Pro · E-commerce y pagos",
+          "plugin": "k0lmenia-pro-ecommerce",
+          "fuente": {
+            "source": "github",
+            "repo": "underc0delabs/k0lmenIA-PRO-plugin",
+            "ref": "pro-ecommerce"
+          },
+          "depende": [
+            "k0lmenia",
+            "k0lmenia-pro-base"
+          ],
+          "resumen": "Shopify, VTEX, WordPress/WooCommerce, PrestaShop, billeteras y pagos, punto de venta y búsqueda.",
+          "descripcion": "K0lmenIA Pro · E-commerce y pagos (paquete privado; requiere k0lmenia y k0lmenia-pro-base): Shopify, VTEX, WordPress/WooCommerce, PrestaShop, billeteras y pagos, punto de venta y búsqueda.",
+          "agentes": [
+            "probador-shopify",
+            "probador-vtex",
+            "probador-wordpress",
+            "probador-prestashop",
+            "probador-billeteras",
+            "probador-pos",
+            "probador-busqueda"
+          ],
+          "skills": [
+            "pruebas-ecommerce",
+            "pruebas-shopify",
+            "pruebas-vtex",
+            "pruebas-wordpress",
+            "pruebas-prestashop",
+            "pruebas-billeteras",
+            "pruebas-pos",
+            "pruebas-busqueda"
+          ]
+        },
+        {
+          "id": "apis-datos",
+          "nombre": "K0lmenIA Pro · APIs, integraciones y datos",
+          "plugin": "k0lmenia-pro-apis-datos",
+          "fuente": {
+            "source": "github",
+            "repo": "underc0delabs/k0lmenIA-PRO-plugin",
+            "ref": "pro-apis-datos"
+          },
+          "depende": [
+            "k0lmenia",
+            "k0lmenia-pro-base"
+          ],
+          "resumen": "Contratos, SOAP, Scalar, mensajería asíncrona, virtualización de servicios, vigía de APIs externas, migraciones de base de datos y calidad de datos.",
+          "descripcion": "K0lmenIA Pro · APIs, integraciones y datos (paquete privado; requiere k0lmenia y k0lmenia-pro-base): Contratos, SOAP, Scalar, mensajería asíncrona, virtualización de servicios, vigía de APIs externas, migraciones de base de datos y calidad de datos.",
+          "agentes": [
+            "probador-contratos",
+            "probador-soap",
+            "probador-scalar",
+            "probador-mensajeria",
+            "virtualizador-servicios",
+            "vigia-apis-externas",
+            "probador-migraciones-bd",
+            "probador-datos"
+          ],
+          "skills": [
+            "pruebas-contratos",
+            "pruebas-soap",
+            "pruebas-scalar",
+            "virtualizacion-servicios",
+            "vigilancia-apis",
+            "pruebas-migraciones",
+            "pruebas-datos"
+          ]
+        },
+        {
+          "id": "ia",
+          "nombre": "K0lmenIA Pro · IA, chatbots e IVR",
+          "plugin": "k0lmenia-pro-ia",
+          "fuente": {
+            "source": "github",
+            "repo": "underc0delabs/k0lmenIA-PRO-plugin",
+            "ref": "pro-ia"
+          },
+          "depende": [
+            "k0lmenia",
+            "k0lmenia-pro-base"
+          ],
+          "resumen": "Asistentes y modelos de IA, chatbots e IVR.",
+          "descripcion": "K0lmenIA Pro · IA, chatbots e IVR (paquete privado; requiere k0lmenia y k0lmenia-pro-base): Asistentes y modelos de IA, chatbots e IVR.",
+          "agentes": [
+            "probador-ia",
+            "probador-chatbot",
+            "probador-ivr"
+          ],
+          "skills": [
+            "pruebas-ia",
+            "pruebas-chatbots",
+            "pruebas-ivr"
+          ]
+        },
+        {
+          "id": "multimedia",
+          "nombre": "K0lmenIA Pro · Video, cámaras, juegos, documentos y blockchain",
+          "plugin": "k0lmenia-pro-multimedia",
+          "fuente": {
+            "source": "github",
+            "repo": "underc0delabs/k0lmenIA-PRO-plugin",
+            "ref": "pro-multimedia"
+          },
+          "depende": [
+            "k0lmenia",
+            "k0lmenia-pro-base"
+          ],
+          "resumen": "Streaming y cámaras ONVIF, grabaciones, calidad de imagen, juegos, documentos (PDF y Excel) y blockchain.",
+          "descripcion": "K0lmenIA Pro · Video, cámaras, juegos, documentos y blockchain (paquete privado; requiere k0lmenia y k0lmenia-pro-base): Streaming y cámaras ONVIF, grabaciones, calidad de imagen, juegos, documentos (PDF y Excel) y blockchain.",
+          "agentes": [
+            "probador-streaming",
+            "probador-onvif",
+            "verificador-grabaciones",
+            "calidad-imagen",
+            "probador-juegos",
+            "probador-documentos",
+            "probador-blockchain"
+          ],
+          "skills": [
+            "verificacion-streaming",
+            "control-onvif",
+            "calidad-de-imagen",
+            "pruebas-juegos",
+            "pruebas-documentos",
+            "pruebas-blockchain"
+          ]
+        },
+        {
+          "id": "codigo",
+          "nombre": "K0lmenIA Pro · Código y automatización",
+          "plugin": "k0lmenia-pro-codigo",
+          "fuente": {
+            "source": "github",
+            "repo": "underc0delabs/k0lmenIA-PRO-plugin",
+            "ref": "pro-codigo"
+          },
+          "depende": [
+            "k0lmenia",
+            "k0lmenia-pro-base"
+          ],
+          "resumen": "Code review, revisión, reparación y migración de la automatización, depuración de la suite, mutation testing y cobertura de código.",
+          "descripcion": "K0lmenIA Pro · Código y automatización (paquete privado; requiere k0lmenia y k0lmenia-pro-base): Code review, revisión, reparación y migración de la automatización, depuración de la suite, mutation testing y cobertura de código.",
+          "agentes": [
+            "revisor-codigo",
+            "revisor-automatizacion",
+            "reparador-automatizacion",
+            "migrador-automatizacion",
+            "depurador-suite",
+            "analista-mutacion",
+            "analista-cobertura-codigo"
+          ],
+          "skills": [
+            "revision-codigo",
+            "revision-automatizacion",
+            "migracion-automatizacion",
+            "depuracion-suite",
+            "pruebas-mutacion",
+            "cobertura-codigo"
+          ]
+        },
+        {
+          "id": "produccion",
+          "nombre": "K0lmenIA Pro · Producción, causa raíz y riesgo",
+          "plugin": "k0lmenia-pro-produccion",
+          "fuente": {
+            "source": "github",
+            "repo": "underc0delabs/k0lmenIA-PRO-plugin",
+            "ref": "pro-produccion"
+          },
+          "depende": [
+            "k0lmenia",
+            "k0lmenia-pro-base"
+          ],
+          "resumen": "Causa raíz en el código, errores de producción, feedback de usuarios, flujos reales y mapa de riesgo.",
+          "descripcion": "K0lmenIA Pro · Producción, causa raíz y riesgo (paquete privado; requiere k0lmenia y k0lmenia-pro-base): Causa raíz en el código, errores de producción, feedback de usuarios, flujos reales y mapa de riesgo.",
+          "agentes": [
+            "analista-causa-raiz",
+            "analista-produccion",
+            "analista-feedback-usuarios",
+            "analista-flujos-reales",
+            "mapa-de-riesgo"
+          ],
+          "skills": [
+            "analisis-causa-raiz",
+            "analisis-produccion",
+            "analisis-feedback",
+            "flujos-reales",
+            "mapa-riesgo"
+          ]
+        },
+        {
+          "id": "gestion",
+          "nombre": "K0lmenIA Pro · Gestión del equipo",
+          "plugin": "k0lmenia-pro-gestion",
+          "fuente": {
+            "source": "github",
+            "repo": "underc0delabs/k0lmenIA-PRO-plugin",
+            "ref": "pro-gestion"
+          },
+          "depende": [
+            "k0lmenia",
+            "k0lmenia-pro-base"
+          ],
+          "resumen": "Estrategia del proyecto, relevamiento, manual de usuario, reuniones, métricas y tablero de calidad, trazabilidad, evidencias para auditoría, presentaciones, onboarding, capacidad y los atajos de sprint, release y auditoría.",
+          "descripcion": "K0lmenIA Pro · Gestión del equipo (paquete privado; requiere k0lmenia y k0lmenia-pro-base): Estrategia del proyecto, relevamiento, manual de usuario, reuniones, métricas y tablero de calidad, trazabilidad, evidencias para auditoría, presentaciones, onboarding, capacidad y los atajos de sprint, release y auditoría.",
+          "agentes": [
+            "estratega-proyecto",
+            "investigador-proyecto",
+            "redactor-manual",
+            "analista-reuniones",
+            "analista-metricas",
+            "tablero-calidad",
+            "analista-trazabilidad",
+            "auditor-evidencias",
+            "presentador-resultados",
+            "guia-onboarding",
+            "planificador-capacidad"
+          ],
+          "skills": [
+            "estrategia-proyecto",
+            "relevamiento-proyecto",
+            "redaccion-manual",
+            "analisis-reuniones",
+            "refinamiento-tres-amigos",
+            "metricas-qa",
+            "trazabilidad-herramientas",
+            "evidencias-auditoria",
+            "presentacion-resultados",
+            "planificacion-capacidad",
+            "resumen-diario",
+            "flujo-sprint",
+            "flujo-release",
+            "flujo-post-release",
+            "flujo-auditoria"
+          ]
+        },
+        {
+          "id": "erp-crm",
+          "nombre": "K0lmenIA Pro · SAP, Salesforce y Dynamics",
+          "plugin": "k0lmenia-pro-erp-crm",
+          "fuente": {
+            "source": "github",
+            "repo": "underc0delabs/k0lmenIA-PRO-plugin",
+            "ref": "pro-erp-crm"
+          },
+          "depende": [
+            "k0lmenia",
+            "k0lmenia-pro-base"
+          ],
+          "resumen": "SAP (GUI y Fiori), Salesforce y Dynamics 365.",
+          "descripcion": "K0lmenIA Pro · SAP, Salesforce y Dynamics (paquete privado; requiere k0lmenia y k0lmenia-pro-base): SAP (GUI y Fiori), Salesforce y Dynamics 365.",
+          "agentes": [
+            "probador-sap",
+            "probador-salesforce",
+            "probador-dynamics"
+          ],
+          "skills": [
+            "pruebas-sap",
+            "pruebas-salesforce",
+            "pruebas-dynamics"
+          ]
+        }
       ]
     }
   ]

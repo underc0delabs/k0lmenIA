@@ -20,7 +20,7 @@ Mirá si existe el comando `k0lmenia` (corré `k0lmenia ayuda`):
   claude plugin marketplace add underc0delabs/k0lmenIA
   claude plugin install k0lmenia@k0lmenia
   ```
-  Después, `/k0lmenia:setup` le muestra qué planes tiene disponibles (Pro y Empresa se suman como plugins aparte).
+  Después, `/k0lmenia:setup` lo termina de configurar para su proyecto.
 
 ## Paso 2 — Preparar el proyecto (solo plugin)
 
@@ -48,7 +48,7 @@ Cuando termines el paso 5, regeneralo con `--analisis output/entorno/analisis.js
 Si la persona todavía no pasó por el skill `setup` en esta carpeta, seguí con él ahora: pide la web principal del
 proyecto, la recorre, recomienda qué usar y activa los plugins de los planes a los que tiene acceso. Al terminar, volvé
 acá al paso 4. Si ya lo hizo, corré `k0lmenia planes --json --sin-red`, decí en una línea qué planes tiene activos y
-seguí. No insistas con los planes pagos.
+seguí. No ofrezcas planes que no tiene ni hables de precios.
 
 ## Paso 4 — Conectar sus herramientas
 
