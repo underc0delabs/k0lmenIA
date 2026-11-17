@@ -1,6 +1,6 @@
 ---
 name: automatizacion-k0lmena
-description: Convenciones para automatizar en k0lmena — dónde van .feature, steps y locators de web, api y mobile, nombres y tags, steps reutilizables y de BD. Lo usan los mappers y verificador-datos.
+description: Convenciones para automatizar en k0lmena — dónde van .feature, steps y locators de web, api y mobile, nombres y tags, steps reutilizables y de BD. Lo usan los mappers (web-mapper y api-mapper).
 ---
 
 # Automatización con k0lmena
@@ -12,7 +12,7 @@ herramientas/k0lmena/
 ├── web/      features/  steps/  locators/   (Playwright + Cucumber; hooks/, utils/ ya existen)
 ├── api/      features/  steps/              (axios + Cucumber; steps/comunes.steps.ts ya existe)
 ├── mobile/   features/  steps/  locators/   (WebdriverIO + Appium; support/ ya existe; apps/ = .apk/.ipa)
-├── performance/  k6/http/  artillery/  jmeter/   (k6, Artillery y JMeter; lo genera el performance-mapper)
+├── performance/  k6/http/  artillery/  jmeter/   (k6, Artillery y JMeter; se corre con k0lmenia perf)
 ├── cucumber.js  run-tests.js  env.js      (env.js carga el .env ÚNICO de la raíz del repo)
 ```
 
@@ -32,7 +32,7 @@ herramientas/k0lmena/
 
 - Tags del `Feature`: `@HU-001`, el módulo (`@modulo-<nombre>`, el mismo del caso de origen) y el tipo (`@web`, `@api` o `@mobile`).
 - Tags de cada `Scenario`: el ID del caso de origen (`@CP-001`, `@CP-API-001`), su prioridad (`@critica`/`@alta`/`@media`/`@baja`, la misma del caso de origen), `@regresion` si entra en la regresión (todos, salvo `@falta-info` y `@bloqueado`) y, si es smoke o crítico, `@smoke` (siempre en minúscula: Cucumber distingue mayúsculas y `TAGS=@smoke` no encuentra `@Smoke`). Si el caso de origen es un `.feature` que ya trae el tag de prioridad, conservalo tal cual.
-- **Falta información**: si el caso depende de un dato que no está definido (ficha `output/contexto/contexto-HU-XXX.md`, skill `investigacion-contexto`), el escenario lleva `@falta-info @FI-01` y el comentario `# FALTA INFORMACIÓN (FI-01): <qué falta>` arriba. Corre normalmente (salvo que también sea `@bloqueado`) y el reporte de k0lmena le agrega una nota visible; al publicar en Xray/QMetry/AIO, el comentario lo indica.
+- **Falta información**: si el caso depende de un dato que no está definido (ficha `output/contexto/contexto-HU-XXX.md`, skill `investigacion-contexto`), el escenario lleva `@falta-info @FI-01` y el comentario `# FALTA INFORMACIÓN (FI-01): <qué falta>` arriba. Corre normalmente (salvo que también sea `@bloqueado`) y el reporte de k0lmena le agrega una nota visible; al publicar en Xray o k0lmenaTMT, el comentario lo indica.
 - Si la fuente no es una HU (ej. un contrato de API), usá un slug: `api/features/pets.feature` y tag `@contrato-pets`.
 
 ## Gherkin

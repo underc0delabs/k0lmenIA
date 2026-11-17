@@ -1,6 +1,6 @@
 # Conectores MCP
 
-Cómo conectar K0lmenIA Light por MCP a **Jira** (Atlassian), al navegador (**Playwright**) y a **k0lmenaTMT**. Xray se integra sin MCP (ver abajo).
+Cómo conectar K0lmenIA por MCP a **Jira** (Atlassian), al navegador (**Playwright**) y a **k0lmenaTMT**. Xray se integra sin MCP (ver abajo).
 
 > **La forma fácil:** corré `npm run configurar` en una terminal. Te pregunta qué herramientas usa tu equipo, pide solo sus datos y activa los conectores que hagan falta. Lo de abajo es el detalle, para configurar a mano o algo puntual.
 

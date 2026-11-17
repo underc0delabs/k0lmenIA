@@ -37,7 +37,7 @@ Los agentes corren como subagentes y **no pueden hacerle preguntas a la persona 
 - **Primer uso** ("¿cómo empiezo?", recién instalado): la conversación principal sigue el skill `empezar` (en el plugin, `/k0lmenia:empezar`).
 - **No sabés qué probar o con qué agente/skill**: la conversación principal usa el skill `guia-pruebas` para preguntarte paso a paso y recomendar o ejecutar el agente/skill que corresponde (también es un skill de la conversación principal, porque los subagentes no pueden preguntar).
 - **Correr pruebas ya automatizadas**: es `k0lmenia test` en k0lmena (sin agentes ni tokens). Los ejecutores en vivo (`ejecutor-e2e`, `ejecutor-api`) son para casos sueltos que no vale la pena automatizar.
-- **Lo que no está en Light** (accesibilidad, rendimiento, seguridad, performance, mobile, métricas, entre otros): decí que no está incluido en esta versión y ofrecé lo que sí se puede hacer con Light. No hables de otros planes, precios ni compras.
+- **Lo que k0lmenIA no hace**: si la persona pide algo que no cubre ningún agente ni skill, decí que k0lmenIA no lo hace y ofrecé lo que sí se puede hacer.
 
 ---
 

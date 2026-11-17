@@ -2,7 +2,7 @@
 
 ## Alcance
 
-K0lmenIA Light es un conjunto de herramientas de **QA que corren en local o en CI** (Playwright, Cucumber, WebdriverIO, Appium, k6/Artillery/JMeter, OWASP ZAP). **No es un servicio expuesto a internet** que procese entradas de terceros: los insumos (historias, URLs a probar, colecciones, configs) son del propio equipo.
+K0lmenIA es un conjunto de herramientas de **QA que corren en local o en CI** (Playwright, Cucumber, WebdriverIO, Appium, k6/Artillery/JMeter, OWASP ZAP). **No es un servicio expuesto a internet** que procese entradas de terceros: los insumos (historias, URLs a probar, colecciones, configs) son del propio equipo.
 
 Secretos (tokens, credenciales, cadenas de conexión) van **solo** en el `.env` local (gitignored) o en variables de entorno, nunca commiteados. Hay una plantilla en `.env.example`.
 

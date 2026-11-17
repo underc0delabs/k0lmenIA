@@ -17,11 +17,6 @@ O adentro de Claude Code: `/plugin marketplace add underc0delabs/k0lmenIA` y `/p
 Después abrí Claude Code en la carpeta de tu proyecto y escribí **`/k0lmenia:empezar`**: prepara el proyecto, revisa
 que esté todo instalado, te ayuda a conectar tus herramientas y te sugiere por dónde arrancar.
 
-## Planes
-
-El core es gratis y abierto. **K0lmenIA Pro** (`k0lmenia-pro`) es privado: no se vende y lo instala solo quien
-tiene acceso de lectura a su repo. Si es tu caso, **`/k0lmenia:setup`** lo instala. Desde una terminal: `k0lmenia planes`.
-
 ## Qué instala y dónde
 
 El código (agentes, skills, scripts y herramientas) queda en la caché de Claude Code. En tu proyecto, `k0lmenia init` (o

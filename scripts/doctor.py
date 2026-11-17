@@ -288,7 +288,7 @@ def _integraciones(ctx):
     env = ctx["env"]
     proveedor = env.get("REPO_PROVEEDOR", "")
     if proveedor and proveedor != "local":
-        linea(AVISO, f"REPO_PROVEEDOR={proveedor}: K0lmenIA Light lee el repositorio desde un clon local",
+        linea(AVISO, f"REPO_PROVEEDOR={proveedor}: K0lmenIA lee el repositorio desde un clon local",
               "Completá REPO_RUTA_LOCAL")
     ruta = env.get("REPO_RUTA_LOCAL", "")
     if ruta and not (Path(ruta) / ".git").exists():

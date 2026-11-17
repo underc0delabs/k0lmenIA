@@ -1,6 +1,6 @@
 # Catálogo de agentes
 
-Los 13 agentes de K0lmenIA Light: para qué sirve cada uno, cómo pedírselo, qué skills, scripts, herramientas y conectores usa, y qué entrega. No hace falta nombrar al agente: Claude Code elige el que corresponde según el pedido (también se lo podés pedir por su nombre).
+Los 13 agentes de K0lmenIA: para qué sirve cada uno, cómo pedírselo, qué skills, scripts, herramientas y conectores usa, y qué entrega. No hace falta nombrar al agente: Claude Code elige el que corresponde según el pedido (también se lo podés pedir por su nombre).
 
 **Leyenda**
 - **Tokens**: *en cada uso* = trabaja con el modelo cada vez que lo pedís; *una vez* = genera algo que después corre solo, sin agentes ni tokens (`k0lmenia test`).
@@ -154,8 +154,6 @@ Los skills se cargan solo cuando hacen falta.
 | documentacion-proyecto | Lectura del repositorio, mapa funcional, estructura de input/documentacion/ y dossier, modos barrido y actualizar | documentador-proyecto |
 | base-conocimiento | Armar y mantener la base de conocimiento del proyecto en input/documentacion/ y la rutina ágil cuando cambian los requerimientos | la conversación principal |
 | ejecucion-manual | Ejecución manual acompañada: caso por caso y paso por paso, resultados, evidencia, tiempos, bugs, pausa y retomar | la conversación principal (`/k0lmenia:ejecucion-manual`) y asistente-ejecucion-manual |
-| setup | Setup inicial: recorre la web del proyecto, recomienda agentes y configura k0lmenaTMT | la conversación principal (`/k0lmenia:setup`) |
-| options | Cuadro comparativo de los planes (gratis y Pro) y todas las opciones de cada uno: agentes, skills y conectores | la conversación principal (`/k0lmenia:options`) |
 | guia-pruebas | Asistente interactivo para elegir qué probar y con qué agente o skill | la conversación principal |
 | empezar | Bienvenida y puesta en marcha: preparar el proyecto, revisar el entorno, conectar herramientas y elegir la primera tarea | la conversación principal (`/k0lmenia:empezar` en el plugin) |
 

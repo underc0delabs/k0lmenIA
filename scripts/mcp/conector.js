@@ -3,8 +3,8 @@
 //
 //   npm run conector                        lista los conectores (por grupo) y cuáles tenés activos
 //   npm run conector -- listar --html       además deja output/conectores/estado.html (estado de cada conector)
-//   npm run conector -- activar azure-devops [qtm4j ...]
-//   npm run conector -- desactivar azure-devops
+//   npm run conector -- activar k0lmena-tmt
+//   npm run conector -- desactivar k0lmena-tmt
 //
 // Los opcionales no están en .mcp.json para que Claude Code arranque sin pedir aprobaciones.
 // "activar" los registra con `claude mcp add-json --scope local`: quedan solo para vos, en este
@@ -24,26 +24,12 @@ const POR_DEFECTO = Object.keys(JSON.parse(fs.readFileSync(path.join(RAIZ, '.mcp
 
 // Variables que revisa "activar" (solo avisa: el conector se puede activar antes de completar el .env).
 const REQUERIDAS = {
-  'azure-devops': () => (/^(interactive|azcli|env|envvar)$/i.test(variable('ADO_AUTENTICACION')) ? ['ADO_ORGANIZACION'] : ['ADO_ORGANIZACION', 'ADO_PAT']),
-  qtm4j: () => ['QTM4J_API_KEY'],
-  qmetry: () => ['QMETRY_API_KEY'],
-  'aio-tests': () => ['AIO_MCP_URL', 'AIO_API_TOKEN'],
   'k0lmena-tmt': () => ['K0LMENA_TMT_TOKEN'],
-  github: () => ['GITHUB_TOKEN'],
-  asana: () => ['ASANA_CLIENT_ID', 'ASANA_CLIENT_SECRET'],
-  youtrack: () => ['YOUTRACK_URL', 'YOUTRACK_TOKEN'],
-  scalar: () => ['SCALAR_MCP_URL'],
-  'sentry-local': () => ['SENTRY_TOKEN'],
-  'google-analytics': () => ['GA4_CREDENCIALES', 'GA4_PROYECTO_GCP'],
-  'search-console': () => (variable('GSC_CREDENCIALES') || variable('GA4_CREDENCIALES') ? [] : ['GSC_CREDENCIALES']),
-  testrail: () => ['TESTRAIL_INSTANCE_URL', 'TESTRAIL_USERNAME', 'TESTRAIL_API_KEY'],
-  browserstack: () => ['BROWSERSTACK_USERNAME', 'BROWSERSTACK_ACCESS_KEY'],
-  'sauce-labs': () => ['SAUCE_USERNAME', 'SAUCE_ACCESS_KEY'],
 };
 
 /**
  * ${VAR:-valor} de la URL con el valor del .env (o del entorno), si está definido: así, por ejemplo,
- * GITLAB_URL se toma del .env. Si no está, queda igual y Claude Code lo resuelve con el entorno.
+ * K0LMENA_TMT_URL se toma del .env. Si no está, queda igual y Claude Code lo resuelve con el entorno.
  */
 function conVariablesDelEnv(url) {
   // Si la variable no está pero hay valor por defecto (${VAR:-valor}), se usa ese: no depende de que Claude Code expanda
