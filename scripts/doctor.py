@@ -206,7 +206,7 @@ def revisar_env(ctx):
     herramienta = env.get("GESTION_HERRAMIENTA", "")
     if herramienta:
         if herramienta not in VARIABLES_GESTION:
-            linea(FALTA, f"GESTION_HERRAMIENTA={herramienta} no es válida", "Usá xray-cloud, xray-dc o k0lmena-tmt (QMetry, AIO Tests y Zephyr Scale están en K0lmenIA Empresa)")
+            linea(FALTA, f"GESTION_HERRAMIENTA={herramienta} no es válida", "Usá xray-cloud, xray-dc o k0lmena-tmt")
         else:
             faltan = faltantes(VARIABLES_GESTION[herramienta], env)
             if faltan:
@@ -289,7 +289,7 @@ def _integraciones(ctx):
     proveedor = env.get("REPO_PROVEEDOR", "")
     if proveedor and proveedor != "local":
         linea(AVISO, f"REPO_PROVEEDOR={proveedor}: K0lmenIA Light lee el repositorio desde un clon local",
-              "Completá REPO_RUTA_LOCAL (leer el repositorio por conector está disponible en K0lmenIA Pro)")
+              "Completá REPO_RUTA_LOCAL")
     ruta = env.get("REPO_RUTA_LOCAL", "")
     if ruta and not (Path(ruta) / ".git").exists():
         linea(AVISO, "REPO_RUTA_LOCAL no apunta a un clon de git", "Revisá la ruta o dejala vacía")
@@ -321,8 +321,7 @@ def revisar_conectores(ctx):
             linea(OK, f"{nombre}{origen} (se autoriza con tu cuenta desde /mcp la primera vez)")
         else:
             linea(OK, nombre + origen)
-    nota("Más conectores (Azure DevOps, Confluence, GitHub, GitLab, Figma, Linear, observabilidad, analytics y otros) "
-         "están disponibles en K0lmenIA Pro y K0lmenIA Empresa. El estado en HTML: npm run conector -- listar --html")
+    nota("El estado en HTML: npm run conector -- listar --html")
 
 
 def revisar_repo(ctx):

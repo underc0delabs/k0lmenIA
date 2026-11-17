@@ -1,6 +1,6 @@
 # Plantilla — Reporte de bug
 
-> Plantilla para reportar un bug a mano (en K0lmenIA Pro la sigue el agente de redacción de bugs).
+> Plantilla para reportar un bug a mano.
 > Para cambiar el formato de salida, editá esta plantilla.
 >
 > Formato de salida: **bloque vertical, un reporte por archivo.**

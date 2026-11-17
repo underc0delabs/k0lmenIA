@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 import construir_plugin as cp
 
 RAIZ = Path(__file__).resolve().parents[1]
@@ -32,12 +34,13 @@ def _ejecutable(plugin):
 
 
 def test_armar_el_plugin(tmp_path):
-    destino = cp.construir(tmp_path / "plugin")
+    destino = cp.construir(tmp_path / "plugin", cp.PRINCIPAL)
+    obj = cp.objetivo(cp.PRINCIPAL)
     manifiesto = json.loads((destino / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
-    assert manifiesto["name"] == cp.NOMBRE and "version" not in manifiesto  # sin versión: cada commit es una versión
+    assert manifiesto["name"] == obj["plugin"] and "version" not in manifiesto  # sin versión: cada commit es una versión
     agentes = list((destino / "agents").glob("*.md"))
-    assert sorted(a.stem for a in agentes) == sorted(cp.AGENTES_PLAN)  # solo los de su plan
-    assert sorted(p.name for p in (destino / "skills").iterdir()) == sorted(cp.SKILLS_PLAN + (["estandares"] if cp.ES_CORE else []))
+    assert sorted(a.stem for a in agentes) == sorted(obj["agentes"])  # solo los de su plan (o su paquete)
+    assert sorted(p.name for p in (destino / "skills").iterdir()) == sorted(obj["skills"] + (["estandares"] if cp.ES_CORE else []))
     sin_transformar = [a.name for a in agentes if "python scripts/" in a.read_text(encoding="utf-8")
                        or "npm run " in a.read_text(encoding="utf-8")]
     assert not sin_transformar, f"agentes con comandos del repo: {sin_transformar}"
@@ -46,14 +49,15 @@ def test_armar_el_plugin(tmp_path):
     assert (destino / "scripts" / "_i18n.py").exists() and (destino / "catalogo-planes.json").exists()
     if cp.ES_CORE:
         catalogo = json.loads((destino / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8"))
-        assert catalogo["name"] == "k0lmenia" and [p["name"] for p in catalogo["plugins"]] == ["k0lmenia", "k0lmenia-pro", "k0lmenia-empresa"]
+        nombres = [p["name"] for p in catalogo["plugins"]]
+        assert catalogo["name"] == "k0lmenia" and nombres[:3] == ["k0lmenia", "k0lmenia-pro", "k0lmenia-pro-base"]
         assert catalogo["plugins"][0]["source"] == "./"
         assert "preparar" in comando and "dependencies" not in manifiesto
         mcp = json.loads((destino / ".mcp.json").read_text(encoding="utf-8"))
         assert "${CLAUDE_PLUGIN_ROOT}" in mcp["mcpServers"]["playwright"]["args"][0]
         assert (destino / "bin" / "k0lmenia").exists() and not (destino / "lib").exists()
     else:
-        # Un add-on: depende del core (y Empresa de Pro), se registra al iniciar la sesión y no trae lo que trae el core.
+        # Un add-on: depende del core, se registra al iniciar la sesión y no trae lo que trae el core.
         assert manifiesto["dependencies"][0] == "k0lmenia" and f"registrar {cp.PLAN}" in comando
         assert not (destino / "bin").exists() and (destino / "lib" / "k0lmenia").exists()
         assert not (destino / ".mcp.json").exists() and not (destino / ".claude-plugin" / "marketplace.json").exists()
@@ -61,8 +65,44 @@ def test_armar_el_plugin(tmp_path):
     assert not (destino / "scripts" / "construir_plugin.py").exists()
     # Volver a armar sobre la misma carpeta la limpia (lo que hace la publicación en la rama plugin).
     (destino / "agents" / "viejo.md").write_text("x", encoding="utf-8")
-    cp.construir(destino)
+    cp.construir(destino, cp.PRINCIPAL)
     assert not (destino / "agents" / "viejo.md").exists()
+
+
+@pytest.mark.skipif(not cp.PAQUETES, reason="los paquetes son de Pro")
+def test_pro_completo_y_por_paquetes(tmp_path):
+    """Pro se arma como un plugin por paquete (la base con el código; los demás, solo sus agentes y skills) y uno completo,
+    `k0lmenia-pro`, que no trae nada propio y depende de todos los paquetes."""
+    hechos = cp.construir_todos(tmp_path / "plugins")
+    assert set(hechos) == {"main", *(p["fuente"]["ref"] for p in cp.PAQUETES.values())}
+    leer = lambda d: json.loads((d / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))  # noqa: E731
+    completo = leer(hechos["main"])
+    assert completo["name"] == "k0lmenia-pro" and not (hechos["main"] / "agents").exists()
+    assert completo["dependencies"] == ["k0lmenia", *(p["plugin"] for p in cp.PAQUETES.values())]
+    assert not (hechos["main"] / "hooks").exists() and not (hechos["main"] / "lib").exists()
+    vistos = []
+    for pid, p in cp.PAQUETES.items():
+        d = hechos[p["fuente"]["ref"]]
+        m = leer(d)
+        assert m["name"] == p["plugin"] and m["dependencies"] == p["depende"]
+        assert sorted(a.stem for a in (d / "agents").glob("*.md")) == sorted(p["agentes"])
+        assert sorted(s.name for s in (d / "skills").iterdir()) == sorted(p["skills"])
+        assert (d / "scripts").exists() == (pid == "base"), "solo la base trae el código"
+        assert (d / "lib" / "k0lmenia").exists() and (d / "LICENSE.md").exists()
+        comando = json.loads((d / "hooks" / "hooks.json").read_text(encoding="utf-8"))["hooks"]["SessionStart"][0]["hooks"][0]["command"]
+        assert comando.endswith(f"registrar {'pro' if pid == 'base' else 'paquete:' + pid} --contexto")
+        vistos += p["agentes"]
+    assert sorted(vistos) == sorted(cp.AGENTES_PLAN), "cada agente de Pro está en un solo paquete"
+    # Un paquete se anota al iniciar la sesión (sin pisar la base, que es la que corre los comandos).
+    registro = tmp_path / "registro.json"
+    env = {**os.environ, "K0LMENIA_REGISTRO": str(registro)}
+    seguridad = hechos["pro-seguridad"]
+    r = subprocess.run(["node", str(seguridad / "lib" / "k0lmenia"), "registrar", "paquete:seguridad", "--contexto"],
+                       env=env, capture_output=True, text=True, encoding="utf-8")
+    assert r.returncode == 0, r.stderr
+    assert "k0lmenia-pro-seguridad:<agente>" in r.stdout
+    reg = json.loads(registro.read_text(encoding="utf-8"))
+    assert Path(reg["paquetes"]["seguridad"]["raiz"]) == seguridad and "pro" not in reg
 
 
 def _k0lmenia(plugin, proyecto, *args):
@@ -72,7 +112,7 @@ def _k0lmenia(plugin, proyecto, *args):
 
 
 def test_init_y_comandos_en_el_proyecto_del_qa(tmp_path):
-    plugin = cp.construir(tmp_path / "plugin")
+    plugin = cp.construir(tmp_path / "plugin", cp.PRINCIPAL)
     proyecto = tmp_path / "mi-proyecto"
     proyecto.mkdir()
     r = _k0lmenia(plugin, proyecto, "init", "--sin-npm")
@@ -128,7 +168,7 @@ def test_tarea_programada_como_plugin_usa_un_lanzador_estable(tmp_path, monkeypa
 def test_actualizar_k0lmena_sin_perder_cambios(tmp_path):
     """Una versión nueva del plugin trae mejoras del framework: llegan, pero las pruebas del QA y los archivos del
     framework que el QA modificó no se pisan (la versión nueva queda al lado como .nuevo)."""
-    plugin = cp.construir(tmp_path / "plugin")
+    plugin = cp.construir(tmp_path / "plugin", cp.PRINCIPAL)
     proyecto = tmp_path / "proyecto"
     proyecto.mkdir()
     assert _k0lmenia(plugin, proyecto, "init", "--sin-npm").returncode == 0
@@ -161,25 +201,28 @@ def test_actualizar_k0lmena_sin_perder_cambios(tmp_path):
 
 
 def test_marketplace_de_main_apunta_a_la_rama_plugin():
-    """El catálogo `k0lmenia` vive en el repo público (core): trae los tres plugins. Los repos de Pro y Empresa no tienen
-    catálogo propio: sus plugins se instalan desde ese."""
+    """El catálogo `k0lmenia` vive en el repo público (core): trae el core, Pro completo y cada paquete de Pro (cada uno
+    en su rama del repo privado de distribución). El repo de Pro no tiene catálogo propio: sus plugins se instalan desde ese."""
     archivo = RAIZ / ".claude-plugin" / "marketplace.json"
     if not cp.ES_CORE:
         assert not archivo.exists()
         return
     m = json.loads(archivo.read_text(encoding="utf-8"))
     assert m["name"] == "k0lmenia" and m.get("description")
-    core, pro, empresa = m["plugins"]
+    core, pro, *paquetes = m["plugins"]
     assert core["name"] == "k0lmenia" and core["source"] == {"source": "github", "repo": cp.REPO, "ref": "plugin"}
     assert core["description"] == cp.DESCRIPCION  # un solo lugar para la descripción: catalogo-planes.json
-    assert pro["name"] == "k0lmenia-pro" and pro["source"]["repo"].endswith("-plugin")
-    assert empresa["name"] == "k0lmenia-empresa" and empresa["source"]["repo"].endswith("-plugin")
+    assert pro["name"] == "k0lmenia-pro" and pro["source"]["repo"].endswith("-plugin") and "ref" not in pro["source"]
+    assert paquetes and paquetes[0]["name"] == "k0lmenia-pro-base"
+    for q in paquetes:
+        assert q["name"].startswith("k0lmenia-pro-") and q["source"]["repo"] == pro["source"]["repo"]
+        assert q["source"]["ref"] == "pro-" + q["name"].removeprefix("k0lmenia-pro-")
     assert m == cp.marketplace(desde_rama=False), "regeneralo con: python scripts/construir_plugin.py --marketplace-main"
 
 
 def test_icono_privacidad_y_bienvenida(tmp_path):
     import struct
-    destino = cp.construir(tmp_path / "plugin")
+    destino = cp.construir(tmp_path / "plugin", cp.PRINCIPAL)
     png = (destino / ".claude-plugin" / "icon.png").read_bytes()
     ancho, alto = struct.unpack(">II", png[16:24])  # encabezado IHDR del PNG
     assert png[:8] == b"\x89PNG\r\n\x1a\n" and ancho == alto >= 512 and len(png) < 2_000_000
@@ -208,7 +251,7 @@ def test_permisos_iguales_al_repo_con_los_comandos_del_plugin():
 
 
 def test_init_copia_ejemplos_y_suma_permisos_sin_pisar(tmp_path):
-    plugin = cp.construir(tmp_path / "plugin")
+    plugin = cp.construir(tmp_path / "plugin", cp.PRINCIPAL)
     proyecto = tmp_path / "proyecto"
     (proyecto / ".claude").mkdir(parents=True)
     (proyecto / ".claude" / "settings.json").write_text(json.dumps({"permissions": {"allow": ["Bash(git status)"]}, "model": "opus"}),

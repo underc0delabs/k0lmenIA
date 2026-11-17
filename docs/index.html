@@ -75,7 +75,6 @@
   <a href="#evals">Evals de los agentes</a>
   <a href="#tokens">Uso de tokens</a>
   <a href="#conectores">Conectores MCP</a>
-  <a href="#planes">¿Necesitás más?</a>
   <div class="grupo">Referencia</div>
   <a href="#convenciones">Convenciones</a>
   <a href="#estructura">Estructura del repo</a>
@@ -98,7 +97,7 @@
 <section class="solo-impresion indice">
   <h2>Contenido</h2>
   <ol>
-  <li><span>1</span>Qué es K0lmenIA Light</li><li><span>2</span>Arquitectura</li><li><span>3</span>Cómo se usa</li><li><span>4</span>Agentes</li><li><span>5</span>Requisitos</li><li><span>6</span>Instalación</li><li><span>7</span>Como plugin de Claude Code</li><li><span>8</span>Configuración: el archivo .env</li><li><span>9</span>Documentación del proyecto</li><li><span>10</span>Investigación de contexto y "Falta información"</li><li><span>11</span>Diseño y ejecución</li><li><span>12</span>Automatización con k0lmena</li><li><span>13</span>Gestión de pruebas: Xray y k0lmenaTMT</li><li><span>14</span>k0lmena en el pipeline (CI)</li><li><span>15</span>Apps con protección anti-bots</li><li><span>16</span>Verificación en base de datos</li><li><span>17</span>Triage de bugs</li><li><span>18</span>Ejecución manual acompañada</li><li><span>19</span>Historial de corridas</li><li><span>20</span>Portal de informes</li><li><span>21</span>Informes en español e inglés</li><li><span>22</span>Avisos a Slack y Teams</li><li><span>23</span>Evals de los agentes</li><li><span>24</span>Uso de tokens</li><li><span>25</span>Conectores MCP</li><li><span>26</span>¿Necesitás más?</li><li><span>27</span>Convenciones</li><li><span>28</span>Estructura del repositorio</li><li><span>29</span>Problemas frecuentes</li><li><span>30</span>Extender el proyecto</li></ol>
+  <li><span>1</span>Qué es K0lmenIA Light</li><li><span>2</span>Arquitectura</li><li><span>3</span>Cómo se usa</li><li><span>4</span>Agentes</li><li><span>5</span>Requisitos</li><li><span>6</span>Instalación</li><li><span>7</span>Como plugin de Claude Code</li><li><span>8</span>Configuración: el archivo .env</li><li><span>9</span>Documentación del proyecto</li><li><span>10</span>Investigación de contexto y "Falta información"</li><li><span>11</span>Diseño y ejecución</li><li><span>12</span>Automatización con k0lmena</li><li><span>13</span>Gestión de pruebas: Xray y k0lmenaTMT</li><li><span>14</span>k0lmena en el pipeline (CI)</li><li><span>15</span>Apps con protección anti-bots</li><li><span>16</span>Verificación en base de datos</li><li><span>17</span>Triage de bugs</li><li><span>18</span>Ejecución manual acompañada</li><li><span>19</span>Historial de corridas</li><li><span>20</span>Portal de informes</li><li><span>21</span>Informes en español e inglés</li><li><span>22</span>Avisos a Slack y Teams</li><li><span>23</span>Evals de los agentes</li><li><span>24</span>Uso de tokens</li><li><span>25</span>Conectores MCP</li><li><span>26</span>Convenciones</li><li><span>27</span>Estructura del repositorio</li><li><span>28</span>Problemas frecuentes</li><li><span>29</span>Extender el proyecto</li></ol>
 </section>
 
 <!-- ======================================================= HERO -->
@@ -570,18 +569,6 @@ npm run evals -- --correr --agente generador-casos-manuales</pre></div>
   <div class="codigo"><pre>npm run conector                            <span class="c"># lista los conectores y cuáles tenés activos</span>
 npm run conector -- activar k0lmena-tmt     <span class="c"># queda solo para vos; reiniciá Claude Code</span></pre></div>
   <p>Ninguno lleva secretos: las credenciales se leen del <code>.env</code>. <code>npm run doctor</code> te dice qué le falta a cada conector activo. Guía completa en <code>CONECTORES.md</code>.</p>
-</section>
-
-<!-- ======================================================= PLANES -->
-<section class="seccion" id="planes">
-  <div class="kicker">Planes</div>
-  <h2>¿Necesitás más?</h2>
-  <p class="bajada">K0lmenIA Light trae lo elemental del día a día de QA. Cuando el equipo necesita más, hay dos planes pagos.</p>
-  <div class="tarjetas">
-    <div class="tarjeta c-violeta"><h4>K0lmenIA Pro</h4><p>Todos los agentes para probar (101 en total): accesibilidad, rendimiento, seguridad, performance, mobile, regresión visual, exploratorias, análisis de fallos, causa raíz, e-commerce, IA y chatbots, analytics, datos y más, con más conectores (Confluence, Figma, GitHub, GitLab, Linear, observabilidad y otros).</p><div class="salida">USD 29 por usuario por mes</div></div>
-    <div class="tarjeta c-cian"><h4>K0lmenIA Empresa</h4><p>Todo Pro más métricas, tablero de calidad, trazabilidad, evidencias de auditoría, presentaciones, onboarding, SAP, Salesforce y Dynamics, resumen diario, planificación de capacidad y gestión en QMetry, AIO Tests, Zephyr Scale y Azure DevOps.</p><div class="salida">USD 590 por mes hasta 10 personas</div></div>
-  </div>
-  <p>Más información en <a href="https://k0lmena.com/k0lmenia/" target="_blank" rel="noopener">k0lmena.com/k0lmenia</a>.</p>
 </section>
 
 <!-- ======================================================= CONVENCIONES -->

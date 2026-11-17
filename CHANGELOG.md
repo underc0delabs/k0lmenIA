@@ -2,6 +2,14 @@
 
 Los cambios más relevantes, del más nuevo al más viejo. El detalle de cada uno está en el historial de git.
 
+## 2026-11-16 — Dos planes: gratis y Pro
+
+- **K0lmenIA Empresa se integra en K0lmenIA Pro.** El marketplace `k0lmenia` trae dos plugins: el core gratis (`k0lmenia`) y Pro (`k0lmenia-pro`), que suma todo lo que antes era de Pro y de Empresa (111 agentes en total).
+- **Nada está a la venta.** K0lmenIA es gratis y abierto; K0lmenIA Pro es privado y lo instala solo quien tiene acceso de lectura a su repo. Se sacaron precios, links de compra y avisos de "disponible en Pro".
+- **`/k0lmenia:setup`** te pregunta si activás Pro solo cuando tenés acceso; `/k0lmenia:options` muestra Pro solo si lo tenés o tenés acceso.
+- **Pro completo o por paquetes**: quien tiene acceso instala todo (`k0lmenia-pro`) o solo los paquetes que necesita (`k0lmenia-pro-seguridad`, `k0lmenia-pro-performance`…); el marketplace `k0lmenia` los lista a todos. `/k0lmenia:setup` recomienda los paquetes según tu proyecto.
+- **Si tenías `k0lmenia-empresa` instalado**: desinstalalo (`claude plugin uninstall k0lmenia-empresa@k0lmenia`) e instalá Pro (`claude plugin install k0lmenia-pro@k0lmenia`).
+
 ## 2026-11-10 — Planes como plugins
 
 - **Pro y Empresa se suman como plugins aparte** (`k0lmenia-pro` y `k0lmenia-empresa`) desde el mismo marketplace `k0lmenia`: el core gratis queda instalado y cada plan pago suma sus agentes, skills y conectores encima.

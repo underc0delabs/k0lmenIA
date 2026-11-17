@@ -115,7 +115,6 @@ Después abrí Claude Code en la carpeta de tu proyecto y escribí **`/k0lmenia:
 - [Apps con protección anti-bots](#-apps-con-protección-anti-bots)
 - [Verificación en base de datos](#️-verificación-en-base-de-datos)
 - [Conectores MCP](#-conectores-mcp)
-- [¿Necesitás más?](#-necesitás-más)
 - [Referencia](#-referencia): flujo completo, convenciones, estructura, problemas frecuentes y cómo extenderlo
 
 ---
@@ -162,7 +161,7 @@ Claude Code elige el agente según lo que pidas; también podés nombrarlo (*"us
 <tr><td><code>base-conocimiento</code></td><td>Armar y mantener la base de conocimiento del proyecto en input/documentacion/ y la rutina ágil cuando cambian los requerimientos</td><td>la conversación principal</td></tr>
 <tr><td><code>ejecucion-manual</code></td><td>Ejecución manual acompañada en la conversación: caso por caso y paso por paso, resultados, evidencia, tiempos, bugs, pausa y retomar</td><td>conversación principal (/k0lmenia:ejecucion-manual) y asistente-ejecucion-manual</td></tr>
 <tr><td><code>setup</code></td><td>Setup inicial: recorre la web del proyecto, recomienda qué agentes y planes usar y activa los plugins de los planes a los que tenés acceso; configura k0lmenaTMT</td><td>conversación principal (/k0lmenia:setup)</td></tr>
-<tr><td><code>options</code></td><td>Cuadro comparativo de los planes (gratis, Pro y Empresa) y todas las opciones de cada uno: agentes, skills y conectores</td><td>conversación principal (/k0lmenia:options)</td></tr>
+<tr><td><code>options</code></td><td>Cuadro comparativo de los planes (gratis y Pro) y todas las opciones de cada uno: agentes, skills y conectores</td><td>conversación principal (/k0lmenia:options)</td></tr>
 <tr><td><code>guia-pruebas</code></td><td>Asistente interactivo para elegir qué probar y con qué agente o skill: pregunta paso a paso y recomienda o ejecuta</td><td>la conversación principal</td></tr>
 <tr><td><code>empezar</code></td><td>Bienvenida y puesta en marcha: preparar el proyecto, revisar el entorno, conectar herramientas y elegir la primera tarea (`/k0lmenia:empezar` en el plugin)</td><td>conversación principal</td></tr>
 </table>
@@ -554,19 +553,6 @@ npm run conector -- activar k0lmena-tmt     # queda solo para vos; reiniciá Cla
 ```
 
 `npm run conector -- listar --html` deja `output/conectores/estado.html` con el estado de cada conector, sin mostrar valores del `.env`. `npm run doctor` te dice qué variables le faltan a cada conector activo.
-
----
-
-## 🚀 ¿Necesitás más?
-
-K0lmenIA Light trae lo elemental del día a día de QA. Cuando el equipo necesita más, hay dos planes pagos:
-
-| Plan | Qué suma | Precio |
-|---|---|---|
-| **K0lmenIA Pro** | Todos los agentes para probar (101 en total): accesibilidad, rendimiento, seguridad, performance, mobile, regresión visual, exploratorias, análisis de fallos, causa raíz, e-commerce, IA y chatbots, analytics, datos y más, con más conectores (Confluence, Figma, GitHub, GitLab, Linear, observabilidad y otros) | USD 29 por usuario por mes |
-| **K0lmenIA Empresa** | Todo Pro más métricas, tablero de calidad, trazabilidad, evidencias de auditoría, presentaciones, onboarding, SAP, Salesforce y Dynamics, resumen diario, planificación de capacidad y gestión en QMetry, AIO Tests, Zephyr Scale y Azure DevOps | USD 590 por mes hasta 10 personas |
-
-Más información en **https://k0lmena.com/k0lmenia/**.
 
 ---
 
