@@ -1,26 +1,15 @@
-# Cambios de K0lmenIA Light
+# Cambios de K0lmenIA
 
 Los cambios más relevantes, del más nuevo al más viejo. El detalle de cada uno está en el historial de git.
 
-## 2026-11-16 — Dos planes: gratis y Pro
+## 2026-11-16 — Agentes y skills enfocados en lo que trae k0lmenIA
 
-- **K0lmenIA Empresa se integra en K0lmenIA Pro.** El marketplace `k0lmenia` trae dos plugins: el core gratis (`k0lmenia`) y Pro (`k0lmenia-pro`), que suma todo lo que antes era de Pro y de Empresa (111 agentes en total).
-- **Nada está a la venta.** K0lmenIA es gratis y abierto; K0lmenIA Pro es privado y lo instala solo quien tiene acceso de lectura a su repo. Se sacaron precios, links de compra y avisos de "disponible en Pro".
-- **`/k0lmenia:setup`** te pregunta si activás Pro solo cuando tenés acceso; `/k0lmenia:options` muestra Pro solo si lo tenés o tenés acceso.
-- **Pro completo o por paquetes**: quien tiene acceso instala todo (`k0lmenia-pro`) o solo los paquetes que necesita (`k0lmenia-pro-seguridad`, `k0lmenia-pro-performance`…); el marketplace `k0lmenia` los lista a todos. `/k0lmenia:setup` recomienda los paquetes según tu proyecto.
-- **Si tenías `k0lmenia-empresa` instalado**: desinstalalo (`claude plugin uninstall k0lmenia-empresa@k0lmenia`) e instalá Pro (`claude plugin install k0lmenia-pro@k0lmenia`).
+- **Los agentes y skills nombran solo lo que k0lmenIA trae**: sus agentes y skills, los conectores de Playwright, Atlassian (Jira y Confluence) y k0lmenaTMT, y la gestión de pruebas en Xray y k0lmenaTMT. La guía de pruebas (`/k0lmenia:guia-pruebas`) recomienda solo esos agentes y skills.
+- **Puesta en marcha en un solo lugar**: `/k0lmenia:empezar` prepara el proyecto y configura k0lmenaTMT. Se sacaron los skills `setup` y `options`.
 
-## 2026-11-10 — Planes como plugins
+## 2026-10-30 — K0lmenIA
 
-- **Pro y Empresa se suman como plugins aparte** (`k0lmenia-pro` y `k0lmenia-empresa`) desde el mismo marketplace `k0lmenia`: el core gratis queda instalado y cada plan pago suma sus agentes, skills y conectores encima.
-- **`/k0lmenia:setup`** muestra qué plan tenés, a cuáles tenés acceso (según tu acceso a sus repos en GitHub) y qué suma cada uno, instala los que te corresponden y configura k0lmenaTMT. Desde una terminal: `k0lmenia planes`.
-- Los agentes del core usan la versión completa de su texto: si pedís algo de un plan que no tenés, te dice en cuál está.
-- **`/k0lmenia:options`**: cuadro comparativo de los tres planes (una fila por capacidad) y todas las opciones de cada uno: agentes, skills y conectores. Desde una terminal: `k0lmenia planes --opciones`.
-- **`/k0lmenia:setup` arranca por tu proyecto**: te pide la web principal, la recorre, te recomienda qué agentes y planes te sirven y te muestra checks para activar los plugins de los planes a los que tenés acceso. Desde una terminal: `k0lmenia planes --recomendar <url>`.
-
-## 2026-10-30 — K0lmenIA Light
-
-Primera versión de K0lmenIA Light, la versión gratuita (licencia MIT): lo elemental del día a día de QA.
+Primera versión de K0lmenIA (licencia MIT): lo elemental del día a día de QA.
 
 - **13 agentes**: `documentador-proyecto`, `analista-historias`, `generador-casos-manuales`, `generador-casos-bdd`, `revisor-casos` y `triador-bugs` (análisis y diseño); `ejecutor-e2e`, `ejecutor-api` y `asistente-ejecucion-manual` (ejecución en vivo); `web-mapper` y `api-mapper` (automatización con k0lmena); `gestor-pruebas` y `publicador-resultados` (gestión en Xray Cloud, Xray Server/DC y k0lmenaTMT).
 - **13 skills**: investigación de contexto y Falta información, técnicas de diseño, redacción de casos manuales, ejecución E2E y de API, GraphQL y gRPC, automatización con k0lmena, documentación del proyecto, base de conocimiento, ejecución manual acompañada (`/k0lmenia:ejecucion-manual`), guía de pruebas y puesta en marcha (`/k0lmenia:empezar`).
@@ -28,4 +17,3 @@ Primera versión de K0lmenIA Light, la versión gratuita (licencia MIT): lo elem
 - **Conectores**: Playwright (headed y headless), Atlassian para Jira y k0lmenaTMT.
 - **Informes en español e inglés** con portal de informes (`output/index.html`) e historial de las últimas 5 corridas.
 - Se instala como **plugin de Claude Code** (`claude plugin marketplace add underc0delabs/k0lmenIA` y `claude plugin install k0lmenia@k0lmenia`) o clonando el repo.
-- Para más agentes y conectores: **K0lmenIA Pro** y **K0lmenIA Empresa** (https://k0lmena.com/k0lmenia/).

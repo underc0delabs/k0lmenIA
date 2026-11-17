@@ -20,7 +20,7 @@ Mirá si existe el comando `k0lmenia` (corré `k0lmenia ayuda`):
   claude plugin marketplace add underc0delabs/k0lmenIA
   claude plugin install k0lmenia@k0lmenia
   ```
-  Después, `/k0lmenia:setup` lo termina de configurar para su proyecto.
+  Después, `/k0lmenia:empezar` lo termina de preparar para su proyecto.
 
 ## Paso 2 — Preparar el proyecto (solo plugin)
 
@@ -43,19 +43,14 @@ python scripts/generar_informe_entorno.py output/entorno/doctor.json output/ento
 
 Cuando termines el paso 5, regeneralo con `--analisis output/entorno/analisis.json`, un JSON con `conectores_elegidos` (lista), `primera_tarea`, `proximos_pasos` y su bloque `"en"`, así el informe queda como la ficha de arranque del proyecto. Pasale la ruta a la persona.
 
-## Paso 3b — Su plan (solo plugin)
-
-Si la persona todavía no pasó por el skill `setup` en esta carpeta, seguí con él ahora: pide la web principal del
-proyecto, la recorre, recomienda qué usar y activa los plugins de los planes a los que tiene acceso. Al terminar, volvé
-acá al paso 4. Si ya lo hizo, corré `k0lmenia planes --json --sin-red`, decí en una línea qué planes tiene activos y
-seguí. No ofrezcas planes que no tiene ni hables de precios.
-
 ## Paso 4 — Conectar sus herramientas
 
-Preguntá con qué trabaja el equipo (una pregunta, varias opciones): Jira y Confluence, Azure DevOps, Xray / Zephyr / QMetry / AIO / k0lmenaTMT, GitHub o GitLab, Figma, o ninguna por ahora.
+Preguntá con qué trabaja el equipo (una pregunta, varias opciones): Jira y Confluence, Xray, k0lmenaTMT, el repositorio de la aplicación (clon local), o ninguna por ahora.
 
 - **Jira y Confluence** vienen activos: la primera vez que un agente los use, Claude Code abre el navegador para iniciar sesión.
-- **Lo demás** se configura con el asistente `k0lmenia configurar`. Pide los datos en español y activa los conectores. Como pide tokens, **lo corre la persona en una terminal** (la de VS Code sirve), no vos. **Nunca le pidas tokens ni contraseñas en el chat.**
+- **Lo demás** se configura con el asistente `k0lmenia configurar` (en el repo clonado, `npm run configurar`). Pide los datos en español y los deja en el `.env`. Como pide tokens, **lo corre la persona en una terminal** (la de VS Code sirve), no vos. **Nunca le pidas tokens ni contraseñas en el chat.**
+- **k0lmenaTMT**: la URL y el token van en el `.env` con ese mismo asistente, que corre la persona. Después, con su confirmación, activá el conector con `k0lmenia conector activar k0lmena-tmt` (en el repo clonado, `npm run conector -- activar k0lmena-tmt`) y avisale que reinicie Claude Code.
+- **Repositorio de la aplicación**: se lee en solo lectura desde un clon local; la ruta va en `REPO_RUTA_LOCAL` del `.env`.
 - Si dice "ninguna por ahora", seguí: se puede trabajar con archivos en `input/`.
 
 ## Paso 5 — La primera tarea
@@ -76,7 +71,6 @@ Cerrá con tres datos, una línea cada uno:
 - Los informes quedan en `output/` y se ven todos juntos en `output/index.html` (`k0lmenia portal -- --abrir`).
 - Para dejar varias tareas en fila: escribirlas en `TAREAS.md` y pedir *"Hacé las tareas de TAREAS.md"*.
 - Para recibir las mejoras solo: `/plugin` → Marketplaces → `k0lmenia` → *Enable auto-update*.
-- Para ver qué plan tiene y qué suma cada uno: `/k0lmenia:setup`.
 
 ## Reglas
 

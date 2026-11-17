@@ -3,7 +3,7 @@ import json
 
 import _historial
 
-# Un tipo de historial de prueba (los informes de K0lmenIA Light registran los suyos en _historial.TIPOS).
+# Un tipo de historial de prueba (los informes de K0lmenIA registran los suyos en _historial.TIPOS).
 TIPO = {"archivo": "exploracion.json", "items": lambda d: d.get("hallazgos") or [],
         "clave": lambda h: f'{h.get("categoria")}|{h.get("pagina")}|{_historial._norm(h.get("titulo"))}',
         "titulo": lambda h: h.get("titulo"),

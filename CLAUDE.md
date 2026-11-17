@@ -1,4 +1,4 @@
-# K0lmenIA Light — Contexto del proyecto
+# K0lmenIA — Contexto del proyecto
 
 Este repositorio es un conjunto de **agentes de QA para Claude Code**, pensados para que profesionales de testing manual aceleren sus tareas del día a día: analizar historias, escribir casos de prueba (manuales y BDD), revisarlos, triar bugs, ejecutar pruebas end-to-end en el navegador y de API, acompañar la ejecución manual, automatizar con k0lmena y llevar casos y resultados a Xray o k0lmenaTMT.
 
@@ -32,7 +32,7 @@ Los agentes corren como subagentes y **no pueden hacerle preguntas a la persona 
 - **Primer uso** ("¿cómo empiezo?", recién instalado): la conversación principal sigue el skill `empezar` (en el plugin, `/k0lmenia:empezar`).
 - **No sabés qué probar o con qué agente/skill**: la conversación principal usa el skill `guia-pruebas` para preguntarte paso a paso y recomendar o ejecutar el agente/skill que corresponde (también es un skill de la conversación principal, porque los subagentes no pueden preguntar).
 - **Correr pruebas ya automatizadas**: es `npm test` en k0lmena (sin agentes ni tokens). Los ejecutores en vivo (`ejecutor-e2e`, `ejecutor-api`) son para casos sueltos que no vale la pena automatizar.
-- **Lo que no está en Light** (accesibilidad, rendimiento, seguridad, performance, mobile, métricas, entre otros): decí que no está incluido en esta versión y ofrecé lo que sí se puede hacer con Light. No hables de otros planes, precios ni compras.
+- **Lo que k0lmenIA no hace**: si la persona pide algo que no cubre ningún agente ni skill, decí que k0lmenIA no lo hace y ofrecé lo que sí se puede hacer.
 
 ---
 

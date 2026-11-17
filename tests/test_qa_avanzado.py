@@ -1,4 +1,4 @@
-"""Portal de informes: cada carpeta de output/ de K0lmenIA Light cae en su categoría y tiene nombre legible."""
+"""Portal de informes: cada carpeta de output/ de K0lmenIA cae en su categoría y tiene nombre legible."""
 import sys
 from pathlib import Path
 

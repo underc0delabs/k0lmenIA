@@ -1,4 +1,4 @@
-# Referencia de K0lmenIA Light
+# Referencia de K0lmenIA
 
 Lo que no hace falta en cada conversación y por eso no está en `CLAUDE.md`: la tabla de agentes con dónde guarda cada uno su salida, los comandos npm, qué hace cada script y herramienta, y los nombres de los archivos de salida. Claude lo lee cuando lo necesita; `CLAUDE.md` queda corto y se gastan menos tokens en cada sesión.
 
@@ -136,7 +136,6 @@ Todos los comandos de `package.json`, desde la raíz del repo (con el plugin, `k
 | `npm run novedades`               | Qué cambió desde la última vez (desde el | hook de inicio del plugin          |
 |                                   | CHANGELOG); `--todas`, `--ultimas N`     |                                    |
 +-----------------------------------+------------------------------------------+------------------------------------+
-| `npm run planes`                  | Planes instalados, a cuáles hay acceso y | skill setup                        |
 |                                   | qué suma cada uno; `--instalar <plan>`   |                                    |
 +-----------------------------------+------------------------------------------+------------------------------------+
 | `npm run doctor`                  | Revisa el entorno y la configuración y   | skill empezar                      |
@@ -196,7 +195,6 @@ Todos los comandos de `package.json`, desde la raíz del repo (con el plugin, `k
 - `scripts/metricas_tokens.py` → **uso de tokens** de los agentes: lee las transcripciones de Claude Code del proyecto (solo conteos, nunca el texto), atribuye el uso a cada agente y estima el costo por agente, día y modelo.
 - `scripts/evaluar_agentes.py` → **evals de los agentes** (`evals/`): casos con trampas deliberadas que corren en un workspace aislado con `claude -p` y se verifican con chequeos determinísticos. **Gastan tokens** (tope por caso); `--solo-verificar` revisa salidas ya generadas.
 - `scripts/novedades.py` (`npm run novedades`, `k0lmenia novedades`) → qué cambió desde la última vez que lo viste, a partir del CHANGELOG; `--todas`, `--ultimas N`; con `--contexto` lo usa el hook de inicio del plugin.
-- `scripts/planes.py` (`npm run planes`, `k0lmenia planes`) → qué plan está instalado, a cuáles hay acceso y qué suma cada uno; `--json`, `--instalar <plan>`, `--aviso` (hook de inicio del plugin), `--opciones` (cuadro comparativo y todas las opciones de cada plan, lo usa el skill `options`) y `--recomendar <url>` (lee la web del proyecto y recomienda agentes y planes, lo usa el skill `setup`).
 - `scripts/generar_informe_novedades.py` → informe HTML de las novedades (`output/novedades/`).
 - `herramientas/k0lmena/` → el framework de automatización (web y API, steps de base de datos, sesión guardada, mapa funcional y grabación). Detalle en `herramientas/k0lmena/README.md`.
 - `herramientas/newman/` → Newman, el CLI de Postman: corre las colecciones de Postman, Bruno e Insomnia (`ejecutor-api`, con `scripts/correr_newman.py`).
